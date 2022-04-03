@@ -1,5 +1,5 @@
 {
-  "name": "@my-app/react-app",
+  "name": "@prodeapp/react-app",
   "version": "1.0.0",
   "homepage": "./",
   "browserslist": {
@@ -15,7 +15,7 @@
     ]
   },
   "dependencies": {
-    "@my-app/contracts": "^1.0.0",
+    "@prodeapp/contracts": "^1.0.0",
     "@apollo/client": "^3.5.10",
     "@ethersproject/contracts": "^5.6.0",
     "@ethersproject/providers": "^5.6.0",
