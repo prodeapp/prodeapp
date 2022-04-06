@@ -1,5 +1,5 @@
 {
-  "name": "@my-app/react-app",
+  "name": "@prodeapp/react-app",
   "version": "1.0.0",
   "homepage": "./",
   "browserslist": {
@@ -15,22 +15,27 @@
     ]
   },
   "dependencies": {
-    "@my-app/contracts": "^1.0.0",
     "@apollo/client": "^3.5.10",
     "@ethersproject/contracts": "^5.6.0",
     "@ethersproject/providers": "^5.6.0",
+    "@prodeapp/contracts": "^1.0.0",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
-    "@types/react": "^17.0.40",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.23",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "@types/styled-components": "^5.1.24",
     "@usedapp/core": "^0.12.1",
     "graphql": "^16.3.0",
     "ipfs-deploy": "^11.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-scripts": "4.0.3",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "typescript": "^4.6.3"
   },
   "eslintConfig": {
     "extends": [

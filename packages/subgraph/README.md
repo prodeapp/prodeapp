@@ -1,4 +1,4 @@
-## @my-app/subgraph
+## @prodeapp/subgraph
 
 The Graph is a tool for for indexing events emitted on the Ethereum blockchain. It provides you with an easy-to-use GraphQL API.
 
