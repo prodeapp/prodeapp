@@ -1,11 +1,8 @@
-import { useQuery } from "@apollo/client";
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import React, { useEffect, useState } from "react";
 
-import { Body, Button, Container, Header, Image, Link } from "./components";
-import logo from "./ethereumLogo.png";
-
-import GET_TRANSFERS from "./graphql/subgraph";
+import { Body, Button, Container, Header } from "./index";
+import {Outlet} from "react-router-dom";
 
 function WalletButton() {
   const [rendered, setRendered] = useState("");
@@ -45,37 +42,17 @@ function WalletButton() {
   );
 }
 
-function App() {
-  const { loading, error: subgraphQueryError, data } = useQuery(GET_TRANSFERS);
-
-  useEffect(() => {
-    if (subgraphQueryError) {
-      console.error("Error while querying subgraph:", subgraphQueryError.message);
-      return;
-    }
-    if (!loading && data && data.transfers) {
-      console.log({ transfers: data.transfers });
-    }
-  }, [loading, subgraphQueryError, data]);
-
+function Layout() {
   return (
     <Container>
       <Header>
         <WalletButton />
       </Header>
       <Body>
-        <Image src={logo} alt="ethereum-logo" />
-        <p>
-          Edit <code>packages/react-app/src/App.js</code> and save to reload.
-        </p>
-        <Link href="https://reactjs.org">
-          Learn React
-        </Link>
-        <Link href="https://usedapp.io/">Learn useDapp</Link>
-        <Link href="https://thegraph.com/docs/quick-start">Learn The Graph</Link>
+          <Outlet />
       </Body>
     </Container>
   );
 }
 
-export default App;
+export default Layout;

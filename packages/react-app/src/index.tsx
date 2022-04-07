@@ -4,8 +4,16 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { DAppProvider, Mainnet } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
-
-import App from "./App";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import TournamentsCreate from "./pages/TournamentsCreate";
+import TournamentsView from "./pages/TournamentsView";
+import TournamentsList from "./pages/TournamentsList";
 
 // Change this to your own Infura project id: https://infura.io/register
 const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
@@ -27,7 +35,18 @@ ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
-        <App />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="tournaments">
+                <Route index element={<TournamentsList />} />
+                <Route path=":id" element={<TournamentsView />} />
+                <Route path="new" element={<TournamentsCreate />} />
+              </Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </ApolloProvider>
     </DAppProvider>
   </React.StrictMode>,
