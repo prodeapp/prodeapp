@@ -23,6 +23,17 @@ export const Button = styled.button`
   text-decoration: none;
 `;
 
+export const Input = styled.input`
+  color: #282c34;
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+`;
+
 export const Container = styled.div`
   background-color: #282c34;
   display: flex;
