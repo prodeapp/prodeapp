@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link as RouterLink } from "react-router-dom";
 
 export const Body = styled.div`
   align-items: center;
@@ -7,7 +8,7 @@ export const Body = styled.div`
   flex-direction: column;
   font-size: calc(10px + 2vmin);
   justify-content: center;
-  margin-top: 40px;
+  padding-top: 40px;
 `;
 
 export const Button = styled.button`
@@ -35,10 +36,10 @@ export const Input = styled.input`
 `;
 
 export const Container = styled.div`
-  background-color: #282c34;
   display: flex;
   flex-direction: column;
-  height: calc(100vh);
+  min-height: calc(100vh);
+  background-color: #282c34;
 `;
 
 export const Header = styled.header`
@@ -57,10 +58,7 @@ export const Image = styled.img`
   pointer-events: none;
 `;
 
-export const Link = styled.a.attrs({
-  target: "_blank",
-  rel: "noopener noreferrer",
-})`
+export const Link = styled(RouterLink)`
   color: #61dafb;
   margin-top: 8px;
 `;

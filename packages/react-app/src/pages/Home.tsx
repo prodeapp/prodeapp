@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
-
 import { Image, Link } from "../components";
 import logo from "../ethereumLogo.png";
 
@@ -22,14 +21,7 @@ function Home() {
   return (
     <>
       <Image src={logo} alt="ethereum-logo" />
-      <p>
-        Edit <code>packages/react-app/src/App.js</code> and save to reload.
-      </p>
-      <Link href="https://reactjs.org">
-        Learn React
-      </Link>
-      <Link href="https://usedapp.io/">Learn useDapp</Link>
-      <Link href="https://thegraph.com/docs/quick-start">Learn The Graph</Link>
+      <Link to="/tournaments/new">New Tournament</Link>
     </>
   );
 }
