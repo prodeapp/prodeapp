@@ -1,16 +1,6 @@
 import styled from "styled-components";
 import { Link as RouterLink } from "react-router-dom";
 
-export const Body = styled.div`
-  align-items: center;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  font-size: calc(10px + 2vmin);
-  justify-content: center;
-  padding-top: 40px;
-`;
-
 export const Button = styled.button`
   background: #121212;
   border: 1px solid #272727;
@@ -41,9 +31,9 @@ export const Input = styled.input`
 `;
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh);
+  max-width: 1000px;
+  padding: 0 10px;
+  margin: 0 auto;
 `;
 
 export const Header = styled.header`
@@ -67,7 +57,6 @@ export const Link = styled(RouterLink)`
 `;
 
 export const Box = styled.div`
-  width: 800px;
   background: #121212;
   border-radius: 10px;
   border: 1px solid #272727;
@@ -84,6 +73,10 @@ export const BoxRow = styled.div`
 
   & + & {
     border-top: 1px solid #272727;
+  }
+
+  &:hover {
+    background: #272727;
   }
 `
 

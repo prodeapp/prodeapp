@@ -2,9 +2,6 @@ import { Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import AppMenuBar from "./AppMenuBar";
 
-
-
-
 function Layout() {
   return (
     <>
@@ -17,3 +14,4 @@ function Layout() {
 }
 
 export default Layout;
+
