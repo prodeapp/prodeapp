@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
+import {ReactQueryProvider} from "./lib/react-query";
 
 // Change this to your own Infura project id: https://infura.io/register
 const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
@@ -35,18 +36,20 @@ ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
-        <BrowserRouter>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="tournaments">
-                <Route index element={<TournamentsList />} />
-                <Route path=":id" element={<TournamentsView />} />
-                <Route path="new" element={<TournamentsCreate />} />
+        <ReactQueryProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="tournaments">
+                  <Route index element={<TournamentsList />} />
+                  <Route path=":id" element={<TournamentsView />} />
+                  <Route path="new" element={<TournamentsCreate />} />
+                </Route>
               </Route>
-            </Route>
-          </Routes>
-        </BrowserRouter>
+            </Routes>
+          </BrowserRouter>
+        </ReactQueryProvider>
       </ApolloProvider>
     </DAppProvider>
   </React.StrictMode>,
