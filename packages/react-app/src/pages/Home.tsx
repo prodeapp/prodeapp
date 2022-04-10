@@ -1,29 +1,42 @@
-import { useQuery } from "@apollo/client";
-import React, { useEffect } from "react";
-import { Image, Link } from "../components";
-import logo from "../ethereumLogo.png";
-
-import GET_TRANSFERS from "../graphql/subgraph";
+import React from "react";
+import { Link } from "../components";
+import {useTournaments} from "../hooks/useTournaments";
+import {Tournament} from "../lib/types";
+import {DecimalBigNumber} from "../lib/DecimalBigNumber";
 
 function Home() {
-  const { loading, error: subgraphQueryError, data } = useQuery(GET_TRANSFERS);
-
-  useEffect(() => {
-    if (subgraphQueryError) {
-      console.error("Error while querying subgraph:", subgraphQueryError.message);
-      return;
-    }
-    if (!loading && data && data.transfers) {
-      console.log({ transfers: data.transfers });
-    }
-  }, [loading, subgraphQueryError, data]);
+  const { error, data: tournaments } = useTournaments();
 
   return (
     <>
-      <Image src={logo} alt="ethereum-logo" />
       <Link to="/tournaments/new">New Tournament</Link>
+
+      {!error && tournaments && <TournamentsTable tournaments={tournaments}/>}
     </>
   );
+}
+
+type TournamentsTableProps = {
+  tournaments: Tournament[]
+}
+
+function TournamentsTable({tournaments}: TournamentsTableProps) {
+  return <div style={{width: '90%'}}>
+    <div style={{display: 'flex'}}>
+      <div style={{width: '25%'}}>Name</div>
+      <div style={{width: '25%'}}>Price</div>
+      <div style={{width: '25%'}}>Participants</div>
+      <div style={{width: '25%'}}>Total Prize</div>
+    </div>
+    {tournaments.map((tournament, i) => {
+      return <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>
+        <div style={{width: '25%'}}>{tournament.name}</div>
+        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.price,18).toString()}</div>
+        <div style={{width: '25%'}}>{tournament.participants.toString()}</div>
+        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.totalPrize,18).toString()}</div>
+      </Link>
+    })}
+  </div>
 }
 
 export default Home;
