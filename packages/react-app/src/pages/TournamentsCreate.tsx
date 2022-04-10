@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Input, Button} from "../components"
+import {Input, Button, Box, BoxRow, BoxLabelCell, BoxTitleCell} from "../components"
 
 const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -120,8 +120,8 @@ function AnswersBuilder({answersPlaceholder, setAnswersPlaceholder}: AnswersBuil
   return <div>
     {answersPlaceholder.map((answer, i) => {
       return <div key={i}>
-        <div style={{display: 'inline-flex', alignItems: 'center'}}>
-          <Input onChange={answerChange(i)} value={answer} style={{width: '200px'}} />
+        <div style={{display: 'inline-flex', alignItems: 'center', marginBottom: '10px'}}>
+          <Input onChange={answerChange(i)} value={answer} style={{width: '150px'}} />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
         </div>
       </div>
@@ -190,35 +190,43 @@ function TournamentsCreate() {
   }
 
   return (
-    <div style={{textAlign: 'center', width: '800px'}}>
-      <div>
-        <div>Question</div>
-        <Input onChange={questionPlaceholderChange} value={questionPlaceholder} style={{width: '100%'}}/>
-      </div>
-      <div style={{marginTop: '10px'}}>
-        <div>Number of Matches</div>
-        <Input onChange={numberOfMatchesChange} type="number" value={numberOfMatches} style={{width: '100px'}}/>
-      </div>
-      <div style={{marginTop: '10px'}}>
-        <div>Answers</div>
-        <AnswersBuilder answersPlaceholder={answersPlaceholder} setAnswersPlaceholder={setAnswersPlaceholder} />
-      </div>
-      <hr />
-
-      {[...Array(numberOfMatches)].map((_, i) => {
-        return (
-          <div key={i} style={{marginTop: '10px'}}>
-            <QuestionBuilder
-              placeholdersCount={placeholdersCount}
-              questionPlaceholder={questionPlaceholder}
-              updateQuestion={updateQuestion(i)}
-              answersPlaceholder={answersPlaceholder}
-              updateAnswer={updateAnswer(i)}
-            />
-          </div>
-        )
-      })}
-    </div>
+    <>
+      <Box>
+        <BoxRow>
+          <BoxLabelCell>Question</BoxLabelCell>
+          <Input onChange={questionPlaceholderChange} value={questionPlaceholder} style={{width: '100%'}}/>
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Number of Matches</BoxLabelCell>
+          <Input onChange={numberOfMatchesChange} type="number" value={numberOfMatches} style={{width: '100px'}}/>
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Answers</BoxLabelCell>
+          <AnswersBuilder answersPlaceholder={answersPlaceholder} setAnswersPlaceholder={setAnswersPlaceholder} />
+        </BoxRow>
+      </Box>
+      <Box>
+        <BoxRow>
+          <BoxTitleCell>Questions</BoxTitleCell>
+        </BoxRow>
+        {[...Array(numberOfMatches)].map((_, i) => {
+          return (
+            <div key={i} style={{padding: '10px'}}>
+              <QuestionBuilder
+                placeholdersCount={placeholdersCount}
+                questionPlaceholder={questionPlaceholder}
+                updateQuestion={updateQuestion(i)}
+                answersPlaceholder={answersPlaceholder}
+                updateAnswer={updateAnswer(i)}
+              />
+            </div>
+          )
+        })}
+        <BoxRow>
+          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}><Button>Create Tournament</Button></div>
+        </BoxRow>
+      </Box>
+    </>
   );
 }
 

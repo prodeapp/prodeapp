@@ -12,14 +12,15 @@ export const Body = styled.div`
 `;
 
 export const Button = styled.button`
-  background-color: white;
-  border: none;
-  border-radius: 8px;
-  color: #282c34;
+  background: #121212;
+  border: 1px solid #272727;
+  border-radius: 10px;
+  color: #fff;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 700;
   margin: 0px 20px;
-  padding: 12px 24px;
+  padding: 6px 10px;
   text-align: center;
   text-decoration: none;
 `;
@@ -33,18 +34,20 @@ export const Input = styled.input`
   display: inline-block;
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid #e2e8f0;
+  background: transparent;
+  border-radius: 6px;
+  color: #FFF;
 `;
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
   min-height: calc(100vh);
-  background-color: #282c34;
 `;
 
 export const Header = styled.header`
   align-items: center;
-  background-color: #282c34;
   color: white;
   display: flex;
   flex-direction: row;
@@ -62,3 +65,33 @@ export const Link = styled(RouterLink)`
   color: #61dafb;
   margin-top: 8px;
 `;
+
+export const Box = styled.div`
+  width: 800px;
+  background: #121212;
+  border-radius: 10px;
+  border: 1px solid #272727;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+`
+
+export const BoxRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+
+  & + & {
+    border-top: 1px solid #272727;
+  }
+`
+
+export const BoxLabelCell = styled.div`
+  margin-right: 10px;
+  min-width: 30%;
+`
+
+export const BoxTitleCell = styled(BoxLabelCell)`
+  font-size: 20px;
+`
