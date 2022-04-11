@@ -13,6 +13,11 @@ export const Button = styled.button`
   padding: 6px 10px;
   text-align: center;
   text-decoration: none;
+
+  &.active {
+    background: #FFF;
+    color: #000;
+  }
 `;
 
 export const Input = styled.input`
