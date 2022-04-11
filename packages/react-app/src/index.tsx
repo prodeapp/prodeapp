@@ -14,16 +14,15 @@ import Home from "./pages/Home";
 import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
-import {ReactQueryProvider} from "./lib/react-query";
+import { ReactQueryProvider } from "./lib/react-query";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { INFURA_PROJECT_ID } from "./secrets";
 import Leaderboard from "./pages/Leaderboard";
-import User from "./pages/User";
+import Profile from "./pages/Profile";
 
 const config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
-    [Mainnet.chainId]: "https://mainnet.infura.io/v3/" + INFURA_PROJECT_ID,
+    [Mainnet.chainId]: "https://mainnet.infura.io/v3/32396ad0cab1489eaaca0ac9ecda1566",
   },
 }
 
@@ -40,7 +39,7 @@ const darkTheme = createTheme({
     primary: {
       main: '#fff',
     }
-    },
+  },
 });
 
 ReactDOM.render(
@@ -49,23 +48,20 @@ ReactDOM.render(
       <ApolloProvider client={client}>
         <ReactQueryProvider>
           <ThemeProvider theme={darkTheme}>
-          <BrowserRouter>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="tournaments">
-                  <Route index element={<TournamentsList />} />
-                  <Route path=":id" element={<TournamentsView />} />
-                  <Route path="new" element={<TournamentsCreate />} />
+            <BrowserRouter>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="tournaments">
+                    <Route index element={<TournamentsList />} />
+                    <Route path=":id" element={<TournamentsView />} />
+                    <Route path="new" element={<TournamentsCreate />} />
+                  </Route>
+                  <Route path="leaderboard" element={<Leaderboard />} />
+                  <Route path="profile" element={<Profile />} />
                 </Route>
-                <Route path="users">
-                <Route index element={<Leaderboard />} />
-                <Route path=":id" element={<User />} />
-
-                </Route>
-              </Route>
-            </Routes>
-          </BrowserRouter>
+              </Routes>
+            </BrowserRouter>
           </ThemeProvider>
         </ReactQueryProvider>
       </ApolloProvider>
