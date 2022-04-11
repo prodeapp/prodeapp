@@ -15,9 +15,11 @@ import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
 import {ReactQueryProvider} from "./lib/react-query";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { INFURA_PROJECT_ID } from "./secrets";
+import Leaderboard from "./pages/Leaderboard";
+import User from "./pages/User";
 
-// Change this to your own Infura project id: https://infura.io/register
-const INFURA_PROJECT_ID = "defba93b47f748f09fcead8282b9e58e";
 const config = {
   readOnlyChainId: Mainnet.chainId,
   readOnlyUrls: {
@@ -32,11 +34,18 @@ const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
 });
 
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
         <ReactQueryProvider>
+          <ThemeProvider theme={darkTheme}>
           <BrowserRouter>
             <Routes>
               <Route element={<Layout />}>
@@ -46,9 +55,15 @@ ReactDOM.render(
                   <Route path=":id" element={<TournamentsView />} />
                   <Route path="new" element={<TournamentsCreate />} />
                 </Route>
+                <Route path="users">
+                <Route index element={<Leaderboard />} />
+                <Route path=":id" element={<User />} />
+
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>
+          </ThemeProvider>
         </ReactQueryProvider>
       </ApolloProvider>
     </DAppProvider>
