@@ -1,19 +1,39 @@
 import React, {useEffect, useState} from "react";
-import {Input, Button, Box, BoxRow, BoxLabelCell, BoxTitleCell} from "../components"
+import {Input, Button, Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
+import {Control, useFieldArray, useForm, useWatch} from "react-hook-form";
+import { ErrorMessage } from '@hookform/error-message';
+import {UseFormRegister} from "react-hook-form/dist/types/form";
+import {FieldErrors} from "react-hook-form/dist/types/errors";
 
 const PLACEHOLDER_REGEX = /\$\d/g
 
-type QuestionBuilderProps = {
+type AnswersPlaceholder = {value: string}[];
+type QuestionParams = {value: string}[];
+
+type MatchBuilderProps = {
+  matchIndex: number
+  removeMatch: (i: number) => void
   placeholdersCount: number
+  control: Control<FormValues>
+  register: UseFormRegister<FormValues>
+  errors: FieldErrors<FormValues>
+}
+
+type FormValues = {
   questionPlaceholder: string
-  updateQuestion: (question: string) => void
-  answersPlaceholder: string[]
-  updateAnswer: (answer: string[]) => void
+  matches: {questionParams: QuestionParams}[]
+  answersPlaceholder: AnswersPlaceholder
 }
 
 type AnswersBuilderProps = {
-  answersPlaceholder: string[]
-  setAnswersPlaceholder: (value: string[]) => void
+  control: Control<FormValues>
+  register: UseFormRegister<FormValues>
+  errors: FieldErrors<FormValues>
+}
+
+type MatchData = {
+  question: string
+  answers: string[]
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
@@ -27,206 +47,136 @@ function replacePlaceholders(text: string, questionParams: string[]) {
   )
 }
 
-function QuestionBuilder({placeholdersCount, questionPlaceholder, updateQuestion, answersPlaceholder, updateAnswer}: QuestionBuilderProps) {
-  const [questionParams, setQuestionParams] = useState<string[]>([]);
-  const [question, setQuestion] = useState('');
-  const [isValidQuestion, setIsValidQuestion] = useState(false);
-  const [answers, setAnswers] = useState<string[]>([]);
-
-  const questionParamChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const _questionsParams: string[] = [...questionParams];
-    const i = Number(e.currentTarget.getAttribute('data-i'));
-
-    _questionsParams[i] = e.currentTarget.value;
-    setQuestionParams(_questionsParams);
+function getMatchData(questionParams: QuestionParams, questionPlaceholder: string, answersPlaceholder: AnswersPlaceholder): MatchData {
+  return {
+    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)),
+    answers: answersPlaceholder.map((answerPlaceholder, i) => {
+      return replacePlaceholders(answerPlaceholder.value, [questionParams[i]?.value || '']);
+    }),
   }
+}
 
-  useEffect(() => {
-    setQuestion(replacePlaceholders(questionPlaceholder, questionParams));
-  }, [placeholdersCount, questionPlaceholder, questionParams]);
-
-  useEffect(() => {
-    setAnswers(() => {
-      return answersPlaceholder.map((answer, i) => {
-        return replacePlaceholders(answer, [questionParams[i]]);
-      })
-    });
-  }, [answersPlaceholder, questionParams]);
+function MatchBuilder({matchIndex, removeMatch, placeholdersCount, control, register, errors}: MatchBuilderProps) {
+  const { fields: questionParamsFields, append: appendAnswerPlaceholderField, remove: removeAnswerPlaceholderField } = useFieldArray({control, name: `matches.${matchIndex}.questionParams`});
+  const questionParams = useWatch({ control, name: `matches.${matchIndex}.questionParams` });
 
   useEffect(() => {
     if (placeholdersCount > questionParams.length) {
-      // add questions
-      setQuestionParams(
-        [...questionParams].concat(Array.from({ length: placeholdersCount - questionParams.length } , () => ('')))
-      );
+      // add questionParams
+      for(let i = questionParams.length; i < placeholdersCount; i++) {
+        appendAnswerPlaceholderField({value: ''});
+      }
     } else if (placeholdersCount < questionParams.length) {
-      // remove questions
-      setQuestionParams(
-        [...questionParams].slice(0, placeholdersCount - questionParams.length)
-      );
+      // remove questionParams
+      for(let i = placeholdersCount; i < questionParams.length; i++) {
+        removeAnswerPlaceholderField(i);
+      }
     }
-  }, [placeholdersCount, questionParams]);
-
-  useEffect(() => {
-    setIsValidQuestion(questionParams.length > 0 && !questionParams.includes(''));
-  }, [questionParams]);
-
-  useEffect(() => {
-    updateQuestion(isValidQuestion ? question : '');
-  // eslint-disable-next-line
-  }, [question, isValidQuestion]);
-
-  useEffect(() => {
-    updateAnswer(answers);
-  // eslint-disable-next-line
-  }, [answers]);
+  }, [placeholdersCount, questionParams, appendAnswerPlaceholderField, removeAnswerPlaceholderField]);
 
   return <div>
     <div style={{display: 'flex', justifyContent: 'center'}}>
-      {[...Array(placeholdersCount)].map((n, i) => {
+      {questionParamsFields.map((questionParamField, i) => {
         return <div key={i} style={{margin: '0 5px'}}>
-          <Input onChange={questionParamChange} value={questionParams[i] || ''} placeholder={`$${i+1}`} data-i={i} />
+          <Input {...register(`matches.${matchIndex}.questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
+          <AlertError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionParams.${i}.value`} /></AlertError>
         </div>
       })}
+      <div><Button onClick={() => removeMatch(matchIndex)}>+ Remove match</Button></div>
     </div>
-    <div style={{textAlign: 'center', marginTop: '10px', color: isValidQuestion ? 'white' : 'red'}}>Q: {question}</div>
-    <div style={{textAlign: 'center', marginTop: '10px', color: isValidQuestion ? 'white' : 'red'}}>A: {answers.join(', ')}</div>
   </div>
 }
 
-function AnswersBuilder({answersPlaceholder, setAnswersPlaceholder}: AnswersBuilderProps) {
-  const answerChange = (i: number) => {
-    return (e: React.FormEvent<HTMLInputElement>) => {
-      const _answers = [...answersPlaceholder];
-      _answers[i] = e.currentTarget.value;
-      setAnswersPlaceholder(_answers);
-    }
-  }
+function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {
+  const { fields: answersPlaceholderFields, append: appendAnswerPlaceholderField, remove: removeAnswerPlaceholderField } = useFieldArray({control, name: 'answersPlaceholder'});
 
   const deleteAnswer = (i: number) => {
-    return () => {
-      const _answers = [...answersPlaceholder];
-      _answers.splice(i, 1);
-      setAnswersPlaceholder(_answers);
-    }
+    return () => removeAnswerPlaceholderField(i);
   }
 
-  const addAnswer = () => {
-    const _answers = [...answersPlaceholder];
-    _answers.push('');
-    setAnswersPlaceholder(_answers);
-  }
+  const addAnswer = () => appendAnswerPlaceholderField({value: ''});
 
   return <div>
-    {answersPlaceholder.map((answer, i) => {
-      return <div key={i}>
-        <div style={{display: 'inline-flex', alignItems: 'center', marginBottom: '10px'}}>
-          <Input onChange={answerChange(i)} value={answer} style={{width: '150px'}} />
+    {answersPlaceholderFields.map((answerField, i) => {
+      return <AnswerFieldWrapper key={answerField.id}>
+        <AnswerField>
+          <Input {...register(`answersPlaceholder.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
-        </div>
-      </div>
+        </AnswerField>
+        <AlertError><ErrorMessage errors={errors} name={`answersPlaceholder.${i}.value`} /></AlertError>
+      </AnswerFieldWrapper>
     })}
     <Button onClick={addAnswer}>Add answer</Button>
   </div>
 }
 
 function TournamentsCreate() {
-
-  const [numberOfMatches, setNumberOfMatches] = useState(2);
-  const [questionPlaceholder, setQuestionPlaceholder] = useState('Who is going to win the match between $1 and $2?');
   const [placeholdersCount, setPlaceholdersCount] = useState(0);
 
-  const [answersPlaceholder, setAnswersPlaceholder] = useState<string[]>(['$1', '$2', 'Draw']);
+  const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>({defaultValues: {
+      questionPlaceholder: 'Who is going to win the match between $1 and $2?',
+      answersPlaceholder: [{value: '$1'}, {value: '$2'}, {value: 'Draw'}],
+      matches: [],
+    }});
 
-  const [questions, setQuestions] = useState<string[]>([]);
-  const [answers, setAnswers] = useState<string[][]>([]);
+  const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
 
-  const numberOfMatchesChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setNumberOfMatches(Number(e.currentTarget.value))
-  }
+  const questionPlaceholder = useWatch({control, name: 'questionPlaceholder'});
 
-  const questionPlaceholderChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setQuestionPlaceholder(e.currentTarget.value)
-  }
+  const onSubmit = (data: FormValues) => {
+    const qAndA = data.matches.map(match => {
+      return getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder)
+    })
+
+    alert(qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n"))
+  };
 
   useEffect(() => {
     const placeholders = questionPlaceholder.match(PLACEHOLDER_REGEX)
     setPlaceholdersCount(placeholders ? placeholders.length : 0);
   }, [questionPlaceholder])
 
-  useEffect(() => {
-    // remove extra questions
-    if (numberOfMatches < questions.length) {
-      setQuestions(
-        [...questions].slice(0, numberOfMatches - questions.length)
-      );
-    }
-    // remove extra answers
-    if (numberOfMatches < answers.length) {
-      setAnswers(
-        [...answers].slice(0, numberOfMatches - answers.length)
-      );
-    }
-  }, [numberOfMatches, answersPlaceholder, questions, answers]);
-
-  const updateQuestion = (i: number) => {
-    return (question: string) => {
-      setQuestions(prevQuestions => {
-        const _prevQuestions = [...prevQuestions];
-        _prevQuestions[i] = question;
-        return _prevQuestions;
-      });
-    }
-  }
-
-  const updateAnswer = (i: number) => {
-    return (answer: string[]) => {
-      setAnswers(prevAnswers => {
-        const _prevAnswers = [...prevAnswers];
-        _prevAnswers[i] = answer;
-        return _prevAnswers;
-      });
-    }
-  }
+  const addMatch = () => appendMatch({questionParams: []})
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box>
         <BoxRow>
           <BoxLabelCell>Question</BoxLabelCell>
-          <Input onChange={questionPlaceholderChange} value={questionPlaceholder} style={{width: '100%'}}/>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell>Number of Matches</BoxLabelCell>
-          <Input onChange={numberOfMatchesChange} type="number" value={numberOfMatches} style={{width: '100px'}}/>
+          <div style={{width: '100%'}}>
+            <Input {...register('questionPlaceholder', {required: 'This field is required.'})} style={{width: '100%'}}/>
+            <AlertError><ErrorMessage errors={errors} name="questionPlaceholder" /></AlertError>
+          </div>
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Answers</BoxLabelCell>
-          <AnswersBuilder answersPlaceholder={answersPlaceholder} setAnswersPlaceholder={setAnswersPlaceholder} />
+          <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
       </Box>
       <Box>
         <BoxRow>
-          <BoxTitleCell>Questions</BoxTitleCell>
+          <BoxTitleCell>Matches</BoxTitleCell>
+          <div><Button onClick={addMatch}>+ Add match</Button></div>
         </BoxRow>
-        {[...Array(numberOfMatches)].map((_, i) => {
-          return (
-            <div key={i} style={{padding: '10px'}}>
-              <QuestionBuilder
-                placeholdersCount={placeholdersCount}
-                questionPlaceholder={questionPlaceholder}
-                updateQuestion={updateQuestion(i)}
-                answersPlaceholder={answersPlaceholder}
-                updateAnswer={updateAnswer(i)}
-              />
-            </div>
-          )
-        })}
+        {matchesFields.length > 0 &&
+          <BoxRow style={{flexDirection: 'column'}}>
+            {matchesFields.map((questionField, i) => {
+              return (
+                <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
+                  <MatchBuilder
+                    matchIndex={i}
+                    {...{removeMatch, placeholdersCount, control, register, errors}}
+                  />
+                </div>
+              )
+            })}
+          </BoxRow>
+        }
         <BoxRow>
-          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}><Button>Create Tournament</Button></div>
+          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}><Button type="submit">Create Tournament</Button></div>
         </BoxRow>
       </Box>
-    </>
+    </form>
   );
 }
 
