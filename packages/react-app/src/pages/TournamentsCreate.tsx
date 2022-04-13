@@ -97,6 +97,7 @@ function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {
   const addAnswer = () => appendAnswerPlaceholderField({value: ''});
 
   return <div>
+    {answersPlaceholderFields.length < 2 && <AlertError style={{marginBottom: '5px'}}>Add at least two answers.</AlertError>}
     {answersPlaceholderFields.map((answerField, i) => {
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
@@ -122,6 +123,7 @@ function TournamentsCreate() {
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
 
   const questionPlaceholder = useWatch({control, name: 'questionPlaceholder'});
+  const answersPlaceholder = useWatch({control, name: 'answersPlaceholder'});
 
   const onSubmit = (data: FormValues) => {
     const qAndA = data.matches.map(match => {
@@ -172,9 +174,9 @@ function TournamentsCreate() {
             })}
           </BoxRow>
         }
-        <BoxRow>
+        {matchesFields.length > 0 && answersPlaceholder.length > 1 && <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}><Button type="submit">Create Tournament</Button></div>
-        </BoxRow>
+        </BoxRow>}
       </Box>
     </form>
   );
