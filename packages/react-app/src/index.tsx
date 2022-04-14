@@ -15,7 +15,8 @@ import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
 import { ReactQueryProvider } from "./lib/react-query";
-import { createTheme, ThemeProvider } from "@mui/material";
+import {  ThemeProvider } from "@mui/material";
+import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 
@@ -33,21 +34,13 @@ const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
 });
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#fff',
-    }
-  },
-});
 
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
         <ReactQueryProvider>
-          <ThemeProvider theme={darkTheme}>
+          <ThemeProvider theme={theme}>
             <BrowserRouter>
               <Routes>
                 <Route element={<Layout />}>

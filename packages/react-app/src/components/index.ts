@@ -19,21 +19,6 @@ export const Button = styled.button`
   }
 `;
 
-export const Input = styled.input`
-  color: #282c34;
-  font-size: 16px;
-  padding: 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #e2e8f0;
-  background: transparent;
-  border-radius: 6px;
-  color: #FFF;
-`;
-
 export const AlertError = styled.div`
   color: red;
   margin-top: 5px;

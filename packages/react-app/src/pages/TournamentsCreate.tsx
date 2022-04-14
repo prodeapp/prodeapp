@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Input, Button, Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
+import {Button, Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
+import Input from '@mui/material/Input';
 import {Control, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {UseFormRegister} from "react-hook-form/dist/types/form";
