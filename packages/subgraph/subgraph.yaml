@@ -5,22 +5,42 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: CeaErc20
+    name: TournamentFactory
     network: mainnet
     source:
-      abi: erc20
-      address: "0xa6dF0C88916f3e2831A329CE46566dDfBe9E74b7"
+      abi: TournamentFactory
+      address: "0x0000000000000000000000000000000000000000"
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       abis:
-        - name: erc20
-          file: ../contracts/src/abis/erc20.json
+        - name: TournamentFactory
+          file: ./contracts/abis/TournamentFactory.json
       entities:
-        - Token
-        - Transfer
+        - Tournament
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-      file: ./src/mappings/transfers.ts
+        - event: NewTournament(indexed address)
+          handler: handleNewTournament
+      file: ./src/mappings/TournamentFactory.ts
       language: wasm/assemblyscript
+templates:
+  - name: Tournament
+    kind: ethereum/contract
+    network: mainnet
+    source:
+      abi: Tournament
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/Tournament.ts
+      entities:
+        - Tournament
+        - Bet
+        - Player
+      abis:
+        - name: Tournament
+          file: ./contracts/abis/Tournament.json
+      eventHandlers:
+        - event: Initialize(string,string,string,address,uint256,uint256,uint256,address)
+          handler: handleInitialize

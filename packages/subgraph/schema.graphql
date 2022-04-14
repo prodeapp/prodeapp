@@ -1,13 +1,33 @@
-type Token @entity {
+type Tournament @entity {
   id: ID!
-  decimals: Int
-  name: String
-  symbol: String
+  name: String!
+  symbol: String!
+  uri: String!
+  ownwer: Bytes!
+  closingTime: BigInt!
+  creationTime: BigInt!
+  price: BigInt!
+  managementFee: BigInt
+  manager: Bytes!
+  players: [Player!]! @derivedFrom(field: "tournaments")
+  bets: [Bet!]! @derivedFrom(field: "tournament")
 }
 
-type Transfer @entity {
+type Player @entity {
   id: ID!
-  from: String!
-  to: String!
-  value: BigInt!
+  amountBeted: BigInt!
+  pricesReceived: BigInt!
+  tournaments: [Tournament!]!
+  bets: [Bet!]! @derivedFrom(field: "player")
+}
+
+type Bet @entity {
+  """tournamentId-tokenID"""
+  id: ID!
+  player: Player!
+  tournament: Tournament!
+  tokenID: BigInt!
+  ranking: BigInt
+  results: [BigInt!]!
+  count: BigInt!
 }
