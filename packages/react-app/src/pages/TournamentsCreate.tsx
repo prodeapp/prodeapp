@@ -20,6 +20,7 @@ type MatchBuilderProps = {
 }
 
 type FormValues = {
+  tournament: string
   questionPlaceholder: string
   matches: {questionParams: QuestionParams}[]
   answersPlaceholder: AnswersPlaceholder
@@ -82,7 +83,7 @@ function MatchBuilder({matchIndex, removeMatch, placeholdersCount, control, regi
           <AlertError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionParams.${i}.value`} /></AlertError>
         </div>
       })}
-      <div><Button onClick={() => removeMatch(matchIndex)}>+ Remove match</Button></div>
+      <div><Button onClick={() => removeMatch(matchIndex)}>- Remove match</Button></div>
     </div>
   </div>
 }
@@ -115,6 +116,7 @@ function TournamentsCreate() {
   const [placeholdersCount, setPlaceholdersCount] = useState(0);
 
   const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>({defaultValues: {
+      tournament: '',
       questionPlaceholder: 'Who is going to win the match between $1 and $2?',
       answersPlaceholder: [{value: '$1'}, {value: '$2'}, {value: 'Draw'}],
       matches: [],
@@ -130,7 +132,11 @@ function TournamentsCreate() {
       return getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder)
     })
 
-    alert(qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n"))
+    alert(`
+Tournament: ${data.tournament}
+
+${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
+    `)
   };
 
   useEffect(() => {
@@ -143,6 +149,13 @@ function TournamentsCreate() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Box>
+        <BoxRow>
+          <BoxLabelCell>Tournament name</BoxLabelCell>
+          <div style={{width: '100%'}}>
+            <Input {...register('tournament', {required: 'This field is required.'})} style={{width: '100%'}}/>
+            <AlertError><ErrorMessage errors={errors} name="tournament" /></AlertError>
+          </div>
+        </BoxRow>
         <BoxRow>
           <BoxLabelCell>Question</BoxLabelCell>
           <div style={{width: '100%'}}>
