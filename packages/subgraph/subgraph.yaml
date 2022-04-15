@@ -38,9 +38,14 @@ templates:
         - Tournament
         - Bet
         - Player
+        - Match
       abis:
         - name: Tournament
           file: ./contracts/abis/Tournament.json
       eventHandlers:
         - event: Initialize(string,string,string,address,uint256,uint256,uint256,address)
           handler: handleInitialize
+        - event: QuestionsRegistered(address,bytes32[])
+          handler: handleQuestionsRegistered
+        - event: PlaceBet(indexed address,indexed uint256,bytes32[])
+          handler: handlePlaceBet
