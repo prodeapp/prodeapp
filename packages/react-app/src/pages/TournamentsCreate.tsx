@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Button, Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
+import {Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
 import Input from '@mui/material/Input';
+import Button from '@mui/material/Button';
 import {Control, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {UseFormRegister} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
+import TemplateDialog from "../components/TemplateDialog";
+import {tournamentsTemplates, TournamentTemplate} from "../lib/templates";
 
 const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -39,12 +42,10 @@ type MatchData = {
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
-  let n = 0;
-
   return text.replace(
     PLACEHOLDER_REGEX,
     (match) => {
-      return questionParams[n++] || match;
+      return questionParams[Number(match.replace('$','')) -1] || match;
     }
   )
 }
@@ -53,7 +54,7 @@ function getMatchData(questionParams: QuestionParams, questionPlaceholder: strin
   return {
     question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)),
     answers: answersPlaceholder.map((answerPlaceholder, i) => {
-      return replacePlaceholders(answerPlaceholder.value, [questionParams[i]?.value || '']);
+      return replacePlaceholders(answerPlaceholder.value, questionParams.map(qp => qp.value));
     }),
   }
 }
@@ -109,17 +110,23 @@ function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {
         <AlertError><ErrorMessage errors={errors} name={`answersPlaceholder.${i}.value`} /></AlertError>
       </AnswerFieldWrapper>
     })}
-    <Button onClick={addAnswer}>Add answer</Button>
+    <Button onClick={addAnswer} size="small">Add answer</Button>
   </div>
+}
+
+const formatAnswers = (answers: string[]) => {
+  return answers.map(a => ({value: a}))
 }
 
 function TournamentsCreate() {
   const [placeholdersCount, setPlaceholdersCount] = useState(0);
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>({defaultValues: {
+  const [openModal, setOpenModal] = useState(false);
+
+  const { register, handleSubmit, control, reset, getValues, formState: { errors } } = useForm<FormValues>({defaultValues: {
       tournament: '',
-      questionPlaceholder: 'Who is going to win the match between $1 and $2?',
-      answersPlaceholder: [{value: '$1'}, {value: '$2'}, {value: 'Draw'}],
+      questionPlaceholder: tournamentsTemplates[0].q,
+      answersPlaceholder: formatAnswers(tournamentsTemplates[0].a),
       matches: [],
     }});
 
@@ -147,8 +154,29 @@ ${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
 
   const addMatch = () => appendMatch({questionParams: []})
 
+  const handleClose = () => {
+    setOpenModal(false);
+  };
+
+  const onTemplateChange = (template?: TournamentTemplate) => {
+    if (template) {
+      reset({
+        tournament: getValues('tournament'),
+        questionPlaceholder: template.q,
+        answersPlaceholder: formatAnswers(template.a)
+      });
+    }
+    setOpenModal(false);
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <TemplateDialog
+        open={openModal}
+        handleClose={handleClose}
+        tournamentsTemplates={tournamentsTemplates}
+        onTemplateChange={onTemplateChange}
+      />
       <Box>
         <BoxRow>
           <BoxLabelCell>Tournament name</BoxLabelCell>
@@ -160,7 +188,10 @@ ${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
         <BoxRow>
           <BoxLabelCell>Question</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('questionPlaceholder', {required: 'This field is required.'})} style={{width: '100%'}}/>
+            <div style={{display: 'flex'}}>
+              <Input {...register('questionPlaceholder', {required: 'This field is required.'})} style={{flexGrow: 1}}/>
+              <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Change template</Button>
+            </div>
             <AlertError><ErrorMessage errors={errors} name="questionPlaceholder" /></AlertError>
           </div>
         </BoxRow>

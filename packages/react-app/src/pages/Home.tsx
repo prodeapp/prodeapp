@@ -1,5 +1,6 @@
 import React from "react";
-import {Box, BoxRow, Button} from "../components";
+import {Box, BoxRow} from "../components";
+import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
 import {useTournaments} from "../hooks/useTournaments";
 import {Tournament} from "../lib/types";
@@ -12,7 +13,7 @@ function Home() {
     <>
       <Box>
         <BoxRow style={{textAlign: 'right'}}>
-          <Button as={Link} to="/tournaments/new">+ New Tournament</Button>
+          <Button component={Link} to="/tournaments/new">+ New Tournament</Button>
         </BoxRow>
       </Box>
 
