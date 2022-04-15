@@ -58,55 +58,194 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": false,
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "indexed": false,
-          "internalType": "string",
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "indexed": false,
+          "indexed": true,
           "internalType": "address",
-          "name": "ownwer",
+          "name": "_owner",
           "type": "address"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "closingTime",
+          "name": "_reward",
+          "type": "uint256"
+        }
+      ],
+      "name": "BetReward",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_funder",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_message",
+          "type": "string"
+        }
+      ],
+      "name": "FundingReceived",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_symbol",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_uri",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_ownwer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_closingTime",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "price",
+          "name": "_price",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "managementFee",
+          "name": "_managementFee",
           "type": "uint256"
         },
         {
           "indexed": false,
           "internalType": "address",
-          "name": "manager",
+          "name": "_manager",
           "type": "address"
         }
       ],
       "name": "Initialize",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_manager",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_managementReward",
+          "type": "uint256"
+        }
+      ],
+      "name": "ManagementReward",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_period",
+          "type": "uint256"
+        }
+      ],
+      "name": "NewPeriod",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_player",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenID",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[]",
+          "name": "_predictions",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "PlaceBet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_tournament",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32[]",
+          "name": "_questionIDs",
+          "type": "bytes32[]"
+        }
+      ],
+      "name": "QuestionsRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "_questionID",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "_result",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RegisterResult",
       "type": "event"
     },
     {
@@ -227,6 +366,26 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "distributeRemainingPrizes",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_message",
+          "type": "string"
+        }
+      ],
+      "name": "fundPool",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -568,51 +727,11 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "questionIndex",
+          "name": "_tokenID",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "template_id",
-          "type": "uint256"
-        },
-        {
-          "internalType": "string",
-          "name": "question",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "arbitrator",
-          "type": "address"
-        },
-        {
-          "internalType": "uint32",
-          "name": "timeout",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint32",
-          "name": "opening_ts",
-          "type": "uint32"
-        },
-        {
-          "internalType": "uint256",
-          "name": "nonce",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "min_bond",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "author",
-          "type": "address"
         }
       ],
-      "name": "reopenQuestion",
+      "name": "reimbursePlayer",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -864,9 +983,5 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
-    },
-    {
-      "stateMutability": "payable",
-      "type": "receive"
     }
   ]
