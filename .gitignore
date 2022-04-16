@@ -24,4 +24,4 @@ yarn-error.log*
 packages/subgraph/build/
 packages/subgraph/src/types/
 
-packages/react-app/src/secrets.ts
+packages/react-app/src/typechain

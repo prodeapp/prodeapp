@@ -56,6 +56,12 @@
     "eject": "react-scripts eject",
     "ipfs": "yarn build && ipfs-deploy build/",
     "start": "react-scripts start",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "typechain-build": "npx typechain --target ethers-v5 --out-dir src/typechain ../contracts/abi/*.json",
+    "postinstall": "yarn typechain-build"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v5": "^10.0.0",
+    "typechain": "^8.0.0"
   }
 }

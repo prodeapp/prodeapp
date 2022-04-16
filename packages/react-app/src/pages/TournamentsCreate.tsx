@@ -8,8 +8,15 @@ import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form"
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import TemplateDialog from "../components/TemplateDialog";
 import {tournamentsTemplates, TournamentTemplate} from "../lib/templates";
+import {useContractFunction, useEthers} from "@usedapp/core";
+import {Contract} from "@ethersproject/contracts";
+import {TournamentFactory__factory, TournamentFactory} from "../typechain";
+import {addresses} from "@prodeapp/contracts";
+import {parseUnits} from "@ethersproject/units";
+import {encodeQuestionText} from "../lib/reality";
 
 const PLACEHOLDER_REGEX = /\$\d/g
+const DIVISOR = 10000;
 
 type AnswersPlaceholder = {value: string}[];
 type QuestionParams = {value: string}[];
@@ -180,18 +187,6 @@ function TournamentsCreate() {
   const questionPlaceholder = useWatch({control, name: 'questionPlaceholder'});
   const answersPlaceholder = useWatch({control, name: 'answersPlaceholder'});
 
-  const onSubmit = (data: FormValues) => {
-    const qAndA = data.matches.map(match => {
-      return getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder)
-    })
-
-    alert(`
-Tournament: ${data.tournament}
-
-${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
-    `)
-  };
-
   useEffect(() => {
     register('prizeDivisor', {
       validate: value => value === 100 || 'The sum of prize weights must be 100.'
@@ -219,6 +214,45 @@ ${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
     }
     setOpenModal(false);
   }
+
+  const { account } = useEthers();
+  const { state, send } = useContractFunction(
+    new Contract(addresses.TOURNAMENT_FACTORY_ADDRESS, TournamentFactory__factory.createInterface()) as TournamentFactory,
+    'createTournament'
+  );
+
+  if (!account) {
+    return <div>Connect your wallet to create a Tournament.</div>
+  }
+
+  const onSubmit = async (data: FormValues) => {
+    const questionsData = data.matches.map(match => {
+      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder);
+      return {
+        templateID: 2, // TODO
+        question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),
+        openingTS: 0, // TODO
+      }
+    })
+
+    await send({
+        tournamentName:data.tournament,
+        tournamentSymbol: '', // TODO
+        tournamentUri: '', // TODO
+      },
+      /*closingTime*/ 0, // TODO
+      /*price*/ parseUnits('1', 'ether'), // TODO
+      /*managementFee*/ 0, // TODO
+      account,
+      {
+        arbitrator: '0x29f39de98d750eb77b5fafb31b2837f079fce222', // kleros
+        timeout: 86400, // TODO
+        minBond: parseUnits('1', 'ether'), // TODO
+      },
+      questionsData,
+      data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
+    );
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

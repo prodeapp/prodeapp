@@ -1,7 +1,7 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { DAppProvider, Mainnet } from "@usedapp/core";
+import { DAppProvider, xDai, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
@@ -21,9 +21,14 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 
 const config = {
-  readOnlyChainId: Mainnet.chainId,
+  readOnlyChainId: xDai.chainId,
   readOnlyUrls: {
-    [Mainnet.chainId]: "https://mainnet.infura.io/v3/32396ad0cab1489eaaca0ac9ecda1566",
+    [xDai.chainId]: "https://rpc.gnosischain.com",
+    [Localhost.chainId]: "http://localhost:8545",
+  },
+  networks: [xDai, Localhost],
+  multicallAddresses: {
+    [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
   },
 }
 
