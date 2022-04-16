@@ -4,7 +4,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {Control, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {UseFormRegister} from "react-hook-form/dist/types/form";
+import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import TemplateDialog from "../components/TemplateDialog";
 import {tournamentsTemplates, TournamentTemplate} from "../lib/templates";
@@ -13,6 +13,7 @@ const PLACEHOLDER_REGEX = /\$\d/g
 
 type AnswersPlaceholder = {value: string}[];
 type QuestionParams = {value: string}[];
+type PrizeWeight = {value: number};
 
 type MatchBuilderProps = {
   matchIndex: number
@@ -28,12 +29,21 @@ type FormValues = {
   questionPlaceholder: string
   matches: {questionParams: QuestionParams}[]
   answersPlaceholder: AnswersPlaceholder
+  prizeWeights: PrizeWeight[]
+  prizeDivisor: number
 }
 
 type AnswersBuilderProps = {
   control: Control<FormValues>
   register: UseFormRegister<FormValues>
   errors: FieldErrors<FormValues>
+}
+
+type PrizeWeightsBuilderProps = {
+  control: Control<FormValues>
+  register: UseFormRegister<FormValues>
+  errors: FieldErrors<FormValues>
+  setValue: UseFormSetValue<FormValues>
 }
 
 type MatchData = {
@@ -114,6 +124,39 @@ function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {
   </div>
 }
 
+function PrizeWeightsBuilder({control, register, errors, setValue}: PrizeWeightsBuilderProps) {
+  const { fields: prizesFields, append: appendPrizesField, remove: removePrizesField } = useFieldArray({control, name: 'prizeWeights'});
+
+  const prizeWeights = useWatch({control, name: 'prizeWeights'});
+
+  useEffect(() => {
+    setValue('prizeDivisor', prizeWeights.map((pw) => Number(pw.value)).reduce((partialSum, a) => partialSum + a, 0));
+  }, [setValue, prizeWeights]);
+
+  const deletePrizeWeight = (i: number) => {
+    return () => removePrizesField(i);
+  }
+
+  const addPrizeWeight = () => appendPrizesField({value: 0});
+
+  return <div>
+    {prizesFields.length === 0 && <AlertError style={{marginBottom: '5px'}}>Add at least one prize weight.</AlertError>}
+    {prizesFields.map((answerField, i) => {
+      return <AnswerFieldWrapper key={answerField.id}>
+        <AnswerField>
+          <div style={{marginRight: '10px'}}>#{i+1}</div>
+          <Input {...register(`prizeWeights.${i}.value`, {required: 'This field is required.'})} style={{width: '100px'}} type="number" />
+          <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deletePrizeWeight(i)}>[x]</div>
+        </AnswerField>
+        <AlertError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></AlertError>
+      </AnswerFieldWrapper>
+    })}
+    <AlertError><ErrorMessage errors={errors} name={`prizeDivisor`} /></AlertError>
+    <Button onClick={addPrizeWeight} size="small">Add prize weight</Button>
+  </div>
+}
+
+
 const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
@@ -123,11 +166,13 @@ function TournamentsCreate() {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const { register, handleSubmit, control, reset, getValues, formState: { errors } } = useForm<FormValues>({defaultValues: {
+  const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<FormValues>({defaultValues: {
       tournament: '',
       questionPlaceholder: tournamentsTemplates[0].q,
       answersPlaceholder: formatAnswers(tournamentsTemplates[0].a),
       matches: [],
+      prizeWeights: [{value: 40}, {value: 30}, {value: 20}, {value: 10}],
+      prizeDivisor: 0,
     }});
 
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
@@ -146,6 +191,12 @@ Tournament: ${data.tournament}
 ${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
     `)
   };
+
+  useEffect(() => {
+    register('prizeDivisor', {
+      validate: value => value === 100 || 'The sum of prize weights must be 100.'
+    });
+  }, [register]);
 
   useEffect(() => {
     const placeholders = questionPlaceholder.match(PLACEHOLDER_REGEX)
@@ -198,6 +249,10 @@ ${qAndA.map(qa => `Q: ${qa.question}\nA: ${qa.answers.join(', ')}`).join("\n")}
         <BoxRow>
           <BoxLabelCell>Answers</BoxLabelCell>
           <AnswersBuilder {...{control, register, errors}} />
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Prize Weights</BoxLabelCell>
+          <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
         </BoxRow>
       </Box>
       <Box>
