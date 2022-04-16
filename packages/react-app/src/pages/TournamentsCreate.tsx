@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError, AnswerFieldWrapper, AnswerField} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import {Control, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form";
@@ -221,6 +222,13 @@ function TournamentsCreate() {
     'createTournament'
   );
 
+  useEffect(() => {
+    if (state.status === 'Success') {
+      // TODO: redirect to tournament page
+      alert('Tournament created!');
+    }
+  }, [state]);
+
   if (!account) {
     return <div>Connect your wallet to create a Tournament.</div>
   }
@@ -256,6 +264,7 @@ function TournamentsCreate() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <TemplateDialog
         open={openModal}
         handleClose={handleClose}
