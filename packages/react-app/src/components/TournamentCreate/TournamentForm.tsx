@@ -24,6 +24,7 @@ export type TournamentFormValues = {
   answersPlaceholder: AnswersPlaceholder
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
+  price: number
 }
 
 type MatchData = {
@@ -85,12 +86,12 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
     })
 
     await send({
-        tournamentName:data.tournament,
+        tournamentName: data.tournament,
         tournamentSymbol: '', // TODO
         tournamentUri: '', // TODO
       },
       /*closingTime*/ 0, // TODO
-      /*price*/ parseUnits('1', 'ether'), // TODO
+      parseUnits(String(data.price), 18),
       /*managementFee*/ 0, // TODO
       account,
       {

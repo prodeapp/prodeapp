@@ -93,6 +93,13 @@ function TournamentsCreate() {
           <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
         <BoxRow>
+          <BoxLabelCell>Bet price (xDAI)</BoxLabelCell>
+          <div style={{width: '100%'}}>
+            <Input {...register('price', {required: 'This field is required.', min: { value: 1, message: 'Price must be greater than 0.' }})} style={{width: '100%'}} type="number"/>
+            <AlertError><ErrorMessage errors={errors} name="price" /></AlertError>
+          </div>
+        </BoxRow>
+        <BoxRow>
           <BoxLabelCell>Prize Weights</BoxLabelCell>
           <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
         </BoxRow>
