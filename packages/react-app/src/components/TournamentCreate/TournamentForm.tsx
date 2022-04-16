@@ -25,6 +25,7 @@ export type TournamentFormValues = {
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
   price: number
+  managementFee: number
 }
 
 type MatchData = {
@@ -92,7 +93,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       },
       /*closingTime*/ 0, // TODO
       parseUnits(String(data.price), 18),
-      /*managementFee*/ 0, // TODO
+      Math.round(data.managementFee * DIVISOR / 100),
       account,
       {
         arbitrator: '0x29f39de98d750eb77b5fafb31b2837f079fce222', // kleros

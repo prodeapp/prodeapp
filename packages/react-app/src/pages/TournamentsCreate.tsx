@@ -74,7 +74,9 @@ function TournamentsCreate() {
         <BoxRow>
           <BoxLabelCell>Tournament name</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('tournament', {required: 'This field is required.'})} style={{width: '100%'}}/>
+            <Input {...register('tournament', {
+              required: 'This field is required.'
+            })} style={{width: '100%'}}/>
             <AlertError><ErrorMessage errors={errors} name="tournament" /></AlertError>
           </div>
         </BoxRow>
@@ -82,7 +84,9 @@ function TournamentsCreate() {
           <BoxLabelCell>Question</BoxLabelCell>
           <div style={{width: '100%'}}>
             <div style={{display: 'flex'}}>
-              <Input {...register('questionPlaceholder', {required: 'This field is required.'})} style={{flexGrow: 1}}/>
+              <Input {...register('questionPlaceholder', {
+                required: 'This field is required.'
+              })} style={{flexGrow: 1}}/>
               <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Change template</Button>
             </div>
             <AlertError><ErrorMessage errors={errors} name="questionPlaceholder" /></AlertError>
@@ -95,8 +99,22 @@ function TournamentsCreate() {
         <BoxRow>
           <BoxLabelCell>Bet price (xDAI)</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('price', {required: 'This field is required.', min: { value: 1, message: 'Price must be greater than 0.' }})} style={{width: '100%'}} type="number"/>
+            <Input {...register('price', {
+              required: 'This field is required.',
+              min: { value: 1, message: 'Price must be greater than 0.' }
+            })} style={{width: '100%'}} type="number"/>
             <AlertError><ErrorMessage errors={errors} name="price" /></AlertError>
+          </div>
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Management Fee (%)</BoxLabelCell>
+          <div style={{width: '100%'}}>
+            <Input {...register('managementFee', {
+              required: 'This field is required.',
+              min: {value: 0, message: 'Fee must be greater than 0.'},
+              max: {value: 100, message: 'Fee must be lower than 100.'}
+            })} style={{width: '100%'}} type="number"/>
+            <AlertError><ErrorMessage errors={errors} name="managementFee" /></AlertError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -124,7 +142,9 @@ function TournamentsCreate() {
           </BoxRow>
         }
         {matchesFields.length > 0 && answersPlaceholder.length > 1 && <BoxRow>
-          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}><Button type="submit">Create Tournament</Button></div>
+          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
+            <Button type="submit">Create Tournament</Button>
+          </div>
         </BoxRow>}
       </Box>
     </TournamentForm>
