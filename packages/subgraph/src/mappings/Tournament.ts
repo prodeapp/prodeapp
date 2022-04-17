@@ -55,7 +55,7 @@ export function handlePlaceBet(event: PlaceBet) {
         }
         bet.results = results
         bet.count = BigInt.fromI32(0)
-    
+        bet.points = BigInt.fromI32(0)
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))  
     bet.save()
