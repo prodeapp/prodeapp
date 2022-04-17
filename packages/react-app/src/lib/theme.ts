@@ -23,6 +23,16 @@ const darkTheme = createTheme({
         },
       },
     },
+    MuiOutlinedInput:{
+      styleOverrides: {
+        notchedOutline: {
+          borderColor: '#e2e8f0',
+        },
+        input: {
+          padding: '8.5px 14px',
+        },
+      },
+    },
     MuiDialog: {
       styleOverrides: {
         root: {

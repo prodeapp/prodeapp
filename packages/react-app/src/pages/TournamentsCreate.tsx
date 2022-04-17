@@ -2,7 +2,11 @@ import React, {useEffect, useState} from "react";
 import {Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
-import {useFieldArray, useForm, useWatch} from "react-hook-form";
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import TemplateDialog from "../components/TemplateDialog";
 import {tournamentsTemplates, TournamentTemplate} from "../lib/templates";
@@ -20,6 +24,8 @@ function TournamentsCreate() {
 
   const [openModal, setOpenModal] = useState(false);
 
+  const today = new Date();
+
   const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<TournamentFormValues>({defaultValues: {
       tournament: '',
       questionPlaceholder: tournamentsTemplates[0].q,
@@ -27,6 +33,7 @@ function TournamentsCreate() {
       matches: [],
       prizeWeights: [{value: 40}, {value: 30}, {value: 20}, {value: 10}],
       prizeDivisor: 0,
+      closingTime: today
     }});
 
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
@@ -95,6 +102,28 @@ function TournamentsCreate() {
         <BoxRow>
           <BoxLabelCell>Answers</BoxLabelCell>
           <AnswersBuilder {...{control, register, errors}} />
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Closing Time</BoxLabelCell>
+          <div>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Controller
+                control={control}
+                name='closingTime'
+                rules={{required: 'This field is required'}}
+                render={({ field }) => (
+                  <DatePicker
+                    label='Select date'
+                    minDate={today}
+                    onChange={field.onChange}
+                    value={field.value}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+            <AlertError><ErrorMessage errors={errors} name="closingTime" /></AlertError>
+          </div>
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Bet price (xDAI)</BoxLabelCell>

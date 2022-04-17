@@ -26,6 +26,7 @@ export type TournamentFormValues = {
   prizeDivisor: number
   price: number
   managementFee: number
+  closingTime: Date
 }
 
 type MatchData = {
@@ -77,12 +78,15 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
   }
 
   const onSubmit = async (data: TournamentFormValues) => {
+    const closingTime = Math.floor(data.closingTime.getTime() / 1000);
+    const openingTS = closingTime + 1;
+
     const questionsData = data.matches.map(match => {
       const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder);
       return {
-        templateID: 2, // TODO
+        templateID: 2,
         question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),
-        openingTS: 0, // TODO
+        openingTS: openingTS,
       }
     })
 
@@ -91,14 +95,14 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
         tournamentSymbol: '', // TODO
         tournamentUri: '', // TODO
       },
-      /*closingTime*/ 0, // TODO
+      closingTime,
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
       account,
       {
         arbitrator: '0x29f39de98d750eb77b5fafb31b2837f079fce222', // kleros
         timeout: 86400, // TODO
-        minBond: parseUnits('1', 'ether'), // TODO
+        minBond: parseUnits('7', 18),
       },
       questionsData,
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
