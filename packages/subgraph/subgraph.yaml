@@ -1,6 +1,6 @@
 specVersion: 0.0.4
-description: Subgraph that indexes the blockchain data
-repository: https://github.com/sablierhq/sablier-subgraph
+description: Subgraph that tracks tournaments Data
+repository: https://github.com/prodeapp/prodeapp
 schema:
   file: ./schema.graphql
 dataSources:
@@ -9,7 +9,8 @@ dataSources:
     network: xdai
     source:
       abi: TournamentFactory
-      address: "0x0000000000000000000000000000000000000000"
+      address: "0x8c89A3c9dEa75D9590f677baD1184Fd97898BA2A"
+      startBlock: 21689094
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -28,7 +29,8 @@ dataSources:
     network: xdai
     source:
       abi: Realitio
-      address: "0x0000000000000000000000000000000000000000"
+      address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
+      startBlock: 21689095
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

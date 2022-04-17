@@ -1,9 +1,3 @@
-enum TournamentPeriod {
-  Betting
-  Submission
-  Claiming
-}
-
 type Tournament @entity {
   id: ID!
   name: String!
@@ -16,7 +10,7 @@ type Tournament @entity {
   pool: BigInt!
   managementFee: BigInt
   manager: Bytes!
-  period: TournamentPeriod!
+  period: BigInt!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
