@@ -9,6 +9,24 @@ import "./IERC2981.sol";
 
 contract Tournament is ERC721, IERC2981 {
   
+    struct RealitioQuestion {
+        uint256 templateID;
+        string question;
+        uint32 openingTS;
+    }
+
+    struct RealitioSetup {
+        address arbitrator;
+        uint32 timeout;
+        uint256 minBond;
+    }
+
+    struct TournamentInfo {
+        string tournamentName;
+        string tournamentSymbol;
+        string tournamentUri;
+    }
+
     struct Result {
         uint256 tokenID;
         uint248 points;
@@ -22,21 +40,17 @@ contract Tournament is ERC721, IERC2981 {
 
     uint256 public constant DIVISOR = 10000;
 
-    string private tournamentName;
-    string private tournamentSymbol;
-    string private tournamentUri;
-    address public owner;
+    TournamentInfo private tournamentInfo;
     address public manager;
     RealityETH_v3_0 public realitio; // Realitio v3
     uint256 public nextTokenID;
     bool public initialized;
-    bool public tournamentInitialized;
     uint256 public resultSubmissionPeriodStart;
     uint256 public price;
     uint256 public closingTime;
     uint256 public submissionTimeout;
     uint256 public managementFee;
-    uint256 private totalPrize;
+    uint256 public totalPrize;
 
     bytes32[] public questionIDs;
     uint16[] public prizeWeights;
@@ -61,8 +75,6 @@ contract Tournament is ERC721, IERC2981 {
 
     event NewPeriod(uint256 _period);
     
-    event RegisterResult(bytes32 _questionID, bytes32 _result);
-
     event BetReward(address indexed _owner, uint256 _reward);
 
     event ManagementReward(address indexed _manager, uint256 _managementReward);
@@ -72,23 +84,20 @@ contract Tournament is ERC721, IERC2981 {
     constructor() ERC721("", "") {}
 
     function initialize(
-        string memory _tournamentName,
-        string memory _tournamentSymbol,
-        string memory _tournamentUri,
-        address _owner,
+        TournamentInfo memory _tournamentInfo,
         address _realityETH,
         uint256 _price,
         uint256 _closingTime,
         uint256 _submissionTimeout,
         uint256 _managementFee,
-        address _manager
+        address _manager,
+        RealitioSetup memory _realitioSetup,
+        RealitioQuestion[] memory _questionsData, 
+        uint16[] memory _prizeWeights
     ) external {
         require(!initialized, "Already initialized.");
 
-        tournamentName = _tournamentName;
-        tournamentSymbol = _tournamentSymbol;
-        tournamentUri = _tournamentUri;
-        owner = _owner;
+        tournamentInfo = _tournamentInfo;
         realitio = RealityETH_v3_0(_realityETH);
         price = _price;
         closingTime = _closingTime;
@@ -96,23 +105,18 @@ contract Tournament is ERC721, IERC2981 {
         managementFee = _managementFee;
         manager = _manager;
 
-        initialized = true;
-        emit Initialize(_tournamentName, _tournamentSymbol, _tournamentUri, _owner, _closingTime, _price, _managementFee, _manager);   
-        emit NewPeriod(0);  // Starting period. Tournament Not initialized
-    }
-
-    /** @dev Link Realitio questions to the tournament and specify prizes. (Should a weight for each question/answer be added?)
-     *  @param _questionIDs List of question ids as defined in Realitio.
-     *  @param _prizeWeights List of prizes in basis points for each ranked position in descending order.
-     */
-    function setTournament(bytes32[] calldata _questionIDs, uint16[] calldata _prizeWeights) external {
-        require(msg.sender == owner, "Not authorized");
-        require(!tournamentInitialized, "Already initialized");
-
-        for (uint256 i = 0; i < _questionIDs.length; i++) {
-            require(realitio.getTimeout(_questionIDs[i]) > 0, "Question not created");
+        for (uint256 i = 0; i < _questionsData.length; i++) {
+            bytes32 questionID = realitio.askQuestionWithMinBond(
+                _questionsData[i].templateID,
+                _questionsData[i].question,
+                _realitioSetup.arbitrator,
+                _realitioSetup.timeout,
+                _questionsData[i].openingTS,
+                0,
+                _realitioSetup.minBond
+            );
+            questionIDs.push(questionID);
         }
-        questionIDs = _questionIDs;
 
         uint256 sumWeights;
         for (uint256 i = 0; i < _prizeWeights.length; i++) {
@@ -121,7 +125,7 @@ contract Tournament is ERC721, IERC2981 {
         require(sumWeights == DIVISOR, "Invalid weights");
         prizeWeights = _prizeWeights;
 
-        tournamentInitialized = true;
+        initialized = true;
 
         emit NewPeriod(1);  // Betting period
         emit QuestionsRegistered(address(this), questionIDs);
@@ -132,7 +136,7 @@ contract Tournament is ERC721, IERC2981 {
      *  @return the minted token id.
      */
     function placeBet(bytes32[] calldata _results) external payable returns(uint256) {
-        require(tournamentInitialized, "Not initialized");
+        require(initialized, "Not initialized");
         require(_results.length == questionIDs.length, "Results mismatch");
         require(msg.value >= price, "Not enough funds");
         require(block.timestamp < closingTime, "Bets not allowed");
@@ -159,7 +163,6 @@ contract Tournament is ERC721, IERC2981 {
         for (uint256 i = 0; i < questionIDs.length; i++) {
             bytes32 questionId = questionIDs[i];
             bytes32 _result = realitio.resultForOnceSettled(questionId); // Reverts if not finalized.
-            emit RegisterResult(questionId, _result);  // We cann't emit results of some question until all the questions are solved.
         }
 
         resultSubmissionPeriodStart = block.timestamp;
@@ -236,8 +239,7 @@ contract Tournament is ERC721, IERC2981 {
 
         uint256 reward = totalPrize * cumWeigths / (DIVISOR * sharedBetween);
         ranking[_rankIndex].claimed = true;
-        payable(ownerOf(ranking[_rankIndex].tokenID)).send(reward);
-
+        payable(ownerOf(ranking[_rankIndex].tokenID)).transfer(reward);
         emit BetReward(ownerOf(ranking[_rankIndex].tokenID), reward);
     }
 
@@ -252,7 +254,7 @@ contract Tournament is ERC721, IERC2981 {
 
         uint256 reimbursement = totalPrize / nextTokenID;
         _burn(_tokenID); // Can only be reimbursed once.
-        payable(ownerOf(_tokenID)).send(reimbursement);
+        payable(ownerOf(_tokenID)).transfer(reimbursement);
     }
 
     /** @dev Edge case in which there is a winner but one or more prizes are vacant.
@@ -299,14 +301,14 @@ contract Tournament is ERC721, IERC2981 {
      * @dev See {IERC721Metadata-name}.
      */
     function name() public view override returns (string memory) {
-        return tournamentName;
+        return tournamentInfo.tournamentName;
     }
 
     /**
      * @dev See {IERC721Metadata-symbol}.
      */
     function symbol() public view override returns (string memory) {
-        return tournamentSymbol;
+        return tournamentInfo.tournamentSymbol;
     }
 
     /**
@@ -315,7 +317,7 @@ contract Tournament is ERC721, IERC2981 {
      * by default, can be overriden in child contracts.
      */
     function _baseURI() internal view override returns (string memory) {
-        return tournamentUri;
+        return tournamentInfo.tournamentUri;
     }
 
     /**

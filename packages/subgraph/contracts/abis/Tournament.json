@@ -233,25 +233,6 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "_questionID",
-          "type": "bytes32"
-        },
-        {
-          "indexed": false,
-          "internalType": "bytes32",
-          "name": "_result",
-          "type": "bytes32"
-        }
-      ],
-      "name": "RegisterResult",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
           "indexed": true,
           "internalType": "address",
           "name": "from",
@@ -410,24 +391,26 @@
     {
       "inputs": [
         {
-          "internalType": "string",
-          "name": "_tournamentName",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_tournamentSymbol",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_tournamentUri",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "_owner",
-          "type": "address"
+          "components": [
+            {
+              "internalType": "string",
+              "name": "tournamentName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tournamentSymbol",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tournamentUri",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct Tournament.TournamentInfo",
+          "name": "_tournamentInfo",
+          "type": "tuple"
         },
         {
           "internalType": "address",
@@ -458,6 +441,55 @@
           "internalType": "address",
           "name": "_manager",
           "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "arbitrator",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "timeout",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minBond",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Tournament.RealitioSetup",
+          "name": "_realitioSetup",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "templateID",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "question",
+              "type": "string"
+            },
+            {
+              "internalType": "uint32",
+              "name": "openingTS",
+              "type": "uint32"
+            }
+          ],
+          "internalType": "struct Tournament.RealitioQuestion[]",
+          "name": "_questionsData",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "uint16[]",
+          "name": "_prizeWeights",
+          "type": "uint16[]"
         }
       ],
       "name": "initialize",
@@ -549,19 +581,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "owner",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -848,24 +867,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "bytes32[]",
-          "name": "_questionIDs",
-          "type": "bytes32[]"
-        },
-        {
-          "internalType": "uint16[]",
-          "name": "_prizeWeights",
-          "type": "uint16[]"
-        }
-      ],
-      "name": "setTournament",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "submissionTimeout",
       "outputs": [
@@ -950,12 +951,12 @@
     },
     {
       "inputs": [],
-      "name": "tournamentInitialized",
+      "name": "totalPrize",
       "outputs": [
         {
-          "internalType": "bool",
+          "internalType": "uint256",
           "name": "",
-          "type": "bool"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
