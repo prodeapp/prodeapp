@@ -6,8 +6,8 @@ import { getBetID, getOrCreatePlayer } from './helpers';
 export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
-    log.info("handleInitialize: Initializing {} tournament", [event.transaction.to!.toHexString()])
-    let tournament = Tournament.load(event.transaction.to!.toHexString())!;
+    log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
+    let tournament = Tournament.load(event.address.toHexString())!;
     tournament.name = event.params._name;
     tournament.symbol = event.params._symbol;
     tournament.uri = event.params._uri;
@@ -23,7 +23,7 @@ export function handleInitialize(event: Initialize): void {
 }
 
 export function handleQuestionsRegistered(event: QuestionsRegistered): void {
-    let tournament = Tournament.load(event.transaction.to!.toHexString())!;
+    let tournament = Tournament.load(event.address.toHexString())!;
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
         let matchID = event.params._questionIDs[i].toString()
@@ -37,7 +37,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
 
 export function handlePlaceBet(event: PlaceBet): void {
     let player = getOrCreatePlayer(event.params._player)
-    let tournament = Tournament.load(event.transaction.to!.toHexString())!
+    let tournament = Tournament.load(event.address.toHexString())!
     tournament.pool = tournament.pool.plus(tournament.price)
     let tmp_tournamnets = player.tournaments
     if (tmp_tournamnets === null){
@@ -47,10 +47,10 @@ export function handlePlaceBet(event: PlaceBet): void {
     }
     player.tournaments = tmp_tournamnets
 
-    let contract = TournamentContract.bind(event.transaction.to!);
+    let contract = TournamentContract.bind(event.address);
     // TODO: No se si esto funciona como esperamos
     let tokenHash = contract.tokenIDtoTokenHash(event.params.tokenID)
-    let betID = getBetID(event.transaction.to!, Address.fromString(tokenHash.toString()))
+    let betID = getBetID(event.address, Address.fromString(tokenHash.toString()))
     log.info("handlePlaceBet: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     if (bet == null) {
@@ -76,7 +76,7 @@ export function handlePlaceBet(event: PlaceBet): void {
 }
 
 export function handleBetReward(event: BetReward): void {
-    let betID = getBetID(event.transaction.to!, event.params._tokenID)
+    let betID = getBetID(event.address, event.params._tokenID)
     log.info("handleBetReward: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     bet.claim = true;
@@ -86,7 +86,7 @@ export function handleBetReward(event: BetReward): void {
 }
 
 export function handleFundingReceived(event: FundingReceived): void {
-    let tournament = Tournament.load(event.transaction.to!.toHexString())!;
+    let tournament = Tournament.load(event.address.toHexString())!;
     tournament.pool = tournament.pool.plus(event.params._amount);
     tournament.save()
 
@@ -108,8 +108,8 @@ export function handleFundingReceived(event: FundingReceived): void {
 }
 
 export function handleNewPeriod(event: NewPeriod): void {
-    log.info("HandleNewPeriod: new period {} in tournament {}", [event.transaction.to!.toHexString()]);
-    let tournament = Tournament.load(event.transaction.to!.toHexString())!;
+    log.info("HandleNewPeriod: new period {} in tournament {}", [event.params._period.toString(), event.address.toHexString()]);
+    let tournament = Tournament.load(event.address.toHexString())!;
     tournament.period = event.params._period;
     tournament.save();
 }
