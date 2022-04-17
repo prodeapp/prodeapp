@@ -1,7 +1,7 @@
 import { log, BigInt } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
-import { getBetID, getOrCreatePlayer } from './helpers';
+import { getBetID, getOrCreatePlayer, tournamentPeriods } from './helpers';
 
 export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
@@ -16,6 +16,7 @@ export function handleInitialize(event: Initialize): void {
     tournament.creationTime = event.block.timestamp;
     tournament.price = event.params._price;
     tournament.ownwer = event.params._ownwer;
+    tournament.period = tournamentPeriods[0]
     tournament.save()
     log.debug("handleInitialize: Tournament {} initialized.", [tournament.id.toString()]);
 }
@@ -88,4 +89,11 @@ export function handleFundingReceived(event: FundingReceived) {
     tournaments.push(tournament.id)
     funder.tournaments = tournaments;
     funder.save()
+}
+
+export function handleNewPeriod(event: NewPeriod) {
+    let period = tournamentPeriods[event.params._period.toI32()];
+    let tournament = Tournament.load(event.address.toString());
+    tournament.period = period;
+    tournament.save();
 }

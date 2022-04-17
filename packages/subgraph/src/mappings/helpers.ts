@@ -15,3 +15,9 @@ export function getOrCreatePlayer(address: { toString: () => string; }): Player 
     }
     return player
 }
+
+export enum tournamentPeriods {
+    Betting = 0,
+    Submission,
+    Claiming
+  }
