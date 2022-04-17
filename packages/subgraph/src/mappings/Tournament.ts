@@ -82,6 +82,7 @@ export function handleBetReward(event: BetReward): void {
     bet.claim = true;
     bet.reward = event.params._reward;
     bet.save()
+    log.debug("handleBetReward: {} reward claimed from token {}", [event.params._reward.toString(), event.params._tokenID.toString()])
 }
 
 export function handleFundingReceived(event: FundingReceived): void {
@@ -103,6 +104,7 @@ export function handleFundingReceived(event: FundingReceived): void {
     tournaments.push(tournament.id)
     funder.tournaments = tournaments;
     funder.save()
+    log.info("handleFundingReceived: {} funds received from {}", [event.params._amount.toString(), event.params._funder.toString()])
 }
 
 export function handleNewPeriod(event: NewPeriod): void {
