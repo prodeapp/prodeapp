@@ -6,7 +6,7 @@ import {Contract} from "@ethersproject/contracts";
 import {TournamentFactory, TournamentFactory__factory} from "../../typechain";
 import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
-import {addresses} from "@prodeapp/contracts";
+import addresses from "../../lib/addresses";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
@@ -37,6 +37,7 @@ type MatchData = {
 interface FormProps {
   children?: React.ReactNode;
   handleSubmit: UseFormHandleSubmit<TournamentFormValues>;
+  chainId: number;
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
@@ -57,10 +58,10 @@ function getMatchData(questionParams: QuestionParams, questionPlaceholder: strin
   }
 }
 
-export default function TournamentForm({children, handleSubmit}: FormProps) {
+export default function TournamentForm({children, handleSubmit, chainId}: FormProps) {
 
   const { state, send } = useContractFunction(
-    new Contract(addresses.TOURNAMENT_FACTORY_ADDRESS, TournamentFactory__factory.createInterface()) as TournamentFactory,
+    new Contract(addresses[chainId].TOURNAMENT_FACTORY_ADDRESS, TournamentFactory__factory.createInterface()) as TournamentFactory,
     'createTournament'
   );
 
@@ -100,7 +101,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       Math.round(data.managementFee * DIVISOR / 100),
       account,
       {
-        arbitrator: '0x29f39de98d750eb77b5fafb31b2837f079fce222', // kleros
+        arbitrator: addresses[chainId].ARBITRATOR,
         timeout: 86400, // TODO
         minBond: parseUnits('7', 18),
       },

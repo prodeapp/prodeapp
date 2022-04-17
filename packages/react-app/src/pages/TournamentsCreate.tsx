@@ -14,6 +14,7 @@ import AnswersBuilder from "../components/TournamentCreate/AnswersBuilder";
 import PrizeWeightsBuilder from "../components/TournamentCreate/PrizeWeightsBuilder";
 import MatchBuilder from "../components/TournamentCreate/MatchBuilder";
 import TournamentForm, {TournamentFormValues, PLACEHOLDER_REGEX} from "../components/TournamentCreate/TournamentForm";
+import {useEthers} from "@usedapp/core";
 
 const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -69,8 +70,14 @@ function TournamentsCreate() {
     setOpenModal(false);
   }
 
+  const {chainId} = useEthers();
+
+  if (!chainId) {
+    return <div>Loading...</div>
+  }
+
   return (
-    <TournamentForm handleSubmit={handleSubmit}>
+    <TournamentForm handleSubmit={handleSubmit} chainId={chainId}>
       <TemplateDialog
         open={openModal}
         handleClose={handleClose}

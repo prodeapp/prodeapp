@@ -24,7 +24,6 @@ const config = {
   readOnlyChainId: xDai.chainId,
   readOnlyUrls: {
     [xDai.chainId]: "https://rpc.gnosischain.com",
-    [Localhost.chainId]: "http://localhost:8545",
   },
   networks: [xDai, Localhost],
   multicallAddresses: {
