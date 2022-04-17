@@ -36,6 +36,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered) {
 export function handlePlaceBet(event: PlaceBet) {
     let player = getOrCreatePlayer(event.params._player)
     let tournament = Tournament.load(event.address.toString())
+    tournament.pool = tournament.pool.plus(tournament.price)
     let tmp_tournamnets = player.tournaments
     tmp_tournamnets.push(tournament.id)
     player.tournaments = tmp_tournamnets

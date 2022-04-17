@@ -7,6 +7,7 @@ type Tournament @entity {
   closingTime: BigInt!
   creationTime: BigInt!
   price: BigInt!
+  pool: BigInt!
   managementFee: BigInt
   manager: Bytes!
   players: [Player!]! @derivedFrom(field: "tournaments")
