@@ -5,7 +5,8 @@ import {useParams} from "react-router-dom";
 import {useRanking} from "../hooks/useRanking";
 import {useMatches} from "../hooks/useMatches";
 import {shortenAddress} from "@usedapp/core";
-import {Button, Box, BoxRow} from "../components"
+import {Box, BoxRow} from "../components"
+import Button from '@mui/material/Button';
 
 function TournamentsView() {
   const { id } = useParams();
@@ -38,8 +39,8 @@ function TournamentsView() {
 
       <Box>
         <BoxRow style={{justifyContent: 'center'}}>
-          <div><Button onClick={() => setSection('ranking')} className={section === 'ranking' ? 'active' : ''}>Ranking</Button></div>
-          <div><Button onClick={() => setSection('results')} className={section === 'results' ? 'active' : ''}>Results</Button></div>
+          <div><Button onClick={() => setSection('ranking')} color={section === 'ranking' ? 'secondary' : 'primary'}>Ranking</Button></div>
+          <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
         </BoxRow>
       </Box>
 

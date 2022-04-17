@@ -1,7 +1,7 @@
 import "./index.css";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { DAppProvider, Mainnet } from "@usedapp/core";
+import { DAppProvider, xDai, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
@@ -15,14 +15,19 @@ import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
 import { ReactQueryProvider } from "./lib/react-query";
-import { createTheme, ThemeProvider } from "@mui/material";
+import {  ThemeProvider } from "@mui/material";
+import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 
 const config = {
-  readOnlyChainId: Mainnet.chainId,
+  readOnlyChainId: xDai.chainId,
   readOnlyUrls: {
-    [Mainnet.chainId]: "https://mainnet.infura.io/v3/32396ad0cab1489eaaca0ac9ecda1566",
+    [xDai.chainId]: "https://rpc.gnosischain.com",
+  },
+  networks: [xDai, Localhost],
+  multicallAddresses: {
+    [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
   },
 }
 
@@ -33,21 +38,13 @@ const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
 });
 
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#fff',
-    }
-  },
-});
 
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ApolloProvider client={client}>
         <ReactQueryProvider>
-          <ThemeProvider theme={darkTheme}>
+          <ThemeProvider theme={theme}>
             <BrowserRouter>
               <Routes>
                 <Route element={<Layout />}>

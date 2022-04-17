@@ -136,7 +136,7 @@ export default function AppMenuBar() {
     return (
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open settings">
-          <Button onClick={typeof (account) !== 'string' ? activateBrowserWallet : handleOpenUserMenu} sx={{ p: 0 }}>
+          <Button onClick={typeof (account) !== 'string' ? activateBrowserWallet : handleOpenUserMenu}>
             {rendered === "" ?
               "Connect Wallet" :
               rendered
