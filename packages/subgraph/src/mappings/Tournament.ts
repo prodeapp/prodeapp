@@ -1,8 +1,7 @@
 import { log, BigInt } from '@graphprotocol/graph-ts';
-import { Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
-import { Bet, Match, Tournament } from '../types/schema';
+import { FundingReceived, Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
+import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getMatchID, getOrCreatePlayer } from './helpers';
-import { PlayCircleOutlineRounded } from '@material-ui/icons';
 
 export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
@@ -61,4 +60,21 @@ export function handlePlaceBet(event: PlaceBet) {
     bet.save()
 
     player.save()
+}
+
+export function handleFundingReceived(event: FundingReceived) {
+    let tournament = Tournament.load(event.address.toString());
+    tournament.pool = tournament.pool.plus(event.params._amount);
+    tournament.save()
+
+    let funder = Funder.load(event.params._funder.toString())
+    if (funder == null) funder = new Funder(event.params._funder.toString())
+    funder.amount = funder.amount.plus(event.params._amount)
+    let msgs = funder.messages
+    msgs.push(event.params._message)
+    funder.messages = msgs;
+    let tournaments = funder.tournaments;
+    tournaments.push(tournament.id)
+    funder.tournaments = tournaments;
+    funder.save()
 }

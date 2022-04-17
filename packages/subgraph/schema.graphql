@@ -12,6 +12,7 @@ type Tournament @entity {
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
+  funders: [Funder!] @derivedFrom(field: "tournaments")
 }
 
 type Match @entity {
@@ -38,4 +39,11 @@ type Bet @entity {
   ranking: BigInt
   results: [BigInt!]!
   count: BigInt!
+}
+
+type Funder @entity {
+  id: ID!
+  amount: BigInt!
+  tournaments: [Tournament!]!
+  messages: [String!]
 }

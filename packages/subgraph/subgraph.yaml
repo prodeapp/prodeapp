@@ -49,3 +49,5 @@ templates:
           handler: handleQuestionsRegistered
         - event: PlaceBet(indexed address,indexed uint256,bytes32[])
           handler: handlePlaceBet
+        - event: FundingReceived(indexed address,uint256,string)
+          handler: handleFundingReceived
