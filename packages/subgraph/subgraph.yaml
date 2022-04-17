@@ -6,7 +6,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: TournamentFactory
-    network: mainnet
+    network: xdai
     source:
       abi: TournamentFactory
       address: "0x0000000000000000000000000000000000000000"
@@ -23,10 +23,31 @@ dataSources:
           handler: handleNewTournament
       file: ./src/mappings/TournamentFactory.ts
       language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: RealitioV3
+    network: xdai
+    source:
+      abi: Realitio
+      address: "0x0000000000000000000000000000000000000000"
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
+      entities:
+        - Match
+        - Bet
+      eventHandlers:
+        - event: LogNewAnswer(bytes32,indexed bytes32,bytes32,indexed address,uint256,uint256,bool)
+          handler: handleNewAnswer
+      file: ./src/mappings/Realitio.ts
+      language: wasm/assemblyscript        
+
 templates:
   - name: Tournament
     kind: ethereum/contract
-    network: mainnet
+    network: xdai
     source:
       abi: Tournament
     mapping:
@@ -51,3 +72,7 @@ templates:
           handler: handlePlaceBet
         - event: FundingReceived(indexed address,uint256,string)
           handler: handleFundingReceived
+        - event: BetReward(indexed address,uint256)
+          handler: handleBetReward
+        - event: NewPeriod(uint256)
+          handler: handleNewPeriod

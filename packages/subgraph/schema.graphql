@@ -17,10 +17,24 @@ type Tournament @entity {
 }
 
 type Match @entity {
-  "tournament-questionID"
+  "questionID"
   id: ID!
   tournament: Tournament!
-  result: BigInt
+  answer: Answer! @derivedFrom(field: "match")
+}
+
+type Answer @entity {
+  "questionID. Not sure if we can have the same ID for different entities"
+  id: ID!
+  "Answer expresed in uint"
+  answer: BigInt!,
+  historyHash: Bytes!
+  user: Bytes!,
+  bond: BigInt!,
+  timestamp: BigInt!,
+  isCommitment: Boolean!
+  match: Match!
+  tournament: Tournament!
 }
 
 type Player @entity {

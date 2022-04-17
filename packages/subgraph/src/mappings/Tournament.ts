@@ -1,7 +1,7 @@
 import { log, BigInt } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
-import { getBetID, getMatchID, getOrCreatePlayer } from './helpers';
+import { getBetID, getOrCreatePlayer } from './helpers';
 
 export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
@@ -24,7 +24,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered) {
     let tournament = Tournament.load(event.address.toString());
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
-        let matchID = getMatchID(event.address, event.params._questionIDs[i])
+        let matchID = event.params._questionIDs[i].toString()
         let match = new Match(matchID);
         match.tournament = tournament.id;
         match.save();
