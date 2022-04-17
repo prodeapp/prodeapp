@@ -75,7 +75,7 @@ contract Tournament is ERC721, IERC2981 {
 
     event NewPeriod(uint256 _period);
     
-    event BetReward(address indexed _owner, uint256 _reward);
+    event BetReward(address indexed _tokenID, uint256 _reward);
 
     event ManagementReward(address indexed _manager, uint256 _managementReward);
 

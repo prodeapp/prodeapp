@@ -41,6 +41,8 @@ type Bet @entity {
   points: BigInt!
   results: [BigInt!]!
   count: BigInt!
+  claim: Boolean!
+  reward: BigInt!
 }
 
 type Funder @entity {

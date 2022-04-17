@@ -1,5 +1,5 @@
 import { log, BigInt } from '@graphprotocol/graph-ts';
-import { FundingReceived, Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, PlaceBet, QuestionsRegistered } from '../types/templates/Tournament/Tournament';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getMatchID, getOrCreatePlayer } from './helpers';
 
@@ -56,11 +56,21 @@ export function handlePlaceBet(event: PlaceBet) {
         bet.results = results
         bet.count = BigInt.fromI32(0)
         bet.points = BigInt.fromI32(0)
+        bet.reward = BigInt.fromI32(0)
+        bet.claim = false;
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))  
     bet.save()
 
     player.save()
+}
+
+export function handleBetReward(event: BetReward) {
+    let betID = getBetID(event.address, event.params._tokenID)
+    let bet = Bet.load(betID)
+    bet.claim = true;
+    bet.reward = event.params._reward;
+    bet.save()
 }
 
 export function handleFundingReceived(event: FundingReceived) {
