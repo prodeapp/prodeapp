@@ -1,8 +1,8 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
 import { Player } from "../types/schema";
 
-export function getBetID(tournament: ByteArray, tokenID: Address): string {
-    return tournament.toHexString() + '-' + tokenID.toHexString();
+export function getBetID(tournament: ByteArray, tokenID: BigInt): string {
+    return tournament.toHexString() + '-' + tokenID.toString();
 }
 
 export function getOrCreatePlayer(address: Address): Player {

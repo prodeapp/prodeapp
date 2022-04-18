@@ -59,9 +59,9 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "address",
+          "internalType": "uint256",
           "name": "_tokenID",
-          "type": "address"
+          "type": "uint256"
         },
         {
           "indexed": false,
@@ -213,12 +213,6 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "_tournament",
-          "type": "address"
-        },
         {
           "indexed": false,
           "internalType": "bytes32[]",

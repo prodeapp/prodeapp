@@ -52,24 +52,26 @@
     {
       "inputs": [
         {
-          "internalType": "string",
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "symbol",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "uri",
-          "type": "string"
-        },
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
+          "components": [
+            {
+              "internalType": "string",
+              "name": "tournamentName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tournamentSymbol",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "tournamentUri",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct Tournament.TournamentInfo",
+          "name": "tournamentInfo",
+          "type": "tuple"
         },
         {
           "internalType": "uint256",
@@ -90,6 +92,55 @@
           "internalType": "address",
           "name": "manager",
           "type": "address"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "arbitrator",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "timeout",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minBond",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct Tournament.RealitioSetup",
+          "name": "realitioSetup",
+          "type": "tuple"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "templateID",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "question",
+              "type": "string"
+            },
+            {
+              "internalType": "uint32",
+              "name": "openingTS",
+              "type": "uint32"
+            }
+          ],
+          "internalType": "struct Tournament.RealitioQuestion[]",
+          "name": "questionsData",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "uint16[]",
+          "name": "prizeWeights",
+          "type": "uint16[]"
         }
       ],
       "name": "createTournament",

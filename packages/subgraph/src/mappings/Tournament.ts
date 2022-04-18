@@ -26,7 +26,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     let tournament = Tournament.load(event.address.toHexString())!;
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
-        let matchID = event.params._questionIDs[i].toString()
+        let matchID = event.params._questionIDs[i].toHexString()
         let match = new Match(matchID);
         match.tournament = tournament.id;
         match.save();
@@ -47,10 +47,7 @@ export function handlePlaceBet(event: PlaceBet): void {
     }
     player.tournaments = tmp_tournamnets
 
-    let contract = TournamentContract.bind(event.address);
-    // TODO: No se si esto funciona como esperamos
-    let tokenHash = contract.tokenIDtoTokenHash(event.params.tokenID)
-    let betID = getBetID(event.address, Address.fromString(tokenHash.toString()))
+    let betID = getBetID(event.address, event.params.tokenID)
     log.info("handlePlaceBet: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     if (bet == null) {
