@@ -21,7 +21,7 @@ type Match @entity {
   "questionID"
   id: ID!
   tournament: Tournament!
-  answer: Answer! @derivedFrom(field: "match")
+  answer: Answer @derivedFrom(field: "match")
 }
 
 type Answer @entity {
