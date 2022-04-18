@@ -1,15 +1,25 @@
-import { gql } from "@apollo/client";
+import {BigNumber} from "@ethersproject/bignumber";
 
-// See more example queries on https://thegraph.com/explorer/subgraph/paulrberg/create-eth-app
-const GET_TRANSFERS = gql`
-  {
-    transfers(first: 10) {
+export interface Tournament {
+  id: BigNumber
+  name: string
+  price: BigNumber
+  closingTime: BigNumber
+  managementFee: BigNumber
+  manager: string
+  pool: BigNumber
+  period: number
+}
+
+export const TOURNAMENT_FIELDS = `
+    fragment TournamentFields on Tournament {
       id
-      from
-      to
-      value
+      name
+      price
+      closingTime
+      managementFee
+      manager
+      pool
+      period
     }
-  }
 `;
-
-export default GET_TRANSFERS;

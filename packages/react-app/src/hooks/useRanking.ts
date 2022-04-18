@@ -2,7 +2,7 @@ import {useQuery} from "react-query";
 import {Ranking} from "../lib/types";
 import {ranking} from "../dummy-subgraph";
 
-export const useRanking = (tournamentId: number) => {
+export const useRanking = (tournamentId: string) => {
   return useQuery<Ranking[], Error>(
     ['useRanking', tournamentId],
     async () => {
