@@ -1,13 +1,77 @@
-type Token @entity {
+type Tournament @entity {
   id: ID!
-  decimals: Int
-  name: String
-  symbol: String
+  name: String!
+  symbol: String!
+  uri: String!
+  owner: Bytes!
+  closingTime: BigInt!
+  creationTime: BigInt!
+  price: BigInt!
+  pool: BigInt!
+  managementFee: BigInt
+  manager: Bytes!
+  period: BigInt!
+  numOfMatches: BigInt!
+  players: [Player!]! @derivedFrom(field: "tournaments")
+  matches: [Match!]! @derivedFrom(field: "tournament")
+  bets: [Bet!]! @derivedFrom(field: "tournament")
+  funders: [Funder!] @derivedFrom(field: "tournaments")
 }
 
-type Transfer @entity {
+type Match @entity {
+  "tournament-nounce"
   id: ID!
-  from: String!
-  to: String!
-  value: BigInt!
+  questionID: Bytes!
+  nonce: BigInt!
+  tournament: Tournament!
+  answer: Answer @derivedFrom(field: "match")
+  openingTs: BigInt!,
+  finalizeTs: BigInt!,
+  timeout: BigInt!,
+  minBond: BigInt!,
+  contentHash: Bytes!
+  historyHash: Bytes!
+}
+
+type Answer @entity {
+  "questionID"
+  id: ID!
+  "Answer expresed in uint"
+  answer: BigInt!,
+  historyHash: Bytes!
+  user: Bytes!,
+  bond: BigInt!,
+  timestamp: BigInt!,
+  isCommitment: Boolean!
+  match: Match!
+  tournament: Tournament!
+}
+
+type Player @entity {
+  id: ID!
+  amountBeted: BigInt!
+  pricesReceived: BigInt!
+  tournaments: [Tournament!]
+  bets: [Bet!]! @derivedFrom(field: "player")
+}
+
+type Bet @entity {
+  """tournamentId-tokenID"""
+  id: ID!
+  player: Player!
+  tournament: Tournament!
+  tokenID: BigInt!
+  ranking: BigInt
+  points: BigInt!
+  results: [BigInt!]!
+  count: BigInt!
+  claim: Boolean!
+  reward: BigInt!
+}
+
+type Funder @entity {
+  id: ID!
+  amount: BigInt!
+  tournaments: [Tournament!]!
+  messages: [String!]
 }

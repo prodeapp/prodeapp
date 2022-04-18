@@ -1,26 +1,82 @@
 specVersion: 0.0.4
-description: Subgraph that indexes the blockchain data
-repository: https://github.com/sablierhq/sablier-subgraph
+description: Subgraph that tracks tournaments Data
+repository: https://github.com/prodeapp/prodeapp
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: CeaErc20
-    network: mainnet
+    name: TournamentFactory
+    network: xdai
     source:
-      abi: erc20
-      address: "0xa6dF0C88916f3e2831A329CE46566dDfBe9E74b7"
+      abi: TournamentFactory
+      address: "0xaa2b3bb574ae456d6D830bA06c749dFc283f72eB"
+      startBlock: 21695861
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       abis:
-        - name: erc20
-          file: ../contracts/src/abis/erc20.json
+        - name: TournamentFactory
+          file: ./contracts/abis/TournamentFactory.json
       entities:
-        - Token
-        - Transfer
+        - Tournament
       eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-      file: ./src/mappings/transfers.ts
+        - event: NewTournament(indexed address)
+          handler: handleNewTournament
+      file: ./src/mappings/TournamentFactory.ts
       language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: RealitioV3
+    network: xdai
+    source:
+      abi: Realitio
+      address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
+      startBlock: 21695778  
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
+      entities:
+        - Match
+        - Bet
+      eventHandlers:
+        - event: LogNewAnswer(bytes32,indexed bytes32,bytes32,indexed address,uint256,uint256,bool)
+          handler: handleNewAnswer
+      file: ./src/mappings/Realitio.ts
+      language: wasm/assemblyscript        
+
+templates:
+  - name: Tournament
+    kind: ethereum/contract
+    network: xdai
+    source:
+      abi: Tournament
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/Tournament.ts
+      entities:
+        - Tournament
+        - Bet
+        - Player
+        - Match
+      abis:
+        - name: Tournament
+          file: ./contracts/abis/Tournament.json
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
+      eventHandlers:
+        - event: Initialize(string,string,string,address,uint256,uint256,uint256,address)
+          handler: handleInitialize
+        - event: QuestionsRegistered(bytes32[])
+          handler: handleQuestionsRegistered
+        - event: PlaceBet(indexed address,indexed uint256,bytes32[])
+          handler: handlePlaceBet
+        - event: FundingReceived(indexed address,uint256,string)
+          handler: handleFundingReceived
+        - event: BetReward(indexed uint256,uint256)
+          handler: handleBetReward
+        - event: NewPeriod(uint256)
+          handler: handleNewPeriod
