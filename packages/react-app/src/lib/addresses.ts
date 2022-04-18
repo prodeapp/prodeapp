@@ -7,7 +7,7 @@ type ChainAddresses = {
 
 const addresses: Record<number, ChainAddresses> = {
   [xDai.chainId]: {
-    TOURNAMENT_FACTORY_ADDRESS: '0x8c89A3c9dEa75D9590f677baD1184Fd97898BA2A',
+    TOURNAMENT_FACTORY_ADDRESS: '0xaa2b3bb574ae456d6D830bA06c749dFc283f72eB',
     ARBITRATOR: '0x29f39de98d750eb77b5fafb31b2837f079fce222', // kleros
   },
   [Localhost.chainId]: {
