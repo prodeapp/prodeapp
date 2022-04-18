@@ -1,20 +1,18 @@
-import {useQuery} from "react-query";
-import {Tournament} from "../lib/types";
-import {tournaments} from "../dummy-subgraph";
+import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
+import {useQuery} from "@apollo/client/react/hooks/useQuery";
+import {gql} from "@apollo/client";
 
-export const useTournament = (id: number) => {
-  return useQuery<Tournament, Error>(
-    ['useTournament', id],
-    async () => {
-      // TODO: load from subgraph
+const query = gql`
+    ${TOURNAMENT_FIELDS}
+    query TournamentQuery($id: String) {
+        tournament(id: $id) {
+            ...TournamentFields
+        }
+    }
+`;
 
-      const tournament = tournaments.find(tournament => tournament.id.eq(id));
+export const useTournament = (id: string) => {
+  const {loading, error, data} = useQuery<{tournament: Tournament}, {id: string}>(query, {variables: {id}});
 
-      if (!tournament) {
-        throw new Error('Tournament not found');
-      }
-
-      return tournament;
-    },
-  );
+  return {loading, error, tournament: data?.tournament || undefined}
 };

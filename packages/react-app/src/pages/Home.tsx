@@ -3,11 +3,11 @@ import {Box, BoxRow} from "../components";
 import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
 import {useTournaments} from "../hooks/useTournaments";
-import {Tournament} from "../lib/types";
 import {DecimalBigNumber} from "../lib/DecimalBigNumber";
+import {Tournament} from "../graphql/subgraph";
 
 function Home() {
-  const { error, data: tournaments } = useTournaments();
+  const { loading, error, tournaments } = useTournaments();
 
   return (
     <>
@@ -17,7 +17,7 @@ function Home() {
         </BoxRow>
       </Box>
 
-      {!error && tournaments && <TournamentsTable tournaments={tournaments}/>}
+      {!loading && !error && tournaments && <TournamentsTable tournaments={tournaments}/>}
     </>
   );
 }
@@ -31,8 +31,8 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
     <BoxRow>
       <div style={{width: '25%'}}>Name</div>
       <div style={{width: '25%'}}>Price</div>
-      <div style={{width: '25%'}}>Participants</div>
-      <div style={{width: '25%'}}>Total Prize</div>
+      <div style={{width: '25%'}}>Closing Time</div>
+      <div style={{width: '25%'}}>Pool</div>
     </BoxRow>
     {tournaments.map((tournament, i) => {
       return <BoxRow key={i}>
@@ -40,8 +40,8 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
         </div>
         <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.price,18).toString()}</div>
-        <div style={{width: '25%'}}>{tournament.participants.toString()}</div>
-        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.totalPrize,18).toString()}</div>
+        <div style={{width: '25%'}}>{tournament.closingTime.toString()}</div>
+        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.pool,18).toString()}</div>
       </BoxRow>
     })}
   </Box>

@@ -10,11 +10,15 @@ import Button from '@mui/material/Button';
 
 function TournamentsView() {
   const { id } = useParams();
-  const { data: tournament } = useTournament(Number(id));
-  const { data: ranking } = useRanking(Number(id));
-  const { data: matches } = useMatches(Number(id));
+  const { loading, tournament } = useTournament(String(id));
+  const { data: ranking } = useRanking(String(id));
+  const { data: matches } = useMatches(String(id));
 
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
 
   if (!tournament) {
     return <div>Tournament not found</div>
@@ -31,7 +35,7 @@ function TournamentsView() {
         <div style={{width: '49%', marginLeft: '2%'}}>
           <Box style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
             <BoxRow>
-              <div>Total Prize: {new DecimalBigNumber(tournament.totalPrize,18).toString()}</div>
+              <div>Total Prize: {new DecimalBigNumber(tournament.pool,18).toString()}</div>
             </BoxRow>
           </Box>
         </div>
