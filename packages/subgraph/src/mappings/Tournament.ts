@@ -7,7 +7,7 @@ export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
     log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
-    let tournament = Tournament.load(event.address.toHexString())!;
+    let tournament = new Tournament(event.address.toHexString());
     tournament.name = event.params._name;
     tournament.symbol = event.params._symbol;
     tournament.uri = event.params._uri;
