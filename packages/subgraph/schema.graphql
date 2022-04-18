@@ -9,7 +9,7 @@ type Tournament @entity {
   price: BigInt!
   pool: BigInt!
   managementFee: BigInt
-  manager: Bytes!
+  manager: Manager!
   period: BigInt!
   numOfMatches: BigInt!
   players: [Player!]! @derivedFrom(field: "tournaments")
@@ -53,6 +53,12 @@ type Player @entity {
   pricesReceived: BigInt!
   tournaments: [Tournament!]
   bets: [Bet!]! @derivedFrom(field: "player")
+}
+
+type Manager @entity {
+  id: ID!
+  tournaments: [Tournament!]
+  managementRewards: BigInt!
 }
 
 type Bet @entity {

@@ -1,8 +1,8 @@
 import { log, BigInt, Address } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
-import { getBetID, getMatchID, getOrCreatePlayer } from './helpers';
+import { getBetID, getMatchID, getOrCreateManager, getOrCreatePlayer } from './helpers';
 import { RealitioAddress } from './constants';
 
 
@@ -15,13 +15,15 @@ export function handleInitialize(event: Initialize): void {
     tournament.symbol = event.params._symbol;
     tournament.uri = event.params._uri;
     tournament.managementFee = event.params._managementFee;
-    tournament.manager = event.params._manager;
     tournament.closingTime = event.params._closingTime;
     tournament.creationTime = event.block.timestamp;
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
     tournament.period = BigInt.fromI32(0);
     tournament.numOfMatches = BigInt.fromI32(0);
+
+    let manager = getOrCreateManager(event.params._manager);
+    tournament.manager = manager.id;
     tournament.save()
     log.debug("handleInitialize: Tournament {} initialized.", [tournament.id.toString()]);
 }
@@ -123,9 +125,12 @@ export function handleFundingReceived(event: FundingReceived): void {
     log.info("handleFundingReceived: {} funds received from {}", [event.params._amount.toString(), event.params._funder.toString()])
 }
 
-export function handleNewPeriod(event: NewPeriod): void {
-    log.info("HandleNewPeriod: new period {} in tournament {}", [event.params._period.toString(), event.address.toHexString()]);
+
+export function handleManagementReward(event: ManagementReward): void {
     let tournament = Tournament.load(event.address.toHexString())!;
-    tournament.period = event.params._period;
-    tournament.save();
+    tournament.period = BigInt.fromI32(2);  // pass to next period
+    log.debug("handleManagementReward: Moving tournament {} to period 2", [event.address.toHexString()]);
+    let manager = getOrCreateManager(event.params._manager);
+    manager.managementRewards = manager.managementRewards.plus(event.params._managementReward);
+    manager.save()
 }

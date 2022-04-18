@@ -62,6 +62,7 @@ templates:
         - Bet
         - Player
         - Match
+        - Manager
       abis:
         - name: Tournament
           file: ./contracts/abis/Tournament.json
@@ -78,5 +79,5 @@ templates:
           handler: handleFundingReceived
         - event: BetReward(indexed uint256,uint256)
           handler: handleBetReward
-        - event: NewPeriod(uint256)
-          handler: handleNewPeriod
+        - event: ManagementReward(indexed address,uint256)
+          handler: handleManagementReward

@@ -80,8 +80,6 @@ contract Tournament is ERC721, IERC2981 {
         bytes32[] _predictions
     );
 
-    event NewPeriod(uint256 _period);
-
     event BetReward(uint256 indexed _tokenID, uint256 _reward);
 
     event ManagementReward(address indexed _manager, uint256 _managementReward);
@@ -143,7 +141,6 @@ contract Tournament is ERC721, IERC2981 {
             _managementFee,
             _manager
         );
-        emit NewPeriod(1); // Betting period
         emit QuestionsRegistered(questionIDs);
         
     }
@@ -192,7 +189,6 @@ contract Tournament is ERC721, IERC2981 {
         payable(manager).send(managementReward);
         totalPrize = poolBalance - managementReward;
 
-        emit NewPeriod(2); // Submission period
         emit ManagementReward(manager, managementReward);
     }
 
