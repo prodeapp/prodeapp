@@ -11,6 +11,7 @@ type Tournament @entity {
   managementFee: BigInt
   manager: Bytes!
   period: BigInt!
+  numOfMatches: BigInt!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
@@ -18,8 +19,10 @@ type Tournament @entity {
 }
 
 type Match @entity {
-  "questionID"
+  "tournament-nounce"
   id: ID!
+  questionID: Bytes!
+  nonce: BigInt!
   tournament: Tournament!
   answer: Answer @derivedFrom(field: "match")
   openingTs: BigInt!,
@@ -31,7 +34,7 @@ type Match @entity {
 }
 
 type Answer @entity {
-  "questionID. Not sure if we can have the same ID for different entities"
+  "questionID"
   id: ID!
   "Answer expresed in uint"
   answer: BigInt!,

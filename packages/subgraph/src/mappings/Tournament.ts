@@ -2,7 +2,7 @@ import { log, BigInt, Address } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
-import { getBetID, getOrCreatePlayer } from './helpers';
+import { getBetID, getMatchID, getOrCreatePlayer } from './helpers';
 import { RealitioAddress } from './constants';
 
 
@@ -21,20 +21,24 @@ export function handleInitialize(event: Initialize): void {
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
     tournament.period = BigInt.fromI32(0);
+    tournament.numOfMatches = BigInt.fromI32(0);
     tournament.save()
     log.debug("handleInitialize: Tournament {} initialized.", [tournament.id.toString()]);
 }
 
 export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     let tournament = Tournament.load(event.address.toHexString())!;
+    let nonce = tournament.numOfMatches;
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
 
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
         let questionID = event.params._questionIDs[i]
-        let matchID = questionID.toHexString()
+        let matchID = getMatchID(event.address, nonce)
         let match = new Match(matchID);
         match.tournament = tournament.id;
+        match.questionID = questionID;
+        match.nonce = nonce;
         match.openingTs = realitioSC.getOpeningTS(questionID);
         match.timeout = realitioSC.getTimeout(questionID);
         match.minBond = realitioSC.getMinBond(questionID);
@@ -42,8 +46,11 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         match.contentHash = realitioSC.getContentHash(questionID);
         match.historyHash = realitioSC.getHistoryHash(questionID);
         match.save();
+        nonce = nonce.plus(BigInt.fromI32(1))
         log.debug("handleQuestionsRegistered: matchID {} registered", [matchID])
     }
+    tournament.numOfMatches = nonce;
+    tournament.save();
 }
 
 
