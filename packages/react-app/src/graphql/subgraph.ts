@@ -1,7 +1,7 @@
-import {BigNumber} from "@ethersproject/bignumber";
+import { BigNumber } from "@ethersproject/bignumber";
 
 export interface Tournament {
-  id: BigNumber
+  id: string
   name: string
   price: BigNumber
   closingTime: BigNumber
@@ -22,4 +22,46 @@ export const TOURNAMENT_FIELDS = `
       pool
       period
     }
+`;
+
+export interface Answer {
+  id: string
+  answer: BigNumber
+  historyHash: string
+  user: string
+  bond: BigNumber
+  timestamp: BigNumber
+  isCommitment: boolean
+  match: Match
+  tournament: Tournament
+}
+
+export interface Match {
+  id: string
+  questionID: string
+  nonce: BigNumber
+  tournament: Tournament
+  answer: Answer
+  openingTs: BigNumber
+  finalizeTs: BigNumber
+  timeout: BigNumber
+  minBond: BigNumber
+  contentHash: string
+  historyHash: string
+}
+
+export const MATCH_FIELDS = `
+  fragment MatchFields on Match {
+    id
+    questionID
+    nonce
+    tournament{id}
+    answer{id, answer}
+    openingTs
+    finalizeTs
+    timeout
+    minBond
+    contentHash
+    historyHash
+  }
 `;

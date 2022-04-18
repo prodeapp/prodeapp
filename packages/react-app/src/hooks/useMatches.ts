@@ -1,14 +1,16 @@
-import {useQuery} from "react-query";
-import {Match} from "../lib/types";
-import {matches} from "../dummy-subgraph";
+import {Match, MATCH_FIELDS} from "../graphql/subgraph";
+import { gql, useQuery } from "@apollo/client";
 
-export const useMatches = (tournamentId: string) => {
-  return useQuery<Match[], Error>(
-    ['useMatches', tournamentId],
-    async () => {
-      // TODO: load from subgraph
-
-      return matches;
-    },
-  );
+const query = gql`
+    ${MATCH_FIELDS}
+    query MATCHsQuery ($id: String!){
+      matches(where:{tournament: $id}, orderBy:id, orderDirection:desc) {
+        ...MatchFields
+      }
+    }
+`;
+export const useMatches = (tournamentID: string) => {
+  const {loading, error, data} = useQuery<{matches: Match[]}>(query, {
+    variables: {id: tournamentID}});
+  return {loading, error, matches: data?.matches || []}
 };

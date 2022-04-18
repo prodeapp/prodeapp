@@ -12,8 +12,7 @@ function TournamentsView() {
   const { id } = useParams();
   const { loading, tournament } = useTournament(String(id));
   const { data: ranking } = useRanking(String(id));
-  const { data: matches } = useMatches(String(id));
-
+  const { matches } = useMatches(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
 
   if (loading) {
@@ -51,12 +50,14 @@ function TournamentsView() {
       {section === 'results' && <Box>
         <BoxRow>
           <div style={{width: '80%'}}>Match</div>
+          <div style={{width: '20%'}}>Start</div>
           <div style={{width: '20%'}}>Result</div>
         </BoxRow>
         {matches && matches.map((match, i) => {
           return <BoxRow style={{display: 'flex'}} key={i}>
-            <div style={{width: '80%'}}>{match.question}</div>
-            <div style={{width: '20%'}}>{match.result}</div>
+            <div style={{width: '60%'}}>{match.questionID}</div>
+            <div style={{width: '20%'}}>{match.openingTs}</div>
+            <div style={{width: '20%'}}>{match.answer!==null ? match.answer.answer : "Not answered yet"}</div>
           </BoxRow>
         })}
       </Box>}
