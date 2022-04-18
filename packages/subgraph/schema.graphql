@@ -22,6 +22,12 @@ type Match @entity {
   id: ID!
   tournament: Tournament!
   answer: Answer @derivedFrom(field: "match")
+  openingTs: BigInt!,
+  finalizeTs: BigInt!,
+  timeout: BigInt!,
+  minBond: BigInt!,
+  contentHash: Bytes!
+  historyHash: Bytes!
 }
 
 type Answer @entity {

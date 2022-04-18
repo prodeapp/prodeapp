@@ -1,7 +1,10 @@
 import { log, BigInt, Address } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
+import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getOrCreatePlayer } from './helpers';
+import { RealitioAddress } from './constants';
+
 
 export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
@@ -24,11 +27,20 @@ export function handleInitialize(event: Initialize): void {
 
 export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     let tournament = Tournament.load(event.address.toHexString())!;
+    let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
+
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
-        let matchID = event.params._questionIDs[i].toHexString()
+        let questionID = event.params._questionIDs[i]
+        let matchID = questionID.toHexString()
         let match = new Match(matchID);
         match.tournament = tournament.id;
+        match.openingTs = realitioSC.getOpeningTS(questionID);
+        match.timeout = realitioSC.getTimeout(questionID);
+        match.minBond = realitioSC.getMinBond(questionID);
+        match.finalizeTs = realitioSC.getFinalizeTS(questionID);
+        match.contentHash = realitioSC.getContentHash(questionID);
+        match.historyHash = realitioSC.getHistoryHash(questionID);
         match.save();
         log.debug("handleQuestionsRegistered: matchID {} registered", [matchID])
     }
@@ -40,7 +52,7 @@ export function handlePlaceBet(event: PlaceBet): void {
     let tournament = Tournament.load(event.address.toHexString())!
     tournament.pool = tournament.pool.plus(tournament.price)
     let tmp_tournamnets = player.tournaments
-    if (tmp_tournamnets === null){
+    if (tmp_tournamnets === null) {
         tmp_tournamnets = [tournament.id];
     } else {
         tmp_tournamnets.push(tournament.id)
@@ -66,7 +78,7 @@ export function handlePlaceBet(event: PlaceBet): void {
         bet.reward = BigInt.fromI32(0)
         bet.claim = false;
     }
-    bet.count = bet.count.plus(BigInt.fromI32(1))  
+    bet.count = bet.count.plus(BigInt.fromI32(1))
     bet.save()
 
     player.save()
