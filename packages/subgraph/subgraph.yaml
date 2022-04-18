@@ -65,6 +65,8 @@ templates:
       abis:
         - name: Tournament
           file: ./contracts/abis/Tournament.json
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
       eventHandlers:
         - event: Initialize(string,string,string,address,uint256,uint256,uint256,address)
           handler: handleInitialize
