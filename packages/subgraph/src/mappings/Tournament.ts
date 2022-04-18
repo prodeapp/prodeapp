@@ -1,5 +1,5 @@
 import { log, BigInt, Address } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered,Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, NewPeriod, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getOrCreatePlayer } from './helpers';
 
@@ -16,7 +16,7 @@ export function handleInitialize(event: Initialize): void {
     tournament.closingTime = event.params._closingTime;
     tournament.creationTime = event.block.timestamp;
     tournament.price = event.params._price;
-    tournament.ownwer = event.params._ownwer;
+    tournament.owner = event.params._ownwer;
     tournament.period = BigInt.fromI32(0);
     tournament.save()
     log.debug("handleInitialize: Tournament {} initialized.", [tournament.id.toString()]);

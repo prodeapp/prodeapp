@@ -3,7 +3,7 @@ type Tournament @entity {
   name: String!
   symbol: String!
   uri: String!
-  ownwer: Bytes!
+  owner: Bytes!
   closingTime: BigInt!
   creationTime: BigInt!
   price: BigInt!
