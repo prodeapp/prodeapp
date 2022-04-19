@@ -1,6 +1,6 @@
 import {BET_FIELDS, Bet} from "../graphql/subgraph";
 import {useQuery} from "react-query";
-import apollo from "../lib/apolloClient";
+import {apolloProdeQuery} from "../lib/apolloClient";
 
 const query = `
     ${BET_FIELDS}
@@ -16,7 +16,7 @@ export const useRanking = (tournamentId: string) => {
   return useQuery<Bet[], Error>(
     ["useRanking", tournamentId],
     async () => {
-      const response = await apollo<{ bets: Bet[] }>(query, {tournamentId});
+      const response = await apolloProdeQuery<{ bets: Bet[] }>(query, {tournamentId});
 
       if (!response) throw new Error("No response from TheGraph");
 

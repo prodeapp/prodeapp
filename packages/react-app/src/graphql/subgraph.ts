@@ -125,3 +125,23 @@ export const BET_FIELDS = `
     reward
   }
 `;
+
+export interface Question {
+  questionId: string
+  qTitle: string
+  outcomes: {
+    id: string
+    answer: string
+  }[]
+}
+
+export const QUESTION_FIELDS = `
+  fragment QuestionFields on Question {
+    questionId
+    qTitle
+    outcomes {
+      id
+      answer
+    }
+  }
+`;

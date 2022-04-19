@@ -1,14 +1,28 @@
-import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
+import { ApolloClient, gql, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
 
-const client = () =>
+const prodeClient = () =>
   new ApolloClient({
     uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp",
     cache: new InMemoryCache(),
   });
 
-const apollo = async<T>(queryString: string, variables: Record<string, any> = {}) => {
+const realityClient = () =>
+  new ApolloClient({
+    uri: "https://api.thegraph.com/subgraphs/name/realityeth/realityeth-xdai",
+    cache: new InMemoryCache(),
+  });
+
+const apolloProdeQuery = async<T>(queryString: string, variables: Record<string, any> = {}) => {
+  return apolloQuery<T>(prodeClient(), queryString, variables);
+};
+
+const apolloRealityQuery = async<T>(queryString: string, variables: Record<string, any> = {}) => {
+  return apolloQuery<T>(realityClient(), queryString, variables);
+};
+
+const apolloQuery = async<T>(client: ApolloClient<NormalizedCacheObject >, queryString: string, variables: Record<string, any> = {}) => {
   try {
-    return client().query<T>({
+    return client.query<T>({
       query: gql(queryString),
       variables: variables
     });
@@ -17,4 +31,4 @@ const apollo = async<T>(queryString: string, variables: Record<string, any> = {}
   }
 };
 
-export default apollo;
+export {apolloProdeQuery, apolloRealityQuery};

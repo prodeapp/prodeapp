@@ -7,6 +7,7 @@ import {useMatches} from "../hooks/useMatches";
 import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
+import QuestionsDialog from "../components/Questions/QuestionsDialog";
 
 function TournamentsView() {
   const { id } = useParams();
@@ -14,6 +15,7 @@ function TournamentsView() {
   const { data: ranking } = useRanking(String(id));
   const { data: matches } = useMatches(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
+  const [openModal, setOpenModal] = useState(false);
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -22,6 +24,10 @@ function TournamentsView() {
   if (!tournament) {
     return <div>Tournament not found</div>
   }
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
 
   return (
     <>
@@ -32,9 +38,12 @@ function TournamentsView() {
           </Box>
         </div>
         <div style={{width: '49%', marginLeft: '2%'}}>
-          <Box style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
             <BoxRow>
               <div>Total Prize: {new DecimalBigNumber(tournament.pool,18).toString()}</div>
+            </BoxRow>
+            <BoxRow>
+              <div><Button style={{flexGrow: 0, marginLeft: '10px'}} color="secondary" onClick={() => setOpenModal(true)}>Place Bet</Button></div>
             </BoxRow>
           </Box>
         </div>
@@ -46,6 +55,13 @@ function TournamentsView() {
           <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
         </BoxRow>
       </Box>
+
+      <QuestionsDialog
+        tournamentId={String(id)}
+        price={tournament.price}
+        open={openModal}
+        handleClose={handleClose}
+      />
 
       {section === 'results' && <Box>
         <BoxRow>
