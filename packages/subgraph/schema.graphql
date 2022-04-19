@@ -69,7 +69,7 @@ type Bet @entity {
   tokenID: BigInt!
   ranking: BigInt
   points: BigInt!
-  results: [BigInt!]!
+  results: [Bytes!]!
   count: BigInt!
   claim: Boolean!
   reward: BigInt!

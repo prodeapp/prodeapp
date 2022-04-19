@@ -1,4 +1,4 @@
-import { log, BigInt, Address } from '@graphprotocol/graph-ts';
+import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
@@ -70,22 +70,19 @@ export function handlePlaceBet(event: PlaceBet): void {
 
     let betID = getBetID(event.address, event.params.tokenID)
     log.info("handlePlaceBet: Betid: {}", [betID.toString()])
-    let bet = Bet.load(betID)!
+    let bet = Bet.load(betID)
     if (bet == null) {
-        let bet = new Bet(betID)
+        bet = new Bet(betID)
         bet.tokenID = event.params.tokenID
         bet.player = player.id
         bet.tournament = tournament.id
-        let predictions = event.params._predictions
-        let results: BigInt[]
-        for (let i = 0; i < predictions.length; i++) {
-            results.push(BigInt.fromByteArray(predictions[i]))
-        }
-        bet.results = results
+        bet.results = event.params._predictions
         bet.count = BigInt.fromI32(0)
         bet.points = BigInt.fromI32(0)
         bet.reward = BigInt.fromI32(0)
         bet.claim = false;
+        bet.ranking = BigInt.fromI32(0)
+        bet.reward = BigInt.fromI32(0)
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))
     bet.save()
