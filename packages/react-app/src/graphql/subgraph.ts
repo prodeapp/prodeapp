@@ -9,6 +9,8 @@ export interface Tournament {
   manager: string
   pool: BigNumber
   period: number
+  players: Player[]
+  bets: Bet[]
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -18,7 +20,7 @@ export const TOURNAMENT_FIELDS = `
       price
       closingTime
       managementFee
-      manager
+      manager{id}
       pool
       period
     }
@@ -50,6 +52,40 @@ export interface Match {
   historyHash: string
 }
 
+export interface Player {
+  id: string
+  amountBeted: BigNumber
+  pricesReceived: BigNumber
+  tournaments: [Tournament]
+  bets: [Bet]
+}
+
+export interface Bet {
+  id: string
+  player: Player
+  tournament: Tournament
+  tokenID: BigNumber
+  ranking: BigNumber
+  points: BigNumber
+  results: [BigNumber]
+  count: BigNumber
+  claim: Boolean
+  reward: BigNumber
+}
+
+export interface Manager {
+  id: string
+  tournaments: [Tournament]
+  managementRewards: BigNumber
+}
+
+export interface Funder {
+  id: string
+  amount: BigNumber
+  tournaments: [Tournament]
+  messages: [string]
+}
+
 export const MATCH_FIELDS = `
   fragment MatchFields on Match {
     id
@@ -63,5 +99,29 @@ export const MATCH_FIELDS = `
     minBond
     contentHash
     historyHash
+  }
+`;
+
+export const PLAYER_FIELDS = `
+  fragment PlayerFields on Player {
+    amountBeted
+    pricesReceived
+    tournaments{id}
+    bets{id}
+  }
+`;
+
+export const BET_FIELDS = `
+  fragment BetFields on Bet {
+    id
+    player{id}
+    tournament{id}
+    tokenID
+    ranking
+    points
+    results
+    count
+    claim
+    reward
   }
 `;

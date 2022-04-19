@@ -11,7 +11,7 @@ import Button from '@mui/material/Button';
 function TournamentsView() {
   const { id } = useParams();
   const { loading, tournament } = useTournament(String(id));
-  const { data: ranking } = useRanking(String(id));
+  const { ranking } = useRanking(String(id));
   const { matches } = useMatches(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
 
@@ -71,7 +71,7 @@ function TournamentsView() {
         {ranking && ranking.map((rank, i) => {
           return <BoxRow key={i}>
             <div style={{width: '20%'}}>{i+1}</div>
-            <div style={{width: '40%'}}>{shortenAddress(rank.player)}</div>
+            <div style={{width: '40%'}}>{shortenAddress(rank.player.id)}</div>
             <div style={{width: '40%'}}>{rank.points.toString()}</div>
           </BoxRow>
         })}
