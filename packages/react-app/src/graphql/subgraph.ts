@@ -1,13 +1,13 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumberish } from "@ethersproject/bignumber";
 
 export interface Tournament {
   id: string
   name: string
-  price: BigNumber
-  closingTime: BigNumber
-  managementFee: BigNumber
+  price: BigNumberish
+  closingTime: BigNumberish
+  managementFee: BigNumberish
   manager: string
-  pool: BigNumber
+  pool: BigNumberish
   period: number
   players: Player[]
   bets: Bet[]
@@ -28,11 +28,11 @@ export const TOURNAMENT_FIELDS = `
 
 export interface Answer {
   id: string
-  answer: BigNumber
+  answer: BigNumberish
   historyHash: string
   user: string
-  bond: BigNumber
-  timestamp: BigNumber
+  bond: BigNumberish
+  timestamp: BigNumberish
   isCommitment: boolean
   match: Match
   tournament: Tournament
@@ -41,21 +41,21 @@ export interface Answer {
 export interface Match {
   id: string
   questionID: string
-  nonce: BigNumber
+  nonce: BigNumberish
   tournament: Tournament
   answer: Answer
-  openingTs: BigNumber
-  finalizeTs: BigNumber
-  timeout: BigNumber
-  minBond: BigNumber
+  openingTs: BigNumberish
+  finalizeTs: BigNumberish
+  timeout: BigNumberish
+  minBond: BigNumberish
   contentHash: string
   historyHash: string
 }
 
 export interface Player {
   id: string
-  amountBeted: BigNumber
-  pricesReceived: BigNumber
+  amountBeted: BigNumberish
+  pricesReceived: BigNumberish
   tournaments: [Tournament]
   bets: [Bet]
 }
@@ -64,24 +64,24 @@ export interface Bet {
   id: string
   player: Player
   tournament: Tournament
-  tokenID: BigNumber
-  ranking: BigNumber
-  points: BigNumber
-  results: [BigNumber]
-  count: BigNumber
+  tokenID: BigNumberish
+  ranking: BigNumberish
+  points: BigNumberish
+  results: BigNumberish[]
+  count: BigNumberish
   claim: Boolean
-  reward: BigNumber
+  reward: BigNumberish
 }
 
 export interface Manager {
   id: string
   tournaments: [Tournament]
-  managementRewards: BigNumber
+  managementRewards: BigNumberish
 }
 
 export interface Funder {
   id: string
-  amount: BigNumber
+  amount: BigNumberish
   tournaments: [Tournament]
   messages: [string]
 }

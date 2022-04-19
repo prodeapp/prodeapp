@@ -39,9 +39,9 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
         <div style={{width: '25%'}}>
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
         </div>
-        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.price,18).toString()}</div>
+        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.price as string,18).toString()}</div>
         <div style={{width: '25%'}}>{tournament.closingTime.toString()}</div>
-        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.pool,18).toString()}</div>
+        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.pool as string,18).toString()}</div>
       </BoxRow>
     })}
   </Box>

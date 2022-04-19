@@ -11,7 +11,7 @@ import {Contract} from "@ethersproject/contracts";
 import {Tournament, Tournament__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
-import type {BigNumber} from "ethers";
+import type {BigNumberish} from "ethers";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[]
@@ -19,7 +19,7 @@ export type QuestionsFormValues = {
 
 type QuestionsFormProps = {
   tournamentId: string
-  price: BigNumber
+  price: BigNumberish
   control: Control<QuestionsFormValues>
   register: UseFormRegister<QuestionsFormValues>
   errors: FieldErrors<QuestionsFormValues>

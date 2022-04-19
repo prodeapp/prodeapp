@@ -4,11 +4,11 @@ import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import QuestionsForm, {QuestionsFormValues} from "./QuestionsForm";
-import type {BigNumber} from "ethers";
+import type {BigNumberish} from "ethers";
 
 type QuestionsDialogProps = DialogProps & {
   tournamentId: string
-  price: BigNumber
+  price: BigNumberish
 }
 
 function QuestionsDialog({open, handleClose, tournamentId, price}: QuestionsDialogProps) {
