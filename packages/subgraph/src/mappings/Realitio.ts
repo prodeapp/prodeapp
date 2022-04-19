@@ -2,9 +2,9 @@ import { BigInt, ByteArray, log } from "@graphprotocol/graph-ts";
 import { LogNewAnswer } from "../types/RealitioV3/Realitio";
 import { Answer, Bet, Match } from "../types/schema";
 import { correctAnswerPoints } from "./constants";
-import { getBetID } from "./helpers";
+import { getBetID, getCurrentRanking } from "./helpers";
 
-export function handleNewAnswer(event: LogNewAnswer): void  {
+export function handleNewAnswer(event: LogNewAnswer): void {
     let id = event.params.question_id.toHexString();
     let match = Match.load(id);
     if (match === null) return; // this is not a question from the Dapp
@@ -19,10 +19,11 @@ export function handleNewAnswer(event: LogNewAnswer): void  {
     answerEntity.tournament = match.tournament;
     answerEntity.save();
 
-    // TODO: add points in the bets
+    // add points with this new match
     let tokenID = BigInt.fromI32(0);
     const questionNonce = match.nonce;
-    let betID = getBetID(ByteArray.fromHexString(match.tournament), tokenID);
+    let tournamentId = ByteArray.fromHexString(match.tournament);
+    let betID = getBetID(tournamentId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
         let betResult = bet.results[questionNonce.toI32()];
@@ -33,7 +34,22 @@ export function handleNewAnswer(event: LogNewAnswer): void  {
             bet.save()
         }
         tokenID = tokenID.plus(BigInt.fromI32(1));
-        betID = getBetID(ByteArray.fromHexString(match.tournament), tokenID);
+        betID = getBetID(tournamentId, tokenID);
         bet = Bet.load(betID);
     };
+
+    // get the current ranking
+    let betsRanking = getCurrentRanking(tournamentId);
+    // update bets ranking
+    for (let i = 0; i < tokenID.toI32(); i++) {
+        // find current position
+        betID = getBetID(tournamentId, BigInt.fromI32(i));
+        bet = Bet.load(betID);
+        if (bet === null) break;
+        // get current ranking
+        bet.ranking =  BigInt.fromI32(betsRanking.map<string>((item: Bet): string => {
+            return item.id;
+          }).indexOf(betID));
+        bet.save()
+    }
 }
