@@ -59,17 +59,19 @@ export default function QuestionsForm({tournamentId, price, control, register, e
   }
 
   const onSubmit = async (data: QuestionsFormValues) => {
-    await send(
-      data.outcomes.map(outcome => {
-        if (outcome.value === '') {
-          throw Error('Invalid outcome')
-        }
+    const results = data.outcomes.map(outcome => {
+      if (outcome.value === '') {
+        throw Error('Invalid outcome')
+      }
 
-        return hexZeroPad(hexlify(outcome.value), 32)
-      },
+      return hexZeroPad(hexlify(outcome.value), 32)
+    });
+
+    await send(
+      results,
       {
         value: price
-      })
+      }
     )
   }
 
