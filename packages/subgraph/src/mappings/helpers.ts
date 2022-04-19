@@ -5,10 +5,6 @@ export function getBetID(tournament: ByteArray, tokenID: BigInt): string {
     return tournament.toHexString() + '-' + tokenID.toString();
 }
 
-export function getMatchID(tournament: ByteArray, nonce: BigInt): string {
-    return tournament.toHexString() + '-' + nonce.toString();
-}
-
 export function getOrCreatePlayer(address: Address): Player {
     let player = Player.load(address.toHexString())
     if (player === null) {

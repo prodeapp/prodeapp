@@ -2,7 +2,7 @@ import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
-import { getBetID, getMatchID, getOrCreateManager, getOrCreatePlayer } from './helpers';
+import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
 import { RealitioAddress } from './constants';
 
 
@@ -36,8 +36,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
         let questionID = event.params._questionIDs[i]
-        let matchID = getMatchID(event.address, nonce)
-        let match = new Match(matchID);
+        let match = new Match(questionID.toHexString());
         match.tournament = tournament.id;
         match.questionID = questionID;
         match.nonce = nonce;
@@ -49,7 +48,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         match.historyHash = realitioSC.getHistoryHash(questionID);
         match.save();
         nonce = nonce.plus(BigInt.fromI32(1))
-        log.debug("handleQuestionsRegistered: matchID {} registered", [matchID])
+        log.debug("handleQuestionsRegistered: matchID {} registered", [questionID.toHexString()])
     }
     tournament.numOfMatches = nonce;
     tournament.save();
