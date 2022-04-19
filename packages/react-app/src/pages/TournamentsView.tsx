@@ -10,12 +10,12 @@ import Button from '@mui/material/Button';
 
 function TournamentsView() {
   const { id } = useParams();
-  const { loading, tournament } = useTournament(String(id));
-  const { ranking } = useRanking(String(id));
-  const { matches } = useMatches(String(id));
+  const { isLoading, data: tournament } = useTournament(String(id));
+  const { data: ranking } = useRanking(String(id));
+  const { data: matches } = useMatches(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
 
-  if (loading) {
+  if (isLoading) {
     return <div>Loading...</div>
   }
 

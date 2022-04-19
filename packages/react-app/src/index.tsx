@@ -1,6 +1,5 @@
 import "./index.css";
 
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { DAppProvider, xDai, Localhost, Kovan } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -31,37 +30,27 @@ const config = {
   },
 }
 
-// You should replace this url with your own and put it into a .env file
-// See all subgraphs: https://thegraph.com/explorer/
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp",
-});
-
-
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
-      <ApolloProvider client={client}>
-        <ReactQueryProvider>
-          <ThemeProvider theme={theme}>
-            <BrowserRouter>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="tournaments">
-                    <Route index element={<TournamentsList />} />
-                    <Route path=":id" element={<TournamentsView />} />
-                    <Route path="new" element={<TournamentsCreate />} />
-                  </Route>
-                  <Route path="leaderboard" element={<Leaderboard />} />
-                  <Route path="profile" element={<Profile />} />
+      <ReactQueryProvider>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="tournaments">
+                  <Route index element={<TournamentsList />} />
+                  <Route path=":id" element={<TournamentsView />} />
+                  <Route path="new" element={<TournamentsCreate />} />
                 </Route>
-              </Routes>
-            </BrowserRouter>
-          </ThemeProvider>
-        </ReactQueryProvider>
-      </ApolloProvider>
+                <Route path="leaderboard" element={<Leaderboard />} />
+                <Route path="profile" element={<Profile />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </ReactQueryProvider>
     </DAppProvider>
   </React.StrictMode>,
   document.getElementById("root"),

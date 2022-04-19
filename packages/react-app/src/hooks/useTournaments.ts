@@ -1,8 +1,8 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from "react-query";
+import apollo from "../lib/apolloClient";
 import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
-import { gql } from "@apollo/client";
 
-const query = gql`
+const query = `
     ${TOURNAMENT_FIELDS}
     query TournamentsQuery {
       tournaments(first: 10) {
@@ -12,7 +12,14 @@ const query = gql`
 `;
 
 export const useTournaments = () => {
-  const {loading, error, data} = useQuery<{tournaments: Tournament[]}>(query);
+  return useQuery<Tournament[], Error>(
+    ["useTournaments"],
+    async () => {
+      const response = await apollo<{ tournaments: Tournament[] }>(query);
 
-  return {loading, error, tournaments: data?.tournaments || []}
+      if (!response) throw new Error("No response from TheGraph");
+
+      return response.data.tournaments;
+    }
+  );
 };

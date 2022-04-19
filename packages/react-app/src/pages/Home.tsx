@@ -7,7 +7,7 @@ import {DecimalBigNumber} from "../lib/DecimalBigNumber";
 import {Tournament} from "../graphql/subgraph";
 
 function Home() {
-  const { loading, error, tournaments } = useTournaments();
+  const { isLoading, error, data: tournaments } = useTournaments();
 
   return (
     <>
@@ -17,7 +17,7 @@ function Home() {
         </BoxRow>
       </Box>
 
-      {!loading && !error && tournaments && <TournamentsTable tournaments={tournaments}/>}
+      {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments}/>}
     </>
   );
 }

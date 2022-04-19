@@ -1,19 +1,26 @@
-import {Tournament, BET_FIELDS} from "../graphql/subgraph";
-import { gql, useQuery } from "@apollo/client";
+import {BET_FIELDS, Bet} from "../graphql/subgraph";
+import {useQuery} from "react-query";
+import apollo from "../lib/apolloClient";
 
-const query = gql`
+const query = `
     ${BET_FIELDS}
-    query PLAYERSQuery ($tournamentID: String!){
-      tournaments(where:{id: $tournamentID}) {
-        bets{...BetsFields}
+    query BetsQuery {
+      bets(tournament: $id) {
+        ...BetFields
       }
     }
 `;
 
 /** TODO: sort the bets by points */
 export const useRanking = (tournamentId: string) => {
-  const {loading, error, data} = useQuery<{tournamnet: Tournament}>(query, {
-    variables: {tournamentID: tournamentId}});
+  return useQuery<Bet[], Error>(
+    ["useRanking", tournamentId],
+    async () => {
+      const response = await apollo<{ bets: Bet[] }>(query, {tournamentId});
 
-  return {loading, error, ranking: data?.tournamnet.bets || []}
+      if (!response) throw new Error("No response from TheGraph");
+
+      return response.data.bets;
+    }
+  );
 };

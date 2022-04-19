@@ -1,18 +1,25 @@
+import { useQuery } from "react-query";
+import apollo from "../lib/apolloClient";
 import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
-import {useQuery} from "@apollo/client/react/hooks/useQuery";
-import {gql} from "@apollo/client";
 
-const query = gql`
+const query = `
     ${TOURNAMENT_FIELDS}
-    query TournamentQuery($id: String) {
-        tournament(id: $id) {
+    query TournamentQuery($tournamentId: String) {
+        tournament(id: $tournamentId) {
             ...TournamentFields
         }
     }
 `;
 
-export const useTournament = (id: string) => {
-  const {loading, error, data} = useQuery<{tournament: Tournament}, {id: string}>(query, {variables: {id}});
+export const useTournament = (tournamentId: string) => {
+  return useQuery<Tournament, Error>(
+    ["useTournament", tournamentId],
+    async () => {
+      const response = await apollo<{ tournament: Tournament }>(query, {tournamentId});
 
-  return {loading, error, tournament: data?.tournament || undefined}
+      if (!response) throw new Error("No response from TheGraph");
+
+      return response.data.tournament;
+    }
+  );
 };
