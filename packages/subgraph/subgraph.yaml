@@ -9,8 +9,8 @@ dataSources:
     network: xdai
     source:
       abi: TournamentFactory
-      address: "0xaa2b3bb574ae456d6D830bA06c749dFc283f72eB"
-      startBlock: 21695861
+      address: "0xEc14BecE211650E63E5d9Fd570d9085f697d508A"
+      startBlock: 21724046
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

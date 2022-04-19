@@ -19,7 +19,7 @@ type Tournament @entity {
 }
 
 type Match @entity {
-  "tournament-nounce"
+  "tournament-nonce"
   id: ID!
   questionID: Bytes!
   nonce: BigInt!
