@@ -51,7 +51,7 @@ type Player @entity {
   id: ID!
   amountBeted: BigInt!
   pricesReceived: BigInt!
-  tournaments: [Tournament!]
+  tournaments: [Tournament!]!
   bets: [Bet!]! @derivedFrom(field: "player")
 }
 
