@@ -41,18 +41,18 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         bet = Bet.load(betID);
     };
 
-    // get the current ranking
-    let betsRanking = getCurrentRanking(tournamentId);
-    // update bets ranking
-    for (let i = 0; i < tokenID.toI32(); i++) {
-        // find current position
-        betID = getBetID(tournamentId, BigInt.fromI32(i));
-        bet = Bet.load(betID);
-        if (bet === null) break;
-        // get current ranking
-        bet.ranking =  BigInt.fromI32(betsRanking.map<string>((item: Bet): string => {
-            return item.id;
-          }).indexOf(betID));
-        bet.save()
-    }
+    // // get the current ranking
+    // let betsRanking = getCurrentRanking(tournamentId);
+    // // update bets ranking
+    // for (let i = 0; i < tokenID.toI32(); i++) {
+    //     // find current position
+    //     betID = getBetID(tournamentId, BigInt.fromI32(i));
+    //     bet = Bet.load(betID);
+    //     if (bet === null) break;
+    //     // get current ranking
+    //     bet.ranking =  BigInt.fromI32(betsRanking.map<string>((item: Bet): string => {
+    //         return item.id;
+    //       }).indexOf(betID));
+    //     bet.save()
+    // }
 }
