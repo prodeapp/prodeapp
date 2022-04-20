@@ -5,6 +5,7 @@ import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
+import {Outcome} from "../graphql/subgraph";
 
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);
@@ -29,4 +30,13 @@ export function getTimeLeft(endDate: Date|string|number): string | false {
 export function formatAmount(amount: BigNumberish) {
   const number = new DecimalBigNumber(BigNumber.from(amount),18)
   return `${number.toString()} xDAI`
+}
+
+export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], noAnswerText = 'Not answered yet') {
+  if (currentAnswer === null) {
+    return noAnswerText;
+  }
+
+  const value = BigNumber.from(currentAnswer);
+  return outcomes[value.toNumber()].answer;
 }

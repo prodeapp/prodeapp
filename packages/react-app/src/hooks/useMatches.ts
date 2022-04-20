@@ -5,7 +5,7 @@ import {apolloProdeQuery} from "../lib/apolloClient";
 const query = `
     ${MATCH_FIELDS}
     query MatchesQuery ($tournamentId: String!){
-      matches(where:{tournament: $tournamentId}, orderBy:id, orderDirection:desc) {
+      matches(where:{tournament: $tournamentId}, orderBy: nonce, orderDirection: asc) {
         ...MatchFields
       }
     }
@@ -13,7 +13,7 @@ const query = `
 
 export const useMatches = (tournamentId: string) => {
   return useQuery<Match[], Error>(
-    ["useMatches"],
+    ["useMatches", tournamentId],
     async () => {
       const response = await apolloProdeQuery<{ matches: Match[] }>(query, {tournamentId});
 

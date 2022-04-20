@@ -4,6 +4,7 @@ export interface Tournament {
   id: string
   name: string
   price: BigNumberish
+  creationTime: string
   closingTime: string
   managementFee: BigNumberish
   manager: string
@@ -18,6 +19,7 @@ export const TOURNAMENT_FIELDS = `
       id
       name
       price
+      creationTime
       closingTime
       managementFee
       manager{id}
@@ -126,19 +128,29 @@ export const BET_FIELDS = `
   }
 `;
 
+export interface Outcome {
+  id: string
+  answer: string
+}
+
 export interface Question {
   questionId: string
   qTitle: string
-  outcomes: {
-    id: string
-    answer: string
-  }[]
+  openingTimestamp: string
+  currentAnswer: string
+  isPendingArbitration: boolean
+  answerFinalizedTimestamp: string | null
+  outcomes: Outcome[]
 }
 
 export const QUESTION_FIELDS = `
   fragment QuestionFields on Question {
     questionId
     qTitle
+    openingTimestamp
+    currentAnswer
+    isPendingArbitration
+    answerFinalizedTimestamp
     outcomes {
       id
       answer

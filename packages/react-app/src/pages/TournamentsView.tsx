@@ -2,18 +2,18 @@ import React, {useEffect, useState} from "react";
 import {useTournament} from "../hooks/useTournament";
 import {useParams} from "react-router-dom";
 import {useRanking} from "../hooks/useRanking";
-import {useMatches} from "../hooks/useMatches";
 import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
-import {formatAmount, getTimeLeft} from "../lib/helpers";
+import {formatAmount, getAnswerText, getTimeLeft} from "../lib/helpers";
+import {useQuestions} from "../hooks/useQuestions";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
   const { data: ranking } = useRanking(String(id));
-  const { data: matches } = useMatches(String(id));
+  const { data: questions } = useQuestions(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
   const [openModal, setOpenModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
@@ -77,13 +77,15 @@ function TournamentsView() {
 
       {section === 'results' && <Box>
         <BoxRow>
-          <div style={{width: '70%'}}>Match</div>
+          <div style={{width: '60%'}}>Match</div>
           <div style={{width: '30%'}}>Result</div>
+          <div style={{width: '10%'}}>Status</div>
         </BoxRow>
-        {matches && matches.map((match, i) => {
+        {questions && questions.map((question, i) => {
           return <BoxRow style={{display: 'flex'}} key={i}>
-            <div style={{width: '70%'}}>{match.questionID}</div>
-            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || (match.answer !== null ? match.answer.answer : "Not answered yet")}</div>
+            <div style={{width: '60%'}}>{question.qTitle}</div>
+            <div style={{width: '30%'}}>{getTimeLeft(question.openingTimestamp) || getAnswerText(question.currentAnswer, question.outcomes)}</div>
+            <div style={{width: '10%'}}>{question.answerFinalizedTimestamp !== null ? 'Finalized' : 'Pending'}</div>
           </BoxRow>
         })}
       </Box>}
