@@ -9,7 +9,6 @@ import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
 import {getTimeLeft} from "../lib/helpers";
-import fromUnixTime from "date-fns/fromUnixTime";
 
 function TournamentsView() {
   const { id } = useParams();
@@ -25,9 +24,7 @@ function TournamentsView() {
       return;
     }
 
-    const ct = fromUnixTime(Number(tournament.closingTime));
-
-    setTimeLeft(getTimeLeft(ct))
+    setTimeLeft(getTimeLeft(tournament.closingTime))
   }, [tournament]);
 
   if (isLoading) {
@@ -81,15 +78,13 @@ function TournamentsView() {
 
       {section === 'results' && <Box>
         <BoxRow>
-          <div style={{width: '80%'}}>Match</div>
-          <div style={{width: '20%'}}>Start</div>
-          <div style={{width: '20%'}}>Result</div>
+          <div style={{width: '70%'}}>Match</div>
+          <div style={{width: '30%'}}>Result</div>
         </BoxRow>
         {matches && matches.map((match, i) => {
           return <BoxRow style={{display: 'flex'}} key={i}>
-            <div style={{width: '60%'}}>{match.questionID}</div>
-            <div style={{width: '20%'}}>{match.openingTs}</div>
-            <div style={{width: '20%'}}>{match.answer!==null ? match.answer.answer : "Not answered yet"}</div>
+            <div style={{width: '70%'}}>{match.questionID}</div>
+            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || (match.answer !== null ? match.answer.answer : "Not answered yet")}</div>
           </BoxRow>
         })}
       </Box>}

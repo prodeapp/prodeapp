@@ -9,8 +9,12 @@ export function formatDate(timestamp: number) {
   return format(date, 'MMMM d yyyy, HH:mm')
 }
 
-export function getTimeLeft(endDate: Date): string | false {
+export function getTimeLeft(endDate: Date|string|number): string | false {
   const startDate = new Date()
+
+  if (typeof endDate === 'number' || typeof endDate === 'string') {
+    endDate = fromUnixTime(Number(endDate))
+  }
 
   if (compareAsc(startDate, endDate) === 1) {
     return false;

@@ -26,7 +26,8 @@ function TournamentsCreate() {
 
   const [openModal, setOpenModal] = useState(false);
 
-  const defaultClosingTime = dateAdd(new Date(), {days: 5});
+  const today = new Date();
+  const defaultClosingTime = dateAdd(today, {days: 5});
 
   const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<TournamentFormValues>({defaultValues: {
       tournament: '',
@@ -122,7 +123,7 @@ function TournamentsCreate() {
                 render={({ field }) => (
                   <DateTimePicker
                     label='Select date'
-                    minDate={defaultClosingTime}
+                    minDate={today}
                     onChange={field.onChange}
                     value={field.value}
                     renderInput={(params) => <TextField {...params} />}

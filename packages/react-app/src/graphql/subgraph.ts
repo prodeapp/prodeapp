@@ -4,7 +4,7 @@ export interface Tournament {
   id: string
   name: string
   price: BigNumberish
-  closingTime: BigNumberish
+  closingTime: string
   managementFee: BigNumberish
   manager: string
   pool: BigNumberish
@@ -32,7 +32,7 @@ export interface Answer {
   historyHash: string
   user: string
   bond: BigNumberish
-  timestamp: BigNumberish
+  timestamp: string
   isCommitment: boolean
   match: Match
   tournament: Tournament
@@ -44,9 +44,9 @@ export interface Match {
   nonce: BigNumberish
   tournament: Tournament
   answer: Answer
-  openingTs: BigNumberish
-  finalizeTs: BigNumberish
-  timeout: BigNumberish
+  openingTs: string
+  finalizeTs: string
+  timeout: string
   minBond: BigNumberish
   contentHash: string
   historyHash: string
