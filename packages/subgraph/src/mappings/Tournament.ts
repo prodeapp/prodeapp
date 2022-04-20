@@ -19,7 +19,7 @@ export function handleInitialize(event: Initialize): void {
     tournament.creationTime = event.block.timestamp;
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
-    tournament.period = BigInt.fromI32(0);
+    tournament.period = BigInt.fromI32(1);
     tournament.numOfMatches = BigInt.fromI32(0);
 
     let manager = getOrCreateManager(event.params._manager);
