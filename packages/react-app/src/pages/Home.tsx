@@ -3,8 +3,8 @@ import {Box, BoxRow} from "../components";
 import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
 import {useTournaments} from "../hooks/useTournaments";
-import {DecimalBigNumber} from "../lib/DecimalBigNumber";
 import {Tournament} from "../graphql/subgraph";
+import {formatAmount} from "../lib/helpers";
 
 function Home() {
   const { isLoading, error, data: tournaments } = useTournaments();
@@ -39,9 +39,9 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
         <div style={{width: '25%'}}>
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
         </div>
-        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.price as string,18).toString()}</div>
+        <div style={{width: '25%'}}>{formatAmount(tournament.price)}</div>
         <div style={{width: '25%'}}>{tournament.closingTime.toString()}</div>
-        <div style={{width: '25%'}}>{new DecimalBigNumber(tournament.pool as string,18).toString()}</div>
+        <div style={{width: '25%'}}>{formatAmount(tournament.pool)}</div>
       </BoxRow>
     })}
   </Box>

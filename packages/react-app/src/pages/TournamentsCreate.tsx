@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import TemplateDialog from "../components/TemplateDialog";
@@ -15,6 +15,7 @@ import PrizeWeightsBuilder from "../components/TournamentCreate/PrizeWeightsBuil
 import MatchBuilder from "../components/TournamentCreate/MatchBuilder";
 import TournamentForm, {TournamentFormValues, PLACEHOLDER_REGEX} from "../components/TournamentCreate/TournamentForm";
 import {useEthers} from "@usedapp/core";
+import dateAdd from 'date-fns/add'
 
 const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -26,6 +27,7 @@ function TournamentsCreate() {
   const [openModal, setOpenModal] = useState(false);
 
   const today = new Date();
+  const defaultClosingTime = dateAdd(today, {days: 5});
 
   const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<TournamentFormValues>({defaultValues: {
       tournament: '',
@@ -34,7 +36,7 @@ function TournamentsCreate() {
       matches: [],
       prizeWeights: [{value: 40}, {value: 30}, {value: 20}, {value: 10}],
       prizeDivisor: 0,
-      closingTime: today
+      closingTime: defaultClosingTime
     }});
 
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
@@ -119,7 +121,7 @@ function TournamentsCreate() {
                 name='closingTime'
                 rules={{required: 'This field is required'}}
                 render={({ field }) => (
-                  <DatePicker
+                  <DateTimePicker
                     label='Select date'
                     minDate={today}
                     onChange={field.onChange}

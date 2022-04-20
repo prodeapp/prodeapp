@@ -19,7 +19,7 @@ export function handleInitialize(event: Initialize): void {
     tournament.creationTime = event.block.timestamp;
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
-    tournament.period = BigInt.fromI32(0);
+    tournament.period = BigInt.fromI32(1);
     tournament.numOfMatches = BigInt.fromI32(0);
 
     let manager = getOrCreateManager(event.params._manager);
@@ -56,16 +56,15 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
 
 
 export function handlePlaceBet(event: PlaceBet): void {
-    let player = getOrCreatePlayer(event.params._player)
     let tournament = Tournament.load(event.address.toHexString())!
     tournament.pool = tournament.pool.plus(tournament.price)
-    let tmp_tournamnets = player.tournaments
-    if (tmp_tournamnets === null) {
-        tmp_tournamnets = [tournament.id];
-    } else {
-        tmp_tournamnets.push(tournament.id)
-    }
-    player.tournaments = tmp_tournamnets
+    tournament.save()
+
+    let player = getOrCreatePlayer(event.params._player)
+    let tmp_tournaments = player.tournaments;
+    tmp_tournaments.push(tournament.id);
+    player.tournaments = tmp_tournaments;
+    player.save()
 
     let betID = getBetID(event.address, event.params.tokenID)
     log.info("handlePlaceBet: Betid: {}", [betID.toString()])
@@ -85,8 +84,6 @@ export function handlePlaceBet(event: PlaceBet): void {
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))
     bet.save()
-
-    player.save()
 }
 
 export function handleBetReward(event: BetReward): void {
