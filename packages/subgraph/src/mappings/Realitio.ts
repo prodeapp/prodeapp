@@ -23,11 +23,14 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     let tokenID = BigInt.fromI32(0);
     const questionNonce = match.nonce;
     let tournamentId = ByteArray.fromHexString(match.tournament);
+    log.debug("handleNewAnswer: summing points for tournament {}, questoinID: {}, questionNonce: {}, with answer {}", [tournamentId.toHexString(), id, questionNonce.toString(),answerEntity.answer.toHexString()]);
     let betID = getBetID(tournamentId, tokenID);
+    log.debug("handleNewAnswer: checking betID {}", [betID]);
     let bet = Bet.load(betID);
     while (bet !== null) {
         let betResult = bet.results[questionNonce.toI32()];
-        if (betResult === answerEntity.answer) {
+        log.debug("handleNewAnswer: Checking bet {} with result {} for nonce {}", [bet.id, betResult.toHexString(), questionNonce.toString()])
+        if (betResult.equals(answerEntity.answer)) {
             // The player has the correct answer
             log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
             bet.points = bet.points.plus(correctAnswerPoints);
