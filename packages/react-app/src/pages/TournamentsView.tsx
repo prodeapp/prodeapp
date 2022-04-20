@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {useTournament} from "../hooks/useTournament";
-import {DecimalBigNumber} from "../lib/DecimalBigNumber";
 import {useParams} from "react-router-dom";
 import {useRanking} from "../hooks/useRanking";
 import {useMatches} from "../hooks/useMatches";
@@ -8,7 +7,7 @@ import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
-import {getTimeLeft} from "../lib/helpers";
+import {formatAmount, getTimeLeft} from "../lib/helpers";
 
 function TournamentsView() {
   const { id } = useParams();
@@ -50,7 +49,7 @@ function TournamentsView() {
         <div style={{width: '49%', marginLeft: '2%'}}>
           <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
             <BoxRow>
-              <div>Total Prize: {new DecimalBigNumber(tournament.pool as string,18).toString()}</div>
+              <div>Total Prize: {formatAmount(tournament.pool)}</div>
             </BoxRow>
             {timeLeft !== false && <BoxRow>
               <div style={{textAlign: 'center'}}>
