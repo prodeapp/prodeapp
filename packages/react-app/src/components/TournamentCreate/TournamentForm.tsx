@@ -49,9 +49,14 @@ function replacePlaceholders(text: string, questionParams: string[]) {
   )
 }
 
-function getMatchData(questionParams: QuestionParams, questionPlaceholder: string, answersPlaceholder: AnswersPlaceholder): MatchData {
+function getMatchData(
+  questionParams: QuestionParams,
+  questionPlaceholder: string,
+  answersPlaceholder: AnswersPlaceholder,
+  tournamentName: string
+): MatchData {
   return {
-    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)),
+    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)).replace('[tournament]', tournamentName),
     answers: answersPlaceholder.map((answerPlaceholder, i) => {
       return replacePlaceholders(answerPlaceholder.value, questionParams.map(qp => qp.value));
     }),
@@ -83,7 +88,7 @@ export default function TournamentForm({children, handleSubmit, chainId}: FormPr
     const openingTS = closingTime + 1;
 
     const questionsData = data.matches.map(match => {
-      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder);
+      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder, data.tournament);
       return {
         templateID: 2,
         question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),

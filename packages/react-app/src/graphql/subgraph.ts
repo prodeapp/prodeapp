@@ -6,10 +6,11 @@ export interface Tournament {
   price: BigNumberish
   creationTime: string
   closingTime: string
+  resultSubmissionPeriodStart: string
+  submissionTimeout: string
   managementFee: BigNumberish
   manager: string
   pool: BigNumberish
-  period: number
   players: Player[]
   bets: Bet[]
 }
@@ -21,10 +22,11 @@ export const TOURNAMENT_FIELDS = `
       price
       creationTime
       closingTime
+      resultSubmissionPeriodStart
+      submissionTimeout
       managementFee
       manager{id}
       pool
-      period
     }
 `;
 

@@ -17,10 +17,12 @@ export function handleInitialize(event: Initialize): void {
     tournament.managementFee = event.params._managementFee;
     tournament.closingTime = event.params._closingTime;
     tournament.creationTime = event.block.timestamp;
+    tournament.submissionTimeout = BigInt.fromI32(60*60*24*7); // TODO: read from params
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
-    tournament.period = BigInt.fromI32(1);
     tournament.numOfMatches = BigInt.fromI32(0);
+    tournament.numOfMatchesWithAnswer = BigInt.fromI32(0);
+    tournament.hasPendingAnswers = true;
 
     let manager = getOrCreateManager(event.params._manager);
     tournament.manager = manager.id;
@@ -120,8 +122,9 @@ export function handleFundingReceived(event: FundingReceived): void {
 
 export function handleManagementReward(event: ManagementReward): void {
     let tournament = Tournament.load(event.address.toHexString())!;
-    tournament.period = BigInt.fromI32(2);  // pass to next period
-    log.debug("handleManagementReward: Moving tournament {} to period 2", [event.address.toHexString()]);
+    tournament.resultSubmissionPeriodStart = event.block.timestamp;
+    tournament.save();
+
     let manager = getOrCreateManager(event.params._manager);
     manager.managementRewards = manager.managementRewards.plus(event.params._managementReward);
     manager.save()
