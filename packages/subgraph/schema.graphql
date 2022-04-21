@@ -13,6 +13,8 @@ type Tournament @entity {
   managementFee: BigInt
   manager: Manager!
   numOfMatches: BigInt!
+  numOfMatchesWithAnswer: BigInt!
+  hasPendingAnswers: Boolean!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
