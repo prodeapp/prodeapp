@@ -120,7 +120,6 @@ export const BET_FIELDS = `
     player{id}
     tournament{id}
     tokenID
-    ranking
     points
     results
     count
