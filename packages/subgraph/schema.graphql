@@ -45,6 +45,8 @@ type Answer @entity {
   isCommitment: Boolean!
   match: Match!
   tournament: Tournament!
+  isPendingArbitration: Boolean!
+  arbitrationOccurred: Boolean!
 }
 
 type Player @entity {

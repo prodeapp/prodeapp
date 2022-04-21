@@ -1,5 +1,5 @@
 import { BigInt, ByteArray, log } from "@graphprotocol/graph-ts";
-import { LogNewAnswer } from "../types/RealitioV3/Realitio";
+import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
 import { Answer, Bet, Match } from "../types/schema";
 import { correctAnswerPoints } from "./constants";
 import { getBetID } from "./helpers";
@@ -17,6 +17,8 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     answerEntity.timestamp = event.params.ts;
     answerEntity.match = match.id;
     answerEntity.tournament = match.tournament;
+    answerEntity.isPendingArbitration = false;
+    answerEntity.arbitrationOccurred = false;
     answerEntity.save();
 
     // add points with this new match
@@ -38,4 +40,22 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         betID = getBetID(tournamentId, tokenID);
         bet = Bet.load(betID);
     };
+}
+
+export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): void {
+    let answer = Answer.load(event.params.question_id.toHexString());
+    if (answer === null) return; // not a question for our tournaments
+    log.debug("handleArbitrationRequest: Dispute raise for answer {}", [answer.id]);
+    answer.isPendingArbitration = true;
+    answer.save();
+}
+
+export function handleFinalize(event: LogFinalize): void {
+    let answer = Answer.load(event.params.question_id.toHexString());
+    if (answer === null) return; // not a question for our tournaments
+    log.debug("handleArbitrationRequest: Dispute raise for answer {}", [answer.id]);
+    answer.isPendingArbitration = false;
+    answer.arbitrationOccurred = true;
+    answer.answer = event.params.answer;
+    answer.save();
 }
