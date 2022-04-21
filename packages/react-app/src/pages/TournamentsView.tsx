@@ -8,12 +8,14 @@ import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
 import {formatAmount, getAnswerText, getTimeLeft} from "../lib/helpers";
 import {useQuestions} from "../hooks/useQuestions";
+import {useTournamentStatus} from "../hooks/useTournamentStatus";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
   const { data: ranking } = useRanking(String(id));
   const { data: questions } = useQuestions(String(id));
+  const { data: tournamentStatus} = useTournamentStatus(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
   const [openModal, setOpenModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
@@ -41,9 +43,12 @@ function TournamentsView() {
   return (
     <>
       <div style={{display: 'flex', marginBottom: '20px'}}>
-        <div style={{width: '49%'}}>
-          <Box style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <div style={{fontSize: '25px'}}>{tournament.name}</div>
+        <div style={{width: '49%', textAlign: 'center'}}>
+          <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+            <div style={{fontSize: '25px', width: '100%'}}>{tournament.name}</div>
+            <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
+              Status: {tournamentStatus}
+            </div>
           </Box>
         </div>
         <div style={{width: '49%', marginLeft: '2%'}}>

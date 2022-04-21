@@ -6,11 +6,12 @@ type Tournament @entity {
   owner: Bytes!
   closingTime: BigInt!
   creationTime: BigInt!
+  resultSubmissionPeriodStart: BigInt!
+  submissionTimeout: BigInt!
   price: BigInt!
   pool: BigInt!
   managementFee: BigInt
   manager: Manager!
-  period: BigInt!
   numOfMatches: BigInt!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
