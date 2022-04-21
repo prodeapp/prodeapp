@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Typography, Container, Grid } from '@mui/material';
 import { shortenAddress } from '@usedapp/core';
 import { BoxRow } from '../components';
 import { usePlayer } from '../hooks/usePlayer';
@@ -14,38 +14,37 @@ export default function Profile() {
     return <div>Error...</div>
   }
 
-  console.log(player)
-
   if (!player) {
     return <div>User not found</div>
   }
 
   return (
-    <>
-      <div style={{display: 'flex', marginBottom: '20px'}}>
-        <div style={{width: '49%'}}>
-          <Box style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <div style={{fontSize: '25px'}}>{player.id}</div>
-          </Box>
-        </div>
-        <div style={{width: '49%', marginLeft: '2%'}}>
-          <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-            <BoxRow>
-              <div>Total Prize: {formatAmount(player.pricesReceived)}</div>
-            </BoxRow>
-          </Box>
-        </div>
-
-        <Box>
-        {player.tournaments && player.tournaments.map((tournament, i) => {
-          return <BoxRow key={i}>
-            <div style={{width: '20%'}}>{i+1}</div>
-            <div style={{width: '80%'}}>{shortenAddress(tournament.id)}</div>
+    <Container>
+      <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'center'}}>
+        <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Typography variant='h5'>Total Bet: {formatAmount(player.amountBeted)}</Typography>
+        </Grid>
+        <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
+          <Typography variant='h5'>Total Rewards: {formatAmount(player.pricesReceived)}</Typography>
+        </Grid>
+      </Grid>
+      <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
+        <Grid item sm={12} md={12}>
+          <BoxRow>
+            <div style={{ width: '20%' }}>Token ID</div>
+            <div style={{ width: '60%' }}>Tournament</div>
+            <div style={{ width: '20%' }}>Reward</div>
           </BoxRow>
-        })}
-        </Box>
+          {player.bets && player.bets.map((bet, i) => {
+            return <BoxRow key={i}>
+              <div style={{ width: '20%' }}>{bet.tokenID}</div>
+              <div style={{ width: '60%' }}><a href={'/tournaments/'+bet.tournament.id}>{shortenAddress(bet.tournament.id)}</a></div>
+              <div style={{ width: '20%' }}>{formatAmount(bet.reward)}</div>
+            </BoxRow>
+          })}
+        </Grid>
+      </Grid>
 
-      </div>
-    </>
+    </Container >
   );
 }
