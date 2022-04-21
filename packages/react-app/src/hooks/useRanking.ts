@@ -4,8 +4,8 @@ import {apolloProdeQuery} from "../lib/apolloClient";
 
 const query = `
     ${BET_FIELDS}
-    query BetsQuery {
-      bets(tournament: $id, orderBy: points, orderDirection: desc) {
+    query BetsQuery($tournamentId: String!) {
+      bets(where: {tournament: $tournamentId}, orderBy: points, orderDirection: desc) {
         ...BetFields
       }
     }
