@@ -6,7 +6,7 @@ import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
-import {formatAmount, getAnswerText, getTimeLeft} from "../lib/helpers";
+import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../lib/helpers";
 import {useQuestions} from "../hooks/useQuestions";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
 
@@ -94,7 +94,7 @@ function TournamentsView() {
               </a>
             </div>
             <div style={{width: '30%'}}>{getTimeLeft(question.openingTimestamp) || getAnswerText(question.currentAnswer, question.outcomes)}</div>
-            <div style={{width: '10%'}}>{question.answerFinalizedTimestamp !== null ? 'Finalized' : 'Pending'}</div>
+            <div style={{width: '10%'}}>{isFinalized(question) ? 'Finalized' : 'Pending'}</div>
           </BoxRow>
         })}
       </Box>}
