@@ -83,7 +83,11 @@ function TournamentsView() {
         </BoxRow>
         {questions && questions.map((question, i) => {
           return <BoxRow style={{display: 'flex'}} key={i}>
-            <div style={{width: '60%'}}>{question.qTitle}</div>
+            <div style={{width: '60%'}}>
+              <a href={`https://reality.eth.link/app/index.html#!/network/100/question/0xe78996a233895be74a66f451f1019ca9734205cc-${question.questionId}`} target="_blank" rel="noreferrer">
+                {question.qTitle}
+              </a>
+            </div>
             <div style={{width: '30%'}}>{getTimeLeft(question.openingTimestamp) || getAnswerText(question.currentAnswer, question.outcomes)}</div>
             <div style={{width: '10%'}}>{question.answerFinalizedTimestamp !== null ? 'Finalized' : 'Pending'}</div>
           </BoxRow>
