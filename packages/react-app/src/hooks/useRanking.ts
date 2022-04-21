@@ -5,13 +5,12 @@ import {apolloProdeQuery} from "../lib/apolloClient";
 const query = `
     ${BET_FIELDS}
     query BetsQuery {
-      bets(tournament: $id) {
+      bets(tournament: $id, orderBy: points, orderDirection: asc)) {
         ...BetFields
       }
     }
 `;
 
-/** TODO: sort the bets by points */
 export const useRanking = (tournamentId: string) => {
   return useQuery<Bet[], Error>(
     ["useRanking", tournamentId],

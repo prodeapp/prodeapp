@@ -43,6 +43,10 @@ dataSources:
       eventHandlers:
         - event: LogNewAnswer(bytes32,indexed bytes32,bytes32,indexed address,uint256,uint256,bool)
           handler: handleNewAnswer
+        - event: LogFinalize(indexed bytes32,indexed bytes32)
+          handler: handleFinalize
+        - event: LogNotifyOfArbitrationRequest(indexed bytes32,indexed address)
+          handler: handleArbitrationRequest
       file: ./src/mappings/Realitio.ts
       language: wasm/assemblyscript        
 

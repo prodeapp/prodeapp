@@ -19,7 +19,7 @@ type Tournament @entity {
 }
 
 type Match @entity {
-  "tournament-nonce"
+  "questionID"
   id: ID!
   questionID: Bytes!
   nonce: BigInt!
@@ -37,7 +37,7 @@ type Answer @entity {
   "questionID"
   id: ID!
   "Answer expresed in uint"
-  answer: BigInt!,
+  answer: Bytes!,
   historyHash: Bytes!
   user: Bytes!,
   bond: BigInt!,
@@ -45,6 +45,8 @@ type Answer @entity {
   isCommitment: Boolean!
   match: Match!
   tournament: Tournament!
+  isPendingArbitration: Boolean!
+  arbitrationOccurred: Boolean!
 }
 
 type Player @entity {
@@ -67,7 +69,6 @@ type Bet @entity {
   player: Player!
   tournament: Tournament!
   tokenID: BigInt!
-  ranking: BigInt
   points: BigInt!
   results: [Bytes!]!
   count: BigInt!

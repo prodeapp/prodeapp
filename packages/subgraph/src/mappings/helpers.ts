@@ -1,12 +1,8 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import { Player, Manager } from "../types/schema";
+import { Player, Manager, Bet } from "../types/schema";
 
 export function getBetID(tournament: ByteArray, tokenID: BigInt): string {
     return tournament.toHexString() + '-' + tokenID.toString();
-}
-
-export function getMatchID(tournament: ByteArray, nonce: BigInt): string {
-    return tournament.toHexString() + '-' + nonce.toString();
 }
 
 export function getOrCreatePlayer(address: Address): Player {
@@ -29,4 +25,18 @@ export function getOrCreateManager(address: Address): Manager {
         manager.save()
     }
     return manager
+}
+
+export function getCurrentRanking(tournament: ByteArray): Bet[] {
+    let bets: Bet[];
+    let tokenID = BigInt.fromI32(0);
+    let _bet: Bet | null;
+    while (true) {
+        let betID = getBetID(tournament, tokenID);
+        _bet = Bet.load(betID);
+        if (_bet === null) break;
+        bets.push(_bet);
+    }
+    // sort by points, if equal points, the first in bet get the higher ranking
+    return bets.sort((a, b) => (a.points > b.points) ? 1 : (a.points === b.points) ? ((a.tokenID > b.tokenID) ? 1 : -1) : -1)
 }
