@@ -38,6 +38,8 @@ export interface Answer {
   isCommitment: boolean
   match: Match
   tournament: Tournament
+  isPendingArbitration: boolean
+  arbitrationOccurred: boolean
 }
 
 export interface Match {
@@ -67,7 +69,6 @@ export interface Bet {
   player: Player
   tournament: Tournament
   tokenID: BigNumberish
-  ranking: BigNumberish
   points: BigNumberish
   results: BigNumberish[]
   count: BigNumberish
