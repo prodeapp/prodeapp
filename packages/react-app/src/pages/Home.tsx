@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import {Link} from "react-router-dom";
 import {useTournaments} from "../hooks/useTournaments";
 import {Tournament} from "../graphql/subgraph";
-import {formatAmount} from "../lib/helpers";
+import {formatAmount, getTimeLeft} from "../lib/helpers";
 
 function Home() {
   const { isLoading, error, data: tournaments } = useTournaments();
@@ -40,7 +40,7 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
         </div>
         <div style={{width: '25%'}}>{formatAmount(tournament.price)}</div>
-        <div style={{width: '25%'}}>{tournament.closingTime.toString()}</div>
+        <div style={{width: '25%'}}>{getTimeLeft(tournament.closingTime)}</div>
         <div style={{width: '25%'}}>{formatAmount(tournament.pool)}</div>
       </BoxRow>
     })}

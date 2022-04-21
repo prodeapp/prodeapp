@@ -5,7 +5,7 @@ import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
 const query = `
     ${TOURNAMENT_FIELDS}
     query TournamentsQuery {
-      tournaments(first: 10, orderBy: creationTime, orderDirection: desc) {
+      tournaments(first: 10, orderBy: closingTime, orderDirection: desc) {
         ...TournamentFields
       }
     }
