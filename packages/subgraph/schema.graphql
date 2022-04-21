@@ -67,7 +67,6 @@ type Bet @entity {
   player: Player!
   tournament: Tournament!
   tokenID: BigInt!
-  ranking: BigInt
   points: BigInt!
   results: [Bytes!]!
   count: BigInt!

@@ -79,7 +79,6 @@ export function handlePlaceBet(event: PlaceBet): void {
         bet.points = BigInt.fromI32(0)
         bet.reward = BigInt.fromI32(0)
         bet.claim = false;
-        bet.ranking = BigInt.fromI32(0)
         bet.reward = BigInt.fromI32(0)
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))

@@ -30,10 +30,10 @@ export function getOrCreateManager(address: Address): Manager {
 export function getCurrentRanking(tournament: ByteArray): Bet[] {
     let bets: Bet[];
     let tokenID = BigInt.fromI32(0);
-    let _bet: Bet;
+    let _bet: Bet | null;
     while (true) {
         let betID = getBetID(tournament, tokenID);
-        let _bet = Bet.load(betID);
+        _bet = Bet.load(betID);
         if (_bet === null) break;
         bets.push(_bet);
     }
