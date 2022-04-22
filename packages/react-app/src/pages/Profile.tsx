@@ -6,10 +6,10 @@ import { formatAmount } from '../lib/helpers';
 
 
 export default function Profile() {
-  // This ID should be the address of the connected wallet
   const { account, error: errorWallet } = useEthers();
   const { data: player, error } = usePlayer(account);
-  if (errorWallet || typeof(account) !== 'string') { return <Typography variant='h5'>Please, connect your wallet</Typography> }
+  if (typeof(account) !== 'string') return <Typography variant='h5'>Please, connect your wallet</Typography>
+  if (errorWallet) return <Typography variant='h5'>Error in the wallet provider</Typography>
   if (error) {
     return <Typography variant='h5'>Error...</Typography>
   }

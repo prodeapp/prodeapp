@@ -13,6 +13,7 @@ export interface Tournament {
   pool: BigNumberish
   players: Player[]
   bets: Bet[]
+  matches: Match[]
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -126,7 +127,7 @@ export const BET_FIELDS = `
   fragment BetFields on Bet {
     id
     player{id}
-    tournament{id}
+    tournament{id, matches{answer{answer}}}
     tokenID
     points
     results
@@ -135,6 +136,7 @@ export const BET_FIELDS = `
     reward
   }
 `;
+
 
 export interface Outcome {
   id: string
