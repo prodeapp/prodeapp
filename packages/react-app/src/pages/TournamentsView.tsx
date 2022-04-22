@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTournament} from "../hooks/useTournament";
-import {useParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {useRanking} from "../hooks/useRanking";
 import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
@@ -19,6 +19,7 @@ function TournamentsView() {
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
   const [openModal, setOpenModal] = useState(false);
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
     if (!tournament) {
@@ -33,7 +34,9 @@ function TournamentsView() {
   }
 
   if (!tournament) {
-    return <div>Tournament not found</div>
+    return searchParams.get('new') === '1'
+            ? <div>This tournament was just created, please wait a few seconds for it to be indexed.</div>
+            : <div>Tournament not found</div>
   }
 
   const handleClose = () => {

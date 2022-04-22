@@ -8,6 +8,7 @@ import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
 import addresses from "../../lib/addresses";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
+import {useNavigate} from "react-router-dom";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -65,19 +66,19 @@ function getMatchData(
 
 export default function TournamentForm({children, handleSubmit, chainId}: FormProps) {
 
-  const { state, send } = useContractFunction(
+  const { state, send, events } = useContractFunction(
     new Contract(addresses[chainId].TOURNAMENT_FACTORY_ADDRESS, TournamentFactory__factory.createInterface()) as TournamentFactory,
     'createTournament'
   );
 
   const { account } = useEthers();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (state.status === 'Success') {
-      // TODO: redirect to tournament page
-      alert('Tournament created!');
+  useEffect(()=> {
+    if (events && events[0].args.tournament) {
+      navigate(`/tournaments/${events?.[0].args.tournament.toLowerCase()}?new=1`);
     }
-  }, [state]);
+  }, [events, navigate]);
 
   if (!account) {
     return <div>Connect your wallet to create a Tournament.</div>
