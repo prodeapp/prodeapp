@@ -1,5 +1,5 @@
 import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered} from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
@@ -10,6 +10,7 @@ export function handleInitialize(event: Initialize): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
     log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
+    let tournamentContract = TournamentContract.bind(event.address);
     let tournament = new Tournament(event.address.toHexString());
     tournament.name = event.params._name;
     tournament.symbol = event.params._symbol;
@@ -17,7 +18,7 @@ export function handleInitialize(event: Initialize): void {
     tournament.managementFee = event.params._managementFee;
     tournament.closingTime = event.params._closingTime;
     tournament.creationTime = event.block.timestamp;
-    tournament.submissionTimeout = BigInt.fromI32(60*60*24*7); // TODO: read from params
+    tournament.submissionTimeout = tournamentContract.submissionTimeout(); // TODO: read from params
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
     tournament.numOfMatches = BigInt.fromI32(0);
