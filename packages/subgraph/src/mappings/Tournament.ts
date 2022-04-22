@@ -1,37 +1,31 @@
 import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, Initialize, ManagementReward, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
 import { RealitioAddress } from './constants';
 
-
-export function handleInitialize(event: Initialize): void {
+export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
     log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
     let tournamentContract = TournamentContract.bind(event.address);
     let tournament = new Tournament(event.address.toHexString());
-    tournament.name = event.params._name;
-    tournament.symbol = event.params._symbol;
-    tournament.uri = event.params._uri;
-    tournament.managementFee = event.params._managementFee;
-    tournament.closingTime = event.params._closingTime;
+    tournament.name = tournamentContract.name();
+    tournament.symbol = tournamentContract.symbol();
+    tournament.uri = tournamentContract.baseURI();
+    tournament.managementFee = tournamentContract.managementFee();
+    tournament.closingTime = tournamentContract.closingTime();
     tournament.creationTime = event.block.timestamp;
-    tournament.submissionTimeout = tournamentContract.submissionTimeout(); // TODO: read from params
-    tournament.price = event.params._price;
-    tournament.owner = event.params._ownwer;
-    tournament.numOfMatches = BigInt.fromI32(0);
+    tournament.submissionTimeout = tournamentContract.submissionTimeout();
+    tournament.price = tournamentContract.price();
+    tournament.numOfMatchesWithAnswer = BigInt.fromI32(0);
+    tournament.hasPendingAnswers = true;
 
-    let manager = getOrCreateManager(event.params._manager);
+    let manager = getOrCreateManager(tournamentContract.manager());
     tournament.manager = manager.id;
-    tournament.save()
-    log.debug("handleInitialize: Tournament {} initialized.", [tournament.id.toString()]);
-}
 
-export function handleQuestionsRegistered(event: QuestionsRegistered): void {
-    let tournament = Tournament.load(event.address.toHexString())!;
-    let nonce = tournament.numOfMatches;
+    let nonce = BigInt.fromI32(0);
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
 
     log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
@@ -81,6 +75,7 @@ export function handlePlaceBet(event: PlaceBet): void {
     if (bet == null) {
         bet = new Bet(betID)
         bet.tokenID = event.params.tokenID
+        bet.hash = event.params._tokenHash
         bet.player = player.id
         bet.tournament = tournament.id
         bet.results = event.params._predictions

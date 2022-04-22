@@ -73,11 +73,9 @@ templates:
         - name: Realitio
           file: ./contracts/abis/Realitio.json
       eventHandlers:
-        - event: Initialize(string,string,string,address,uint256,uint256,uint256,address)
-          handler: handleInitialize
         - event: QuestionsRegistered(bytes32[])
           handler: handleQuestionsRegistered
-        - event: PlaceBet(indexed address,indexed uint256,bytes32[])
+        - event: PlaceBet(indexed address,indexed uint256,indexed bytes32,bytes32[])
           handler: handlePlaceBet
         - event: FundingReceived(indexed address,uint256,string)
           handler: handleFundingReceived
