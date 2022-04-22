@@ -12,7 +12,7 @@ export function formatDate(timestamp: number) {
   return format(date, 'MMMM d yyyy, HH:mm')
 }
 
-export function getTimeLeft(endDate: Date|string|number): string | false {
+export function getTimeLeft(endDate: Date|string|number, withSeconds = false): string | false {
   const startDate = new Date()
 
   if (typeof endDate === 'number' || typeof endDate === 'string') {
@@ -24,7 +24,14 @@ export function getTimeLeft(endDate: Date|string|number): string | false {
   }
 
   const duration = intervalToDuration({ start: startDate, end: endDate })
-  return formatDuration(duration, {format: ['years', 'months', 'weeks', 'days', 'hours', 'minutes']});
+
+  const format = ['years', 'months', 'weeks', 'days', 'hours', 'minutes']
+
+  if (withSeconds) {
+    format.push('seconds');
+  }
+
+  return formatDuration(duration, {format});
 }
 
 export function formatAmount(amount: BigNumberish) {

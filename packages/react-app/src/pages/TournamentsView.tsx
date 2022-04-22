@@ -9,6 +9,7 @@ import QuestionsDialog from "../components/Questions/QuestionsDialog";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../lib/helpers";
 import {useQuestions} from "../hooks/useQuestions";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
+import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
 
 function TournamentsView() {
   const { id } = useParams();
@@ -26,7 +27,10 @@ function TournamentsView() {
       return;
     }
 
-    setTimeLeft(getTimeLeft(tournament.closingTime))
+    const interval = setInterval(() => {
+      setTimeLeft(getTimeLeft(tournament.closingTime, true))
+    }, 1000);
+    return () => clearInterval(interval);
   }, [tournament]);
 
   if (isLoading) {
@@ -55,19 +59,34 @@ function TournamentsView() {
           </Box>
         </div>
         <div style={{width: '49%', marginLeft: '2%'}}>
-          <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-            <BoxRow>
-              <div>Total Prize: {formatAmount(tournament.pool)}</div>
+          <Box style={{height: '100%'}}>
+            <BoxRow style={{display: 'flex'}}>
+              <div style={{width: '50%'}}>Pool</div>
+              <div style={{width: '50%'}}>{formatAmount(tournament.pool)}</div>
             </BoxRow>
-            {timeLeft !== false && <BoxRow>
-              <div style={{textAlign: 'center'}}>
-                <div style={{marginBottom: '15px'}}>Time left: {timeLeft}</div>
-                <Button style={{flexGrow: 0, marginLeft: '10px'}} color="secondary" onClick={() => setOpenModal(true)}>Place Bet</Button>
+            <BoxRow style={{display: 'flex'}}>
+              <div style={{width: '50%'}}>Management Fee</div>
+              <div style={{width: '50%'}}>{Number(tournament.managementFee) * 100 / DIVISOR}%</div>
+            </BoxRow>
+            <BoxRow style={{display: 'flex'}}>
+              <div style={{width: '50%'}}>Prize Distribution</div>
+              <div style={{width: '50%'}}>
+                {[4000, 3000, 2000, 1000].map((value, index) => <div key={index}>#{index+1}: {Number(value) * 100 / DIVISOR}%</div>)}
               </div>
-            </BoxRow>}
+            </BoxRow>
           </Box>
         </div>
       </div>
+
+      {timeLeft !== false && <Box style={{padding: 20}}>
+        <BoxRow>
+          <div style={{textAlign: 'center', margin: '0 auto'}}>
+            <div>Bet Price: {formatAmount(tournament.price)}</div>
+            <Button style={{flexGrow: 0, margin: '15px 0'}} variant="outlined" size="large" onClick={() => setOpenModal(true)}>Place Bet</Button>
+            <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
+          </div>
+        </BoxRow>
+      </Box>}
 
       <Box>
         <BoxRow style={{justifyContent: 'center'}}>

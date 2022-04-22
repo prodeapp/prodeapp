@@ -8,7 +8,7 @@ export interface Tournament {
   closingTime: string
   resultSubmissionPeriodStart: string
   submissionTimeout: string
-  managementFee: BigNumberish
+  managementFee: string
   manager: string
   pool: BigNumberish
   players: Player[]

@@ -12,7 +12,7 @@ import {useNavigate} from "react-router-dom";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
-const DIVISOR = 10000;
+export const DIVISOR = 10000;
 
 type AnswersPlaceholder = {value: string}[];
 type QuestionParams = {value: string}[];
