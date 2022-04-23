@@ -61,7 +61,7 @@ export default function AppMenuBar() {
                 }}
               >
                 <MenuItem key='tournaments'>
-                  <Button component={RouterLink} to='/tournaments' onClick={handleCloseNavMenu}>Tournaments</Button>
+                  <Button component={RouterLink} to='/' onClick={handleCloseNavMenu}>Tournaments</Button>
                 </MenuItem>
                 <MenuItem key='leaderboard'>
                   <Button component={RouterLink} to='/leaderboard' onClick={handleCloseNavMenu}>Leaderboard</Button>
@@ -83,7 +83,7 @@ export default function AppMenuBar() {
                 key="tournament"
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
-                component={RouterLink} to='/tournaments'
+                component={RouterLink} to='/'
               >
                 Tournaments
               </Button>
