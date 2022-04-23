@@ -58,6 +58,8 @@ type Player @entity {
   pricesReceived: BigInt!
   tournaments: [Tournament!]!
   bets: [Bet!]! @derivedFrom(field: "player")
+  numOfTournaments: BigInt!
+  numOfBets: BigInt!
 }
 
 type Manager @entity {

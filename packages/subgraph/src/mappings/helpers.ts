@@ -11,6 +11,8 @@ export function getOrCreatePlayer(address: Address): Player {
         player = new Player(address.toHexString())
         player.amountBeted = BigInt.fromI32(0)
         player.pricesReceived = BigInt.fromI32(0)
+        player.numOfTournaments = BigInt.fromI32(0)
+        player.numOfBets = BigInt.fromI32(0)
         player.save()
     }
     return player

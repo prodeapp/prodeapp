@@ -1,6 +1,5 @@
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { Typography, Container, Grid, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { useEthers } from '@usedapp/core';
 import { Box, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
 import { usePlayer } from '../hooks/usePlayer';
@@ -24,7 +23,8 @@ function getBetDetails(bet: Bet) {
     output.push(
       <BoxRow key={match.id}>
         <div style={{ width: '40%', wordBreak: 'break-word' }}>{betresult}</div>
-        <div style={{ width: '40%', wordBreak: 'break-word' }}>{matchresult}</div>
+        <div style={{ width: '20%', wordBreak: 'break-word' }}>{betresult}</div>
+        <div style={{ width: '20%', wordBreak: 'break-word' }}>{matchresult}</div>
         {/* TODO: If the points earned change with the tournament? */}
         <div style={{ width: '20%' }}>{betresult === matchresult ? "+1" : matchresult === "Unknown"? "Waiting result": "0"}</div>
       </BoxRow>
@@ -34,7 +34,9 @@ function getBetDetails(bet: Bet) {
 }
 
 export default function Profile() {
-  const { account, error: errorWallet } = useEthers();
+  // const { account, error: errorWallet } = useEthers();
+  const errorWallet = null;
+  const account = "0x5fe87c1a3f42b49643f0a51703ff53f576be753e"
   const { data: player, error, isLoading } = usePlayer(String(account).toLowerCase());
 
   if (typeof (account) !== 'string') return <Typography variant='h5'>Please, connect your wallet</Typography>

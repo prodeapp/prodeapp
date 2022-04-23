@@ -63,9 +63,15 @@ export function handlePlaceBet(event: PlaceBet): void {
     tournament.save()
 
     let player = getOrCreatePlayer(event.params._player)
-    let tmp_tournaments = player.tournaments;
-    tmp_tournaments.push(tournament.id);
-    player.tournaments = tmp_tournaments;
+    
+    if (!player.tournaments.includes(tournament.id)) {
+        let tmp_tournaments = player.tournaments;
+        tmp_tournaments.push(tournament.id);
+        player.tournaments = tmp_tournaments;
+        player.numOfTournaments = player.numOfTournaments.plus(BigInt.fromI32(1));
+    }
+    player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
+    player.amountBeted = player.amountBeted.plus(event.transaction.value)
     player.save()
 
     let betID = getBetID(event.address, event.params.tokenID)
@@ -95,6 +101,10 @@ export function handleBetReward(event: BetReward): void {
     bet.reward = event.params._reward;
     bet.save()
     log.debug("handleBetReward: {} reward claimed from token {}", [event.params._reward.toString(), event.params._tokenID.toString()])
+
+    let player = getOrCreatePlayer(Address.fromString(bet.player));
+    player.pricesReceived = player.pricesReceived.plus(event.params._reward)
+    player.save()
 }
 
 export function handleFundingReceived(event: FundingReceived): void {
