@@ -11,8 +11,7 @@ const query = `
     }
 `;
 
-export const usePlayer = (playerId: string | null | undefined) => {
-
+export const usePlayer = (playerId: string) => {
   return useQuery<Player, Error>(
     ["usePlayer", playerId],
     async () => {

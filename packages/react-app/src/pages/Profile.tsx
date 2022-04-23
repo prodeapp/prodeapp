@@ -8,6 +8,7 @@ import { formatAmount } from '../lib/helpers';
 
 
 function getBetDetails(bet: Bet) {
+  console.log(bet)
   let output = [];
   output.push(
     <BoxRow>
@@ -35,7 +36,7 @@ function getBetDetails(bet: Bet) {
 
 export default function Profile() {
   const { account, error: errorWallet } = useEthers();
-  const { data: player, error, isLoading } = usePlayer(account);
+  const { data: player, error, isLoading } = usePlayer(String(account).toLowerCase());
 
   if (typeof (account) !== 'string') return <Typography variant='h5'>Please, connect your wallet</Typography>
   if (errorWallet) return <Typography variant='h5'>Error in the wallet provider</Typography>
