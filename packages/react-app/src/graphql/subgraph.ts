@@ -129,6 +129,8 @@ export const PLAYER_FIELDS = `
     }
     amountBeted
     pricesReceived
+    numOfTournaments
+    numOfBets
     id
   }
 `;
