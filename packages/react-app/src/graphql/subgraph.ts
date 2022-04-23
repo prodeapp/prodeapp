@@ -110,15 +110,25 @@ export const MATCH_FIELDS = `
 
 export const PLAYER_FIELDS = `
   fragment PlayerFields on Player {
-    bets {
-      tokenID
-      tournament {
+    bets{
+      tournament{
         id
+        name
+        matches{
+          answer{
+            answer
+          }
+          id
+        }
       }
+      results
+      tokenID
+      points
+      id
       reward
     }
-    pricesReceived
     amountBeted
+    pricesReceived
     id
   }
 `;
