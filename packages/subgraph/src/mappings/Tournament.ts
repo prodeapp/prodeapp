@@ -63,9 +63,14 @@ export function handlePlaceBet(event: PlaceBet): void {
     tournament.save()
 
     let player = getOrCreatePlayer(event.params._player)
-    let tmp_tournaments = player.tournaments;
-    tmp_tournaments.push(tournament.id);
-    player.tournaments = tmp_tournaments;
+    
+    if (!player.tournaments.includes(tournament.id)) {
+        let tmp_tournaments = player.tournaments;
+        tmp_tournaments.push(tournament.id);
+        player.tournaments = tmp_tournaments;
+        player.numOfTournaments = player.numOfTournaments.plus(BigInt.fromI32(1));
+    }
+    player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
     player.save()
 
     let betID = getBetID(event.address, event.params.tokenID)
