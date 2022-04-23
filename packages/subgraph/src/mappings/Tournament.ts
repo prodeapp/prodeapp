@@ -101,6 +101,10 @@ export function handleBetReward(event: BetReward): void {
     bet.reward = event.params._reward;
     bet.save()
     log.debug("handleBetReward: {} reward claimed from token {}", [event.params._reward.toString(), event.params._tokenID.toString()])
+
+    let player = getOrCreatePlayer(Address.fromString(bet.player));
+    player.pricesReceived = player.pricesReceived.plus(event.params._reward)
+    player.save()
 }
 
 export function handleFundingReceived(event: FundingReceived): void {
