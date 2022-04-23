@@ -14,10 +14,11 @@ import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
 import TournamentsList from "./pages/TournamentsList";
 import { ReactQueryProvider } from "./lib/react-query";
-import {  ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import BetView from "./pages/BetView";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -45,7 +46,10 @@ ReactDOM.render(
                   <Route path="new" element={<TournamentsCreate />} />
                 </Route>
                 <Route path="leaderboard" element={<Leaderboard />} />
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile">
+                  <Route index element={<Profile />} />
+                  <Route path=":betid" element={<BetView />} />
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>

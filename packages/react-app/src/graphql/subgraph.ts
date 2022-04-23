@@ -13,6 +13,7 @@ export interface Tournament {
   pool: BigNumberish
   players: Player[]
   bets: Bet[]
+  matches: Match[]
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -109,10 +110,26 @@ export const MATCH_FIELDS = `
 
 export const PLAYER_FIELDS = `
   fragment PlayerFields on Player {
+    bets{
+      tournament{
+        id
+        name
+        matches{
+          answer{
+            answer
+          }
+          id
+        }
+      }
+      results
+      tokenID
+      points
+      id
+      reward
+    }
     amountBeted
     pricesReceived
-    tournaments{id}
-    bets{id}
+    id
   }
 `;
 
@@ -120,7 +137,7 @@ export const BET_FIELDS = `
   fragment BetFields on Bet {
     id
     player{id}
-    tournament{id}
+    tournament{id, matches{answer{answer}}}
     tokenID
     points
     results
@@ -129,6 +146,7 @@ export const BET_FIELDS = `
     reward
   }
 `;
+
 
 export interface Outcome {
   id: string
