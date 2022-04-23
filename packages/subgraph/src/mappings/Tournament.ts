@@ -71,6 +71,7 @@ export function handlePlaceBet(event: PlaceBet): void {
         player.numOfTournaments = player.numOfTournaments.plus(BigInt.fromI32(1));
     }
     player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
+    player.amountBeted = player.amountBeted.plus(event.transaction.value)
     player.save()
 
     let betID = getBetID(event.address, event.params.tokenID)
