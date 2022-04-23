@@ -8,7 +8,6 @@ import { formatAmount } from '../lib/helpers';
 
 
 function getBetDetails(bet: Bet) {
-  console.log(bet)
   let output = [];
   output.push(
     <BoxRow>
