@@ -5,7 +5,7 @@ import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
-import {Outcome, Question} from "../graphql/subgraph";
+import {Match, Outcome} from "../graphql/subgraph";
 
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);
@@ -49,10 +49,10 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490
-export function isFinalized(question: Question) {
-  const finalizeTs = Number(question.answerFinalizedTimestamp);
+export function isFinalized(match: Match) {
+  const finalizeTs = Number(match.answerFinalizedTimestamp);
   return (
-    !question.isPendingArbitration
+    !match.isPendingArbitration
     && (finalizeTs > 0)
     && (compareAsc(new Date(), fromUnixTime(finalizeTs)) === 1)
   );

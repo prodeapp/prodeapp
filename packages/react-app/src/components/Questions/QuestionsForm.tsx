@@ -12,6 +12,7 @@ import {Tournament, Tournament__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import type {BigNumberish} from "ethers";
+import {useMatches} from "../../hooks/useMatches";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[]
@@ -27,7 +28,8 @@ type QuestionsFormProps = {
 }
 
 export default function QuestionsForm({tournamentId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
-  const { isLoading, error, data: questions } = useQuestions(tournamentId);
+  const { isLoading, error, data: matches } = useMatches(tournamentId);
+  const { data: questions } = useQuestions(tournamentId);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -36,8 +38,8 @@ export default function QuestionsForm({tournamentId, price, control, register, e
 
   useEffect(()=> {
     remove();
-    questions && questions.forEach(() => append({value: ''}))
-  }, [questions, append, remove]);
+    matches && matches.forEach(() => append({value: ''}))
+  }, [matches, append, remove]);
 
   const { state, send } = useContractFunction(
     new Contract(tournamentId, Tournament__factory.createInterface()) as Tournament,
@@ -84,11 +86,11 @@ export default function QuestionsForm({tournamentId, price, control, register, e
           <div style={{width: '20%'}}>Outcome</div>
         </BoxRow>
         {fields.map((field, i) => {
-          if (!questions || !questions[i]) {
+          if (!matches || !matches[i] || !questions?.[matches[i].questionID]) {
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{questions[i].qTitle}</div>
+            <div style={{width: '60%'}}>{questions[matches[i].questionID].qTitle}</div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
@@ -96,7 +98,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
                   id={`question-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
                 >
-                  {questions?.[i]?.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  {questions[matches[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
                 </Select>
                 <AlertError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></AlertError>
               </FormControl>

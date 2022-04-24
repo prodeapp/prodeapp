@@ -15,7 +15,7 @@ const query = `
 export const useQuestions = (tournamentId: string) => {
   const {data: matches} = useMatches(tournamentId);
 
-  return useQuery<Question[], Error>(
+  return useQuery<Record<string, Question>, Error>(
     ["useQuestions", tournamentId],
     async () => {
       if (!matches) {
@@ -28,7 +28,9 @@ export const useQuestions = (tournamentId: string) => {
 
       if (!response) throw new Error("No response from TheGraph");
 
-      return response.data.questions;
+      return response.data.questions.reduce((obj, question) => {
+        return {...obj, [question.questionId]: question}
+      }, {})
     },
     {
       enabled: !!matches
