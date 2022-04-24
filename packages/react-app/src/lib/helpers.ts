@@ -45,7 +45,7 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
   }
 
   const value = BigNumber.from(currentAnswer);
-  return outcomes[value.toNumber()].answer;
+  return outcomes[value.toNumber()]?.answer || noAnswerText;
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490

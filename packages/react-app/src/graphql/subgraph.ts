@@ -48,7 +48,7 @@ export interface Match {
   questionID: string
   nonce: BigNumberish
   tournament: Tournament
-  answer: Answer
+  answer: Answer | null
   openingTs: string
   finalizeTs: string
   timeout: string
@@ -81,21 +81,55 @@ export interface Player {
   id: string
   amountBeted: BigNumberish
   pricesReceived: BigNumberish
-  tournaments: [Tournament]
-  bets: [Bet]
 }
 
 export interface Bet {
   id: string
-  player: Player
-  tournament: Tournament
+  player: {
+    id: string
+  }
+  tournament: {
+    id: string
+    name: string
+    matches: {
+      questionID: string
+      answer: {
+        answer: string
+      } | null
+    }[]
+  }
   tokenID: BigNumberish
   points: BigNumberish
-  results: BigNumberish[]
+  results: string[]
   count: BigNumberish
   claim: Boolean
   reward: BigNumberish
 }
+
+export const BET_FIELDS = `
+  fragment BetFields on Bet {
+    id
+    player {
+      id
+    }
+    tournament {
+      id,
+      name,
+      matches {
+        questionID
+        answer {
+          answer
+        }
+      }
+    }
+    tokenID
+    points
+    results
+    count
+    claim
+    reward
+  }
+`;
 
 export interface Manager {
   id: string
@@ -134,20 +168,6 @@ export const PLAYER_FIELDS = `
     numOfTournaments
     numOfBets
     id
-  }
-`;
-
-export const BET_FIELDS = `
-  fragment BetFields on Bet {
-    id
-    player{id}
-    tournament{id, matches{answer{answer}}}
-    tokenID
-    points
-    results
-    count
-    claim
-    reward
   }
 `;
 

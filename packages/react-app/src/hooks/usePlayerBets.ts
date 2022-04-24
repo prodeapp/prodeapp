@@ -5,18 +5,17 @@ import { useQuery } from "react-query";
 const query = `
     ${BET_FIELDS}
     query BetsQuery($playerId: String) {
-        bets(where{player: $playerId}) {
+        bets(where: {player: $playerId}) {
             ...BetFields
         }
     }
 `;
 
-export const useBets = (playerId: string | null | undefined) => {
- 
+export const usePlayerBets = (playerId: string) => {
   return useQuery<Bet[], Error>(
-    ["useBets", playerId],
+    ["usePlayerBets", playerId],
     async () => {
-      const response = await apolloProdeQuery<{ bets: [] }>(query, {playerId});
+      const response = await apolloProdeQuery<{ bets: [] }>(query, {playerId: playerId.toLowerCase()});
 
       if (!response) throw new Error("No response from TheGraph");
 

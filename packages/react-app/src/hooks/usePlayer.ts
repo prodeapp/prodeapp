@@ -15,7 +15,7 @@ export const usePlayer = (playerId: string) => {
   return useQuery<Player, Error>(
     ["usePlayer", playerId],
     async () => {
-      const response = await apolloProdeQuery<{ player: Player }>(query, {playerId});
+      const response = await apolloProdeQuery<{ player: Player }>(query, {playerId: playerId.toLowerCase()});
 
       if (!response) throw new Error("No response from TheGraph");
 
