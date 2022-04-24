@@ -48,6 +48,8 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         match.finalizeTs = realitioSC.getFinalizeTS(questionID);
         match.contentHash = realitioSC.getContentHash(questionID);
         match.historyHash = realitioSC.getHistoryHash(questionID);
+        match.arbitrationOccurred = false;
+        match.isPendingArbitration = false;
         match.save();
         nonce = nonce.plus(BigInt.fromI32(1))
         log.debug("handleQuestionsRegistered: matchID {} registered", [questionID.toHexString()])

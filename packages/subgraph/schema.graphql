@@ -28,6 +28,9 @@ type Match @entity {
   nonce: BigInt!
   tournament: Tournament!
   answer: Answer @derivedFrom(field: "match")
+  answerFinalizedTimestamp: BigInt
+  arbitrationOccurred: Boolean!
+  isPendingArbitration: Boolean!
   openingTs: BigInt!,
   finalizeTs: BigInt!,
   timeout: BigInt!,
@@ -48,8 +51,6 @@ type Answer @entity {
   isCommitment: Boolean!
   match: Match!
   tournament: Tournament!
-  isPendingArbitration: Boolean!
-  arbitrationOccurred: Boolean!
 }
 
 type Player @entity {

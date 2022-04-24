@@ -10,11 +10,13 @@ import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../lib/help
 import {useQuestions} from "../hooks/useQuestions";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
 import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
+import {useMatches} from "../hooks/useMatches";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
   const { data: ranking } = useRanking(String(id));
+  const { data: matches } = useMatches(String(id));
   const { data: questions } = useQuestions(String(id));
   const { data: tournamentStatus} = useTournamentStatus(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
@@ -108,15 +110,15 @@ function TournamentsView() {
           <div style={{width: '30%'}}>Result</div>
           <div style={{width: '10%'}}>Status</div>
         </BoxRow>
-        {questions && questions.map((question, i) => {
+        {matches && matches.map((match, i) => {
           return <BoxRow style={{display: 'flex'}} key={i}>
             <div style={{width: '60%'}}>
-              <a href={`https://reality.eth.link/app/index.html#!/network/100/question/0xe78996a233895be74a66f451f1019ca9734205cc-${question.questionId}`} target="_blank" rel="noreferrer">
-                {question.qTitle}
+              <a href={`https://reality.eth.link/app/index.html#!/network/100/question/0xe78996a233895be74a66f451f1019ca9734205cc-${match.questionID}`} target="_blank" rel="noreferrer">
+                {questions?.[match.questionID].qTitle}
               </a>
             </div>
-            <div style={{width: '30%'}}>{getTimeLeft(question.openingTimestamp) || getAnswerText(question.currentAnswer, question.outcomes)}</div>
-            <div style={{width: '10%'}}>{isFinalized(question) ? 'Finalized' : 'Pending'}</div>
+            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || getAnswerText(match.answer.answer, questions?.[match.questionID].outcomes || [])}</div>
+            <div style={{width: '10%'}}>{isFinalized(match) ? 'Finalized' : 'Pending'}</div>
           </BoxRow>
         })}
       </Box>}

@@ -8,6 +8,11 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     let id = event.params.question_id.toHexString();
     let match = Match.load(id);
     if (match === null) return; // this is not a question from the Dapp
+
+    const ts = event.params.ts;
+    match.answerFinalizedTimestamp = match.arbitrationOccurred ? ts : ts.plus(match.timeout);
+    match.save();
+
     let answerEntity = Answer.load(id);
     let changeAnswer = false;
     let oldAnswer : Bytes
@@ -26,8 +31,6 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     answerEntity.timestamp = event.params.ts;
     answerEntity.match = match.id;
     answerEntity.tournament = match.tournament;
-    answerEntity.isPendingArbitration = false;
-    answerEntity.arbitrationOccurred = false;
     answerEntity.save();
 
     if (!changeAnswer) {
@@ -64,23 +67,29 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         tokenID = tokenID.plus(BigInt.fromI32(1));
         betID = getBetID(tournamentId, tokenID);
         bet = Bet.load(betID);
-    };
+    }
 }
 
 export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): void {
-    let answer = Answer.load(event.params.question_id.toHexString());
-    if (answer === null) return; // not a question for our tournaments
-    log.debug("handleArbitrationRequest: Dispute raise for answer {}", [answer.id]);
-    answer.isPendingArbitration = true;
-    answer.save();
+    let match = Match.load(event.params.question_id.toHexString());
+    if (match === null) return; // not a question for our tournaments
+    log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
+
+    match.isPendingArbitration = true;
+    match.answerFinalizedTimestamp = null;
+    match.save();
 }
 
 export function handleFinalize(event: LogFinalize): void {
     let answer = Answer.load(event.params.question_id.toHexString());
     if (answer === null) return; // not a question for our tournaments
     log.debug("handleArbitrationRequest: Dispute raise for answer {}", [answer.id]);
-    answer.isPendingArbitration = false;
-    answer.arbitrationOccurred = true;
+
     answer.answer = event.params.answer;
     answer.save();
+
+    let match = Match.load(event.params.question_id.toHexString())!;
+    match.isPendingArbitration = false;
+    match.arbitrationOccurred = true;
+    match.save();
 }

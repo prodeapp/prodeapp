@@ -2,17 +2,17 @@ import { useQuery } from "react-query";
 import compareAsc from "date-fns/compareAsc";
 import fromUnixTime from "date-fns/fromUnixTime";
 import {useTournament} from "./useTournament";
-import {useQuestions} from "./useQuestions";
 import {isFinalized} from "../lib/helpers";
+import {useMatches} from "./useMatches";
 
 export const useTournamentStatus = (tournamentId: string) => {
   const {data: tournament} = useTournament(tournamentId)
-  const {data: questions} = useQuestions(tournamentId)
+  const {data: matches} = useMatches(tournamentId)
 
   return useQuery<string, Error>(
     ["useTournamentStatus", tournamentId],
     async () => {
-      if (!tournament || !questions) {
+      if (!tournament || !matches) {
         return '';
       }
 
@@ -21,7 +21,7 @@ export const useTournamentStatus = (tournamentId: string) => {
         return 'ACCEPTING_BETS';
       }
 
-      const hasPendingAnswers = questions.filter(q => !isFinalized(q)).length > 0
+      const hasPendingAnswers = matches.filter(q => !isFinalized(q)).length > 0
 
       if (hasPendingAnswers) {
         return 'WAITING_ANSWERS'
@@ -46,7 +46,7 @@ export const useTournamentStatus = (tournamentId: string) => {
       return 'FINALIZED';
     },
     {
-      enabled: !!tournament && !!questions
+      enabled: !!tournament && !!matches
     }
   );
 };

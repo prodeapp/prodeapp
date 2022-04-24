@@ -33,7 +33,7 @@ export const TOURNAMENT_FIELDS = `
 
 export interface Answer {
   id: string
-  answer: BigNumberish
+  answer: string
   historyHash: string
   user: string
   bond: BigNumberish
@@ -41,8 +41,6 @@ export interface Answer {
   isCommitment: boolean
   match: Match
   tournament: Tournament
-  isPendingArbitration: boolean
-  arbitrationOccurred: boolean
 }
 
 export interface Match {
@@ -57,7 +55,27 @@ export interface Match {
   minBond: BigNumberish
   contentHash: string
   historyHash: string
+  answerFinalizedTimestamp: string | null
+  isPendingArbitration: boolean
 }
+
+export const MATCH_FIELDS = `
+  fragment MatchFields on Match {
+    id
+    questionID
+    nonce
+    tournament{id}
+    answer{id, answer}
+    openingTs
+    finalizeTs
+    timeout
+    minBond
+    contentHash
+    historyHash
+    answerFinalizedTimestamp
+    isPendingArbitration
+  }
+`;
 
 export interface Player {
   id: string
@@ -91,22 +109,6 @@ export interface Funder {
   tournaments: [Tournament]
   messages: [string]
 }
-
-export const MATCH_FIELDS = `
-  fragment MatchFields on Match {
-    id
-    questionID
-    nonce
-    tournament{id}
-    answer{id, answer}
-    openingTs
-    finalizeTs
-    timeout
-    minBond
-    contentHash
-    historyHash
-  }
-`;
 
 export const PLAYER_FIELDS = `
   fragment PlayerFields on Player {
@@ -158,10 +160,6 @@ export interface Outcome {
 export interface Question {
   questionId: string
   qTitle: string
-  openingTimestamp: string
-  currentAnswer: string
-  isPendingArbitration: boolean
-  answerFinalizedTimestamp: string | null
   outcomes: Outcome[]
 }
 
@@ -169,10 +167,6 @@ export const QUESTION_FIELDS = `
   fragment QuestionFields on Question {
     questionId
     qTitle
-    openingTimestamp
-    currentAnswer
-    isPendingArbitration
-    answerFinalizedTimestamp
     outcomes {
       id
       answer
