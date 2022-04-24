@@ -1,6 +1,6 @@
 import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
-import { Answer, Bet, Match, Tournament } from "../types/schema";
+import { Bet, Match, Tournament } from "../types/schema";
 import { correctAnswerPoints } from "./constants";
 import { getBetID } from "./helpers";
 
@@ -11,47 +11,28 @@ export function handleNewAnswer(event: LogNewAnswer): void {
 
     const ts = event.params.ts;
     match.answerFinalizedTimestamp = match.arbitrationOccurred ? ts : ts.plus(match.timeout);
-    match.save();
 
-    let answerEntity = Answer.load(id);
     let changeAnswer = false;
-    let oldAnswer : Bytes
-    if (answerEntity === null) {
-        answerEntity = new Answer(id);
-    } else {
-        // the answer it's changing
+    let oldAnswer: Bytes;
+    let tmpAnswer = match.answer;
+    if (tmpAnswer !== null) {
+        // the answer is changing
         changeAnswer = true;
-        oldAnswer = answerEntity.answer;
+        oldAnswer = tmpAnswer;
     }
-    answerEntity.answer = event.params.answer
-    answerEntity.bond = event.params.bond;
-    answerEntity.historyHash = event.params.history_hash;
-    answerEntity.isCommitment = event.params.is_commitment;
-    answerEntity.user = event.params.user;
-    answerEntity.timestamp = event.params.ts;
-    answerEntity.match = match.id;
-    answerEntity.tournament = match.tournament;
-    answerEntity.save();
-
-    if (!changeAnswer) {
-        let tournament = Tournament.load(match.tournament)!;
-        tournament.numOfMatchesWithAnswer = tournament.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
-        // will be true even if this is not a final answer
-        log.debug("handleNewAnswer: num of answers == num of matches? {}", [tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches).toString()]);
-        tournament.hasPendingAnswers = !tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches);
-        tournament.save();
-    }
+    match.answer = event.params.answer
+    match.save();
 
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
     const questionNonce = match.nonce;
     let tournamentId = ByteArray.fromHexString(match.tournament);
-    log.debug("handleNewAnswer: summing points for tournament {}, questoinID: {}, questionNonce: {}, with answer {}", [tournamentId.toHexString(), id, questionNonce.toString(),answerEntity.answer.toHexString()]);
+    log.debug("handleNewAnswer: summing points for tournament {}, questoinID: {}, questionNonce: {}, with answer {}", [tournamentId.toHexString(), id, questionNonce.toString(),match.answer!.toHexString()]);
     let betID = getBetID(tournamentId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
         let betResult = bet.results[questionNonce.toI32()];
-        if (betResult.equals(answerEntity.answer)) {
+        if (betResult.equals(match.answer!)) {
             // The player has the correct answer
             log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
             bet.points = bet.points.plus(correctAnswerPoints);
@@ -81,14 +62,11 @@ export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): 
 }
 
 export function handleFinalize(event: LogFinalize): void {
-    let answer = Answer.load(event.params.question_id.toHexString());
-    if (answer === null) return; // not a question for our tournaments
-    log.debug("handleArbitrationRequest: Dispute raise for answer {}", [answer.id]);
+    let match = Match.load(event.params.question_id.toHexString());
+    if (match === null) return; // not a question for our tournaments
+    log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
 
-    answer.answer = event.params.answer;
-    answer.save();
-
-    let match = Match.load(event.params.question_id.toHexString())!;
+    match.answer = event.params.answer;
     match.isPendingArbitration = false;
     match.arbitrationOccurred = true;
     match.save();

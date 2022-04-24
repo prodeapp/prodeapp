@@ -21,8 +21,6 @@ export function handleInitialize(event: Initialize): void {
     tournament.price = event.params._price;
     tournament.owner = event.params._ownwer;
     tournament.numOfMatches = BigInt.fromI32(0);
-    tournament.numOfMatchesWithAnswer = BigInt.fromI32(0);
-    tournament.hasPendingAnswers = true;
 
     let manager = getOrCreateManager(event.params._manager);
     tournament.manager = manager.id;

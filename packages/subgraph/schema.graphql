@@ -13,8 +13,6 @@ type Tournament @entity {
   managementFee: BigInt
   manager: Manager!
   numOfMatches: BigInt!
-  numOfMatchesWithAnswer: BigInt!
-  hasPendingAnswers: Boolean!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
@@ -27,7 +25,7 @@ type Match @entity {
   questionID: Bytes!
   nonce: BigInt!
   tournament: Tournament!
-  answer: Answer @derivedFrom(field: "match")
+  answer: Bytes
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!
@@ -37,20 +35,6 @@ type Match @entity {
   minBond: BigInt!,
   contentHash: Bytes!
   historyHash: Bytes!
-}
-
-type Answer @entity {
-  "questionID"
-  id: ID!
-  "Answer expresed in uint"
-  answer: Bytes!,
-  historyHash: Bytes!
-  user: Bytes!,
-  bond: BigInt!,
-  timestamp: BigInt!,
-  isCommitment: Boolean!
-  match: Match!
-  tournament: Tournament!
 }
 
 type Player @entity {

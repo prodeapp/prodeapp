@@ -117,7 +117,7 @@ function TournamentsView() {
                 {questions?.[match.questionID].qTitle}
               </a>
             </div>
-            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || getAnswerText(match.answer?.answer || null, questions?.[match.questionID].outcomes || [])}</div>
+            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || getAnswerText(match.answer, questions?.[match.questionID].outcomes || [])}</div>
             <div style={{width: '10%'}}>{isFinalized(match) ? 'Finalized' : 'Pending'}</div>
           </BoxRow>
         })}
