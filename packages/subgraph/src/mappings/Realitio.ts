@@ -23,15 +23,6 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     match.answer = event.params.answer
     match.save();
 
-    if (!changeAnswer) {
-        let tournament = Tournament.load(match.tournament)!;
-        tournament.numOfMatchesWithAnswer = tournament.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
-        // will be true even if this is not a final answer
-        log.debug("handleNewAnswer: num of answers == num of matches? {}", [tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches).toString()]);
-        tournament.hasPendingAnswers = !tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches);
-        tournament.save();
-    }
-
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
     const questionNonce = match.nonce;

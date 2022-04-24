@@ -18,7 +18,7 @@ function BetDetails({bet}: {bet: Bet}) {
     </BoxRow>
     {bet.tournament.matches.map((match, i) => {
       let betResult = getAnswerText(bet.results[i], questions?.[match.questionID].outcomes || []);
-      let matchResult = getAnswerText(match.answer?.answer || null, questions?.[match.questionID].outcomes || [], "Unknown");
+      let matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], "Unknown");
 
       return <BoxRow key={i}>
         <div style={{ width: '40%', wordBreak: 'break-word' }}>{betResult}</div>

@@ -31,24 +31,12 @@ export const TOURNAMENT_FIELDS = `
     }
 `;
 
-export interface Answer {
-  id: string
-  answer: string
-  historyHash: string
-  user: string
-  bond: BigNumberish
-  timestamp: string
-  isCommitment: boolean
-  match: Match
-  tournament: Tournament
-}
-
 export interface Match {
   id: string
   questionID: string
   nonce: BigNumberish
   tournament: Tournament
-  answer: Answer | null
+  answer: string | null
   openingTs: string
   finalizeTs: string
   timeout: string
@@ -65,7 +53,7 @@ export const MATCH_FIELDS = `
     questionID
     nonce
     tournament{id}
-    answer{id, answer}
+    answer
     openingTs
     finalizeTs
     timeout
@@ -93,9 +81,7 @@ export interface Bet {
     name: string
     matches: {
       questionID: string
-      answer: {
-        answer: string
-      } | null
+      answer: string | null
     }[]
   }
   tokenID: BigNumberish
@@ -117,9 +103,7 @@ export const BET_FIELDS = `
       name,
       matches {
         questionID
-        answer {
-          answer
-        }
+        answer
       }
     }
     tokenID
@@ -151,9 +135,7 @@ export const PLAYER_FIELDS = `
         id
         name
         matches{
-          answer{
-            answer
-          }
+          answer
           id
         }
       }
