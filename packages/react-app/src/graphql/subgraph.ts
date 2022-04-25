@@ -11,9 +11,6 @@ export interface Tournament {
   managementFee: string
   manager: string
   pool: BigNumberish
-  players: Player[]
-  bets: Bet[]
-  matches: Match[]
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -38,11 +35,6 @@ export interface Match {
   tournament: Tournament
   answer: string | null
   openingTs: string
-  finalizeTs: string
-  timeout: string
-  minBond: BigNumberish
-  contentHash: string
-  historyHash: string
   answerFinalizedTimestamp: string | null
   isPendingArbitration: boolean
 }
@@ -55,11 +47,6 @@ export const MATCH_FIELDS = `
     tournament{id}
     answer
     openingTs
-    finalizeTs
-    timeout
-    minBond
-    contentHash
-    historyHash
     answerFinalizedTimestamp
     isPendingArbitration
   }
@@ -70,6 +57,58 @@ export interface Player {
   amountBeted: BigNumberish
   pricesReceived: BigNumberish
 }
+
+export const PLAYER_FIELDS = `
+  fragment PlayerFields on Player {
+    id
+    amountBeted
+    pricesReceived
+  }
+`;
+
+export interface Leaderboard extends Player {
+  numOfTournaments: string
+  numOfBets: string
+  bets: {
+    id: string
+    results: string[]
+    tokenID: BigNumberish
+    points: BigNumberish
+    reward: BigNumberish
+    tournament: {
+      id: string
+      name: string
+      matches: {
+        answer: string
+        id: string
+      }
+    }
+  }
+}
+
+export const LEADERBOARD_FIELDS = `
+  ${PLAYER_FIELDS}
+  fragment LeaderboardFields on Player {
+    ...PlayerFields
+    numOfTournaments
+    numOfBets
+    bets{
+      id
+      results
+      tokenID
+      points
+      reward
+      tournament {
+        id
+        name
+        matches {
+          answer
+          id
+        }
+      }
+    }
+  }
+`;
 
 export interface Bet {
   id: string
@@ -114,45 +153,6 @@ export const BET_FIELDS = `
     reward
   }
 `;
-
-export interface Manager {
-  id: string
-  tournaments: [Tournament]
-  managementRewards: BigNumberish
-}
-
-export interface Funder {
-  id: string
-  amount: BigNumberish
-  tournaments: [Tournament]
-  messages: [string]
-}
-
-export const PLAYER_FIELDS = `
-  fragment PlayerFields on Player {
-    bets{
-      tournament{
-        id
-        name
-        matches{
-          answer
-          id
-        }
-      }
-      results
-      tokenID
-      points
-      id
-      reward
-    }
-    amountBeted
-    pricesReceived
-    numOfTournaments
-    numOfBets
-    id
-  }
-`;
-
 
 export interface Outcome {
   id: string

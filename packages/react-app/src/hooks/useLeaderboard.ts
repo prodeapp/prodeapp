@@ -1,21 +1,21 @@
-import {Player, PLAYER_FIELDS} from "../graphql/subgraph";
+import {Leaderboard, LEADERBOARD_FIELDS} from "../graphql/subgraph";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import { useQuery } from "react-query";
 
 const query = `
-    ${PLAYER_FIELDS}
-    query PlayersQuery {
+    ${LEADERBOARD_FIELDS}
+    query LeaderboardQuery {
         players(first: 100, orderBy: numOfBets, orderDirection: desc) {
-            ...PlayerFields
+            ...LeaderboardFields
         }
     }
 `;
 
-export const usePlayers = () => {
-  return useQuery<Player[], Error>(
-    ["usePlayers"],
+export const useLeaderboard = () => {
+  return useQuery<Leaderboard[], Error>(
+    ["useLeaderboard"],
     async () => {
-      const response = await apolloProdeQuery<{ players: Player[] }>(query);
+      const response = await apolloProdeQuery<{ players: Leaderboard[] }>(query);
 
       if (!response) throw new Error("No response from TheGraph");
 

@@ -1,25 +1,17 @@
 import { Button, Container, Grid, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { BigNumberish } from 'ethers';
-import { useEffect, useState } from 'react';
-import { Player } from '../graphql/subgraph';
-import { usePlayers } from '../hooks/usePlayers';
+import { useState } from 'react';
+import { useLeaderboard } from '../hooks/useLeaderboard';
 import { formatAmount } from '../lib/helpers';
 import { shortenAddress } from "@usedapp/core";
 import { Box, BoxRow } from '../components';
 
 
 export default function Leaderboard() {
-  const [leaderboard, setLeaderboard] = useState<Player[]>([]);
-  const { isLoading, data: players } = usePlayers();
+  const { isLoading, data: leaderboard } = useLeaderboard();
   const [sorting, setSorting] = useState<'numOfBets' | 'numOfTournaments' | 'pricesReceived' | 'amountBeted'>('pricesReceived');
   const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
-
-  useEffect(() => {
-    if (players !== undefined) {
-      setLeaderboard(players);
-    }
-  }, [players])
 
   const columns = [
     {
@@ -62,7 +54,7 @@ export default function Leaderboard() {
           </Grid>
         </BoxRow>
       </Box>
-      <DataGrid
+      {leaderboard && <DataGrid
         rows={leaderboard}
         columns={columns}
         loading={isLoading}
@@ -74,7 +66,7 @@ export default function Leaderboard() {
         autoPageSize
         sortingMode="server"
         sortModel= {[{ field: sorting, sort: direction }]}
-      />
+      />}
     </Container>
 
   )
