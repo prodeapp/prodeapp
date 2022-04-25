@@ -64,7 +64,6 @@ export default function Leaderboard() {
         disableSelectionOnClick
         disableColumnFilter
         autoPageSize
-        sortingMode="server"
         sortModel= {[{ field: sorting, sort: direction }]}
       />}
     </Container>
