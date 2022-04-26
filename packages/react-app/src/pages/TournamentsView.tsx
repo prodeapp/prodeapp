@@ -1,23 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {useTournament} from "../hooks/useTournament";
 import {useParams, useSearchParams} from "react-router-dom";
-import {useRanking} from "../hooks/useRanking";
-import {shortenAddress} from "@usedapp/core";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../components/Questions/QuestionsDialog";
-import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../lib/helpers";
-import {useQuestions} from "../hooks/useQuestions";
+import {formatAmount, getTimeLeft} from "../lib/helpers";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
 import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
-import {useMatches} from "../hooks/useMatches";
+import Ranking from "../components/TournamentView/Ranking";
+import Results from "../components/TournamentView/Results";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
-  const { data: ranking } = useRanking(String(id));
-  const { data: matches } = useMatches(String(id));
-  const { data: questions } = useQuestions(String(id));
   const { data: tournamentStatus} = useTournamentStatus(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
   const [openModal, setOpenModal] = useState(false);
@@ -104,39 +99,9 @@ function TournamentsView() {
         handleClose={handleClose}
       />
 
-      {section === 'results' && <Box>
-        <BoxRow>
-          <div style={{width: '60%'}}>Match</div>
-          <div style={{width: '30%'}}>Result</div>
-          <div style={{width: '10%'}}>Status</div>
-        </BoxRow>
-        {matches && matches.map((match, i) => {
-          return <BoxRow style={{display: 'flex'}} key={i}>
-            <div style={{width: '60%'}}>
-              <a href={`https://reality.eth.link/app/index.html#!/network/100/question/0xe78996a233895be74a66f451f1019ca9734205cc-${match.questionID}`} target="_blank" rel="noreferrer">
-                {questions?.[match.questionID].qTitle}
-              </a>
-            </div>
-            <div style={{width: '30%'}}>{getTimeLeft(match.openingTs) || getAnswerText(match.answer, questions?.[match.questionID].outcomes || [])}</div>
-            <div style={{width: '10%'}}>{isFinalized(match) ? 'Finalized' : 'Pending'}</div>
-          </BoxRow>
-        })}
-      </Box>}
+      {section === 'results' && id && <Results tournamentId={id} />}
 
-      {section === 'ranking' && <Box>
-        <BoxRow>
-          <div style={{width: '20%'}}>#</div>
-          <div style={{width: '40%'}}>Player</div>
-          <div style={{width: '40%'}}>Points</div>
-        </BoxRow>
-        {ranking && ranking.map((rank, i) => {
-          return <BoxRow key={i}>
-            <div style={{width: '20%'}}>{i+1}</div>
-            <div style={{width: '40%'}}>{shortenAddress(rank.player.id)}</div>
-            <div style={{width: '40%'}}>{rank.points.toString()}</div>
-          </BoxRow>
-        })}
-      </Box>}
+      {section === 'ranking' && id && <Ranking tournamentId={id} />}
     </>
   );
 }
