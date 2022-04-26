@@ -1,34 +1,21 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {useTournament} from "../hooks/useTournament";
 import {useParams, useSearchParams} from "react-router-dom";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
-import QuestionsDialog from "../components/Questions/QuestionsDialog";
-import {formatAmount, getTimeLeft} from "../lib/helpers";
+import {formatAmount} from "../lib/helpers";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
 import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
 import Ranking from "../components/TournamentView/Ranking";
 import Results from "../components/TournamentView/Results";
+import PlaceBet from "../components/TournamentView/PlaceBet";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
   const { data: tournamentStatus} = useTournamentStatus(String(id));
   const [section, setSection] = useState<'ranking'|'results'>('ranking');
-  const [openModal, setOpenModal] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<string | false>(false);
   const [searchParams] = useSearchParams();
-
-  useEffect(() => {
-    if (!tournament) {
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setTimeLeft(getTimeLeft(tournament.closingTime, true))
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [tournament]);
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -39,10 +26,6 @@ function TournamentsView() {
             ? <div>This tournament was just created, please wait a few seconds for it to be indexed.</div>
             : <div>Tournament not found</div>
   }
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
 
   return (
     <>
@@ -75,15 +58,7 @@ function TournamentsView() {
         </div>
       </div>
 
-      {timeLeft !== false && <Box style={{padding: 20}}>
-        <BoxRow>
-          <div style={{textAlign: 'center', margin: '0 auto'}}>
-            <div>Bet Price: {formatAmount(tournament.price)}</div>
-            <Button style={{flexGrow: 0, margin: '15px 0'}} variant="outlined" size="large" onClick={() => setOpenModal(true)}>Place Bet</Button>
-            <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
-          </div>
-        </BoxRow>
-      </Box>}
+      <PlaceBet tournament={tournament} />
 
       <Box>
         <BoxRow style={{justifyContent: 'center'}}>
@@ -91,13 +66,6 @@ function TournamentsView() {
           <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
         </BoxRow>
       </Box>
-
-      <QuestionsDialog
-        tournamentId={String(id)}
-        price={tournament.price}
-        open={openModal}
-        handleClose={handleClose}
-      />
 
       {section === 'results' && id && <Results tournamentId={id} />}
 
