@@ -55,7 +55,7 @@ export function handlePrizesRegistered(event: Prizes): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
     log.info("handlePrizesRegistered: {} tournament", [event.address.toHexString()])
-    let tournament = new Tournament(event.address.toHexString());
+    let tournament = Tournament.load(event.address.toHexString())!;
     tournament.prizes = event.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
     tournament.save();
 }
