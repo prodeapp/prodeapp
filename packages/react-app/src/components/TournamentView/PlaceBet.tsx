@@ -27,7 +27,7 @@ export default function PlaceBet({tournament}: {tournament: Tournament}) {
   const handleClose = () => {
     setOpenModal(false);
   };
-  
+
   return <>
     <QuestionsDialog
       tournamentId={tournament.id}

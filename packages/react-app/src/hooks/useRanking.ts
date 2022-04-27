@@ -1,25 +1,34 @@
 import {BET_FIELDS, Bet} from "../graphql/subgraph";
 import {useQuery} from "react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
+import {buildQuery} from "../lib/SubgraphQueryBuilder";
 
 const query = `
     ${BET_FIELDS}
-    query BetsQuery($tournamentId: String!) {
-      bets(where: {tournament: $tournamentId}, orderBy: points, orderDirection: desc) {
+    query BetsQuery(#params#) {
+      bets(where: {#where#}, orderBy: points, orderDirection: desc) {
         ...BetFields
       }
     }
 `;
 
-export const useRanking = (tournamentId: string) => {
+interface Props {
+  tournamentId?: string
+  playerId?: string
+}
+
+export const useRanking = ({tournamentId = '', playerId = ''}: Props) => {
   return useQuery<Bet[], Error>(
-    ["useRanking", tournamentId],
+    ["useRanking", tournamentId, playerId],
     async () => {
-      const response = await apolloProdeQuery<{ bets: Bet[] }>(query, {tournamentId});
+      const variables = {tournament: tournamentId?.toLowerCase(), player: playerId?.toLowerCase()};
+
+      const response = await apolloProdeQuery<{ bets: Bet[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");
 
       return response.data.bets;
-    }
+    },
+    {enabled: !!tournamentId || !!playerId}
   );
 };

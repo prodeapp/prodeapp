@@ -1,14 +1,14 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
 import {shortenAddress} from "@usedapp/core";
-import {Box, BoxRow} from "../../components"
+import {AlertError, Box, BoxRow} from "../../components"
 import Button from '@mui/material/Button';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
 
-export default function Ranking({tournamentId}: {tournamentId: string}) {
-  const { data: ranking } = useRanking(tournamentId);
+export default function Ranking({tournamentId = '', playerId = ''}: {tournamentId?: string, playerId?: string}) {
+  const { isLoading, error, data: ranking } = useRanking({tournamentId, playerId});
   const [openModal, setOpenModal] = useState(false);
   const [bet, setBet] = useState<Bet | undefined>();
 
@@ -20,6 +20,14 @@ export default function Ranking({tournamentId}: {tournamentId: string}) {
   const handleClose = () => {
     setOpenModal(false);
   };
+
+  if (isLoading) {
+    return null
+  }
+
+  if (error) {
+    return <AlertError>{error}</AlertError>
+  }
 
   return <>
     {bet && <AppDialog

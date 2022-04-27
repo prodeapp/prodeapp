@@ -1,16 +1,16 @@
 import { ExpandMoreOutlined } from '@mui/icons-material';
 import { Typography, Container, Grid, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import { Box, BoxRow } from '../components';
+import { BoxRow } from '../components';
 import {formatAmount} from '../lib/helpers';
 import {useEthers} from "@usedapp/core";
-import {usePlayerBets} from "../hooks/usePlayerBets";
 import {usePlayer} from "../hooks/usePlayer";
 import BetDetails from "../components/BetDetails";
+import {useRanking} from "../hooks/useRanking";
 
 export default function Profile() {
   const { account, error: errorWallet } = useEthers();
   const { data: player } = usePlayer(String(account));
-  const { data: bets, error, isLoading } = usePlayerBets(String(account));
+  const { data: bets, error, isLoading } = useRanking({playerId: account || ''});
 
   if (!account) {
     return <Typography variant='h5'>Please, connect your wallet</Typography>

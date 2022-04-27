@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTournament} from "../hooks/useTournament";
 import {useParams, useSearchParams} from "react-router-dom";
-import {Box, BoxRow} from "../components"
+import {Box, BoxRow, AlertError} from "../components"
 import Button from '@mui/material/Button';
 import {formatAmount} from "../lib/helpers";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
@@ -9,12 +9,14 @@ import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
 import Ranking from "../components/TournamentView/Ranking";
 import Results from "../components/TournamentView/Results";
 import PlaceBet from "../components/TournamentView/PlaceBet";
+import {useEthers} from "@usedapp/core";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
   const { data: tournamentStatus} = useTournamentStatus(String(id));
-  const [section, setSection] = useState<'ranking'|'results'>('ranking');
+  const { account } = useEthers();
+  const [section, setSection] = useState<'ranking'|'results'|'my-bets'>('ranking');
   const [searchParams] = useSearchParams();
 
   if (isLoading) {
@@ -64,12 +66,18 @@ function TournamentsView() {
         <BoxRow style={{justifyContent: 'center'}}>
           <div><Button onClick={() => setSection('ranking')} color={section === 'ranking' ? 'secondary' : 'primary'}>Ranking</Button></div>
           <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
+          <div><Button onClick={() => setSection('my-bets')} color={section === 'my-bets' ? 'secondary' : 'primary'}>My Bets</Button></div>
         </BoxRow>
       </Box>
 
-      {section === 'results' && id && <Results tournamentId={id} />}
+      {section === 'results' && <Results tournamentId={tournament.id} />}
 
-      {section === 'ranking' && id && <Ranking tournamentId={id} />}
+      {section === 'ranking' && <Ranking tournamentId={tournament.id} />}
+
+      {section === 'my-bets' && <>
+        {account && <Ranking tournamentId={tournament.id} playerId={account} />}
+        {!account && <AlertError>Connect your wallet to see your bets.</AlertError>}
+      </>}
     </>
   );
 }
