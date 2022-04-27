@@ -5,6 +5,21 @@
         "internalType": "address",
         "name": "_tournament",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_arbitrator",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_realitio",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_submissionTimeout",
+        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -94,26 +109,14 @@
         "type": "address"
       },
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "arbitrator",
-            "type": "address"
-          },
-          {
-            "internalType": "uint32",
-            "name": "timeout",
-            "type": "uint32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "minBond",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct Tournament.RealitioSetup",
-        "name": "realitioSetup",
-        "type": "tuple"
+        "internalType": "uint32",
+        "name": "timeout",
+        "type": "uint32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minBond",
+        "type": "uint256"
       },
       {
         "components": [
@@ -180,6 +183,38 @@
     "outputs": [
       {
         "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tournamentCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "tournaments",
+    "outputs": [
+      {
+        "internalType": "contract Tournament",
         "name": "",
         "type": "address"
       }

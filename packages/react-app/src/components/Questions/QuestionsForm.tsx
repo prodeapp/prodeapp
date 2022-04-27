@@ -11,6 +11,7 @@ import {Contract} from "@ethersproject/contracts";
 import {Tournament, Tournament__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
+import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
 
@@ -70,6 +71,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     });
 
     await send(
+      AddressZero,
       results,
       {
         value: price
