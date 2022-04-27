@@ -106,11 +106,8 @@ export default function TournamentForm({children, handleSubmit, chainId}: FormPr
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
       account,
-      {
-        arbitrator: addresses[chainId].ARBITRATOR,
-        timeout: 86400, // TODO
-        minBond: parseUnits('7', 18),
-      },
+      86400, // TODO
+      parseUnits('7', 18),
       questionsData,
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );

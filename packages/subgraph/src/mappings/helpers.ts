@@ -9,7 +9,7 @@ export function getOrCreatePlayer(address: Address): Player {
     let player = Player.load(address.toHexString())
     if (player === null) {
         player = new Player(address.toHexString())
-        player.amountBeted = BigInt.fromI32(0)
+        player.amountBet = BigInt.fromI32(0)
         player.pricesReceived = BigInt.fromI32(0)
         player.numOfTournaments = BigInt.fromI32(0)
         player.numOfBets = BigInt.fromI32(0)

@@ -13,6 +13,9 @@ type Tournament @entity {
   managementFee: BigInt
   manager: Manager!
   numOfMatches: BigInt!
+  numOfMatchesWithAnswer: BigInt!
+  hasPendingAnswers: Boolean!
+  prizes: [BigInt!]
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
@@ -39,7 +42,7 @@ type Match @entity {
 
 type Player @entity {
   id: ID!
-  amountBeted: BigInt!
+  amountBet: BigInt!
   pricesReceived: BigInt!
   tournaments: [Tournament!]!
   bets: [Bet!]! @derivedFrom(field: "player")
@@ -59,6 +62,7 @@ type Bet @entity {
   player: Player!
   tournament: Tournament!
   tokenID: BigInt!
+  hash: Bytes!
   points: BigInt!
   results: [Bytes!]!
   count: BigInt!
