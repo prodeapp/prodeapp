@@ -107,7 +107,7 @@ export default function TournamentForm({children, handleSubmit, chainId}: FormPr
       Math.round(data.managementFee * DIVISOR / 100),
       account,
       86400, // TODO
-      parseUnits('7', 18),
+      parseUnits('0.5', 18),
       questionsData,
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );

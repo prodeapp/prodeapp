@@ -139,8 +139,10 @@ function TournamentsCreate() {
           <div style={{width: '100%'}}>
             <Input {...register('price', {
               required: 'This field is required.',
-              min: { value: 1, message: 'Price must be greater than 0.' }
-            })} style={{width: '100%'}} type="number"/>
+              valueAsNumber: true,
+              validate: v => !isNaN(Number(v)) || 'Invalid number.',
+              min: { value: 0.01, message: 'Price must be greater than 0.01' }
+            })} style={{width: '100%'}} />
             <AlertError><ErrorMessage errors={errors} name="price" /></AlertError>
           </div>
         </BoxRow>
@@ -149,9 +151,11 @@ function TournamentsCreate() {
           <div style={{width: '100%'}}>
             <Input {...register('managementFee', {
               required: 'This field is required.',
+              valueAsNumber: true,
+              validate: v => !isNaN(Number(v)) || 'Invalid number.',
               min: {value: 0, message: 'Fee must be greater than 0.'},
               max: {value: 100, message: 'Fee must be lower than 100.'}
-            })} style={{width: '100%'}} type="number"/>
+            })} style={{width: '100%'}} />
             <AlertError><ErrorMessage errors={errors} name="managementFee" /></AlertError>
           </div>
         </BoxRow>
