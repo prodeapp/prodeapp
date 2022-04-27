@@ -1,5 +1,5 @@
 import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament } from '../types/schema';
 import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
@@ -51,6 +51,14 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     tournament.save();
 }
 
+export function handlePrizesRegistered(event: Prizes): void {
+    // Start indexing the tournament; `event.params.tournament` is the
+    // address of the new tournament contract
+    log.info("handlePrizesRegistered: {} tournament", [event.address.toHexString()])
+    let tournament = new Tournament(event.address.toHexString());
+    tournament.prizes = event.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
+    tournament.save();
+}
 
 export function handlePlaceBet(event: PlaceBet): void {
     let tournament = Tournament.load(event.address.toHexString())!
@@ -66,7 +74,7 @@ export function handlePlaceBet(event: PlaceBet): void {
         player.numOfTournaments = player.numOfTournaments.plus(BigInt.fromI32(1));
     }
     player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
-    player.amountBeted = player.amountBeted.plus(event.transaction.value)
+    player.amountBet = player.amountBet.plus(event.transaction.value)
     player.save()
 
     let betID = getBetID(event.address, event.params.tokenID)

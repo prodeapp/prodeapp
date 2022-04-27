@@ -75,6 +75,8 @@ templates:
       eventHandlers:
         - event: QuestionsRegistered(bytes32[])
           handler: handleQuestionsRegistered
+        - event: Prizes(uint16[])
+          handler: handlePrizesRegistered
         - event: PlaceBet(indexed address,indexed uint256,indexed bytes32,bytes32[])
           handler: handlePlaceBet
         - event: FundingReceived(indexed address,uint256,string)

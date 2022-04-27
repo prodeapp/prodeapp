@@ -153,12 +153,69 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint16[]",
+        "name": "_prizes",
+        "type": "uint16[]"
+      }
+    ],
+    "name": "Prizes",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_provider",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_providerReward",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProviderReward",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "bytes32[]",
         "name": "_questionIDs",
         "type": "bytes32[]"
       }
     ],
     "name": "QuestionsRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_points",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_index",
+        "type": "uint256"
+      }
+    ],
+    "name": "RankingUpdated",
     "type": "event"
   },
   {
@@ -552,6 +609,11 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_provider",
+        "type": "address"
+      },
       {
         "internalType": "bytes32[]",
         "name": "_results",
