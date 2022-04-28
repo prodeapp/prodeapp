@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { DAppProvider, xDai, Localhost, Kovan } from "@usedapp/core";
+import { DAppProvider, xDai, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
@@ -25,7 +25,7 @@ const config = {
   readOnlyUrls: {
     [xDai.chainId]: "https://rpc.gnosischain.com",
   },
-  networks: [xDai, Localhost, Kovan],
+  networks: [xDai, Localhost],
   multicallAddresses: {
     [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
   },

@@ -24,4 +24,5 @@ yarn-error.log*
 packages/subgraph/build/
 packages/subgraph/src/types/
 
+packages/react-app/.env
 packages/react-app/src/typechain
