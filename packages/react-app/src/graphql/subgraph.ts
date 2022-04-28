@@ -11,6 +11,7 @@ export interface Tournament {
   managementFee: string
   manager: string
   pool: BigNumberish
+  prizes: string[]
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -25,6 +26,7 @@ export const TOURNAMENT_FIELDS = `
       managementFee
       manager{id}
       pool
+      prizes
     }
 `;
 

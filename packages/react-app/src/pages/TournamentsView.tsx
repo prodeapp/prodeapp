@@ -53,7 +53,7 @@ function TournamentsView() {
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Prize Distribution</div>
               <div style={{width: '50%'}}>
-                {[4000, 3000, 2000, 1000].map((value, index) => <div key={index}>#{index+1}: {Number(value) * 100 / DIVISOR}%</div>)}
+                {tournament.prizes.map((value, index) => <div key={index}>#{index+1}: {Number(value) * 100 / DIVISOR}%</div>)}
               </div>
             </BoxRow>
           </Box>
