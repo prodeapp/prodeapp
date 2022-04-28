@@ -29,7 +29,7 @@ export default function Profile() {
     <Container>
       {player && <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'center' }}>
         <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'>Total Bet: {formatAmount(player.amountBeted)}</Typography>
+          <Typography variant='h5'>Total Bet: {formatAmount(player.amountBet)}</Typography>
         </Grid>
         <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <Typography variant='h5'>Total Rewards: {formatAmount(player.pricesReceived)}</Typography>

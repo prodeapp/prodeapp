@@ -10,7 +10,7 @@ import { Box, BoxRow } from '../components';
 
 export default function Leaderboard() {
   const { isLoading, data: leaderboard } = useLeaderboard();
-  const [sorting, setSorting] = useState<'numOfBets' | 'numOfTournaments' | 'pricesReceived' | 'amountBeted'>('pricesReceived');
+  const [sorting, setSorting] = useState<'numOfBets' | 'numOfTournaments' | 'pricesReceived' | 'amountBet'>('pricesReceived');
   const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
 
   const columns = [
@@ -27,7 +27,7 @@ export default function Leaderboard() {
       }
     },
     {
-      field: 'amountBeted', headerName: 'Amount Beted', type: 'string', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
+      field: 'amountBet', headerName: 'Amount Beted', type: 'string', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
         return formatAmount(params.value);
       }
     },
@@ -45,7 +45,7 @@ export default function Leaderboard() {
               <div><Button onClick={() => setSorting('numOfBets')} color={sorting === 'numOfBets' ? 'secondary' : 'primary'}># of Bets</Button></div>
               <div><Button onClick={() => setSorting('numOfTournaments')} color={sorting === 'numOfTournaments' ? 'secondary' : 'primary'}># of Tournaments</Button></div>
               <div><Button onClick={() => setSorting('pricesReceived')} color={sorting === 'pricesReceived' ? 'secondary' : 'primary'}>Prices Received</Button></div>
-              <div><Button onClick={() => setSorting('amountBeted')} color={sorting === 'amountBeted' ? 'secondary' : 'primary'}>Amount Beted</Button></div>
+              <div><Button onClick={() => setSorting('amountBet')} color={sorting === 'amountBet' ? 'secondary' : 'primary'}>Amount Beted</Button></div>
             </Grid>
             <Grid item sm={4} sx={{ display: 'flex', justifyContent: 'right' }}>
               <div><Button onClick={() => setDirection('asc')} color={direction === 'asc' ? 'secondary' : 'primary'}>Ascending</Button></div>

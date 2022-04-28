@@ -56,14 +56,14 @@ export const MATCH_FIELDS = `
 
 export interface Player {
   id: string
-  amountBeted: BigNumberish
+  amountBet: BigNumberish
   pricesReceived: BigNumberish
 }
 
 export const PLAYER_FIELDS = `
   fragment PlayerFields on Player {
     id
-    amountBeted
+    amountBet
     pricesReceived
   }
 `;
