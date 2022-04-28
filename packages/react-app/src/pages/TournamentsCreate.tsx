@@ -14,7 +14,6 @@ import AnswersBuilder from "../components/TournamentCreate/AnswersBuilder";
 import PrizeWeightsBuilder from "../components/TournamentCreate/PrizeWeightsBuilder";
 import MatchBuilder from "../components/TournamentCreate/MatchBuilder";
 import TournamentForm, {TournamentFormValues, PLACEHOLDER_REGEX} from "../components/TournamentCreate/TournamentForm";
-import {useEthers} from "@usedapp/core";
 import dateAdd from 'date-fns/add'
 
 const formatAnswers = (answers: string[]) => {
