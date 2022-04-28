@@ -8,6 +8,7 @@ import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
 import {useNavigate} from "react-router-dom";
+import {queryClient} from "../../lib/react-query";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -74,6 +75,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
 
   useEffect(()=> {
     if (events && events[0].args.tournament) {
+      queryClient.invalidateQueries('useTournaments');
       navigate(`/tournaments/${events?.[0].args.tournament.toLowerCase()}?new=1`);
     }
   }, [events, navigate]);

@@ -14,6 +14,7 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
+import {queryClient} from "../../lib/react-query";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[]
@@ -49,9 +50,11 @@ export default function QuestionsForm({tournamentId, price, control, register, e
 
   useEffect(() => {
     if (state.status === 'Success') {
+      queryClient.invalidateQueries(['useTournament', tournamentId]);
+      queryClient.invalidateQueries(['useRanking', tournamentId]);
       alert('Bet placed!');
     }
-  }, [state]);
+  }, [state, tournamentId]);
 
   if (isLoading) {
     return <div>Loading...</div>
