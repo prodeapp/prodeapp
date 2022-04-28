@@ -6,7 +6,6 @@ import {Contract} from "@ethersproject/contracts";
 import {TournamentFactory, TournamentFactory__factory} from "../../typechain";
 import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
-import addresses from "../../lib/addresses";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
 import {useNavigate} from "react-router-dom";
 
@@ -38,7 +37,6 @@ type MatchData = {
 interface FormProps {
   children?: React.ReactNode;
   handleSubmit: UseFormHandleSubmit<TournamentFormValues>;
-  chainId: number;
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
@@ -64,10 +62,10 @@ function getMatchData(
   }
 }
 
-export default function TournamentForm({children, handleSubmit, chainId}: FormProps) {
+export default function TournamentForm({children, handleSubmit}: FormProps) {
 
   const { state, send, events } = useContractFunction(
-    new Contract(addresses[chainId].TOURNAMENT_FACTORY_ADDRESS, TournamentFactory__factory.createInterface()) as TournamentFactory,
+    new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface()) as TournamentFactory,
     'createTournament'
   );
 

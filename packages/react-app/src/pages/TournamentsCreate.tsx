@@ -72,14 +72,8 @@ function TournamentsCreate() {
     setOpenModal(false);
   }
 
-  const {chainId} = useEthers();
-
-  if (!chainId) {
-    return <div>Loading...</div>
-  }
-
   return (
-    <TournamentForm handleSubmit={handleSubmit} chainId={chainId}>
+    <TournamentForm handleSubmit={handleSubmit}>
       <TemplateDialog
         open={openModal}
         handleClose={handleClose}
