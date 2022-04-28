@@ -15,11 +15,14 @@ export default function BetDetails({bet}: {bet: Bet}) {
       let betResult = getAnswerText(bet.results[i], questions?.[match.questionID].outcomes || []);
       let matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], "Unknown");
 
-      return <BoxRow key={i}>
-        <div style={{ width: '40%', wordBreak: 'break-word' }}>{betResult}</div>
-        <div style={{ width: '40%', wordBreak: 'break-word' }}>{matchResult}</div>
-        {/* TODO: If the points earned change with the tournament? */}
-        <div style={{ width: '20%' }}>{betResult === matchResult ? "+1" : matchResult === "Unknown" ? "Waiting result": "0"}</div>
+      return <BoxRow key={i} style={{flexDirection: 'column'}}>
+        <div style={{ width: '100%', wordBreak: 'break-word' }}>{questions?.[match.questionID].qTitle}</div>
+        <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
+          <div style={{ width: '40%', wordBreak: 'break-word' }}>{betResult}</div>
+          <div style={{ width: '40%', wordBreak: 'break-word' }}>{matchResult}</div>
+          {/* TODO: If the points earned change with the tournament? */}
+          <div style={{ width: '20%' }}>{betResult === matchResult ? "+1" : matchResult === "Unknown" ? "Waiting result": "0"}</div>
+        </div>
       </BoxRow>;
     })}
   </Box>
