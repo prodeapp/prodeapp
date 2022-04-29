@@ -5,11 +5,13 @@ import {useTournament} from "./useTournament";
 import {isFinalized} from "../lib/helpers";
 import {useMatches} from "./useMatches";
 
+type TournamentStatus = 'ACCEPTING_BETS' | 'WAITING_ANSWERS' | 'WAITING_AVAILABITILY_OF_RESULTS' | 'WAITING_REGISTER_POINTS' | 'FINALIZED';
+
 export const useTournamentStatus = (tournamentId: string) => {
   const {data: tournament} = useTournament(tournamentId)
   const {data: matches} = useMatches(tournamentId)
 
-  return useQuery<string, Error>(
+  return useQuery<TournamentStatus | '', Error>(
     ["useTournamentStatus", tournamentId],
     async () => {
       if (!tournament || !matches) {

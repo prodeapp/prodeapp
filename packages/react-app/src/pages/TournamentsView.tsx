@@ -4,18 +4,17 @@ import {useParams, useSearchParams} from "react-router-dom";
 import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import {formatAmount} from "../lib/helpers";
-import {useTournamentStatus} from "../hooks/useTournamentStatus";
 import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
 import Ranking from "../components/TournamentView/Ranking";
 import Results from "../components/TournamentView/Results";
 import PlaceBet from "../components/TournamentView/PlaceBet";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
+import TournamentStatus from "../components/TournamentView/TournamentStatus";
 
 function TournamentsView() {
   const { id } = useParams();
   const { isLoading, data: tournament } = useTournament(String(id));
-  const { data: tournamentStatus} = useTournamentStatus(String(id));
   const { account } = useEthers();
   const [section, setSection] = useState<'ranking'|'results'|'my-bets'>('ranking');
   const [searchParams] = useSearchParams();
@@ -37,7 +36,7 @@ function TournamentsView() {
           <Box style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
             <div style={{fontSize: '25px', width: '100%'}}>{tournament.name}</div>
             <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-              Status: {tournamentStatus}
+              Status: <TournamentStatus tournamentId={tournament.id} />
             </div>
           </Box>
         </div>
