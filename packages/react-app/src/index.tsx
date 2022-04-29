@@ -12,7 +12,6 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import TournamentsCreate from "./pages/TournamentsCreate";
 import TournamentsView from "./pages/TournamentsView";
-import TournamentsList from "./pages/TournamentsList";
 import { ReactQueryProvider } from "./lib/react-query";
 import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
@@ -40,7 +39,6 @@ ReactDOM.render(
               <Route element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="tournaments">
-                  <Route index element={<TournamentsList />} />
                   <Route path=":id" element={<TournamentsView />} />
                   <Route path="new" element={<TournamentsCreate />} />
                 </Route>
