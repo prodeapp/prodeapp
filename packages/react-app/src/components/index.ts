@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AlertError = styled.div`
+export const FormError = styled.div`
   color: red;
   margin-top: 5px;
 `

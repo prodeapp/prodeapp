@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, BoxRow, BoxLabelCell, BoxTitleCell, AlertError} from "../components"
+import {Box, BoxRow, BoxLabelCell, BoxTitleCell, FormError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -21,6 +21,7 @@ const formatAnswers = (answers: string[]) => {
 }
 
 function TournamentsCreate() {
+
   const [placeholdersCount, setPlaceholdersCount] = useState(0);
 
   const [openModal, setOpenModal] = useState(false);
@@ -86,7 +87,7 @@ function TournamentsCreate() {
             <Input {...register('tournament', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
-            <AlertError><ErrorMessage errors={errors} name="tournament" /></AlertError>
+            <FormError><ErrorMessage errors={errors} name="tournament" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -98,7 +99,7 @@ function TournamentsCreate() {
               })} style={{flexGrow: 1}}/>
               <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Change template</Button>
             </div>
-            <AlertError><ErrorMessage errors={errors} name="questionPlaceholder" /></AlertError>
+            <FormError><ErrorMessage errors={errors} name="questionPlaceholder" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -124,7 +125,7 @@ function TournamentsCreate() {
                 )}
               />
             </LocalizationProvider>
-            <AlertError><ErrorMessage errors={errors} name="closingTime" /></AlertError>
+            <FormError><ErrorMessage errors={errors} name="closingTime" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -136,7 +137,7 @@ function TournamentsCreate() {
               validate: v => !isNaN(Number(v)) || 'Invalid number.',
               min: { value: 0.01, message: 'Price must be greater than 0.01' }
             })} style={{width: '100%'}} />
-            <AlertError><ErrorMessage errors={errors} name="price" /></AlertError>
+            <FormError><ErrorMessage errors={errors} name="price" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -149,7 +150,7 @@ function TournamentsCreate() {
               min: {value: 0, message: 'Fee must be greater than 0.'},
               max: {value: 100, message: 'Fee must be lower than 100.'}
             })} style={{width: '100%'}} />
-            <AlertError><ErrorMessage errors={errors} name="managementFee" /></AlertError>
+            <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>

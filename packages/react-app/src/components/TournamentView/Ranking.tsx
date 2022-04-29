@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
 import {shortenAddress} from "@usedapp/core";
-import {AlertError, Box, BoxRow} from "../../components"
+import {Box, BoxRow} from "../../components"
 import Button from '@mui/material/Button';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
+import Alert from "@mui/material/Alert";
 
 export default function Ranking({tournamentId = '', playerId = ''}: {tournamentId?: string, playerId?: string}) {
   const { isLoading, error, data: ranking } = useRanking({tournamentId, playerId});
@@ -26,7 +27,7 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
   }
 
   if (error) {
-    return <AlertError>{error}</AlertError>
+    return <Alert severity="error">{error}</Alert>
   }
 
   return <>

@@ -1,12 +1,12 @@
 import React, {useEffect} from "react";
-import {AlertError, Box, BoxRow} from "../../components"
+import {FormError, Box, BoxRow} from "../../components"
 import {useQuestions} from "../../hooks/useQuestions";
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {Control, useFieldArray} from "react-hook-form";
 import {UseFormHandleSubmit, UseFormRegister} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {ErrorMessage} from "@hookform/error-message";
-import {useContractFunction} from "@usedapp/core";
+import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {Tournament, Tournament__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
@@ -30,6 +30,7 @@ type QuestionsFormProps = {
 }
 
 export default function QuestionsForm({tournamentId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
+  const { account, error: walletError } = useEthers();
   const { isLoading, error, data: matches } = useMatches(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
 
@@ -60,8 +61,12 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     return <div>Loading...</div>
   }
 
+  if (!account || walletError) {
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to place a bet.'}</Alert>
+  }
+
   if (error) {
-    return <div>Error loading questions.</div>
+    return <Alert severity="error">Error loading questions.</Alert>
   }
 
   const onSubmit = async (data: QuestionsFormValues) => {
@@ -105,7 +110,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
                 >
                   {questions[matches[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
                 </Select>
-                <AlertError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></AlertError>
+                <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
             </div>
           </BoxRow>

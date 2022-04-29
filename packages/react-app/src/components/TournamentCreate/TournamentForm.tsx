@@ -70,7 +70,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
     'createTournament'
   );
 
-  const { account } = useEthers();
+  const { account, error: walletError } = useEthers();
   const navigate = useNavigate();
 
   useEffect(()=> {
@@ -80,8 +80,8 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
     }
   }, [events, navigate]);
 
-  if (!account) {
-    return <div>Connect your wallet to create a Tournament.</div>
+  if (!account || walletError) {
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a Tournament.'}</Alert>
   }
 
   const onSubmit = async (data: TournamentFormValues) => {

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useTournament} from "../hooks/useTournament";
 import {useParams, useSearchParams} from "react-router-dom";
-import {Box, BoxRow, AlertError} from "../components"
+import {Box, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import {formatAmount} from "../lib/helpers";
 import {useTournamentStatus} from "../hooks/useTournamentStatus";
@@ -10,6 +10,7 @@ import Ranking from "../components/TournamentView/Ranking";
 import Results from "../components/TournamentView/Results";
 import PlaceBet from "../components/TournamentView/PlaceBet";
 import {useEthers} from "@usedapp/core";
+import Alert from "@mui/material/Alert";
 
 function TournamentsView() {
   const { id } = useParams();
@@ -76,7 +77,7 @@ function TournamentsView() {
 
       {section === 'my-bets' && <>
         {account && <Ranking tournamentId={tournament.id} playerId={account} />}
-        {!account && <AlertError>Connect your wallet to see your bets.</AlertError>}
+        {!account && <Alert severity="error">Connect your wallet to see your bets.</Alert>}
       </>}
     </>
   );

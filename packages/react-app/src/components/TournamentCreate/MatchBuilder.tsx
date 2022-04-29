@@ -1,7 +1,7 @@
 import {Control, useFieldArray, useWatch} from "react-hook-form";
 import React, {useEffect} from "react";
 import Input from "@mui/material/Input";
-import {AlertError} from "../index";
+import {FormError} from "../index";
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import {UseFormRegister} from "react-hook-form/dist/types/form";
@@ -44,7 +44,7 @@ export default function MatchBuilder({matchIndex, removeMatch, placeholdersCount
       {questionParamsFields.map((questionParamField, i) => {
         return <div key={i} style={{margin: '0 5px'}}>
           <Input {...register(`matches.${matchIndex}.questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
-          <AlertError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionParams.${i}.value`} /></AlertError>
+          <FormError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionParams.${i}.value`} /></FormError>
         </div>
       })}
       <div><Button onClick={() => removeMatch(matchIndex)}>- Remove match</Button></div>

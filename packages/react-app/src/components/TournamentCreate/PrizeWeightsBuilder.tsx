@@ -1,6 +1,6 @@
 import {Control, useFieldArray, useWatch} from "react-hook-form";
 import React, {useEffect} from "react";
-import {AlertError, AnswerField, AnswerFieldWrapper} from "../index";
+import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
 import Input from "@mui/material/Input";
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
@@ -31,7 +31,7 @@ export default function PrizeWeightsBuilder({control, register, errors, setValue
   const addPrizeWeight = () => appendPrizesField({value: 0});
 
   return <div>
-    {prizesFields.length === 0 && <AlertError style={{marginBottom: '5px'}}>Add at least one prize weight.</AlertError>}
+    {prizesFields.length === 0 && <FormError style={{marginBottom: '5px'}}>Add at least one prize weight.</FormError>}
     {prizesFields.map((answerField, i) => {
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
@@ -39,10 +39,10 @@ export default function PrizeWeightsBuilder({control, register, errors, setValue
           <Input {...register(`prizeWeights.${i}.value`, {required: 'This field is required.'})} style={{width: '100px'}} type="number" />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deletePrizeWeight(i)}>[x]</div>
         </AnswerField>
-        <AlertError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></AlertError>
+        <FormError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></FormError>
       </AnswerFieldWrapper>
     })}
-    <AlertError><ErrorMessage errors={errors} name={`prizeDivisor`} /></AlertError>
+    <FormError><ErrorMessage errors={errors} name={`prizeDivisor`} /></FormError>
     <Button onClick={addPrizeWeight} size="small">Add prize weight</Button>
   </div>
 }

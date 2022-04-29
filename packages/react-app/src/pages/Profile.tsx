@@ -6,23 +6,28 @@ import {useEthers} from "@usedapp/core";
 import {usePlayer} from "../hooks/usePlayer";
 import BetDetails from "../components/BetDetails";
 import {useRanking} from "../hooks/useRanking";
+import Alert from "@mui/material/Alert";
+import * as React from "react";
 
 export default function Profile() {
-  const { account, error: errorWallet } = useEthers();
+  const { account, error: walletError } = useEthers();
   const { data: player } = usePlayer(String(account));
   const { data: bets, error, isLoading } = useRanking({playerId: account || ''});
 
-  if (!account) {
-    return <Typography variant='h5'>Please, connect your wallet</Typography>
+  if (!account || walletError) {
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to view your profile.'}</Alert>
   }
-  if (errorWallet) {
-    return <Typography variant='h5'>Error in the wallet provider</Typography>
-  }
+
   if (error) {
-    return <Typography variant='h5'>Error...</Typography>
+    return <Alert severity="error">{error}</Alert>
   }
+
   if (isLoading) {
-    return <Typography variant='h5'>Loading...</Typography>
+    return null
+  }
+
+  if (!bets || bets.length === 0) {
+    return <Alert severity="error">No bets found.</Alert>
   }
 
   return (

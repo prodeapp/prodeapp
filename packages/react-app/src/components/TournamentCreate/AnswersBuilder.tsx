@@ -1,5 +1,5 @@
 import {Control, useFieldArray} from "react-hook-form";
-import {AlertError, AnswerField, AnswerFieldWrapper} from "../index";
+import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
 import Input from "@mui/material/Input";
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
@@ -28,14 +28,14 @@ export default function AnswersBuilder({control, register, errors}: AnswersBuild
   const addAnswer = () => appendAnswerPlaceholderField({value: ''});
 
   return <div>
-    {answersPlaceholderFields.length < 2 && <AlertError style={{marginBottom: '5px'}}>Add at least two answers.</AlertError>}
+    {answersPlaceholderFields.length < 2 && <FormError style={{marginBottom: '5px'}}>Add at least two answers.</FormError>}
     {answersPlaceholderFields.map((answerField, i) => {
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
           <Input {...register(`answersPlaceholder.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
         </AnswerField>
-        <AlertError><ErrorMessage errors={errors} name={`answersPlaceholder.${i}.value`} /></AlertError>
+        <FormError><ErrorMessage errors={errors} name={`answersPlaceholder.${i}.value`} /></FormError>
       </AnswerFieldWrapper>
     })}
     <Button onClick={addAnswer} size="small">Add answer</Button>
