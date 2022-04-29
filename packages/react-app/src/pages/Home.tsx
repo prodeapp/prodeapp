@@ -29,19 +29,19 @@ type TournamentsTableProps = {
 function TournamentsTable({tournaments}: TournamentsTableProps) {
   return <Box>
     <BoxRow>
-      <div style={{width: '25%'}}>Name</div>
-      <div style={{width: '25%'}}>Price</div>
+      <div style={{width: '25%', flexGrow: 1}}>Name</div>
+      <div style={{width: '130px'}}>Price</div>
       <div style={{width: '25%'}}>Closing Time</div>
-      <div style={{width: '25%'}}>Pool</div>
+      <div style={{width: '130px'}}>Pool</div>
     </BoxRow>
     {tournaments.map((tournament, i) => {
       return <BoxRow key={i}>
-        <div style={{width: '25%'}}>
+        <div style={{width: '25%', flexGrow: 1}}>
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
         </div>
-        <div style={{width: '25%'}}>{formatAmount(tournament.price)}</div>
+        <div style={{width: '130px'}}>{formatAmount(tournament.price)}</div>
         <div style={{width: '25%'}}>{getTimeLeft(tournament.closingTime)}</div>
-        <div style={{width: '25%'}}>{formatAmount(tournament.pool)}</div>
+        <div style={{width: '130px'}}>{formatAmount(tournament.pool)}</div>
       </BoxRow>
     })}
   </Box>
