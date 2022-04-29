@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormError, Box, BoxRow} from "../../components"
+import {FormError, BoxWrapper, BoxRow} from "../../components"
 import {useQuestions} from "../../hooks/useQuestions";
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {Control, useFieldArray} from "react-hook-form";
@@ -95,7 +95,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="questions-form">
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-      <Box>
+      <BoxWrapper>
         <BoxRow>
           <div style={{width: '80%'}}>Question</div>
           <div style={{width: '20%'}}>Outcome</div>
@@ -120,7 +120,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
             </div>
           </BoxRow>
         })}
-      </Box>
+      </BoxWrapper>
     </form>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import {Box, BoxRow} from "../components";
+import {BoxWrapper, BoxRow} from "../components";
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import {Link} from "react-router-dom";
 import {useTournaments} from "../hooks/useTournaments";
 import {Tournament} from "../graphql/subgraph";
@@ -11,11 +12,11 @@ function Home() {
 
   return (
     <>
-      <Box>
+      <BoxWrapper>
         <BoxRow style={{textAlign: 'right'}}>
           <Button component={Link} to="/tournaments/new">+ New Tournament</Button>
         </BoxRow>
-      </Box>
+      </BoxWrapper>
 
       {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments}/>}
     </>
@@ -27,24 +28,29 @@ type TournamentsTableProps = {
 }
 
 function TournamentsTable({tournaments}: TournamentsTableProps) {
-  return <Box>
+  return <BoxWrapper>
     <BoxRow>
-      <div style={{width: '25%', flexGrow: 1}}>Name</div>
-      <div style={{width: '130px'}}>Price</div>
-      <div style={{width: '25%'}}>Closing Time</div>
-      <div style={{width: '130px'}}>Pool</div>
+      <Box sx={{width: {md: '25%'}, flexGrow: 1}}>Name</Box>
+      <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Bet Price</Box>
+      <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Prize Pool</Box>
+      <Box sx={{width: '25%', display: {xs: 'none', md: 'block'}}}>Time Remaining</Box>
     </BoxRow>
     {tournaments.map((tournament, i) => {
       return <BoxRow key={i}>
-        <div style={{width: '25%', flexGrow: 1}}>
+        <Box sx={{width: {md: '25%'}, flexGrow: 1}}>
           <Link to={`/tournaments/${tournament.id.toString()}`} style={{display: 'flex'}} key={i}>{tournament.name}</Link>
-        </div>
-        <div style={{width: '130px'}}>{formatAmount(tournament.price)}</div>
-        <div style={{width: '25%'}}>{getTimeLeft(tournament.closingTime)}</div>
-        <div style={{width: '130px'}}>{formatAmount(tournament.pool)}</div>
+
+          <Box sx={{display: {md: 'none'}, fontWeight: 'normal', fontSize: '14px'}}>
+            <div>Bet Price: {formatAmount(tournament.price)} / Prize Pool: {formatAmount(tournament.pool)}</div>
+            <div>{getTimeLeft(tournament.closingTime)}</div>
+          </Box>
+        </Box>
+        <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>{formatAmount(tournament.price)}</Box>
+        <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>{formatAmount(tournament.pool)}</Box>
+        <Box sx={{width: '25%', display: {xs: 'none', md: 'block'}}}>{getTimeLeft(tournament.closingTime)}</Box>
       </BoxRow>
     })}
-  </Box>
+  </BoxWrapper>
 }
 
 export default Home;

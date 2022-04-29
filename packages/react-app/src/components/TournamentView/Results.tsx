@@ -1,5 +1,5 @@
 import React from "react";
-import {Box, BoxRow} from "../../components"
+import {BoxWrapper, BoxRow} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useQuestions} from "../../hooks/useQuestions";
 import {useMatches} from "../../hooks/useMatches";
@@ -8,7 +8,7 @@ export default function Results({tournamentId}: {tournamentId: string}) {
   const { data: matches } = useMatches(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
 
-  return <Box>
+  return <BoxWrapper>
     <BoxRow>
       <div style={{width: '60%'}}>Match</div>
       <div style={{width: '30%'}}>Result</div>
@@ -25,5 +25,5 @@ export default function Results({tournamentId}: {tournamentId: string}) {
         <div style={{width: '10%'}}>{isFinalized(match) ? 'Finalized' : 'Pending'}</div>
       </BoxRow>
     })}
-  </Box>
+  </BoxWrapper>
 }

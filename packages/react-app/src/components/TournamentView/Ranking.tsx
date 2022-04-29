@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
 import {shortenAddress} from "@usedapp/core";
-import {Box, BoxRow} from "../../components"
+import {BoxWrapper, BoxRow} from "../../components"
 import Button from '@mui/material/Button';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
@@ -39,21 +39,21 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
     >
       <BetDetails bet={bet} />
     </AppDialog>}
-    <Box>
+    <BoxWrapper>
       <BoxRow>
         <div style={{width: '10%'}}>#</div>
         <div style={{width: '40%'}}>Player</div>
         <div style={{width: '40%'}}>Points</div>
-        <div style={{width: '10%'}}></div>
+        <div style={{width: '120px'}}></div>
       </BoxRow>
       {ranking && ranking.map((rank, i) => {
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
           <div style={{width: '40%'}}>{rank.points.toString()}</div>
-          <div style={{width: '10%'}}><Button onClick={() => handleOpen(rank)}>Details</Button></div>
+          <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}>Details</Button></div>
         </BoxRow>
       })}
-    </Box>
+    </BoxWrapper>
   </>
 }

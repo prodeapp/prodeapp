@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { formatAmount } from '../lib/helpers';
 import { shortenAddress } from "@usedapp/core";
-import { Box, BoxRow } from '../components';
+import { BoxWrapper, BoxRow } from '../components';
 
 
 export default function Leaderboard() {
@@ -38,7 +38,7 @@ export default function Leaderboard() {
     <Container style={{ height: '500px', width: '100%', marginTop: '20px' }}>
 
       <Typography variant="h5">Leaderboard</Typography>
-      <Box style={{ marginTop: '20px' }}>
+      <BoxWrapper style={{ marginTop: '20px' }}>
         <BoxRow>
           <Grid container>
             <Grid item sm={8} sx={{ display: 'flex', justifyContent: 'left' }}>
@@ -53,7 +53,7 @@ export default function Leaderboard() {
             </Grid>
           </Grid>
         </BoxRow>
-      </Box>
+      </BoxWrapper>
       {leaderboard && <DataGrid
         rows={leaderboard}
         columns={columns}

@@ -1,11 +1,11 @@
-import { Box, BoxRow } from '../components';
+import { BoxWrapper, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
 import {getAnswerText} from '../lib/helpers';
 import {useQuestions} from "../hooks/useQuestions";
 
 export default function BetDetails({bet}: {bet: Bet}) {
   const { data: questions } = useQuestions(bet.tournament.id);
-  return <Box>
+  return <BoxWrapper>
     <BoxRow>
       <div style={{ width: '40%'}}>Your Bet</div>
       <div style={{ width: '40%'}}>Match Result</div>
@@ -25,5 +25,5 @@ export default function BetDetails({bet}: {bet: Bet}) {
         </div>
       </BoxRow>;
     })}
-  </Box>
+  </BoxWrapper>
 }

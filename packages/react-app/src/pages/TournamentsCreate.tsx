@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, BoxRow, BoxLabelCell, BoxTitleCell, FormError} from "../components"
+import {BoxWrapper, BoxRow, BoxLabelCell, BoxTitleCell, FormError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -80,7 +80,7 @@ function TournamentsCreate() {
         tournamentsTemplates={tournamentsTemplates}
         onTemplateChange={onTemplateChange}
       />
-      <Box>
+      <BoxWrapper>
         <BoxRow>
           <BoxLabelCell>Tournament name</BoxLabelCell>
           <div style={{width: '100%'}}>
@@ -157,8 +157,8 @@ function TournamentsCreate() {
           <BoxLabelCell>Prize Weights</BoxLabelCell>
           <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
         </BoxRow>
-      </Box>
-      <Box>
+      </BoxWrapper>
+      <BoxWrapper>
         <BoxRow>
           <BoxTitleCell>Matches</BoxTitleCell>
           <div><Button onClick={addMatch}>+ Add match</Button></div>
@@ -182,7 +182,7 @@ function TournamentsCreate() {
             <Button type="submit">Create Tournament</Button>
           </div>
         </BoxRow>}
-      </Box>
+      </BoxWrapper>
     </TournamentForm>
   );
 }

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Box from '@mui/material/Box';
 
 export const FormError = styled.div`
   color: red;
@@ -20,7 +21,7 @@ export const Image = styled.img`
   pointer-events: none;
 `;
 
-export const Box = styled.div`
+export const BoxWrapper = styled(Box)`
   background: #121212;
   border-radius: 10px;
   border: 1px solid #272727;

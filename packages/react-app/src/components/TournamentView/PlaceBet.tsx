@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, BoxRow} from "../index";
+import {BoxWrapper, BoxRow} from "../index";
 import Button from '@mui/material/Button';
 import QuestionsDialog from "../../components/Questions/QuestionsDialog";
 import {formatAmount, getTimeLeft} from "../../lib/helpers";
@@ -35,7 +35,7 @@ export default function PlaceBet({tournament}: {tournament: Tournament}) {
       open={openModal}
       handleClose={handleClose}
     />
-    <Box style={{padding: 20}}>
+    <BoxWrapper style={{padding: 20}}>
       <BoxRow>
         <div style={{textAlign: 'center', margin: '0 auto'}}>
           <div>Bet Price: {formatAmount(tournament.price)}</div>
@@ -43,6 +43,6 @@ export default function PlaceBet({tournament}: {tournament: Tournament}) {
           <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
         </div>
       </BoxRow>
-    </Box>
+    </BoxWrapper>
   </>
 }
