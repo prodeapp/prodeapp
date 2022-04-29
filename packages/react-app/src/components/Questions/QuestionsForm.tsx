@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {FormError, Box, BoxRow} from "../../components"
 import {useQuestions} from "../../hooks/useQuestions";
 import {FormControl, MenuItem, Select} from "@mui/material";
@@ -33,6 +33,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: matches } = useMatches(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
+  const [success, setSuccess] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -53,7 +54,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     if (state.status === 'Success') {
       queryClient.invalidateQueries(['useTournament', tournamentId]);
       queryClient.invalidateQueries(['useRanking', tournamentId]);
-      alert('Bet placed!');
+      setSuccess(true);
     }
   }, [state, tournamentId]);
 
@@ -67,6 +68,10 @@ export default function QuestionsForm({tournamentId, price, control, register, e
 
   if (error) {
     return <Alert severity="error">Error loading questions.</Alert>
+  }
+
+  if (success) {
+    return <Alert severity="success">Bet placed!</Alert>
   }
 
   const onSubmit = async (data: QuestionsFormValues) => {

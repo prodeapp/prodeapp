@@ -18,7 +18,6 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
-import BetView from "./pages/BetView";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -48,7 +47,7 @@ ReactDOM.render(
                 <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="profile">
                   <Route index element={<Profile />} />
-                  <Route path=":betid" element={<BetView />} />
+                  <Route path=":id" element={<Profile />} />
                 </Route>
               </Route>
             </Routes>

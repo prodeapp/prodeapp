@@ -7,6 +7,7 @@ import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
 import Alert from "@mui/material/Alert";
+import {Link} from "react-router-dom";
 
 export default function Ranking({tournamentId = '', playerId = ''}: {tournamentId?: string, playerId?: string}) {
   const { isLoading, error, data: ranking } = useRanking({tournamentId, playerId});
@@ -48,7 +49,7 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
       {ranking && ranking.map((rank, i) => {
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
-          <div style={{width: '40%'}}>{shortenAddress(rank.player.id)}</div>
+          <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
           <div style={{width: '40%'}}>{rank.points.toString()}</div>
           <div style={{width: '10%'}}><Button onClick={() => handleOpen(rank)}>Details</Button></div>
         </BoxRow>

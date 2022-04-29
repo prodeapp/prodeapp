@@ -8,11 +8,19 @@ import BetDetails from "../components/BetDetails";
 import {useRanking} from "../hooks/useRanking";
 import Alert from "@mui/material/Alert";
 import * as React from "react";
+import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 export default function Profile() {
+  const { id } = useParams();
   const { account, error: walletError } = useEthers();
+  const [playerId, setPlayerId] = useState('');
   const { data: player } = usePlayer(String(account));
-  const { data: bets, error, isLoading } = useRanking({playerId: account || ''});
+  const { data: bets, error, isLoading } = useRanking({playerId});
+
+  useEffect(() => {
+    setPlayerId(id || account || '')
+  }, [id, account]);
 
   if (!account || walletError) {
     return <Alert severity="error">{walletError?.message || 'Connect your wallet to view your profile.'}</Alert>
