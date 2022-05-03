@@ -2,6 +2,7 @@ import { BoxWrapper, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
 import {getAnswerText} from '../lib/helpers';
 import {useQuestions} from "../hooks/useQuestions";
+import {BigNumber} from "@ethersproject/bignumber";
 
 export default function BetDetails({bet}: {bet: Bet}) {
   const { data: questions } = useQuestions(bet.tournament.id);
@@ -12,8 +13,9 @@ export default function BetDetails({bet}: {bet: Bet}) {
       <div style={{ width: '20%' }}>Points Earned</div>
     </BoxRow>
     {bet.tournament.matches.map((match, i) => {
-      let betResult = getAnswerText(bet.results[i], questions?.[match.questionID].outcomes || []);
-      let matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], "Unknown");
+      const matchNonce = BigNumber.from(match.nonce).toNumber();
+      const betResult = getAnswerText(bet.results[matchNonce], questions?.[match.questionID].outcomes || []);
+      const matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], "Unknown");
 
       return <BoxRow key={i} style={{flexDirection: 'column'}}>
         <div style={{ width: '100%', wordBreak: 'break-word' }}>{questions?.[match.questionID].qTitle}</div>

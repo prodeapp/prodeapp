@@ -123,6 +123,7 @@ export interface Bet {
     matches: {
       questionID: string
       answer: string | null
+      nonce: string
     }[]
   }
   tokenID: BigNumberish
@@ -145,6 +146,7 @@ export const BET_FIELDS = `
       matches {
         questionID
         answer
+        nonce
       }
     }
     tokenID
