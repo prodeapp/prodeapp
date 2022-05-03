@@ -46,7 +46,8 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
         <div style={{width: '40%'}}>Points</div>
         <div style={{width: '120px'}}></div>
       </BoxRow>
-      {ranking && ranking.map((rank, i) => {
+      {ranking && ranking.length === 0 && <Alert severity="info">No bets found.</Alert>}
+      {ranking && ranking.length > 0 && ranking.map((rank, i) => {
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
