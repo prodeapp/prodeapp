@@ -3,6 +3,7 @@ import {useRanking} from "../../hooks/useRanking";
 import {shortenAddress} from "@usedapp/core";
 import {BoxWrapper, BoxRow} from "../../components"
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
@@ -43,7 +44,7 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
       <BoxRow>
         <div style={{width: '10%'}}>#</div>
         <div style={{width: '40%'}}>Player</div>
-        <div style={{width: '40%'}}>Points</div>
+        <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>Points</Box>
         <div style={{width: '120px'}}></div>
       </BoxRow>
       {ranking && ranking.length === 0 && <Alert severity="info">No bets found.</Alert>}
@@ -51,7 +52,7 @@ export default function Ranking({tournamentId = '', playerId = ''}: {tournamentI
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
-          <div style={{width: '40%'}}>{rank.points.toString()}</div>
+          <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>{rank.points.toString()}</Box>
           <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}>Details</Button></div>
         </BoxRow>
       })}
