@@ -39,7 +39,7 @@ export default function PlaceBet({tournament}: {tournament: Tournament}) {
       <BoxRow>
         <div style={{textAlign: 'center', margin: '0 auto'}}>
           <div>Bet Price: {formatAmount(tournament.price)}</div>
-          <Button style={{flexGrow: 0, margin: '15px 0'}} variant="outlined" size="large" onClick={() => setOpenModal(true)}>Place Bet</Button>
+          <Button style={{flexGrow: 0, margin: '15px 0'}} color="secondary" variant="outlined" size="large" onClick={() => setOpenModal(true)}>Place Bet</Button>
           <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
         </div>
       </BoxRow>

@@ -13,7 +13,7 @@ function TournamentStatus({tournamentId}: {tournamentId: string}) {
   }
 
   if (tournamentStatus === 'WAITING_ANSWERS') {
-    return <span>Waiting answers</span>;
+    return <span>Waiting for results</span>;
   }
 
   return <span>Building ranking</span>;

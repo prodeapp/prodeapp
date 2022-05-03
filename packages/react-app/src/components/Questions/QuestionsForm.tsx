@@ -17,8 +17,19 @@ import {useMatches} from "../../hooks/useMatches";
 import {queryClient} from "../../lib/react-query";
 
 export type QuestionsFormValues = {
-  outcomes: {value: number|''}[]
+  outcomes: {value: number|''}[],
+  provider: string
 }
+
+const MULTI_SIG = "0x0000000000000000000000000000000000000999"; // Or dividend contract
+const UBI_DONATION_ADDRESS = "0x0000000000000000000000000000000000000123";
+const SPLITTER_DONATION_ADDRESS = "0x0000000000000000000000000000000000000666";
+const providers = [
+  { text: "support dev team", address: MULTI_SIG },
+  { text: "support UBI", address: UBI_DONATION_ADDRESS },
+  { text: "support UBI & dev team", address: SPLITTER_DONATION_ADDRESS },
+  { text: "reward pool winners", address: AddressZero }
+];
 
 type QuestionsFormProps = {
   tournamentId: string
@@ -58,6 +69,10 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     }
   }, [state, tournamentId]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
   if (isLoading) {
     return <div>Loading...</div>
   }
@@ -84,13 +99,14 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     });
 
     await send(
-      AddressZero,
+      data.provider,
       results,
       {
         value: price
       }
     )
   }
+  const managementFee = 2; // Get managemente fee
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="questions-form">
@@ -120,6 +136,21 @@ export default function QuestionsForm({tournamentId, price, control, register, e
             </div>
           </BoxRow>
         })}
+        <BoxRow>
+          <div style={{width: '60%'}}>`Use ${managementFee}% of this pool to: `</div>
+          <div style={{width: '40%'}}>
+            <FormControl fullWidth>
+              <Select
+                defaultValue={MULTI_SIG}
+                id={`provider-select`}
+                {...register(`provider`, {required: 'This field is required.'})}
+              >
+                {providers.map((prov, i) => <MenuItem value={prov.address} key={i}>{prov.text}</MenuItem>)}
+              </Select>
+              <FormError><ErrorMessage errors={errors} name={`provider`} /></FormError>
+            </FormControl>
+          </div>
+        </BoxRow>
       </BoxWrapper>
     </form>
   );
