@@ -10,13 +10,15 @@ function TournamentStatus({tournamentId}: {tournamentId: string}) {
 
   if (tournamentStatus === 'ACCEPTING_BETS') {
     return <span>Accepting bets</span>;
-  }
-
-  if (tournamentStatus === 'WAITING_ANSWERS') {
+  } else if (tournamentStatus === 'WAITING_ANSWERS') {
     return <span>Waiting for results</span>;
+  } else if (tournamentStatus === 'WAITING_REGISTER_POINTS' || tournamentStatus === 'WAITING_AVAILABITILY_OF_RESULTS') {
+    return <span>Building ranking</span>;
+  } else if (tournamentStatus === 'FINALIZED') {
+    return <span>Finished</span>;
   }
 
-  return <span>Building ranking</span>;
+  return <span></span>;
 }
 
 export default TournamentStatus;
