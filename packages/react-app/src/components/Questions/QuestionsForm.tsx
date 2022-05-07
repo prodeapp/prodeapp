@@ -14,6 +14,7 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
+import {useTournament} from "../../hooks/useTournament";
 import {queryClient} from "../../lib/react-query";
 
 export type QuestionsFormValues = {
@@ -21,12 +22,12 @@ export type QuestionsFormValues = {
   provider: string
 }
 
-const MULTI_SIG = "0x0000000000000000000000000000000000000999"; // Or dividend contract
-const UBI_DONATION_ADDRESS = "0x0000000000000000000000000000000000000123";
-const SPLITTER_DONATION_ADDRESS = "0x0000000000000000000000000000000000000666";
+const DEVS = "0x9b59eeEA37618ed5227c3Fb2420F68fe5cD1151A";
+const UBI_BURNER_ADDRESS = "0x43E9062F3D4B87C49b96ada5De230B1Ce69485c3";
+const SPLITTER_DONATION_ADDRESS = "0x9378C3F269F5A3f87956FF8DBF2d83E361a7166c";
 const providers = [
-  { text: "support dev team", address: MULTI_SIG },
-  { text: "support UBI", address: UBI_DONATION_ADDRESS },
+  { text: "support dev team", address: DEVS },
+  { text: "support UBI", address: UBI_BURNER_ADDRESS },
   { text: "support UBI & dev team", address: SPLITTER_DONATION_ADDRESS },
   { text: "reward pool winners", address: AddressZero }
 ];
@@ -43,6 +44,7 @@ type QuestionsFormProps = {
 export default function QuestionsForm({tournamentId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: matches } = useMatches(tournamentId);
+  const { isLoading: isLoadingTournament, data: tournament } = useTournament(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
   const [success, setSuccess] = useState(false);
 
@@ -106,7 +108,6 @@ export default function QuestionsForm({tournamentId, price, control, register, e
       }
     )
   }
-  const managementFee = 2; // Get managemente fee
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="questions-form">
@@ -137,11 +138,11 @@ export default function QuestionsForm({tournamentId, price, control, register, e
           </BoxRow>
         })}
         <BoxRow>
-          <div style={{width: '60%'}}>`Use ${managementFee}% of this pool to: `</div>
+          <div style={{width: '60%'}}>Use {Number(tournament?.managementFee) / 100}% of this pool to: </div>
           <div style={{width: '40%'}}>
             <FormControl fullWidth>
               <Select
-                defaultValue={MULTI_SIG}
+                defaultValue={DEVS}
                 id={`provider-select`}
                 {...register(`provider`, {required: 'This field is required.'})}
               >
