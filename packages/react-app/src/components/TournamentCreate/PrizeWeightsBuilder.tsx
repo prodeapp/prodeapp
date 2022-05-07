@@ -33,9 +33,13 @@ export default function PrizeWeightsBuilder({control, register, errors, setValue
   return <div>
     {prizesFields.length === 0 && <FormError style={{marginBottom: '5px'}}>Add at least one prize weight.</FormError>}
     {prizesFields.map((answerField, i) => {
+      const prizeMedal = 
+        i === 0 ? `🥇` :
+        i === 1 ? `🥈` :
+        i === 2 ? `🥉` : `#${i+1}`;
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
-          <div style={{marginRight: '10px'}}>#{i+1}</div>
+          <div style={{marginRight: '10px'}}>{prizeMedal}</div>
           <Input {...register(`prizeWeights.${i}.value`, {required: 'This field is required.'})} style={{width: '100px'}} type="number" />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deletePrizeWeight(i)}>[x]</div>
         </AnswerField>
