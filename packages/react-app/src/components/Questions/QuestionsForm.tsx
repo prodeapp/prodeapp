@@ -75,7 +75,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     window.scrollTo(0, 0)
   }, []);
 
-  if (isLoading) {
+  if (isLoading || isLoadingTournament) {
     return <div>Loading...</div>
   }
 
