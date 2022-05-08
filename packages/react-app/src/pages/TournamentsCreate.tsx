@@ -107,7 +107,7 @@ function TournamentsCreate() {
           <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Closing Time</BoxLabelCell>
+          <BoxLabelCell>Betting deadline</BoxLabelCell>
           <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
@@ -154,7 +154,7 @@ function TournamentsCreate() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Prize Weights</BoxLabelCell>
+          <BoxLabelCell>Prize Distribution (%)</BoxLabelCell>
           <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
         </BoxRow>
       </BoxWrapper>

@@ -18,6 +18,7 @@ export default function Results({tournamentId}: {tournamentId: string}) {
     {matches && questions && matches.map((match, i) => {
       const finalized = isFinalized(match);
       const openingTimeLeft = getTimeLeft(match.openingTs);
+      const answerCountdown = getTimeLeft(match.answerFinalizedTimestamp || 0);
 
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
@@ -30,7 +31,7 @@ export default function Results({tournamentId}: {tournamentId: string}) {
                 <span style={{color: 'red'}}>
                   {
                     (openingTimeLeft !== false && 'Pending') ||
-                    (match.isPendingArbitration ? 'Pending arbitration' : `Answer closes in ${getTimeLeft(match.answerFinalizedTimestamp || 0)}`)
+                    (match.isPendingArbitration ? 'Pending arbitration' : !answerCountdown ? 'Pending' : `Answer closes in ${answerCountdown}`)
                   }
                 </span>
               )}
