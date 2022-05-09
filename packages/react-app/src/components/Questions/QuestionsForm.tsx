@@ -131,6 +131,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
                   {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
                 >
                   {questions[matches[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  <MenuItem value="0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff">Invalid result</MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
