@@ -36,7 +36,7 @@ function TournamentsCreate() {
       questionPlaceholder: tournamentsTemplates[0].q,
       answersPlaceholder: formatAnswers(tournamentsTemplates[0].a),
       matches: [],
-      prizeWeights: [{value: 40}, {value: 30}, {value: 20}, {value: 10}],
+      prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
       prizeDivisor: 0,
       closingTime: defaultClosingTime,
       manager: '',
