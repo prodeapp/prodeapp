@@ -9,7 +9,9 @@ export interface Tournament {
   resultSubmissionPeriodStart: string
   submissionTimeout: string
   managementFee: string
-  manager: string
+  manager: {
+    id: string
+  }
   pool: BigNumberish
   prizes: string[]
 }

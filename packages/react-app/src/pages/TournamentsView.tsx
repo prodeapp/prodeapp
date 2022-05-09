@@ -9,7 +9,7 @@ import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
 import Ranking from "../components/TournamentView/Ranking";
 import Results from "../components/TournamentView/Results";
 import PlaceBet from "../components/TournamentView/PlaceBet";
-import {useEthers} from "@usedapp/core";
+import {shortenAddress, useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import TournamentStatus from "../components/TournamentView/TournamentStatus";
 
@@ -46,6 +46,10 @@ function TournamentsView() {
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Pool</div>
               <div style={{width: '50%'}}>{formatAmount(tournament.pool)}</div>
+            </BoxRow>
+            <BoxRow style={{display: 'flex'}}>
+              <div style={{width: '50%'}}>Manager</div>
+              <div style={{width: '50%'}}><a href={`https://blockscout.com/xdai/mainnet/address/${tournament.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(tournament.manager.id)}</a></div>
             </BoxRow>
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Management Fee</div>

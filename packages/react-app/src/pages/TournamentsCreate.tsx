@@ -16,6 +16,7 @@ import PrizeWeightsBuilder from "../components/TournamentCreate/PrizeWeightsBuil
 import MatchBuilder from "../components/TournamentCreate/MatchBuilder";
 import TournamentForm, {TournamentFormValues, PLACEHOLDER_REGEX} from "../components/TournamentCreate/TournamentForm";
 import dateAdd from 'date-fns/add'
+import { isAddress } from "@ethersproject/address";
 
 const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -37,7 +38,8 @@ function TournamentsCreate() {
       matches: [],
       prizeWeights: [{value: 40}, {value: 30}, {value: 20}, {value: 10}],
       prizeDivisor: 0,
-      closingTime: defaultClosingTime
+      closingTime: defaultClosingTime,
+      manager: '',
     }});
 
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
@@ -140,6 +142,17 @@ function TournamentsCreate() {
               min: { value: 0.01, message: 'Price must be greater than 0.01' }
             })} style={{width: '100%'}} />
             <FormError><ErrorMessage errors={errors} name="price" /></FormError>
+          </div>
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Manager</BoxLabelCell>
+          <div style={{width: '100%'}}>
+            <Input {...register('manager', {
+              required: 'This field is required.',
+              validate: v => isAddress(v) || 'Invalid address.',
+            })} style={{width: '100%'}} />
+            <FormHelperText>Address to send management fees to.</FormHelperText>
+            <FormError><ErrorMessage errors={errors} name="manager" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>

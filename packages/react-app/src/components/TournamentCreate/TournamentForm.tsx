@@ -26,6 +26,7 @@ export type TournamentFormValues = {
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
   price: number
+  manager: string
   managementFee: number
   closingTime: Date
 }
@@ -105,7 +106,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       closingTime,
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
-      account,
+      data.manager,
       86400, // TODO
       parseUnits('0.5', 18),
       questionsData,
