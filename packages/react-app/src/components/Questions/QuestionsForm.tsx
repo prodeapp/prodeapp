@@ -14,11 +14,23 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
+import {useTournament} from "../../hooks/useTournament";
 import {queryClient} from "../../lib/react-query";
 
 export type QuestionsFormValues = {
-  outcomes: {value: number|''}[]
+  outcomes: {value: number|''}[],
+  provider: string
 }
+
+const DEVS = "0x9b59eeEA37618ed5227c3Fb2420F68fe5cD1151A";
+const UBI_BURNER_ADDRESS = "0x43E9062F3D4B87C49b96ada5De230B1Ce69485c3";
+const SPLITTER_DONATION_ADDRESS = "0x9378C3F269F5A3f87956FF8DBF2d83E361a7166c";
+const providers = [
+  { text: "support dev team", address: DEVS },
+  { text: "support UBI", address: UBI_BURNER_ADDRESS },
+  { text: "support UBI & dev team", address: SPLITTER_DONATION_ADDRESS },
+  { text: "reward pool winners", address: AddressZero }
+];
 
 type QuestionsFormProps = {
   tournamentId: string
@@ -32,6 +44,7 @@ type QuestionsFormProps = {
 export default function QuestionsForm({tournamentId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: matches } = useMatches(tournamentId);
+  const { isLoading: isLoadingTournament, data: tournament } = useTournament(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
   const [success, setSuccess] = useState(false);
 
@@ -58,7 +71,11 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     }
   }, [state, tournamentId]);
 
-  if (isLoading) {
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, []);
+
+  if (isLoading || isLoadingTournament) {
     return <div>Loading...</div>
   }
 
@@ -84,7 +101,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
     });
 
     await send(
-      AddressZero,
+      data.provider,
       results,
       {
         value: price
@@ -120,6 +137,21 @@ export default function QuestionsForm({tournamentId, price, control, register, e
             </div>
           </BoxRow>
         })}
+        <BoxRow>
+          <div style={{width: '60%'}}>Use {Number(tournament?.managementFee) / 100}% of this pool to: </div>
+          <div style={{width: '40%'}}>
+            <FormControl fullWidth>
+              <Select
+                defaultValue={DEVS}
+                id={`provider-select`}
+                {...register(`provider`, {required: 'This field is required.'})}
+              >
+                {providers.map((prov, i) => <MenuItem value={prov.address} key={i}>{prov.text}</MenuItem>)}
+              </Select>
+              <FormError><ErrorMessage errors={errors} name={`provider`} /></FormError>
+            </FormControl>
+          </div>
+        </BoxRow>
       </BoxWrapper>
     </form>
   );
