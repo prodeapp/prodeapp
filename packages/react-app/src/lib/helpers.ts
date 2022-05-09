@@ -6,6 +6,7 @@ import compareAsc from 'date-fns/compareAsc'
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Match, Outcome} from "../graphql/subgraph";
+import {INVALID_RESULT} from "../components/Questions/QuestionsForm";
 
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);
@@ -42,6 +43,10 @@ export function formatAmount(amount: BigNumberish) {
 export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], noAnswerText = 'Not answered yet') {
   if (currentAnswer === null) {
     return noAnswerText;
+  }
+
+  if (currentAnswer === INVALID_RESULT) {
+    return 'Invalid result';
   }
 
   const value = BigNumber.from(currentAnswer);

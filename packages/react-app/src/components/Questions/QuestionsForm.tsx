@@ -22,6 +22,8 @@ export type QuestionsFormValues = {
   provider: string
 }
 
+export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+
 const DEVS = "0x9b59eeEA37618ed5227c3Fb2420F68fe5cD1151A";
 const UBI_BURNER_ADDRESS = "0x43E9062F3D4B87C49b96ada5De230B1Ce69485c3";
 const SPLITTER_DONATION_ADDRESS = "0x9378C3F269F5A3f87956FF8DBF2d83E361a7166c";
@@ -131,6 +133,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
                   {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
                 >
                   {questions[matches[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
