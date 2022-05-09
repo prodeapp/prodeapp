@@ -2,6 +2,7 @@ import {Control, useFieldArray, useWatch} from "react-hook-form";
 import React, {useEffect} from "react";
 import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
 import Input from "@mui/material/Input";
+import FormHelperText from '@mui/material/FormHelperText';
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form";
@@ -46,6 +47,7 @@ export default function PrizeWeightsBuilder({control, register, errors, setValue
         <FormError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></FormError>
       </AnswerFieldWrapper>
     })}
+    <FormHelperText>What % of the pool will win the player ranked at position #X.</FormHelperText>
     <FormError><ErrorMessage errors={errors} name={`prizeDivisor`} /></FormError>
     <Button onClick={addPrizeWeight} size="small">Add prize weight</Button>
   </div>

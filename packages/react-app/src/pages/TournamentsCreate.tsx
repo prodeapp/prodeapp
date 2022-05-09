@@ -3,6 +3,7 @@ import {BoxWrapper, BoxRow, BoxLabelCell, BoxTitleCell, FormError} from "../comp
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import FormHelperText from '@mui/material/FormHelperText';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -108,7 +109,7 @@ function TournamentsCreate() {
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Betting deadline</BoxLabelCell>
-          <div>
+          <div style={{textAlign: 'right'}}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
                 control={control}
@@ -125,6 +126,7 @@ function TournamentsCreate() {
                 )}
               />
             </LocalizationProvider>
+            <FormHelperText>Bets will not be accepted passed this time. It should be before the beginning of the first match.</FormHelperText>
             <FormError><ErrorMessage errors={errors} name="closingTime" /></FormError>
           </div>
         </BoxRow>
@@ -150,6 +152,7 @@ function TournamentsCreate() {
               min: {value: 0, message: 'Fee must be greater than 0.'},
               max: {value: 100, message: 'Fee must be lower than 100.'}
             })} style={{width: '100%'}} />
+            <FormHelperText>The manager will receive this percentage of the pool as reward. In addition, the tournament creator will be rewarded when bets are traded on NFT marketplaces. UI providers may apply this fee as well for each bet.</FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>
         </BoxRow>
