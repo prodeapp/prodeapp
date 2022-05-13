@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {encodeQuestionText} from "../../lib/reality";
+import {encodeQuestionText, getQuestionId} from "../../lib/reality";
 import {parseUnits} from "@ethersproject/units";
-import {useContractFunction, useEthers} from "@usedapp/core";
+import {useCall, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {TournamentFactory, TournamentFactory__factory} from "../../typechain";
+import {Tournament, TournamentFactory, TournamentFactory__factory} from "../../typechain";
 import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
 import {useNavigate} from "react-router-dom";
 import {queryClient} from "../../lib/react-query";
+import {BigNumber} from "@ethersproject/bignumber";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -64,12 +65,27 @@ function getMatchData(
   }
 }
 
+function orderByQuestionId(questionsData: Tournament.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, tournamentFactory: string): Tournament.RealitioQuestionStruct[] {
+  const questionsDataWithQuestionId = questionsData.map(questionData => {
+    return {
+      questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, tournamentFactory),
+      questionData
+    }
+  })
+
+  return questionsDataWithQuestionId
+    .sort((a, b) => a.questionId > b.questionId ? 1 : -1)
+    .map(qd => qd.questionData)
+}
+
 export default function TournamentForm({children, handleSubmit}: FormProps) {
 
-  const { state, send, events } = useContractFunction(
-    new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface()) as TournamentFactory,
-    'createTournament'
-  );
+  const tournamentFactoryContract = new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface()) as TournamentFactory
+
+  const { state, send, events } = useContractFunction(tournamentFactoryContract, 'createTournament');
+
+  const { value: arbitrator } = useCall({ contract: tournamentFactoryContract, method: 'arbitrator', args: [] }) || {}
+  const { value: realitio } = useCall({ contract: tournamentFactoryContract, method: 'realitio', args: [] }) || {}
 
   const { account, error: walletError } = useEthers();
   const navigate = useNavigate();
@@ -80,6 +96,10 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       navigate(`/tournaments/${events?.[0].args.tournament.toLowerCase()}?new=1`);
     }
   }, [events, navigate]);
+
+  if (!arbitrator || !realitio) {
+    return <div>Loading...</div>
+  }
 
   if (!account || walletError) {
     return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a Tournament.'}</Alert>
@@ -98,6 +118,9 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       }
     })
 
+    const timeout = 86400; // TODO
+    const minBond = parseUnits('0.5', 18); // TODO
+
     await send({
         tournamentName: data.tournament,
         tournamentSymbol: '', // TODO
@@ -107,9 +130,9 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
       data.manager,
-      86400, // TODO
-      parseUnits('0.5', 18),
-      questionsData,
+      timeout,
+      minBond,
+      orderByQuestionId(questionsData, String(arbitrator), timeout, minBond, String(realitio), process.env.REACT_APP_TOURNAMENT_FACTORY as string),
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );
   };
