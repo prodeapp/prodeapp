@@ -19,6 +19,7 @@ export interface Tournament {
 export const TOURNAMENT_FIELDS = `
     fragment TournamentFields on Tournament {
       id
+      hash
       name
       price
       creationTime
