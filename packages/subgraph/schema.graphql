@@ -1,5 +1,6 @@
 type Tournament @entity {
   id: ID!
+  hash: String!
   name: String!
   symbol: String!
   uri: String!
