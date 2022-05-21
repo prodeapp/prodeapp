@@ -15,7 +15,7 @@ import {Match, Question} from "../../graphql/subgraph";
 import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
-import {queryClient} from "../../lib/react-query";
+import {invalidateQueriesWithTimeout} from "../../lib/react-query";
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -67,7 +67,7 @@ export default function AnswerForm({match, question, control, register, errors, 
       }
     )
 
-    await queryClient.invalidateQueries(['useMatches']);
+    invalidateQueriesWithTimeout(['useMatches'])
   }
 
   const finalized = isFinalized(match);
