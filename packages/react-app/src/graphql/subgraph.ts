@@ -36,7 +36,9 @@ export interface Match {
   id: string
   questionID: string
   nonce: BigNumberish
-  tournament: Tournament
+  tournament: {
+    id: string
+  }
   answer: string | null
   openingTs: string
   answerFinalizedTimestamp: string | null
@@ -169,6 +171,9 @@ export interface Question {
   questionId: string
   qTitle: string
   outcomes: Outcome[]
+  minBond: string
+  lastBond: string
+  bounty: string
 }
 
 export const QUESTION_FIELDS = `
@@ -179,5 +184,8 @@ export const QUESTION_FIELDS = `
       id
       answer
     }
+    minBond
+    lastBond
+    bounty
   }
 `;

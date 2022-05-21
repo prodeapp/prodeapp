@@ -1,15 +1,29 @@
-import React from "react";
+import React, {useState} from "react";
 import {BoxWrapper, BoxRow} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useQuestions} from "../../hooks/useQuestions";
 import {useMatches} from "../../hooks/useMatches";
 import Button from '@mui/material/Button';
+import AnswerDialog from "../Answer/AnswerDialog";
+import {Match} from "../../graphql/subgraph";
 
 export default function Results({tournamentId}: {tournamentId: string}) {
   const { data: matches } = useMatches(tournamentId);
   const { data: questions } = useQuestions(tournamentId);
+  const [currentMatch, setCurrentMatch] = useState<Match|undefined>();
+  const [openModal, setOpenModal] = useState(false);
 
-  return <BoxWrapper>
+  const handleClose = () => {
+    setOpenModal(false);
+  };
+
+  return <>
+    {currentMatch && <AnswerDialog
+      open={openModal}
+      handleClose={handleClose}
+      match={currentMatch}
+    />}
+  <BoxWrapper>
     <BoxRow>
       <div style={{width: '33%'}}>Result</div>
       <div style={{width: '33%'}}>Status</div>
@@ -37,16 +51,16 @@ export default function Results({tournamentId}: {tournamentId: string}) {
               )}
             </div>
             <div style={{width: '33%'}}>
-              <Button
-                component="a" color="primary" size="small"
-                href={`https://reality.eth.link/app/index.html#!/network/100/question/0xe78996a233895be74a66f451f1019ca9734205cc-${match.questionID}`}
-                target="_blank" rel="noreferrer">
-                Go to reality.eth
-              </Button>
+              {!finalized && <Button
+                color="primary" size="small"
+                onClick={() => {setCurrentMatch(match);setOpenModal(true);}}>
+                Answer result
+              </Button>}
             </div>
           </div>
         </div>
       </BoxRow>
     })}
   </BoxWrapper>
+  </>
 }
