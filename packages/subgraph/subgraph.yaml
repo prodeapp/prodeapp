@@ -48,7 +48,27 @@ dataSources:
         - event: LogNotifyOfArbitrationRequest(indexed bytes32,indexed address)
           handler: handleArbitrationRequest
       file: ./src/mappings/Realitio.ts
-      language: wasm/assemblyscript        
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: LightCurate
+    network: xdai
+    source:
+      abi: LightGeneralizedTCR
+      address: "0x18286507b4F61b26f0aA7B5D7d34D7235A576429"
+      startBlock: 19592700  
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: LightGeneralizedTCR
+          file: ./contracts/abis/LightGeneralizedTCR.json
+      entities:
+        - Tournament
+      eventHandlers:
+        - event: NewItem(indexed bytes32,string,bool)
+          handler: handleNewItem
+      file: ./src/mappings/LightGeneralizedTCR.ts
+      language: wasm/assemblyscript
 
 templates:
   - name: Tournament

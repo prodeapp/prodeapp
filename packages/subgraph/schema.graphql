@@ -1,3 +1,10 @@
+enum Curation {
+  NotSubmited
+  Submited
+  Challenged
+  Registered
+}
+
 type Tournament @entity {
   id: ID!
   hash: String!
@@ -21,6 +28,7 @@ type Tournament @entity {
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
   funders: [Funder!] @derivedFrom(field: "tournaments")
+  curation: Curation!
 }
 
 type Match @entity {

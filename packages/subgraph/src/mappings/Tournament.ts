@@ -24,6 +24,7 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     tournament.price = tournamentContract.price();
     tournament.numOfMatchesWithAnswer = BigInt.fromI32(0);
     tournament.hasPendingAnswers = true;
+    tournament.curation = "NotSubmited";
 
     let manager = getOrCreateManager(tournamentContract.manager());
     tournament.manager = manager.id;
