@@ -15,7 +15,7 @@ import {Match, Question} from "../../graphql/subgraph";
 import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
-import {invalidateQueriesWithTimeout} from "../../lib/react-query";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -66,8 +66,6 @@ export default function AnswerForm({match, question, control, register, errors, 
         value: currentBond
       }
     )
-
-    invalidateQueriesWithTimeout(['useMatches'])
   }
 
   const finalized = isFinalized(match);
@@ -83,6 +81,7 @@ export default function AnswerForm({match, question, control, register, errors, 
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="answer-form">
+      {state.status === 'Mining' && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
