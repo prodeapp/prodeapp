@@ -3,7 +3,7 @@ import {Question, QUESTION_FIELDS} from "../graphql/subgraph";
 import {apolloRealityQuery} from "../lib/apolloClient";
 import {useMatches} from "./useMatches";
 
-const query = `
+const questionsQuery = `
   ${QUESTION_FIELDS}
   query QuestionsQuery ($questionIds: [String]){
     questions(where: {questionId_in: $questionIds}) {
@@ -24,7 +24,7 @@ export const useQuestions = (tournamentId: string) => {
 
       const questionIds = matches.map(match => match.questionID);
 
-      const response = await apolloRealityQuery<{ questions: Question[] }>(query, {questionIds});
+      const response = await apolloRealityQuery<{ questions: Question[] }>(questionsQuery, {questionIds});
 
       if (!response) throw new Error("No response from TheGraph");
 
@@ -34,6 +34,28 @@ export const useQuestions = (tournamentId: string) => {
     },
     {
       enabled: !!matches
+    }
+  );
+};
+
+const questionQuery = `
+    ${QUESTION_FIELDS}
+    query QuestionQuery($questionId: String) {
+        question(id: $questionId) {
+          ...QuestionFields
+        }
+    }
+`;
+
+export const useQuestion = (realitio: string, questionId: string) => {
+  return useQuery<Question, Error>(
+    ["useQuestion", realitio, questionId],
+    async () => {
+      const response = await apolloRealityQuery<{ question: Question }>(questionQuery, {questionId: `${realitio}-${questionId}`});
+
+      if (!response) throw new Error("No response from TheGraph");
+
+      return response.data.question;
     }
   );
 };
