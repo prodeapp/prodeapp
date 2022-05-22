@@ -10,6 +10,7 @@
     "auth": "graph auth https://api.thegraph.com/ $GRAPH_ACCESS_TOKEN",
     "build": "graph build",
     "codegen": "graph codegen --output-dir src/types/",
-    "deploy": "graph deploy prodeapp/prodeapp --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/"
+    "deploy": "graph deploy prodeapp/prodeapp --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/",
+    "deploy:kovan": "graph deploy prodeapp/prodeapp-kovan --ipfs https://api.thegraph.com/ipfs/ --node https://api.thegraph.com/deploy/"
   }
 }
