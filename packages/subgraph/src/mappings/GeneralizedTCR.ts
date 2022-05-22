@@ -5,6 +5,8 @@ import { TournamentCuration } from '../types/schema'
 import {
   GeneralizedTCR,
   ItemStatusChange,
+  ItemSubmitted,
+  RequestSubmitted,
 } from '../types/ClasicCurate/GeneralizedTCR';
 
 // Items on a TCR can be in 1 of 4 states:
@@ -40,6 +42,14 @@ function decodeData(data: Bytes): Object {
     startingTimestamp: BigInt.fromI32(0),
     jsonURI: "uriJSON"
   }
+}
+
+export function handleItemSubmitted(event: ItemSubmitted): void {
+
+}
+
+export function handleRequestSubmitted(event: RequestSubmitted): void {
+  
 }
 
 export function handleItemStatusChange(event: ItemStatusChange): void {
