@@ -1,6 +1,6 @@
-enum Curation {
-  NotSubmited
-  Submited
+enum CurationStatus {
+  Absent
+  RegistrationRequested
   Challenged
   Registered
 }
@@ -28,7 +28,21 @@ type Tournament @entity {
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
   funders: [Funder!] @derivedFrom(field: "tournaments")
-  curation: Curation!
+}
+
+type TournamentCuration @entity {
+  """Hash of the tournament"""
+  id: ID!
+  """itemID in curate"""
+  itemID: Bytes
+  """Status in the curation. Enum with statuses"""
+  status: CurationStatus!
+  """ipfs route to the JSON with fields"""
+  json: String
+  """earliest timestamp"""
+  startingTimestamp: BigInt
+  "The data describing the item (encoded)"
+  data: Bytes
 }
 
 type Match @entity {

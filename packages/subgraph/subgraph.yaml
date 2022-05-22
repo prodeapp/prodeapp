@@ -50,24 +50,29 @@ dataSources:
       file: ./src/mappings/Realitio.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
-    name: LightCurate
+    name: ClasicCurate
     network: xdai
     source:
-      abi: LightGeneralizedTCR
+      abi: GeneralizedTCR
       address: "0x18286507b4F61b26f0aA7B5D7d34D7235A576429"
       startBlock: 19592700  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       abis:
-        - name: LightGeneralizedTCR
-          file: ./contracts/abis/LightGeneralizedTCR.json
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
       entities:
         - Tournament
+        - TournamentCuration
       eventHandlers:
-        - event: NewItem(indexed bytes32,string,bool)
-          handler: handleNewItem
-      file: ./src/mappings/LightGeneralizedTCR.ts
+        - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
+          handler: handleItemSubmitted
+        - event: RequestSubmitted(indexed bytes32,indexed uint256,indexed uint8)
+          handler: handleRequestSubmitted
+        - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
+          handler: handleItemStatusChange
+      file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
 
 templates:
