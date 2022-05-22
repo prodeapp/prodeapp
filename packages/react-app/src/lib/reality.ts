@@ -1,5 +1,5 @@
 // https://github.com/RealityETH/reality-eth-monorepo/blob/d95a9f4ee5c96f88b07651a63b3b6bf5f0e0074d/packages/reality-eth-lib/formatters/question.js#L221
-import {Tournament} from "../typechain";
+import {TournamentFactory} from "../typechain";
 import {keccak256} from "@ethersproject/solidity";
 import {BigNumber} from "@ethersproject/bignumber";
 
@@ -26,7 +26,7 @@ export function encodeQuestionText(
   return qText;
 }
 
-export function getQuestionId(questionData: Tournament.RealitioQuestionStruct, arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, msgSender: string) {
+export function getQuestionId(questionData: TournamentFactory.RealitioQuestionStruct, arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, msgSender: string) {
   const contentHash = keccak256(
     ['uint256', 'uint32', 'string'],
     [questionData.templateID, questionData.openingTS, questionData.question]

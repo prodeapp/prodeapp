@@ -1,225 +1,245 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_tournament",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_arbitrator",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_realitio",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_submissionTimeout",
-        "type": "uint256"
-      }
-    ],
+    "type": "constructor",
     "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "tournament",
-        "type": "address"
+        "type": "address",
+        "name": "_tournament",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "_arbitrator",
+        "internalType": "address"
+      },
+      {
+        "type": "address",
+        "name": "_realitio",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "_submissionTimeout",
+        "internalType": "uint256"
       }
-    ],
+    ]
+  },
+  {
+    "type": "event",
     "name": "NewTournament",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "allTournaments",
-    "outputs": [
-      {
-        "internalType": "contract Tournament[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "arbitrator",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "tournamentName",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "tournamentSymbol",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "tournamentUri",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct Tournament.TournamentInfo",
-        "name": "tournamentInfo",
-        "type": "tuple"
-      },
-      {
-        "internalType": "uint256",
-        "name": "closingTime",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "managementFee",
-        "type": "uint256"
-      },
-      {
+        "type": "address",
+        "name": "tournament",
         "internalType": "address",
-        "name": "manager",
-        "type": "address"
+        "indexed": true
       },
       {
-        "internalType": "uint32",
-        "name": "timeout",
-        "type": "uint32"
-      },
+        "type": "bytes32",
+        "name": "hash",
+        "internalType": "bytes32",
+        "indexed": true
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
       {
-        "internalType": "uint256",
-        "name": "minBond",
-        "type": "uint256"
-      },
+        "type": "uint32",
+        "name": "",
+        "internalType": "uint32"
+      }
+    ],
+    "name": "QUESTION_TIMEOUT",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "templateID",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "question",
-            "type": "string"
-          },
-          {
-            "internalType": "uint32",
-            "name": "openingTS",
-            "type": "uint32"
-          }
-        ],
-        "internalType": "struct Tournament.RealitioQuestion[]",
-        "name": "questionsData",
-        "type": "tuple[]"
-      },
+        "type": "address[]",
+        "name": "",
+        "internalType": "contract Tournament[]"
+      }
+    ],
+    "name": "allTournaments",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
       {
-        "internalType": "uint16[]",
-        "name": "prizeWeights",
-        "type": "uint16[]"
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "arbitrator",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
       }
     ],
     "name": "createTournament",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "realitio",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "submissionTimeout",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tournament",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "tournamentCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
-        "internalType": "uint256",
+        "type": "tuple",
+        "name": "tournamentInfo",
+        "internalType": "struct Tournament.TournamentInfo",
+        "components": [
+          {
+            "type": "string",
+            "name": "tournamentName",
+            "internalType": "string"
+          },
+          {
+            "type": "string",
+            "name": "tournamentSymbol",
+            "internalType": "string"
+          },
+          {
+            "type": "string",
+            "name": "tournamentUri",
+            "internalType": "string"
+          }
+        ]
+      },
+      {
+        "type": "uint256",
+        "name": "closingTime",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "price",
+        "internalType": "uint256"
+      },
+      {
+        "type": "uint256",
+        "name": "managementFee",
+        "internalType": "uint256"
+      },
+      {
+        "type": "address",
+        "name": "manager",
+        "internalType": "address"
+      },
+      {
+        "type": "uint256",
+        "name": "minBond",
+        "internalType": "uint256"
+      },
+      {
+        "type": "tuple[]",
+        "name": "questionsData",
+        "internalType": "struct TournamentFactory.RealitioQuestion[]",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "templateID",
+            "internalType": "uint256"
+          },
+          {
+            "type": "string",
+            "name": "question",
+            "internalType": "string"
+          },
+          {
+            "type": "uint32",
+            "name": "openingTS",
+            "internalType": "uint32"
+          }
+        ]
+      },
+      {
+        "type": "uint16[]",
+        "name": "prizeWeights",
+        "internalType": "uint16[]"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
         "name": "",
-        "type": "uint256"
+        "internalType": "address"
+      }
+    ],
+    "name": "realitio",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "submissionTimeout",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "tournament",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "tournamentCount",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract Tournament"
       }
     ],
     "name": "tournaments",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "contract Tournament",
+        "type": "uint256",
         "name": "",
-        "type": "address"
+        "internalType": "uint256"
       }
-    ],
-    "stateMutability": "view",
-    "type": "function"
+    ]
   }
 ]

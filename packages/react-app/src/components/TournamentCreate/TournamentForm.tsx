@@ -3,7 +3,7 @@ import {encodeQuestionText, getQuestionId} from "../../lib/reality";
 import {parseUnits} from "@ethersproject/units";
 import {useCall, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {Tournament, TournamentFactory, TournamentFactory__factory} from "../../typechain";
+import {TournamentFactory, TournamentFactory__factory} from "../../typechain";
 import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
@@ -65,7 +65,7 @@ function getMatchData(
   }
 }
 
-function orderByQuestionId(questionsData: Tournament.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, tournamentFactory: string): Tournament.RealitioQuestionStruct[] {
+function orderByQuestionId(questionsData: TournamentFactory.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, tournamentFactory: string): TournamentFactory.RealitioQuestionStruct[] {
   const questionsDataWithQuestionId = questionsData.map(questionData => {
     return {
       questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, tournamentFactory),
@@ -86,6 +86,8 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
 
   const { value: arbitrator } = useCall({ contract: tournamentFactoryContract, method: 'arbitrator', args: [] }) || {}
   const { value: realitio } = useCall({ contract: tournamentFactoryContract, method: 'realitio', args: [] }) || {}
+  const { value: timeout } = useCall({ contract: tournamentFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
+
 
   const { account, error: walletError } = useEthers();
   const navigate = useNavigate();
@@ -97,7 +99,7 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
     }
   }, [events, navigate]);
 
-  if (!arbitrator || !realitio) {
+  if (!arbitrator || !realitio || !timeout) {
     return <div>Loading...</div>
   }
 
@@ -118,7 +120,6 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       }
     })
 
-    const timeout = 86400; // TODO
     const minBond = parseUnits('0.5', 18); // TODO
 
     await send({
@@ -130,9 +131,8 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
       data.manager,
-      timeout,
       minBond,
-      orderByQuestionId(questionsData, String(arbitrator), timeout, minBond, String(realitio), process.env.REACT_APP_TOURNAMENT_FACTORY as string),
+      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_TOURNAMENT_FACTORY as string),
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );
   };
