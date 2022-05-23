@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { DAppProvider, xDai, Kovan, Localhost } from "@usedapp/core";
+import { DAppProvider, Kovan, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
