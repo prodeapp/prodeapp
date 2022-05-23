@@ -10,6 +10,7 @@ import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
 import {useNavigate} from "react-router-dom";
 import {queryClient} from "../../lib/react-query";
 import {BigNumber} from "@ethersproject/bignumber";
+import {zonedTimeToUtc} from "date-fns-tz";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -108,7 +109,8 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
   }
 
   const onSubmit = async (data: TournamentFormValues) => {
-    const closingTime = Math.floor(data.closingTime.getTime() / 1000);
+    const utcClosingTime = zonedTimeToUtc(data.closingTime, 'UTC');
+    const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
     const openingTS = closingTime + 1;
 
     const questionsData = data.matches.map(match => {

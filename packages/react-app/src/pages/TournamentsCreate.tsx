@@ -110,7 +110,7 @@ function TournamentsCreate() {
           <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Betting deadline</BoxLabelCell>
+          <BoxLabelCell>Betting deadline (UTC)</BoxLabelCell>
           <div style={{textAlign: 'right'}}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
@@ -123,6 +123,7 @@ function TournamentsCreate() {
                     minDate={today}
                     onChange={field.onChange}
                     value={field.value}
+                    inputFormat='yyyy-MM-dd hh:mm aaa'
                     renderInput={(params) => <TextField {...params} />}
                   />
                 )}
