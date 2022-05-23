@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: TournamentFactory
-    network: xdai
+    network: kovan
     source:
       abi: TournamentFactory
-      address: "0x2c053414646d5a843886F8D2912D3Df58DE891ff"
-      startBlock: 22267329
+      address: "0xc649c1FD64Ae4193486d3e177D56D1b45D09e78c"
+      startBlock: 31733689
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -26,11 +26,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: RealitioV3
-    network: xdai
+    network: kovan
     source:
       abi: Realitio
-      address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 21695778  
+      address: "0xcB71745d032E16ec838430731282ff6c10D29Dea"
+      startBlock: 31733689  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -78,7 +78,7 @@ dataSources:
 templates:
   - name: Tournament
     kind: ethereum/contract
-    network: xdai
+    network: kovan
     source:
       abi: Tournament
     mapping:

@@ -2,13 +2,13 @@ import { ApolloClient, gql, InMemoryCache, NormalizedCacheObject } from "@apollo
 
 const prodeClient = () =>
   new ApolloClient({
-    uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp",
+    uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp-kovan",
     cache: new InMemoryCache(),
   });
 
 const realityClient = () =>
   new ApolloClient({
-    uri: "https://api.thegraph.com/subgraphs/name/realityeth/realityeth-xdai",
+    uri: "https://api.thegraph.com/subgraphs/name/realityeth/realityeth-kovan",
     cache: new InMemoryCache(),
   });
 

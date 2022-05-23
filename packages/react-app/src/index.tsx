@@ -1,6 +1,6 @@
 import "./index.css";
 
-import { DAppProvider, xDai, Localhost } from "@usedapp/core";
+import { DAppProvider, Kovan, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
@@ -19,11 +19,11 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 
 const config = {
-  readOnlyChainId: xDai.chainId,
+  readOnlyChainId: Kovan.chainId,
   readOnlyUrls: {
-    [xDai.chainId]: "https://rpc.gnosischain.com",
+    [Kovan.chainId]: "https://kovan.infura.io/v3/32396ad0cab1489eaaca0ac9ecda1566",
   },
-  networks: [xDai, Localhost],
+  networks: [Kovan, Localhost],
   multicallAddresses: {
     [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
   },
