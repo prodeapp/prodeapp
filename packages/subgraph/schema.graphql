@@ -1,8 +1,12 @@
 enum CurationStatus {
-  Absent
-  RegistrationRequested
-  Challenged
-  Registered
+  """The Item is not in the registry"""
+  Absent,
+  """The item is in the registry."""
+  Registered, 
+  """The item has a request to be added to the registry."""
+  RegistrationRequested,
+  """The item has a request to be removed from the registry."""
+  ClearingRequested
 }
 
 type Tournament @entity {

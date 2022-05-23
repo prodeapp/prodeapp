@@ -20,49 +20,74 @@ import {
 // Registration and removal requests can be challenged. Once the request resolves (either by
 // passing the challenge period or via dispute resolution), the item state is updated to 0 or 1.
 
+let CurationStatus = new Map<number, string>();
+CurationStatus.set(0, "Absent");
+CurationStatus.set(1, "Registered");
+CurationStatus.set(2, "RegistrationRequested");
+CurationStatus.set(3, "ClearingRequested");
 
-function getHashfromItemID(itemID: Bytes, contractAddress: Address): Bytes {
-  let tcr = GeneralizedTCR.bind(contractAddress);
-  let itemInfo = tcr.getItemInfo(itemID);
-  let hash = getHashFromData(itemInfo.value0);
-  return hash;
+// const toHexString = (bytes: Uint8Array): string =>
+//   bytes.reduce((str, byte) => str + byte.toString(16), '');
+
+
+function buf2hex(byteArray:Uint8Array): string { // buffer is an ArrayBuffer
+  // for each element, we want to get its two-digit hexadecimal representation
+  const hexParts: string[] = [];
+  for(let i = 0; i < byteArray.length; i++) {
+    // convert value to hexadecimal
+    const hex = byteArray[i].toString(16);
+    
+    // pad with zeros to length 2
+    const paddedHex = ('00' + hex).slice(-2);
+    
+    // push to array
+    hexParts.push(paddedHex);
+  }
+  
+  // join all the hex values of the elements into a single string
+  return hexParts.join('');
 }
+
+const bufferToHex = (buf: Uint8Array): string => { //buf es un Uint8Array
+  const bufferString = buf2hex(buf);
+  if (bufferString.substring(0, 2) === '0x') return bufferString
+  return '0x' + bufferString
+};
 
 function getHashFromData(data: Bytes): Bytes {
-  // let decodedData = decodeData(data);
-  // return decodedData['hash'];
-  // TODO
-  return Bytes.fromHexString("0xb4f92335882f48a7bd5a24ee1da68b2ceeed0964db45bf7baa7dab83a2efcf3e")
+  let hashSlice = data.slice(7, 38);
+  let hashStringSlice = bufferToHex(hashSlice);
+  log.debug("getHashFromData: hashSlice = {}", [hashStringSlice])
+  return Bytes.fromHexString(hashStringSlice);
 }
 
-function decodeData(data: Bytes): Object {
-  // TODO!
-  return {
-    hash: Bytes.fromHexString("0xb4f92335882f48a7bd5a24ee1da68b2ceeed0964db45bf7baa7dab83a2efcf3e"),
-    startingTimestamp: BigInt.fromI32(0),
-    jsonURI: "uriJSON"
-  }
+function getHashfromItemID(itemID: Bytes, contractAddress: Address): Bytes {
+  let data = getDataFromItemID(itemID, contractAddress)
+  return getHashFromData(data);
+}
+
+function statusIndextoValue(statusIndex:number): string {
+  return CurationStatus[statusIndex]
+}
+
+function getStatusfromItemID(itemID: Bytes, contractAddress: Address): string {
+  let tcr = GeneralizedTCR.bind(contractAddress);
+  let itemInfo = tcr.getItemInfo(itemID);
+  return statusIndextoValue(itemInfo.value1)
+}
+
+function getDataFromItemID(itemID:Bytes, contractAddress: Address): Bytes {
+  let tcr = GeneralizedTCR.bind(contractAddress);
+  let itemInfo = tcr.getItemInfo(itemID);
+  return itemInfo.value0
 }
 
 export function handleItemSubmitted(event: ItemSubmitted): void {
-
-}
-
-export function handleRequestSubmitted(event: RequestSubmitted): void {
-  
-}
-
-export function handleItemStatusChange(event: ItemStatusChange): void {
-  if (event.params._resolved == false) return; // No-op.
-
-  let tcrAddress = event.address.toHexString();
-  let tcr = GeneralizedTCR.bind(event.address);
-  let itemInfo = tcr.getItemInfo(event.params._itemID);
-  log.debug("handleItemStatusChange: This is the itemInfo.value0 {}, value1 {}, value2 {} for hash itemID {}", [itemInfo.value0.toString(), itemInfo.value1.toString(), itemInfo.value2.toString(), event.params._itemID.toHexString()])
-  let itemHash = getHashFromData(itemInfo.value0);
-  log.debug('itemHash: {}', [itemHash.toHexString()]);
+  let itemHash = getHashFromData(event.params._data);
+  log.debug("handleItemSubmitted: adding item with hash {}", [itemHash.toHexString()]);
   let tournamentCuration = TournamentCuration.load(itemHash.toHexString());
   if (tournamentCuration === null) {
+    let tcrAddress = event.address.toHexString();
     log.error('handleItemStatusChange: tournamentCuration with hash {} not found in tcr {}. Bailing handleItemStatusChange.', [
       itemHash.toHexString(),
       tcrAddress
@@ -70,8 +95,33 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
     return;
   }
   tournamentCuration.itemID = event.params._itemID;
-  tournamentCuration.status = "RegistrationRequested";
-  tournamentCuration.data = itemInfo.value0;
+  tournamentCuration.status = statusIndextoValue(2);
+  log.debug("handleItemSubmitted: updating status {} to item with hash {}", [tournamentCuration.status, itemHash.toHexString()]);
+  tournamentCuration.data = event.params._data;
+  tournamentCuration.save();
+}
+
+export function handleRequestSubmitted(event: RequestSubmitted): void {
+  log.warning("handleRequestSubmitted: Doing nothing", [])
+}
+
+export function handleItemStatusChange(event: ItemStatusChange): void {
+  if (event.params._resolved == false) return; // No-op.
+  let data = getDataFromItemID(event.params._itemID, event.address);
+  let itemHash = getHashFromData(data)
+  log.debug('itemHash: {}', [itemHash.toHexString()]);
+  let tournamentCuration = TournamentCuration.load(itemHash.toHexString());
+  if (tournamentCuration === null) {
+    log.error('handleItemStatusChange: tournamentCuration with hash {} not found in tcr {}. Bailing handleItemStatusChange.', [
+      itemHash.toHexString(),
+      event.address.toHexString()
+    ]);
+    return;
+  }
+  tournamentCuration.itemID = event.params._itemID;
+  tournamentCuration.status = getStatusfromItemID(event.params._itemID, event.address)
+  log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), tournamentCuration.status])
+  tournamentCuration.data = data;
   tournamentCuration.save();
 }
 
