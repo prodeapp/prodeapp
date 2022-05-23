@@ -68,8 +68,6 @@ dataSources:
       eventHandlers:
         - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
           handler: handleItemSubmitted
-        - event: RequestSubmitted(indexed bytes32,indexed uint256,indexed uint8)
-          handler: handleRequestSubmitted
         - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
           handler: handleItemStatusChange
       file: ./src/mappings/GeneralizedTCR.ts
