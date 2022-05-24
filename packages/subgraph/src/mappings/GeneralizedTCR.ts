@@ -27,10 +27,17 @@ function getStatus(status: number): string {
   return 'Error';
 }
 
+function toHexString(byteArray:Uint8Array):string {
+  const bufferString = byteArray.reduce((str, byte) => str + String.fromCharCode(byte), '');
+  if (bufferString.substring(0, 2) === '0x') return bufferString
+  return `0x${bufferString}`
+};
+
 function getHashFromData(data:Bytes): string {
-  let uint8array = data.slice(7, 38);
-  let hash = Buffer.from(uint8array.buffer,uint8array.byteOffset,uint8array.byteLength).toString('hex');
-  log.debug("getHashFromData: hash = {}", [hash])
+  let hashData = data.slice(6, 70)
+  // log.debug("getHashFromData: hashData = {}", [hashData.toString()]);
+  let hash = toHexString(hashData)
+  // log.debug("getHashFromData: hash = {}", [hash]);
   return hash
 }
 
@@ -56,9 +63,7 @@ export function handleItemSubmitted(event: ItemSubmitted): void {
       itemHash,
       tcrAddress
     ]);
-    // return;
-    tournamentCuration = new TournamentCuration(itemHash);
-    log.warning("handleItemSubmitted: Creando una nueva entidad para chequear el resto de los campos", [])
+    return;
   }
   tournamentCuration.itemID = event.params._itemID;
   tournamentCuration.status = getStatus(2);
