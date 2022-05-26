@@ -1,7 +1,7 @@
-import { log, BigInt, Address, Bytes } from '@graphprotocol/graph-ts';
+import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
-import { Bet, Funder, Match, Tournament } from '../types/schema';
+import { Bet, Funder, Match, Tournament, TournamentCuration } from '../types/schema';
 import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
 import { RealitioAddress } from './constants';
 
@@ -9,9 +9,12 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     // Start indexing the tournament; `event.params.tournament` is the
     // address of the new tournament contract
     log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
+    let context = dataSource.context()
+    let hash = context.getString('hash')
     let tournamentContract = TournamentContract.bind(event.address);
     let tournament = new Tournament(event.address.toHexString());
     tournament.name = tournamentContract.name();
+    tournament.hash = hash;
     tournament.symbol = tournamentContract.symbol();
     tournament.uri = tournamentContract.baseURI();
     tournament.managementFee = tournamentContract.managementFee();
@@ -49,6 +52,16 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     }
     tournament.numOfMatches = nonce;
     tournament.save();
+
+    // Create the entity of tournamentCuration with status Absent
+
+    let tournamentCuration = TournamentCuration.load(hash);
+    if (tournamentCuration === null) {
+        tournamentCuration = new TournamentCuration(hash);
+        tournamentCuration.status = "Absent";
+        log.info("Creating tournament curation with hash {}", [hash]);
+        tournamentCuration.save();
+    }
 }
 
 export function handlePrizesRegistered(event: Prizes): void {

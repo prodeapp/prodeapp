@@ -1,5 +1,17 @@
+enum CurationStatus {
+  """The Item is not in the registry"""
+  Absent,
+  """The item is in the registry."""
+  Registered, 
+  """The item has a request to be added to the registry."""
+  RegistrationRequested,
+  """The item has a request to be removed from the registry."""
+  ClearingRequested
+}
+
 type Tournament @entity {
   id: ID!
+  hash: String!
   name: String!
   symbol: String!
   uri: String!
@@ -20,6 +32,21 @@ type Tournament @entity {
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
   funders: [Funder!] @derivedFrom(field: "tournaments")
+}
+
+type TournamentCuration @entity {
+  """Hash of the tournament"""
+  id: ID!
+  """itemID in curate"""
+  itemID: Bytes
+  """Status in the curation. Enum with statuses"""
+  status: CurationStatus!
+  """ipfs route to the JSON with fields"""
+  json: String
+  """earliest timestamp"""
+  startingTimestamp: BigInt
+  "The data describing the item (encoded)"
+  data: Bytes
 }
 
 type Match @entity {
