@@ -17,6 +17,7 @@ import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
+import CurateValidator from "./pages/CurateValidator";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -47,6 +48,7 @@ ReactDOM.render(
                   <Route index element={<Profile />} />
                   <Route path=":id" element={<Profile />} />
                 </Route>
+                <Route path="curate/validator" element={<CurateValidator />} />
               </Route>
             </Routes>
           </BrowserRouter>
