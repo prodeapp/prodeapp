@@ -8,7 +8,7 @@ import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {ErrorMessage} from "@hookform/error-message";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {Tournament, Tournament__factory} from "../../typechain";
+import {Tournament__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
@@ -61,7 +61,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
   }, [matches, append, remove]);
 
   const { state, send } = useContractFunction(
-    new Contract(tournamentId, Tournament__factory.createInterface()) as Tournament,
+    new Contract(tournamentId, Tournament__factory.createInterface()),
     'placeBet'
   );
 

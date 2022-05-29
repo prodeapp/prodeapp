@@ -4,7 +4,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {ApolloClient, gql, InMemoryCache} from "@apollo/client";
+import {apolloCurateQuery} from "../lib/apolloClient";
 const Ajv = require("ajv")
 
 type FormValues = {
@@ -139,17 +139,9 @@ const jsonSchema = {
 
 const fetchCurateItemProps = async (itemId: string) => {
 
-  const client = new ApolloClient({
-    uri: "https://api.thegraph.com/subgraphs/name/eccentricexit/curate-xdai-ii",
-    cache: new InMemoryCache(),
-  })
+  const result = await apolloCurateQuery<{ litems: {props: CurateItemProps}[] }>(query, {itemId})
 
-  const result = await client.query<{ litems: {props: CurateItemProps}[] }>({
-    query: gql(query),
-    variables: {itemId}
-  })
-
-  if (result.data.litems.length === 0) {
+  if (!result || result.data.litems.length === 0) {
     return false;
   }
 
