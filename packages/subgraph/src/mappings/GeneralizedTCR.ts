@@ -43,7 +43,7 @@ function getHashFromData(data:Bytes): string {
   return hash
 }
 
-function getStatusfromItemID(itemID: Bytes, contractAddress: Address): string {
+function getStatusFromItemID(itemID: Bytes, contractAddress: Address): string {
   let tcr = GeneralizedTCR.bind(contractAddress);
   let itemInfo = tcr.getItemInfo(itemID);
   return getStatus(itemInfo.value1)
@@ -56,20 +56,11 @@ function getDataFromItemID(itemID: Bytes, contractAddress: Address): Bytes {
 }
 
 export function handleItemSubmitted(event: ItemSubmitted): void {
+  let tournamentCuration = new TournamentCuration(event.params._itemID.toHexString());
   let itemHash = getHashFromData(event.params._data);
   log.debug("handleItemSubmitted: adding item with hash {}", [itemHash]);
-  let tournamentCuration = TournamentCuration.load(itemHash);
-  if (tournamentCuration === null) {
-    let tcrAddress = event.address.toHexString();
-    log.error('handleItemStatusChange: tournamentCuration with hash {} not found in tcr {}. Bailing handleItemStatusChange.', [
-      itemHash,
-      tcrAddress
-    ]);
-    return;
-  }
-  tournamentCuration.itemID = event.params._itemID;
+  tournamentCuration.hash = itemHash;
   tournamentCuration.status = getStatus(2);
-  log.debug("handleItemSubmitted: updating status {} to item with hash {}", [tournamentCuration.status, itemHash]);
   tournamentCuration.data = event.params._data;
   tournamentCuration.save();
 }
@@ -78,20 +69,21 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   if (event.params._resolved == false) return; // No-op.
   let data = getDataFromItemID(event.params._itemID, event.address);
   log.debug("handleItemStatusChange: data = {}", [data.toHexString()]);
-  let itemHash = getHashFromData(data)
-  log.debug('itemHash: {}', [itemHash]);
-  let tournamentCuration = TournamentCuration.load(itemHash);
+
+  let tournamentCuration = TournamentCuration.load(event.params._itemID.toHexString());
   if (tournamentCuration === null) {
-    log.error('handleItemStatusChange: tournamentCuration with hash {} not found in tcr {}. Bailing handleItemStatusChange.', [
-      itemHash,
+    log.error('handleItemStatusChange: tournamentCuration with itemId {} not found in tcr {}. Bailing handleItemStatusChange.', [
+      event.params._itemID.toHexString(),
       event.address.toHexString()
     ]);
     return;
   }
-  tournamentCuration.itemID = event.params._itemID;
+  let itemHash = getHashFromData(data)
+  log.debug('itemHash: {}', [itemHash]);
+  tournamentCuration.hash = itemHash;
   // ask to the SC the status instead of create the logic whing the mapping to 
   // detect the current status.
-  tournamentCuration.status = getStatusfromItemID(event.params._itemID, event.address)
+  tournamentCuration.status = getStatusFromItemID(event.params._itemID, event.address)
   log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), tournamentCuration.status])
   tournamentCuration.data = data;
   tournamentCuration.save();

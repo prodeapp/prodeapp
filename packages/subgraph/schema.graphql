@@ -35,10 +35,10 @@ type Tournament @entity {
 }
 
 type TournamentCuration @entity {
-  """Hash of the tournament"""
-  id: ID!
   """itemID in curate"""
-  itemID: Bytes
+  id: ID!
+  """Hash of the tournament"""
+  hash: String!
   """Status in the curation. Enum with statuses"""
   status: CurationStatus!
   """ipfs route to the JSON with fields"""
@@ -46,7 +46,7 @@ type TournamentCuration @entity {
   """earliest timestamp"""
   startingTimestamp: BigInt
   "The data describing the item (encoded)"
-  data: Bytes
+  data: Bytes!
 }
 
 type Match @entity {
