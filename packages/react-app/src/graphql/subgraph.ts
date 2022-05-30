@@ -1,5 +1,14 @@
 import { BigNumberish } from "@ethersproject/bignumber";
 
+export interface TournamentCuration {
+  id: string
+  status: string
+  itemID: string
+  json: string
+  startingTimestamp: BigNumberish
+  data: string
+}
+
 export interface Tournament {
   id: string
   name: string
@@ -14,6 +23,9 @@ export interface Tournament {
   }
   pool: BigNumberish
   prizes: string[]
+  curation: {
+    status: string
+  }
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -30,6 +42,7 @@ export const TOURNAMENT_FIELDS = `
       manager{id}
       pool
       prizes
+      curation{status}
     }
 `;
 

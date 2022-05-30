@@ -3,12 +3,12 @@ import {BoxWrapper, BoxRow} from "../components";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {Link} from "react-router-dom";
-import {useTournaments} from "../hooks/useTournaments";
+import {useCuratedTournaments} from "../hooks/useCuratedTournaments";
 import {Tournament} from "../graphql/subgraph";
 import {formatAmount, getTimeLeft} from "../lib/helpers";
 
 function Home() {
-  const { isLoading, error, data: tournaments } = useTournaments();
+  const { isLoading, error, data: tournaments } = useCuratedTournaments();
 
   return (
     <>
