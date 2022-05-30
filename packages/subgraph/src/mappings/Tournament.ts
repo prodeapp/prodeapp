@@ -51,10 +51,8 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         log.debug("handleQuestionsRegistered: matchID {} registered", [questionID.toHexString()])
     }
     tournament.numOfMatches = nonce;
-    tournament.save();
-
+    
     // Create the entity of tournamentCuration with status Absent
-
     let tournamentCuration = TournamentCuration.load(hash);
     if (tournamentCuration === null) {
         tournamentCuration = new TournamentCuration(hash);
@@ -62,6 +60,8 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         log.info("Creating tournament curation with hash {}", [hash]);
         tournamentCuration.save();
     }
+    tournament.curation = tournamentCuration.id;
+    tournament.save();
 }
 
 export function handlePrizesRegistered(event: Prizes): void {
