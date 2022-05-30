@@ -1,4 +1,4 @@
-import {apolloCurateQuery} from "./apolloClient";
+import {apolloProdeQuery} from "./apolloClient";
 import {gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
 import {CurateSubmitFormValues} from "../pages/CurateSubmit";
@@ -19,9 +19,15 @@ export const TournamentFormats: Record<string, string> = {
   [FORMAT_OTHER]: 'Other',
 }
 
+interface CurateListFields {
+  Hash: string,
+  JSON: string,
+  StartingTimestamp: string,
+}
+
 const query = `
     query RegistryQuery ($registryId: String!) {
-        lregistry(id: $registryId) {
+        registry(id: $registryId) {
           clearingMetaEvidence {
             URI
           }
@@ -30,9 +36,9 @@ const query = `
 `
 
 export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]) {
-  const result = await apolloCurateQuery<{ lregistry: {clearingMetaEvidence: {URI: string}} }>(query, {registryId: process.env.REACT_APP_CURATE_REGISTRY as string})
+  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(query, {registryId: process.env.REACT_APP_CURATE_REGISTRY as string})
 
-  if (!result?.data?.lregistry?.clearingMetaEvidence?.URI) {
+  if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
     console.log('Missing registry meta evidence URI');
     return '';
   }
@@ -40,7 +46,7 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
   let columns: any[] = [];
 
   try {
-    const response = await fetch(`https://ipfs.kleros.io${result.data.lregistry.clearingMetaEvidence.URI}`);
+    const response = await fetch(`https://ipfs.kleros.io${result.data.registry.clearingMetaEvidence.URI}`);
     const metadata = await response.json();
     columns = metadata.metadata.columns;
   } catch (e) {
@@ -63,10 +69,10 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
     return '';
   }
 
-  const values = {
-    name: data.name,
-    hash: questionsHash,
-    json: fileURI,
+  const values: CurateListFields = {
+    Hash: questionsHash,
+    JSON: fileURI,
+    StartingTimestamp: data.startingTimestamp,
   }
 
   return gtcrEncode({ columns, values })
@@ -79,7 +85,7 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
     extraData: {}
   }
 
-  if (![FORMAT_ROUND_ROBIN, FORMAT_GROUPS].includes(data.format)) {
+  if ([FORMAT_ROUND_ROBIN, FORMAT_GROUPS].includes(data.format)) {
     // TODO: add extraData
   }
 

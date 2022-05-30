@@ -1,12 +1,14 @@
 /* eslint-disable prefer-const */
-import { Bytes, log, Address } from '@graphprotocol/graph-ts';
-import { TournamentCuration } from '../types/schema'
+import {Bytes, log, Address, BigInt} from '@graphprotocol/graph-ts';
+import { TournamentCuration, Registry, MetaEvidence } from '../types/schema'
 
 import {
   GeneralizedTCR,
   ItemStatusChange,
   ItemSubmitted,
+  MetaEvidence as MetaEvidenceEvent
 } from '../types/ClasicCurate/GeneralizedTCR';
+import {getOrCreateRegistry} from "./helpers";
 
 // Items on a TCR can be in 1 of 4 states:
 // - (0) Absent: The item is not registered on the TCR and there are no pending requests.
@@ -93,4 +95,34 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), tournamentCuration.status])
   tournamentCuration.data = data;
   tournamentCuration.save();
+}
+
+export function handleMetaEvidence(event: MetaEvidenceEvent): void {
+  let registry = getOrCreateRegistry(event.address);
+
+  registry.metaEvidenceCount = registry.metaEvidenceCount.plus(
+    BigInt.fromI32(1),
+  );
+
+  let metaEvidence = MetaEvidence.load(
+    registry.id + '-' + registry.metaEvidenceCount.toString(),
+  );
+  if (metaEvidence == null) {
+    metaEvidence = new MetaEvidence(
+      registry.id + '-' + registry.metaEvidenceCount.toString(),
+    );
+  }
+
+  metaEvidence.URI = event.params._evidence;
+  metaEvidence.save();
+
+  if (
+    registry.metaEvidenceCount.mod(BigInt.fromI32(2)).equals(BigInt.fromI32(1))
+  ) {
+    registry.registrationMetaEvidence = metaEvidence.id;
+  } else {
+    registry.clearingMetaEvidence = metaEvidence.id;
+  }
+
+  registry.save();
 }

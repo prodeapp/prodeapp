@@ -103,3 +103,21 @@ type Funder @entity {
   tournaments: [Tournament!]!
   messages: [String!]
 }
+
+type Registry @entity {
+  "The registry address"
+  id: ID!
+  "The current registration meta evidence"
+  registrationMetaEvidence: MetaEvidence!
+  "The current removal meta evidence"
+  clearingMetaEvidence: MetaEvidence!
+  "The number of MetaEvidence event logs emitted."
+  metaEvidenceCount: BigInt!
+}
+
+type MetaEvidence @entity {
+  "The meta evidence ID."
+  id: ID!
+  "The URI of the meta evidence file."
+  URI: String!
+}

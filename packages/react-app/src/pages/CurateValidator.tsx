@@ -15,7 +15,7 @@ type CurateItemProps = {label: string, value: string}[]
 
 const query = `
     query ItemQuery ($itemId: String!) {
-        litems(where: {itemID: $itemId}) {
+        items(where: {itemID: $itemId}) {
           props {
             label
             value
