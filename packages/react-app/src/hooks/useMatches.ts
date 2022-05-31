@@ -11,15 +11,20 @@ const query = `
     }
 `;
 
+export const fetchMatches = async (tournamentId: string) => {
+  const response = await apolloProdeQuery<{ matches: Match[] }>(query, {tournamentId});
+
+  if (!response) throw new Error("No response from TheGraph");
+
+  return response.data.matches;
+};
+
+
 export const useMatches = (tournamentId: string) => {
   return useQuery<Match[], Error>(
     ["useMatches", tournamentId],
     async () => {
-      const response = await apolloProdeQuery<{ matches: Match[] }>(query, {tournamentId});
-
-      if (!response) throw new Error("No response from TheGraph");
-
-      return response.data.matches;
+      return fetchMatches(tournamentId);
     }
   );
 };

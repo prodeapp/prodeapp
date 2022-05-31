@@ -1,5 +1,5 @@
 import {apolloProdeQuery} from "./apolloClient";
-import {gtcrEncode} from "@kleros/gtcr-encoder";
+import {gtcrDecode, gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
 import {CurateSubmitFormValues} from "../pages/CurateSubmit";
 
@@ -25,7 +25,7 @@ interface CurateListFields {
   StartingTimestamp: string,
 }
 
-const query = `
+const registryQuery = `
     query RegistryQuery ($registryId: String!) {
         registry(id: $registryId) {
           clearingMetaEvidence {
@@ -35,48 +35,74 @@ const query = `
     }
 `
 
-export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]) {
-  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(query, {registryId: process.env.REACT_APP_CURATE_REGISTRY as string})
+const tournamentCurationQuery = `
+    query TournamentCurationQuery ($itemId: String!) {
+        tournamentCuration(id: $itemId) {
+          data
+        }
+    }
+`
+
+async function getRegistryColumns(): Promise<any[]> {
+  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: process.env.REACT_APP_CURATE_REGISTRY as string})
 
   if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
-    console.log('Missing registry meta evidence URI');
-    return '';
+    throw new Error('Missing registry meta evidence URI');
   }
-
-  let columns: any[] = [];
 
   try {
     const response = await fetch(`https://ipfs.kleros.io${result.data.registry.clearingMetaEvidence.URI}`);
     const metadata = await response.json();
-    columns = metadata.metadata.columns;
+    return metadata.metadata.columns;
   } catch (e) {
-    console.log('Error reading registry meta evidence columns');
-    return '';
+    throw new Error('Error reading registry meta evidence columns');
   }
+}
 
+export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]) {
   const json = {
     title: data.name,
     description: data.description,
     formats: [getTournamentFormat(data, questionsIds)]
   };
 
-  let fileURI = '';
-
-  try {
-    fileURI = await ipfsPublish('tournament.json', JSON.stringify(json))
-  } catch (err) {
-    console.error('Curate json error', err);
-    return '';
-  }
-
   const values: CurateListFields = {
     Hash: questionsHash,
-    JSON: fileURI,
+    JSON: await ipfsPublish('tournament.json', JSON.stringify(json)),
     StartingTimestamp: data.startingTimestamp,
   }
 
-  return gtcrEncode({ columns, values })
+  return gtcrEncode({ columns: await getRegistryColumns(), values })
 }
+
+export async function getDecodedParams(itemId: string): Promise<Record<string, any>> {
+  const result = await apolloProdeQuery<{ tournamentCuration: {data: string} }>(tournamentCurationQuery, {itemId})
+
+  if (!result?.data?.tournamentCuration?.data) {
+    throw new Error('item not found')
+  }
+
+  let columns = await getRegistryColumns()
+
+  const decodedItems = gtcrDecode({ values: result?.data?.tournamentCuration?.data, columns })
+
+  const props: Record<string, any> = columns.reduce((obj, column, i) => {
+    return {...obj, [column.label]: decodedItems[i]}
+  }, {})
+
+  if (props.JSON) {
+    try {
+      const response = await fetch(`https://ipfs.kleros.io${props.JSON}`);
+      props.json = await response.json();
+    } catch (e) {
+      console.log('JSON error')
+      props.JSON = {};
+    }
+  }
+
+  return props;
+}
+
 
 function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[]) {
   const format = {

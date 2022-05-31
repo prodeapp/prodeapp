@@ -1,28 +1,25 @@
-import React from "react";
+import React, {useState} from "react";
 import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {apolloCurateQuery} from "../lib/apolloClient";
+import {getDecodedParams} from "../lib/curate";
+import {apolloProdeQuery} from "../lib/apolloClient";
+import {
+  Tournament,
+  TOURNAMENT_CURATION_FIELDS,
+  TOURNAMENT_FIELDS, TournamentCuration
+} from "../graphql/subgraph";
+import Alert from "@mui/material/Alert";
+import {getQuestionsHash} from "../lib/reality";
+import {fetchMatches} from "../hooks/useMatches";
+import {useQuestions} from "../hooks/useQuestions";
 const Ajv = require("ajv")
 
 type FormValues = {
   itemId: string
 }
-
-type CurateItemProps = {label: string, value: string}[]
-
-const query = `
-    query ItemQuery ($itemId: String!) {
-        items(where: {itemID: $itemId}) {
-          props {
-            label
-            value
-          }
-        }
-    }
-`
 
 const jsonSchema = {
   type: "object",
@@ -137,29 +134,43 @@ const jsonSchema = {
   additionalProperties: false
 }
 
-const fetchCurateItemProps = async (itemId: string) => {
-
-  const result = await apolloCurateQuery<{ litems: {props: CurateItemProps}[] }>(query, {itemId})
-
-  if (!result || result.data.litems.length === 0) {
-    return false;
-  }
-
-  const props: Record<string, any> = result.data.litems[0].props.reduce((obj, prop) => {
-    return {...obj, [prop.label]: prop.value}
-  }, {})
-
-  if (props.json) {
-    try {
-      const response = await fetch(`https://ipfs.kleros.io${props.json}`);
-      props.json = await response.json();
-    } catch (e) {
-      console.log('JSON error')
-      props.json = {};
+export const fetchTournamentByHash = async (hash: string) => {
+  const query = `
+    ${TOURNAMENT_FIELDS}
+    query TournamentQuery($hash: String) {
+        tournaments(where: {hash: $hash}) {
+            ...TournamentFields
+        }
     }
-  }
+`;
 
-  return props;
+  const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(query, {hash});
+
+  if (!response) throw new Error("No response from TheGraph");
+
+  return response.data.tournaments[0];
+};
+
+export const fetchTournamentCurationsByHash = async (hash: string) => {
+  const query = `
+    ${TOURNAMENT_CURATION_FIELDS}
+    query TournamentCurationQuery($hash: String) {
+        tournamentCurations(where: {hash: $hash}) {
+            ...TournamentCurationFields
+        }
+    }
+`;
+
+  const response = await apolloProdeQuery<{ tournamentCurations: TournamentCuration[] }>(query, {hash});
+
+  if (!response) throw new Error("No response from TheGraph");
+
+  return response.data.tournamentCurations;
+};
+
+interface ValidationResult {
+  type: 'error' | 'success'
+  message: string
 }
 
 function CurateValidator() {
@@ -168,11 +179,22 @@ function CurateValidator() {
       itemId: '',
     }});
 
-  const onSubmit = async (data: FormValues) => {
-    const itemProps = await fetchCurateItemProps(data.itemId.toLowerCase());
+  const [tournamentId, setTournamentId] = useState('');
+  const {data: questions} = useQuestions(tournamentId);
+  const [results, setResults] = useState<ValidationResult[]>([]);
 
-    if (!itemProps) {
-      alert('Item id not found');
+  const onSubmit = async (data: FormValues) => {
+
+    setTournamentId('')
+
+    const _results: ValidationResult[] = [];
+
+    let itemProps: Record<string, any> = {};
+
+    try {
+      itemProps = await getDecodedParams(data.itemId.toLowerCase());
+    } catch (e) {
+      setResults([{type: 'error', message: 'Item id not found'}]);
       return;
     }
 
@@ -180,20 +202,53 @@ function CurateValidator() {
     const ajv = new Ajv()
     const validate = ajv.compile(jsonSchema)
 
-    if(!validate(itemProps.json)) {
-      alert('Invalid JSON');
-      return;
+    const isValid = validate(itemProps.json);
+
+    console.log('errors', validate.errors)
+    _results.push(
+      (!isValid && {type: 'error', message: 'Invalid JSON'}) || {type: 'success', message: 'Valid JSON'}
+    );
+
+    // validate hash
+    const tournament = await fetchTournamentByHash(itemProps.Hash);
+
+    if (!tournament) {
+      _results.push({type: 'error', message: 'Tournament hash not found'});
+    } else {
+      _results.push({type: 'success', message: 'Tournament hash found'});
+
+      const matches = await fetchMatches(tournament.id);
+
+      // validate hash
+      _results.push(
+        (getQuestionsHash(matches.map(match => match.questionID)) !== itemProps.Hash
+          && {type: 'error', message: 'Invalid tournament hash'})
+        || {type: 'success', message: 'Valid tournament hash'}
+      );
+
+      // validate hash is not already registered
+      const tournamentCurations = await fetchTournamentCurationsByHash(itemProps.Hash);
+
+      _results.push(
+        (tournamentCurations.length > 1
+          && {type: 'error', message: `This tournament has more than 1 submissions. ItemId's: ${tournamentCurations.map(tc => tc.id).join(', ')}`})
+        || {type: 'success', message: 'This is the first submission for this tournament'}
+      );
+
+      // validate timestamp
+
+      const earliestMatch = matches.reduce((prev, curr) => Number(prev.openingTs) < Number(curr.openingTs) ? prev : curr)
+
+      _results.push(
+        (Number(earliestMatch.openingTs) > Number(itemProps.StartingTimestamp)
+          && {type: 'error', message: 'Starting timestamp is greater than the earliest match'})
+        || {type: 'success', message: 'Valid starting timestamp'}
+      );
+
+      setTournamentId(tournament.id)
     }
 
-    // TODO: check questions hash
-
-    // TODO: check questions opening timestamp > starting timestamp
-
-    // TODO: check questions hash already registered
-
-    // TODO: show questions
-
-    alert('OK!');
+    setResults(_results);
   }
 
   return (
@@ -214,6 +269,9 @@ function CurateValidator() {
           </div>
         </BoxRow>
       </BoxWrapper>
+
+      {results.map((result, i) => <Alert severity={result.type} key={i}>{result.message}</Alert>)}
+      {questions && Object.values(questions).map((question, i) => <div key={i} style={{margin: '10px 0'}}>{question.qTitle}</div>)}
     </form>
   );
 }

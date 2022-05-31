@@ -190,3 +190,26 @@ export const QUESTION_FIELDS = `
     bounty
   }
 `;
+
+export enum CurationStatus {
+  Absent,
+  Registered,
+  RegistrationRequested,
+  ClearingRequested,
+}
+
+export interface TournamentCuration {
+  id: string
+  hash: string
+  status: CurationStatus
+  data: string
+}
+
+export const TOURNAMENT_CURATION_FIELDS = `
+  fragment TournamentCurationFields on TournamentCuration {
+    id
+    hash
+    status
+    data
+  }
+`;
