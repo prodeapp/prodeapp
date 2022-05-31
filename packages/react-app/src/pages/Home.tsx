@@ -3,12 +3,12 @@ import {BoxWrapper, BoxRow} from "../components";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {Link} from "react-router-dom";
-import {useCuratedTournaments} from "../hooks/useCuratedTournaments";
+import {useTournaments} from "../hooks/useTournaments";
 import {Tournament} from "../graphql/subgraph";
 import {formatAmount, getTimeLeft} from "../lib/helpers";
 
 function Home() {
-  const { isLoading, error, data: tournaments } = useCuratedTournaments();
+  const { isLoading, error, data: tournaments } = useTournaments();
 
   return (
     <>
@@ -33,7 +33,8 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
       <Box sx={{width: {md: '25%'}, flexGrow: 1}}>Name</Box>
       <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Bet Price</Box>
       <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Prize Pool</Box>
-      <Box sx={{width: '25%', display: {xs: 'none', md: 'block'}}}>Time Remaining</Box>
+      <Box sx={{width: '20%', display: {xs: 'none', md: 'block'}}}>Time Remaining</Box>
+      <Box sx={{width: '5%', display: {xs: 'none', md: 'block'}}}>Curation</Box>
     </BoxRow>
     {tournaments.map((tournament, i) => {
       return <BoxRow key={i}>
@@ -47,7 +48,8 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
         </Box>
         <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>{formatAmount(tournament.price)}</Box>
         <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>{formatAmount(tournament.pool)}</Box>
-        <Box sx={{width: '25%', display: {xs: 'none', md: 'block'}}}>{getTimeLeft(tournament.closingTime)}</Box>
+        <Box sx={{width: '20%', display: {xs: 'none', md: 'block'}}}>{getTimeLeft(tournament.closingTime)}</Box>
+        <Box sx={{width: '5%', display: {xs: 'none', md: 'block'}}}>{tournament.curation.status === "Registered"? '✅' : '🚫'}</Box>
       </BoxRow>
     })}
   </BoxWrapper>
