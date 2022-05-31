@@ -35,9 +35,9 @@ const registryQuery = `
     }
 `
 
-const tournamentCurationQuery = `
-    query TournamentCurationQuery ($itemId: String!) {
-        tournamentCuration(id: $itemId) {
+const curateItemQuery = `
+    query CurateItemQuery ($itemId: String!) {
+        curateItem(id: $itemId) {
           data
         }
     }
@@ -76,15 +76,15 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
 }
 
 export async function getDecodedParams(itemId: string): Promise<Record<string, any>> {
-  const result = await apolloProdeQuery<{ tournamentCuration: {data: string} }>(tournamentCurationQuery, {itemId})
+  const result = await apolloProdeQuery<{ curateItem: {data: string} }>(curateItemQuery, {itemId})
 
-  if (!result?.data?.tournamentCuration?.data) {
+  if (!result?.data?.curateItem?.data) {
     throw new Error('item not found')
   }
 
   let columns = await getRegistryColumns()
 
-  const decodedItems = gtcrDecode({ values: result?.data?.tournamentCuration?.data, columns })
+  const decodedItems = gtcrDecode({ values: result?.data?.curateItem?.data, columns })
 
   const props: Record<string, any> = columns.reduce((obj, column, i) => {
     return {...obj, [column.label]: decodedItems[i]}

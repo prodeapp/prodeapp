@@ -28,6 +28,7 @@ type Tournament @entity {
   numOfMatchesWithAnswer: BigInt!
   hasPendingAnswers: Boolean!
   prizes: [BigInt!]
+  curated: Boolean!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
@@ -35,16 +36,18 @@ type Tournament @entity {
 }
 
 type TournamentCuration @entity {
+  """Hash of the tournament"""
+  id: ID!
+  tournament: Tournament!
+}
+
+type CurateItem @entity {
   """itemID in curate"""
   id: ID!
   """Hash of the tournament"""
   hash: String!
   """Status in the curation. Enum with statuses"""
   status: CurationStatus!
-  """ipfs route to the JSON with fields"""
-  json: String
-  """earliest timestamp"""
-  startingTimestamp: BigInt
   "The data describing the item (encoded)"
   data: Bytes!
 }

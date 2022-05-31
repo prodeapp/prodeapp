@@ -8,8 +8,9 @@ import {getDecodedParams} from "../lib/curate";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {
   Tournament,
-  TOURNAMENT_CURATION_FIELDS,
-  TOURNAMENT_FIELDS, TournamentCuration
+  CurateItem,
+  TOURNAMENT_FIELDS,
+  CURATE_ITEM_FIELDS,
 } from "../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
@@ -151,21 +152,21 @@ export const fetchTournamentByHash = async (hash: string) => {
   return response.data.tournaments[0];
 };
 
-export const fetchTournamentCurationsByHash = async (hash: string) => {
+export const fetchCurateItemsByHash = async (hash: string) => {
   const query = `
-    ${TOURNAMENT_CURATION_FIELDS}
-    query TournamentCurationQuery($hash: String) {
-        tournamentCurations(where: {hash: $hash}) {
-            ...TournamentCurationFields
+    ${CURATE_ITEM_FIELDS}
+    query CurateItemsQuery($hash: String) {
+        curateItems(where: {hash: $hash}) {
+            ...CurateItemFields
         }
     }
 `;
 
-  const response = await apolloProdeQuery<{ tournamentCurations: TournamentCuration[] }>(query, {hash});
+  const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(query, {hash});
 
   if (!response) throw new Error("No response from TheGraph");
 
-  return response.data.tournamentCurations;
+  return response.data.curateItems;
 };
 
 interface ValidationResult {
@@ -227,7 +228,7 @@ function CurateValidator() {
       );
 
       // validate hash is not already registered
-      const tournamentCurations = await fetchTournamentCurationsByHash(itemProps.Hash);
+      const tournamentCurations = await fetchCurateItemsByHash(itemProps.Hash);
 
       _results.push(
         (tournamentCurations.length > 1

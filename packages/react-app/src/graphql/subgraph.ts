@@ -191,25 +191,16 @@ export const QUESTION_FIELDS = `
   }
 `;
 
-export enum CurationStatus {
-  Absent,
-  Registered,
-  RegistrationRequested,
-  ClearingRequested,
-}
-
-export interface TournamentCuration {
+export interface CurateItem {
   id: string
   hash: string
-  status: CurationStatus
   data: string
 }
 
-export const TOURNAMENT_CURATION_FIELDS = `
-  fragment TournamentCurationFields on TournamentCuration {
+export const CURATE_ITEM_FIELDS = `
+  fragment CurateItemFields on CurateItem {
     id
     hash
-    status
     data
   }
 `;

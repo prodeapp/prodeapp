@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import {Bytes, log, Address, BigInt} from '@graphprotocol/graph-ts';
-import { TournamentCuration, Registry, MetaEvidence } from '../types/schema'
+import {CurateItem, Registry, MetaEvidence, TournamentCuration, Tournament} from '../types/schema'
 
 import {
   GeneralizedTCR,
@@ -56,13 +56,13 @@ function getDataFromItemID(itemID: Bytes, contractAddress: Address): Bytes {
 }
 
 export function handleItemSubmitted(event: ItemSubmitted): void {
-  let tournamentCuration = new TournamentCuration(event.params._itemID.toHexString());
+  let curateItem = new CurateItem(event.params._itemID.toHexString());
   let itemHash = getHashFromData(event.params._data);
   log.debug("handleItemSubmitted: adding item with hash {}", [itemHash]);
-  tournamentCuration.hash = itemHash;
-  tournamentCuration.status = getStatus(2);
-  tournamentCuration.data = event.params._data;
-  tournamentCuration.save();
+  curateItem.hash = itemHash;
+  curateItem.status = getStatus(2);
+  curateItem.data = event.params._data;
+  curateItem.save();
 }
 
 export function handleItemStatusChange(event: ItemStatusChange): void {
@@ -70,9 +70,9 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   let data = getDataFromItemID(event.params._itemID, event.address);
   log.debug("handleItemStatusChange: data = {}", [data.toHexString()]);
 
-  let tournamentCuration = TournamentCuration.load(event.params._itemID.toHexString());
-  if (tournamentCuration === null) {
-    log.error('handleItemStatusChange: tournamentCuration with itemId {} not found in tcr {}. Bailing handleItemStatusChange.', [
+  let curateItem = CurateItem.load(event.params._itemID.toHexString());
+  if (curateItem === null) {
+    log.error('handleItemStatusChange: curateItem with itemId {} not found in tcr {}. Bailing handleItemStatusChange.', [
       event.params._itemID.toHexString(),
       event.address.toHexString()
     ]);
@@ -80,13 +80,21 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   }
   let itemHash = getHashFromData(data)
   log.debug('itemHash: {}', [itemHash]);
-  tournamentCuration.hash = itemHash;
+  curateItem.hash = itemHash;
   // ask to the SC the status instead of create the logic whing the mapping to 
   // detect the current status.
-  tournamentCuration.status = getStatusFromItemID(event.params._itemID, event.address)
-  log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), tournamentCuration.status])
-  tournamentCuration.data = data;
-  tournamentCuration.save();
+  curateItem.status = getStatusFromItemID(event.params._itemID, event.address)
+  log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), curateItem.status])
+  curateItem.data = data;
+  curateItem.save();
+
+  let tournamentCuration = TournamentCuration.load(curateItem.hash);
+
+  if (curateItem.status === 'Registered' && tournamentCuration !== null) {
+    let tournament = Tournament.load(tournamentCuration.tournament)!;
+    tournament.curated = true;
+    tournament.save();
+  }
 }
 
 export function handleMetaEvidence(event: MetaEvidenceEvent): void {
