@@ -23,9 +23,7 @@ export interface Tournament {
   }
   pool: BigNumberish
   prizes: string[]
-  curation: {
-    status: string
-  }
+  curated: boolean
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -201,5 +199,19 @@ export const QUESTION_FIELDS = `
     minBond
     lastBond
     bounty
+  }
+`;
+
+export interface CurateItem {
+  id: string
+  hash: string
+  data: string
+}
+
+export const CURATE_ITEM_FIELDS = `
+  fragment CurateItemFields on CurateItem {
+    id
+    hash
+    data
   }
 `;

@@ -1,21 +1,27 @@
 import { useQuery } from "react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
+import {buildQuery} from "../lib/SubgraphQueryBuilder";
 
 const query = `
     ${TOURNAMENT_FIELDS}
-    query TournamentsQuery {
-      tournaments(first: 10, orderBy: closingTime, orderDirection: desc) {
+    query TournamentsQuery(#params#) {
+      tournaments(where: {#where#}, first: 10, orderBy: closingTime, orderDirection: desc) {
         ...TournamentFields
       }
     }
 `;
 
-export const useTournaments = () => {
+interface Props {
+  curated?: boolean
+}
+
+export const useTournaments = ({curated}: Props = {}) => {
   return useQuery<Tournament[], Error>(
-    ["useTournaments"],
+    ["useTournaments", curated],
     async () => {
-      const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(query);
+      const variables = {curated};
+      const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");
 

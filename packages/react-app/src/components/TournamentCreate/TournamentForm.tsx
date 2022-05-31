@@ -81,7 +81,7 @@ function orderByQuestionId(questionsData: TournamentFactory.RealitioQuestionStru
 
 export default function TournamentForm({children, handleSubmit}: FormProps) {
 
-  const tournamentFactoryContract = new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface()) as TournamentFactory
+  const tournamentFactoryContract = new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface())
 
   const { state, send, events } = useContractFunction(tournamentFactoryContract, 'createTournament');
 

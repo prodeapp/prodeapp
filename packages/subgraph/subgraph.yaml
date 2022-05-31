@@ -54,8 +54,8 @@ dataSources:
     network: xdai
     source:
       abi: GeneralizedTCR
-      address: "0x18286507b4F61b26f0aA7B5D7d34D7235A576429"
-      startBlock: 22267329  
+      address: "0xbcf4256772f1e3751076ae28e786835543441077"
+      startBlock: 19592700  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -65,11 +65,14 @@ dataSources:
       entities:
         - Tournament
         - TournamentCuration
+        - Registry
       eventHandlers:
         - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
           handler: handleItemSubmitted
         - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
           handler: handleItemStatusChange
+        - event: MetaEvidence(indexed uint256,string)
+          handler: handleMetaEvidence
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
 templates:

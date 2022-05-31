@@ -4,13 +4,13 @@ function filterObject<T>(obj: Record<string, T>, callback: (v: T, k: string) => 
   )
 }
 
-export function buildQuery(query: string, variables: Record<string, string | undefined>) {
-  variables = filterObject(variables, Boolean);
+export function buildQuery(query: string, variables: Record<string, string | boolean | undefined>) {
+  variables = filterObject(variables, val => val !== undefined);
 
-  const params = Object.entries(variables).map(([k, v]) => `$${k}: String`).join(', ')
+  const params = Object.entries(variables).map(([k, v]) => `$${k}: ${typeof v === 'string' ? 'String' : 'Boolean'}`).join(', ')
   const where = Object.entries(variables).map(([k, v]) => `${k}: $${k}`).join(', ')
 
   return query
     .replace('#where#', where)
-    .replace('#params#', params);
+    .replace('(#params#)', params !== '' ? `(${params})` : '');
 }

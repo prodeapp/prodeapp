@@ -7,7 +7,7 @@ import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {ErrorMessage} from "@hookform/error-message";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {RealityETH_v3_0, RealityETH_v3_0__factory} from "../../typechain";
+import {RealityETH_v3_0__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -35,7 +35,7 @@ export default function AnswerForm({match, question, control, register, errors, 
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
 
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()) as RealityETH_v3_0,
+    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
     'submitAnswer'
   );
 
