@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry} from "../types/schema";
+import {Player, Manager, Bet, Registry, TournamentCuration} from "../types/schema";
 
 export function getBetID(tournament: ByteArray, tokenID: BigInt): string {
     return tournament.toHexString() + '-' + tokenID.toString();
@@ -36,6 +36,15 @@ export function getOrCreateRegistry(address: Address): Registry {
         registry.save()
     }
     return registry
+}
+
+export function getOrCreateTournamentCuration(hash: string): TournamentCuration {
+    let tournamentCuration = TournamentCuration.load(hash)
+    if (tournamentCuration === null) {
+        tournamentCuration = new TournamentCuration(hash)
+        tournamentCuration.save()
+    }
+    return tournamentCuration
 }
 
 export function getCurrentRanking(tournament: ByteArray): Bet[] {

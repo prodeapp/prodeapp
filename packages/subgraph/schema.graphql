@@ -38,7 +38,7 @@ type Tournament @entity {
 type TournamentCuration @entity {
   """Hash of the tournament"""
   id: ID!
-  tournament: Tournament!
+  tournaments: [Tournament!]!
 }
 
 type CurateItem @entity {

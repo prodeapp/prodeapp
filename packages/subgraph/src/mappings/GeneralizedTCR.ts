@@ -91,9 +91,11 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   let tournamentCuration = TournamentCuration.load(curateItem.hash);
 
   if (curateItem.status === 'Registered' && tournamentCuration !== null) {
-    let tournament = Tournament.load(tournamentCuration.tournament)!;
-    tournament.curated = true;
-    tournament.save();
+    for (let i = 0; i < tournamentCuration.tournaments.length; i++) {
+      let tournament = Tournament.load(tournamentCuration.tournaments[i])!;
+      tournament.curated = true;
+      tournament.save();
+    }
   }
 }
 

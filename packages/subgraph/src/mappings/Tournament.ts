@@ -2,7 +2,7 @@ import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Match, Tournament, TournamentCuration } from '../types/schema';
-import { getBetID, getOrCreateManager, getOrCreatePlayer } from './helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateTournamentCuration} from './helpers';
 import { RealitioAddress } from './constants';
 
 export function handleQuestionsRegistered(event: QuestionsRegistered): void {
@@ -53,12 +53,11 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     tournament.numOfMatches = nonce;
     tournament.save();
 
-    let tournamentCuration = TournamentCuration.load(hash);
-    if (tournamentCuration === null) {
-        tournamentCuration = new TournamentCuration(hash);
-        tournamentCuration.tournament = tournament.id;
-        tournamentCuration.save();
-    }
+    let tournamentCuration = getOrCreateTournamentCuration(hash);
+    let tmp_tournaments = tournamentCuration.tournaments;
+    tmp_tournaments.push(tournament.id);
+    tournamentCuration.tournaments = tmp_tournaments;
+    tournamentCuration.save();
 }
 
 export function handlePrizesRegistered(event: Prizes): void {
