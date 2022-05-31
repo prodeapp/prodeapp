@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useTournament} from "../hooks/useTournament";
-import {useParams, useSearchParams} from "react-router-dom";
+import {Link as RouterLink, useParams, useSearchParams} from "react-router-dom";
 import {BoxWrapper, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -39,6 +39,7 @@ function TournamentsView() {
             <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
               Status: <TournamentStatus tournamentId={tournament.id} />
             </div>
+            {!tournament.curated && <Button component={RouterLink} to={`/curate/submit/${tournament.id}`} sx={{mt: 5}}>Verify Tournament</Button>}
           </BoxWrapper>
         </Box>
         <Box sx={{width: {md: '49%'}, marginLeft: {md: '2%'}}}>

@@ -14,6 +14,7 @@ export interface Tournament {
   }
   pool: BigNumberish
   prizes: string[]
+  curated: boolean
 }
 
 export const TOURNAMENT_FIELDS = `
