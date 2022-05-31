@@ -37,3 +37,10 @@ export function getQuestionId(questionData: TournamentFactory.RealitioQuestionSt
     [contentHash, arbitrator, timeout, minBond, realitio, msgSender, 0]
   );
 }
+
+export function getQuestionsHash(questionIDs: string[]) {
+  return keccak256(
+    questionIDs.map(_ => 'bytes32'),
+    questionIDs.sort((a, b) => a > b ? 1 : -1)
+  );
+}

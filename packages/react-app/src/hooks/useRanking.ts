@@ -17,7 +17,7 @@ interface Props {
   playerId?: string
 }
 
-export const useRanking = ({tournamentId = '', playerId = ''}: Props) => {
+export const useRanking = ({tournamentId, playerId}: Props) => {
   return useQuery<Bet[], Error>(
     ["useRanking", tournamentId, playerId],
     async () => {

@@ -28,6 +28,7 @@ type Tournament @entity {
   numOfMatchesWithAnswer: BigInt!
   hasPendingAnswers: Boolean!
   prizes: [BigInt!]
+  curated: Boolean!
   players: [Player!]! @derivedFrom(field: "tournaments")
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
@@ -37,16 +38,18 @@ type Tournament @entity {
 type TournamentCuration @entity {
   """Hash of the tournament"""
   id: ID!
+  tournaments: [Tournament!]!
+}
+
+type CurateItem @entity {
   """itemID in curate"""
-  itemID: Bytes
+  id: ID!
+  """Hash of the tournament"""
+  hash: String!
   """Status in the curation. Enum with statuses"""
   status: CurationStatus!
-  """ipfs route to the JSON with fields"""
-  json: String
-  """earliest timestamp"""
-  startingTimestamp: BigInt
   "The data describing the item (encoded)"
-  data: Bytes
+  data: Bytes!
 }
 
 type Match @entity {
@@ -102,4 +105,22 @@ type Funder @entity {
   amount: BigInt!
   tournaments: [Tournament!]!
   messages: [String!]
+}
+
+type Registry @entity {
+  "The registry address"
+  id: ID!
+  "The current registration meta evidence"
+  registrationMetaEvidence: MetaEvidence!
+  "The current removal meta evidence"
+  clearingMetaEvidence: MetaEvidence!
+  "The number of MetaEvidence event logs emitted."
+  metaEvidenceCount: BigInt!
+}
+
+type MetaEvidence @entity {
+  "The meta evidence ID."
+  id: ID!
+  "The URI of the meta evidence file."
+  URI: String!
 }
