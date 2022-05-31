@@ -34,7 +34,7 @@ function TournamentsTable({tournaments}: TournamentsTableProps) {
       <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Bet Price</Box>
       <Box sx={{width: '130px', display: {xs: 'none', md: 'block'}}}>Prize Pool</Box>
       <Box sx={{width: '20%', display: {xs: 'none', md: 'block'}}}>Time Remaining</Box>
-      <Box sx={{width: '5%', display: {xs: 'none', md: 'block'}}}>Curation</Box>
+      <Box sx={{width: '5%', display: {xs: 'none', md: 'block'}}}>Verified?</Box>
     </BoxRow>
     {tournaments.map((tournament, i) => {
       return <BoxRow key={i}>
