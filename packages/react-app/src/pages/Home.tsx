@@ -10,8 +10,7 @@ import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
-  const { isLoading, error, data: tournaments } = useTournaments({ curated: verifiedStatus });
-
+  const { isLoading, error, data: tournaments } = useTournaments({ curated: verifiedStatus? verifiedStatus: undefined });
 
   return (
     <>

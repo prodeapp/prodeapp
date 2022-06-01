@@ -33,7 +33,6 @@ type Tournament @entity {
   matches: [Match!]! @derivedFrom(field: "tournament")
   bets: [Bet!]! @derivedFrom(field: "tournament")
   funders: [Funder!] @derivedFrom(field: "tournaments")
-  curation: TournamentCuration!
 }
 
 type TournamentCuration @entity {

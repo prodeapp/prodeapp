@@ -1,14 +1,5 @@
 import { BigNumberish } from "@ethersproject/bignumber";
 
-export interface TournamentCuration {
-  id: string
-  status: string
-  itemID: string
-  json: string
-  startingTimestamp: BigNumberish
-  data: string
-}
-
 export interface Tournament {
   id: string
   name: string
