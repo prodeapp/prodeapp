@@ -30,7 +30,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 21695778  
+      startBlock: 22267329  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -75,7 +75,6 @@ dataSources:
           handler: handleMetaEvidence
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
-
 templates:
   - name: Tournament
     kind: ethereum/contract

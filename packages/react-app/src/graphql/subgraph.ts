@@ -31,6 +31,7 @@ export const TOURNAMENT_FIELDS = `
       manager{id}
       pool
       prizes
+      curated
     }
 `;
 
