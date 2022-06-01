@@ -55,7 +55,7 @@ dataSources:
     source:
       abi: GeneralizedTCR
       address: "0xbcf4256772f1e3751076ae28e786835543441077"
-      startBlock: 19592700  
+      startBlock: 22267329  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
