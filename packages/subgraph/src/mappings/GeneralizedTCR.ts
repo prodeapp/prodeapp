@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import {Bytes, log, Address, BigInt} from '@graphprotocol/graph-ts';
-import {CurateItem, Registry, MetaEvidence, TournamentCuration, Tournament} from '../types/schema'
+import {CurateItem, MetaEvidence, TournamentCuration, Tournament} from '../types/schema'
 
 import {
   GeneralizedTCR,
@@ -36,10 +36,19 @@ function toHexString(byteArray:Uint8Array):string {
 };
 
 function getHashFromData(data:Bytes): string {
-  let hashData = data.slice(6, 70)
-  // log.debug("getHashFromData: hashData = {}", [hashData.toString()]);
-  let hash = toHexString(hashData)
-  // log.debug("getHashFromData: hash = {}", [hash]);
+  // use last index to avoid conflicts if the title has 0x.
+  const hashIndex = data.toString().lastIndexOf("0x")
+
+  let hash:string
+  if (hashIndex === -1){
+    // couln't found 0x character. Assuming that it's where it has to be :)
+    let hashData = data.slice(6, 70)
+    let hash = toHexString(hashData)
+    log.warning("getHashFromData: Couln't found 0x in the data array. Assuming fixed positions for the hash location. hash = {}", [hash])
+  } else {
+    hash = data.toString().slice(hashIndex, hashIndex+66)
+  }
+  log.debug("getHashFromData: hash = {}", [hash])
   return hash
 }
 
