@@ -52,6 +52,8 @@ type CurateItem @entity {
   data: Bytes!
   """The title of the item"""
   title: String!
+  """the json file. null if error"""
+  json: String
 }
 
 type Match @entity {

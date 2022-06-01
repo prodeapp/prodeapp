@@ -64,6 +64,20 @@ function getTitleFromData(data:Bytes): string {
   return title
 }
 
+function getIPFSFromData(data:Bytes): string|null {
+  // use last index to avoid conflicts if the title has 0x.
+  const ipfsIndex = data.toString().lastIndexOf("/ipfs/")
+  let ipfs:string
+  if (ipfsIndex !== -1){
+    ipfs = data.slice(ipfsIndex+1, data.length).reduce((str, byte) => str + String.fromCharCode(byte), '')
+  } else {
+    log.warning("getIPFSFromData: Couln't found /ipfs/ in the data array. retrieving null as ipfs", [])
+    return null
+  }
+  log.debug("getIPFSFromData: json uri {}", [ipfs])
+  return ipfs
+}
+
 function getStatusFromItemID(itemID: Bytes, contractAddress: Address): string {
   let tcr = GeneralizedTCR.bind(contractAddress);
   let itemInfo = tcr.getItemInfo(itemID);
@@ -80,11 +94,13 @@ export function handleItemSubmitted(event: ItemSubmitted): void {
   let curateItem = new CurateItem(event.params._itemID.toHexString());
   let itemHash = getHashFromData(event.params._data);
   let itemTitle = getTitleFromData(event.params._data);
+  let json = getIPFSFromData(event.params._data);
   log.debug("handleItemSubmitted: adding item with hash {}", [itemHash]);
   curateItem.hash = itemHash;
   curateItem.status = getStatus(2);
   curateItem.data = event.params._data;
   curateItem.title = itemTitle;
+  curateItem.json = json;
   curateItem.save();
 }
 
