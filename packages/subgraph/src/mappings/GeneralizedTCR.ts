@@ -29,23 +29,22 @@ function getStatus(status: number): string {
   return 'Error';
 }
 
-function toHexString(byteArray:Uint8Array):string {
+function u8toString(byteArray:Uint8Array):string {
   const bufferString = byteArray.reduce((str, byte) => str + String.fromCharCode(byte), '');
-  if (bufferString.substring(0, 2) === '0x') return bufferString
-  return `0x${bufferString}`
+  return bufferString
 };
 
 function getHashFromData(data:Bytes): string {
   // use last index to avoid conflicts if the title has 0x.
   const hashIndex = data.toString().lastIndexOf("0x")
-  // log.debug("getHashFromIndex: index found at {}", [hashIndex.toString()])
+  // log.debug("getHashFromData: index found at {}", [hashIndex.toString()])
   let hash:string
   if (hashIndex === -1){
     // couln't found 0x character. So isn't possible to know where the hash is.
     hash = "0x00"
     log.warning("getHashFromData: Couln't found 0x in the data array. returning 0x00 as hash", [])
   } else {
-    hash = data.toHexString().slice(hashIndex, hashIndex+66)
+    hash = u8toString(data.slice(hashIndex, hashIndex+66))
   }
   // log.debug("getHashFromData: hash = {}", [hash])
   return hash
@@ -56,7 +55,7 @@ function getTitleFromData(data:Bytes): string {
   const hashIndex = data.toString().lastIndexOf("0x")
   let title:string
   if (hashIndex !== -1){
-    title = data.toString().slice(4, hashIndex-2)
+    title = u8toString(data.slice(3, hashIndex-2))
   } else {
     log.warning("getTitleFromData: Couln't found 0x in the data array. retrieving error as title", [])
     return "Error"
