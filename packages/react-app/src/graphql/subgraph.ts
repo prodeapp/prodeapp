@@ -40,7 +40,7 @@ export const TOURNAMENT_FIELDS = `
       manager{id}
       pool
       prizes
-      curation{status}
+      curated
     }
 `;
 
