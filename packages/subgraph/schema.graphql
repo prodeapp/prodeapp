@@ -50,6 +50,8 @@ type CurateItem @entity {
   status: CurationStatus!
   "The data describing the item (encoded)"
   data: Bytes!
+  """The title of the item"""
+  title: String!
 }
 
 type Match @entity {
