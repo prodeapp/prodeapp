@@ -8,9 +8,9 @@ import AnswerDialog from "../Answer/AnswerDialog";
 import {Match} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
 
-export default function Results({tournamentId}: {tournamentId: string}) {
-  const { data: matches } = useMatches(tournamentId);
-  const { data: questions } = useQuestions(tournamentId);
+export default function Results({marketId}: {marketId: string}) {
+  const { data: matches } = useMatches(marketId);
+  const { data: questions } = useQuestions(marketId);
   const [currentMatch, setCurrentMatch] = useState<Match|undefined>();
   const [openModal, setOpenModal] = useState(false);
 
@@ -18,7 +18,7 @@ export default function Results({tournamentId}: {tournamentId: string}) {
     setOpenModal(false);
     if (currentMatch) {
       // refetch matches and question just in case the user has provided an answer
-      queryClient.invalidateQueries(['useMatches', currentMatch.tournament.id]);
+      queryClient.invalidateQueries(['useMatches', currentMatch.market.id]);
       queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentMatch.questionID]);
     }
   }

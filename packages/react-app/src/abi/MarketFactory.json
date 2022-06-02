@@ -5,7 +5,7 @@
     "inputs": [
       {
         "type": "address",
-        "name": "_tournament",
+        "name": "_market",
         "internalType": "address"
       },
       {
@@ -27,11 +27,11 @@
   },
   {
     "type": "event",
-    "name": "NewTournament",
+    "name": "NewMarket",
     "inputs": [
       {
         "type": "address",
-        "name": "tournament",
+        "name": "market",
         "internalType": "address",
         "indexed": true
       },
@@ -64,10 +64,10 @@
       {
         "type": "address[]",
         "name": "",
-        "internalType": "contract Tournament[]"
+        "internalType": "contract Market[]"
       }
     ],
-    "name": "allTournaments",
+    "name": "allMarkets",
     "inputs": []
   },
   {
@@ -93,26 +93,26 @@
         "internalType": "address"
       }
     ],
-    "name": "createTournament",
+    "name": "createMarket",
     "inputs": [
       {
         "type": "tuple",
-        "name": "tournamentInfo",
-        "internalType": "struct Tournament.TournamentInfo",
+        "name": "marketInfo",
+        "internalType": "struct Market.MarketInfo",
         "components": [
           {
             "type": "string",
-            "name": "tournamentName",
+            "name": "marketName",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentSymbol",
+            "name": "marketSymbol",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentUri",
+            "name": "marketUri",
             "internalType": "string"
           }
         ]
@@ -145,7 +145,7 @@
       {
         "type": "tuple[]",
         "name": "questionsData",
-        "internalType": "struct TournamentFactory.RealitioQuestion[]",
+        "internalType": "struct MarketFactory.RealitioQuestion[]",
         "components": [
           {
             "type": "uint256",
@@ -207,7 +207,7 @@
         "internalType": "address"
       }
     ],
-    "name": "tournament",
+    "name": "market",
     "inputs": []
   },
   {
@@ -220,7 +220,7 @@
         "internalType": "uint256"
       }
     ],
-    "name": "tournamentCount",
+    "name": "marketCount",
     "inputs": []
   },
   {
@@ -230,10 +230,10 @@
       {
         "type": "address",
         "name": "",
-        "internalType": "contract Tournament"
+        "internalType": "contract Market"
       }
     ],
-    "name": "tournaments",
+    "name": "markets",
     "inputs": [
       {
         "type": "uint256",

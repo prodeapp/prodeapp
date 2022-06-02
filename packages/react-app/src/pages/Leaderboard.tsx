@@ -10,7 +10,7 @@ import { BoxWrapper, BoxRow } from '../components';
 
 export default function Leaderboard() {
   const { isLoading, data: leaderboard } = useLeaderboard();
-  const [sorting, setSorting] = useState<'numOfBets' | 'numOfTournaments' | 'pricesReceived' | 'amountBet'>('pricesReceived');
+  const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet'>('pricesReceived');
   const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
 
   const columns = [
@@ -20,7 +20,7 @@ export default function Leaderboard() {
       }
     },
     { field: 'numOfBets', headerName: '# of Bets', type: 'number', flex: 1 },
-    { field: 'numOfTournaments', headerName: '# of Tournaments', type: 'number', flex: 1 },
+    { field: 'numOfMarkets', headerName: '# of Markets', type: 'number', flex: 1 },
     {
       field: 'pricesReceived', headerName: 'Prices Received', type: 'string', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
         return formatAmount(params.value);
@@ -43,7 +43,7 @@ export default function Leaderboard() {
           <Grid container>
             <Grid item sm={8} sx={{ display: 'flex', justifyContent: 'left' }}>
               <div><Button onClick={() => setSorting('numOfBets')} color={sorting === 'numOfBets' ? 'secondary' : 'primary'}># of Bets</Button></div>
-              <div><Button onClick={() => setSorting('numOfTournaments')} color={sorting === 'numOfTournaments' ? 'secondary' : 'primary'}># of Tournaments</Button></div>
+              <div><Button onClick={() => setSorting('numOfMarkets')} color={sorting === 'numOfMarkets' ? 'secondary' : 'primary'}># of Markets</Button></div>
               <div><Button onClick={() => setSorting('pricesReceived')} color={sorting === 'pricesReceived' ? 'secondary' : 'primary'}>Prices Received</Button></div>
               <div><Button onClick={() => setSorting('amountBet')} color={sorting === 'amountBet' ? 'secondary' : 'primary'}>Amount Beted</Button></div>
             </Grid>

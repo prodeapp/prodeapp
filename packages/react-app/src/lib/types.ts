@@ -1,13 +1,13 @@
 import {BigNumber} from "@ethersproject/bignumber";
 
 export interface Ranking {
-  tournamentId: BigNumber
+  marketId: BigNumber
   player: string
   points: BigNumber
 }
 
 export interface Match {
-  tournamentId: BigNumber
+  marketId: BigNumber
   question: string
   result: string
 }

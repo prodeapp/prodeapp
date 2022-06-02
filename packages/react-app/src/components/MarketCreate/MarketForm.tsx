@@ -3,7 +3,7 @@ import {encodeQuestionText, getQuestionId} from "../../lib/reality";
 import {parseUnits} from "@ethersproject/units";
 import {useCall, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {TournamentFactory, TournamentFactory__factory} from "../../typechain";
+import {MarketFactory, MarketFactory__factory} from "../../typechain";
 import {useEffect} from "react";
 import Alert from "@mui/material/Alert";
 import {UseFormHandleSubmit} from "react-hook-form/dist/types/form";
@@ -20,8 +20,8 @@ type AnswersPlaceholder = {value: string}[];
 type QuestionParams = {value: string}[];
 type PrizeWeight = {value: number};
 
-export type TournamentFormValues = {
-  tournament: string
+export type MarketFormValues = {
+  market: string
   questionPlaceholder: string
   matches: {questionParams: QuestionParams}[]
   answersPlaceholder: AnswersPlaceholder
@@ -40,7 +40,7 @@ type MatchData = {
 
 interface FormProps {
   children?: React.ReactNode;
-  handleSubmit: UseFormHandleSubmit<TournamentFormValues>;
+  handleSubmit: UseFormHandleSubmit<MarketFormValues>;
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
@@ -56,20 +56,20 @@ function getMatchData(
   questionParams: QuestionParams,
   questionPlaceholder: string,
   answersPlaceholder: AnswersPlaceholder,
-  tournamentName: string
+  marketName: string
 ): MatchData {
   return {
-    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)).replace('[tournament]', tournamentName),
+    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)).replace('[market]', marketName),
     answers: answersPlaceholder.map((answerPlaceholder, i) => {
       return replacePlaceholders(answerPlaceholder.value, questionParams.map(qp => qp.value));
     }),
   }
 }
 
-function orderByQuestionId(questionsData: TournamentFactory.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, tournamentFactory: string): TournamentFactory.RealitioQuestionStruct[] {
+function orderByQuestionId(questionsData: MarketFactory.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, marketFactory: string): MarketFactory.RealitioQuestionStruct[] {
   const questionsDataWithQuestionId = questionsData.map(questionData => {
     return {
-      questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, tournamentFactory),
+      questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, marketFactory),
       questionData
     }
   })
@@ -79,24 +79,24 @@ function orderByQuestionId(questionsData: TournamentFactory.RealitioQuestionStru
     .map(qd => qd.questionData)
 }
 
-export default function TournamentForm({children, handleSubmit}: FormProps) {
+export default function MarketForm({children, handleSubmit}: FormProps) {
 
-  const tournamentFactoryContract = new Contract(process.env.REACT_APP_TOURNAMENT_FACTORY as string, TournamentFactory__factory.createInterface())
+  const marketFactoryContract = new Contract(process.env.REACT_APP_MARKET_FACTORY as string, MarketFactory__factory.createInterface())
 
-  const { state, send, events } = useContractFunction(tournamentFactoryContract, 'createTournament');
+  const { state, send, events } = useContractFunction(marketFactoryContract, 'createMarket');
 
-  const { value: arbitrator } = useCall({ contract: tournamentFactoryContract, method: 'arbitrator', args: [] }) || {}
-  const { value: realitio } = useCall({ contract: tournamentFactoryContract, method: 'realitio', args: [] }) || {}
-  const { value: timeout } = useCall({ contract: tournamentFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
+  const { value: arbitrator } = useCall({ contract: marketFactoryContract, method: 'arbitrator', args: [] }) || {}
+  const { value: realitio } = useCall({ contract: marketFactoryContract, method: 'realitio', args: [] }) || {}
+  const { value: timeout } = useCall({ contract: marketFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
 
 
   const { account, error: walletError } = useEthers();
   const navigate = useNavigate();
 
   useEffect(()=> {
-    if (events && events[0].args.tournament) {
-      queryClient.invalidateQueries('useTournaments');
-      navigate(`/tournaments/${events?.[0].args.tournament.toLowerCase()}?new=1`);
+    if (events && events[0].args.market) {
+      queryClient.invalidateQueries('useMarkets');
+      navigate(`/markets/${events?.[0].args.market.toLowerCase()}?new=1`);
     }
   }, [events, navigate]);
 
@@ -105,16 +105,16 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
   }
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a Tournament.'}</Alert>
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a market.'}</Alert>
   }
 
-  const onSubmit = async (data: TournamentFormValues) => {
+  const onSubmit = async (data: MarketFormValues) => {
     const utcClosingTime = zonedTimeToUtc(data.closingTime, 'UTC');
     const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
     const openingTS = closingTime + 1;
 
     const questionsData = data.matches.map(match => {
-      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder, data.tournament);
+      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder, data.market);
       return {
         templateID: 2,
         question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),
@@ -125,16 +125,16 @@ export default function TournamentForm({children, handleSubmit}: FormProps) {
     const minBond = parseUnits('0.5', 18); // TODO
 
     await send({
-        tournamentName: data.tournament,
-        tournamentSymbol: '', // TODO
-        tournamentUri: '', // TODO
+        marketName: data.market,
+        marketSymbol: '', // TODO
+        marketUri: '', // TODO
       },
       closingTime,
       parseUnits(String(data.price), 18),
       Math.round(data.managementFee * DIVISOR / 100),
       data.manager,
       minBond,
-      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_TOURNAMENT_FACTORY as string),
+      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),
       data.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );
   };

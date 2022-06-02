@@ -398,22 +398,22 @@
     "inputs": [
       {
         "type": "tuple",
-        "name": "_tournamentInfo",
-        "internalType": "struct Tournament.TournamentInfo",
+        "name": "_marketInfo",
+        "internalType": "struct Market.MarketInfo",
         "components": [
           {
             "type": "string",
-            "name": "tournamentName",
+            "name": "marketName",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentSymbol",
+            "name": "marketSymbol",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentUri",
+            "name": "marketUri",
             "internalType": "string"
           }
         ]

@@ -52,7 +52,7 @@ export default function Profile() {
         <Grid item sm={12} md={12}>
           <BoxRow>
             <div style={{ width: '20%' }}>Token ID</div>
-            <div style={{ width: '40%' }}>Tournament</div>
+            <div style={{ width: '40%' }}>Market</div>
             <div style={{ width: '60%' }}>Points</div>
             <div style={{ width: '20%' }}>Reward</div>
           </BoxRow>
@@ -62,7 +62,7 @@ export default function Profile() {
               <Accordion id={bet.id} key={bet.id}>
                 <AccordionSummary expandIcon={<ExpandMoreOutlined />} sx={{alignContent: 'center'}}>
                   <div style={{ width: '20%' }}>{bet.tokenID}</div>
-                  <div style={{ width: '40%' }}><a href={'/tournaments/' + bet.tournament.id}>{bet.tournament.name}</a></div>
+                  <div style={{ width: '40%' }}><a href={'/market/' + bet.market.id}>{bet.market.name}</a></div>
                   <div style={{ width: '20%' }}>{bet.points}</div>
                   <div style={{ width: '20%' }}>{formatAmount(bet.reward)}</div>
                 </AccordionSummary>

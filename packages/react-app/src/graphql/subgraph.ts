@@ -1,6 +1,6 @@
 import { BigNumberish } from "@ethersproject/bignumber";
 
-export interface Tournament {
+export interface Market {
   id: string
   name: string
   price: BigNumberish
@@ -20,8 +20,8 @@ export interface Tournament {
   hasPendingAnswers: boolean
 }
 
-export const TOURNAMENT_FIELDS = `
-    fragment TournamentFields on Tournament {
+export const MARKET_FIELDS = `
+    fragment MarketFields on Market {
       id
       hash
       name
@@ -45,7 +45,7 @@ export interface Match {
   id: string
   questionID: string
   nonce: BigNumberish
-  tournament: {
+  market: {
     id: string
   }
   answer: string | null
@@ -59,7 +59,7 @@ export const MATCH_FIELDS = `
     id
     questionID
     nonce
-    tournament{id}
+    market{id}
     answer
     openingTs
     answerFinalizedTimestamp
@@ -82,7 +82,7 @@ export const PLAYER_FIELDS = `
 `;
 
 export interface Leaderboard extends Player {
-  numOfTournaments: string
+  numOfMarkets: string
   numOfBets: string
   bets: {
     id: string
@@ -90,7 +90,7 @@ export interface Leaderboard extends Player {
     tokenID: BigNumberish
     points: BigNumberish
     reward: BigNumberish
-    tournament: {
+    market: {
       id: string
       name: string
       matches: {
@@ -105,7 +105,7 @@ export const LEADERBOARD_FIELDS = `
   ${PLAYER_FIELDS}
   fragment LeaderboardFields on Player {
     ...PlayerFields
-    numOfTournaments
+    numOfMarkets
     numOfBets
     bets{
       id
@@ -113,7 +113,7 @@ export const LEADERBOARD_FIELDS = `
       tokenID
       points
       reward
-      tournament {
+      market {
         id
         name
         matches {
@@ -130,7 +130,7 @@ export interface Bet {
   player: {
     id: string
   }
-  tournament: {
+  market: {
     id: string
     name: string
     matches: {
@@ -153,7 +153,7 @@ export const BET_FIELDS = `
     player {
       id
     }
-    tournament {
+    market {
       id,
       name,
       matches {

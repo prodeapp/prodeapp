@@ -1,8 +1,8 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, TournamentCuration} from "../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration} from "../types/schema";
 
-export function getBetID(tournament: ByteArray, tokenID: BigInt): string {
-    return tournament.toHexString() + '-' + tokenID.toString();
+export function getBetID(market: ByteArray, tokenID: BigInt): string {
+    return market.toHexString() + '-' + tokenID.toString();
 }
 
 export function getOrCreatePlayer(address: Address): Player {
@@ -11,7 +11,7 @@ export function getOrCreatePlayer(address: Address): Player {
         player = new Player(address.toHexString())
         player.amountBet = BigInt.fromI32(0)
         player.pricesReceived = BigInt.fromI32(0)
-        player.numOfTournaments = BigInt.fromI32(0)
+        player.numOfMarkets = BigInt.fromI32(0)
         player.numOfBets = BigInt.fromI32(0)
         player.save()
     }
@@ -38,21 +38,21 @@ export function getOrCreateRegistry(address: Address): Registry {
     return registry
 }
 
-export function getOrCreateTournamentCuration(hash: string): TournamentCuration {
-    let tournamentCuration = TournamentCuration.load(hash)
-    if (tournamentCuration === null) {
-        tournamentCuration = new TournamentCuration(hash)
-        tournamentCuration.save()
+export function getOrCreateMarketCuration(hash: string): MarketCuration {
+    let marketCuration = MarketCuration.load(hash)
+    if (marketCuration === null) {
+        marketCuration = new MarketCuration(hash)
+        marketCuration.save()
     }
-    return tournamentCuration
+    return marketCuration
 }
 
-export function getCurrentRanking(tournament: ByteArray): Bet[] {
+export function getCurrentRanking(market: ByteArray): Bet[] {
     let bets: Bet[];
     let tokenID = BigInt.fromI32(0);
     let _bet: Bet | null;
     while (true) {
-        let betID = getBetID(tournament, tokenID);
+        let betID = getBetID(market, tokenID);
         _bet = Bet.load(betID);
         if (_bet === null) break;
         bets.push(_bet);

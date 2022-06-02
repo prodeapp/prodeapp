@@ -7,11 +7,11 @@ import QuestionsForm, {QuestionsFormValues} from "./QuestionsForm";
 import type {BigNumberish} from "ethers";
 
 type QuestionsDialogProps = DialogProps & {
-  tournamentId: string
+  marketId: string
   price: BigNumberish
 }
 
-function QuestionsDialog({open, handleClose, tournamentId, price}: QuestionsDialogProps) {
+function QuestionsDialog({open, handleClose, marketId, price}: QuestionsDialogProps) {
   const { register, control, formState: {errors}, handleSubmit } = useForm<QuestionsFormValues>({defaultValues: {
     outcomes: [],
   }});
@@ -29,7 +29,7 @@ function QuestionsDialog({open, handleClose, tournamentId, price}: QuestionsDial
       title="Place your bets"
       actions={dialogActions}
     >
-      <QuestionsForm {...{tournamentId, price, register, control, errors, handleSubmit}} />
+      <QuestionsForm {...{marketId: marketId, price, register, control, errors, handleSubmit}} />
     </AppDialog>
   );
 }

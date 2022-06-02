@@ -6,12 +6,12 @@ import Button from "@mui/material/Button";
 import React from "react";
 import {UseFormRegister} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {TournamentFormValues} from "./TournamentForm";
+import {MarketFormValues} from "./MarketForm";
 
 type AnswersBuilderProps = {
-  control: Control<TournamentFormValues>
-  register: UseFormRegister<TournamentFormValues>
-  errors: FieldErrors<TournamentFormValues>
+  control: Control<MarketFormValues>
+  register: UseFormRegister<MarketFormValues>
+  errors: FieldErrors<MarketFormValues>
 }
 
 export default function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {

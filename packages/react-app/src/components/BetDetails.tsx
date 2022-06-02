@@ -13,14 +13,14 @@ function getBetResult(matchResult: string, playerBet: string) {
 }
 
 export default function BetDetails({bet}: {bet: Bet}) {
-  const { data: questions } = useQuestions(bet.tournament.id);
+  const { data: questions } = useQuestions(bet.market.id);
   return <BoxWrapper>
     <BoxRow>
       <div style={{ width: '40%'}}>Your Bet</div>
       <div style={{ width: '40%'}}>Match Result</div>
       <div style={{ width: '20%' }}>Points Earned</div>
     </BoxRow>
-    {bet.tournament.matches.map((match, i) => {
+    {bet.market.matches.map((match, i) => {
       const matchNonce = BigNumber.from(match.nonce).toNumber();
       const playerBet = getAnswerText(bet.results[matchNonce], questions?.[match.questionID].outcomes || []);
       const matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], '');

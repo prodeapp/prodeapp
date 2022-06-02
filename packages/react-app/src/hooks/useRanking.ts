@@ -13,15 +13,15 @@ const query = `
 `;
 
 interface Props {
-  tournamentId?: string
+  marketId?: string
   playerId?: string
 }
 
-export const useRanking = ({tournamentId, playerId}: Props) => {
+export const useRanking = ({marketId, playerId}: Props) => {
   return useQuery<Bet[], Error>(
-    ["useRanking", tournamentId, playerId],
+    ["useRanking", marketId, playerId],
     async () => {
-      const variables = {tournament: tournamentId?.toLowerCase(), player: playerId?.toLowerCase()};
+      const variables = {market: marketId?.toLowerCase(), player: playerId?.toLowerCase()};
 
       const response = await apolloProdeQuery<{ bets: Bet[] }>(buildQuery(query, variables), variables);
 
@@ -29,6 +29,6 @@ export const useRanking = ({tournamentId, playerId}: Props) => {
 
       return response.data.bets;
     },
-    {enabled: !!tournamentId || !!playerId}
+    {enabled: !!marketId || !!playerId}
   );
 };

@@ -1,6 +1,6 @@
 import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
-import { Bet, Match, Tournament } from "../types/schema";
+import { Bet, Match, Market } from "../types/schema";
 import { correctAnswerPoints } from "./constants";
 import { getBetID } from "./helpers";
 
@@ -26,9 +26,9 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
     const questionNonce = match.nonce;
-    let tournamentId = ByteArray.fromHexString(match.tournament);
-    log.debug("handleNewAnswer: summing points for tournament {}, questoinID: {}, questionNonce: {}, with answer {}", [tournamentId.toHexString(), id, questionNonce.toString(),match.answer!.toHexString()]);
-    let betID = getBetID(tournamentId, tokenID);
+    let marketId = ByteArray.fromHexString(match.market);
+    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(),match.answer!.toHexString()]);
+    let betID = getBetID(marketId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
         let betResult = bet.results[questionNonce.toI32()];
@@ -46,7 +46,7 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         }
         bet.save()
         tokenID = tokenID.plus(BigInt.fromI32(1));
-        betID = getBetID(tournamentId, tokenID);
+        betID = getBetID(marketId, tokenID);
         bet = Bet.load(betID);
     }
 
@@ -65,7 +65,7 @@ export function handleNewAnswer(event: LogNewAnswer): void {
 
 export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): void {
     let match = Match.load(event.params.question_id.toHexString());
-    if (match === null) return; // not a question for our tournaments
+    if (match === null) return; // not a question for our markets
     log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
 
     match.isPendingArbitration = true;
@@ -75,7 +75,7 @@ export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): 
 
 export function handleFinalize(event: LogFinalize): void {
     let match = Match.load(event.params.question_id.toHexString());
-    if (match === null) return; // not a question for our tournaments
+    if (match === null) return; // not a question for our markets
     log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
 
     match.answer = event.params.answer;

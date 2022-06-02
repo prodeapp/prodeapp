@@ -1,28 +1,28 @@
 specVersion: 0.0.4
-description: Subgraph that tracks tournaments Data
+description: Subgraph that tracks markets data
 repository: https://github.com/prodeapp/prodeapp
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: TournamentFactory
+    name: MarketFactory
     network: xdai
     source:
-      abi: TournamentFactory
+      abi: MarketFactory
       address: "0x2c053414646d5a843886F8D2912D3Df58DE891ff"
       startBlock: 22267329
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       abis:
-        - name: TournamentFactory
-          file: ./contracts/abis/TournamentFactory.json
+        - name: MarketFactory
+          file: ./contracts/abis/MarketFactory.json
       entities:
-        - Tournament
+        - Market
       eventHandlers:
-        - event: NewTournament(indexed address,indexed bytes32)
-          handler: handleNewTournament
-      file: ./src/mappings/TournamentFactory.ts
+        - event: NewMarket(indexed address,indexed bytes32)
+          handler: handleNewMarket
+      file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: RealitioV3
@@ -63,8 +63,8 @@ dataSources:
         - name: GeneralizedTCR
           file: ./contracts/abis/GeneralizedTCR.json
       entities:
-        - Tournament
-        - TournamentCuration
+        - Market
+        - MarketCuration
         - Registry
       eventHandlers:
         - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
@@ -76,25 +76,25 @@ dataSources:
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
 templates:
-  - name: Tournament
+  - name: Market
     kind: ethereum/contract
     network: xdai
     source:
-      abi: Tournament
+      abi: Market
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
-      file: ./src/mappings/Tournament.ts
+      file: ./src/mappings/Market.ts
       entities:
-        - Tournament
+        - Market
         - Bet
         - Player
         - Match
         - Manager
       abis:
-        - name: Tournament
-          file: ./contracts/abis/Tournament.json
+        - name: Market
+          file: ./contracts/abis/Market.json
         - name: Realitio
           file: ./contracts/abis/Realitio.json
       eventHandlers:
