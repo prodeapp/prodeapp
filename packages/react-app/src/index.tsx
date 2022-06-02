@@ -4,7 +4,7 @@ import { DAppProvider, xDai, Localhost } from "@usedapp/core";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route,
 } from "react-router-dom";
@@ -36,7 +36,7 @@ ReactDOM.render(
     <DAppProvider config={config}>
       <ReactQueryProvider>
         <ThemeProvider theme={theme}>
-          <BrowserRouter>
+          <HashRouter>
             <Routes>
               <Route element={<Layout />}>
                 <Route index element={<Home />} />
@@ -53,7 +53,7 @@ ReactDOM.render(
                 <Route path="curate/submit/:tournamentId" element={<CurateSubmit />} />
               </Route>
             </Routes>
-          </BrowserRouter>
+          </HashRouter>
         </ThemeProvider>
       </ReactQueryProvider>
     </DAppProvider>
