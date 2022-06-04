@@ -15,8 +15,6 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     let market = new Market(event.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
-    market.symbol = marketContract.symbol();
-    market.uri = marketContract.baseURI();
     market.managementFee = marketContract.managementFee();
     market.closingTime = marketContract.closingTime();
     market.creationTime = event.block.timestamp;

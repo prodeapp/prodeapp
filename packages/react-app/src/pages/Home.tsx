@@ -7,6 +7,8 @@ import {MarketStatus, useMarkets} from "../hooks/useMarkets";
 import { Market } from "../graphql/subgraph";
 import { formatAmount, getTimeLeft } from "../lib/helpers";
 import { FormControlLabel, FormGroup, Grid, Switch, Typography } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from "@mui/material/Alert";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
@@ -48,7 +50,11 @@ function Home() {
         </Grid>
       </BoxWrapper>
 
-      {!isLoading && !error && markets && <MarketsTable markets={markets} activeStatus={status === 'active'}/>}
+      {isLoading && <CircularProgress />}
+
+      {error && <Alert severity="error">{error.message}</Alert>}
+
+      {!isLoading && !error && <MarketsTable markets={markets} activeStatus={status === 'active'}/>}
     </>
   );
 }
@@ -59,6 +65,11 @@ type MarketsTableProps = {
 }
 
 function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
+
+  if (!markets || markets.length === 0) {
+    return <Alert severity="info">No markets found.</Alert>
+  }
+
   return <BoxWrapper>
     <BoxRow>
       <Box sx={{ width: { md: '25%' }, flexGrow: 1 }}>Name</Box>

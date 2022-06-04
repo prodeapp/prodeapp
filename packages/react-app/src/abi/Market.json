@@ -1,969 +1,969 @@
 [
   {
-    "type": "constructor",
+    "inputs": [],
     "stateMutability": "nonpayable",
-    "inputs": []
+    "type": "constructor"
   },
   {
-    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
     "name": "Approval",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "owner",
-        "internalType": "address",
-        "indexed": true
-      },
-      {
-        "type": "address",
-        "name": "approved",
-        "internalType": "address",
-        "indexed": true
-      },
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256",
-        "indexed": true
-      }
-    ],
-    "anonymous": false
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "ApprovalForAll",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
-        "name": "owner",
+        "indexed": true,
         "internalType": "address",
-        "indexed": true
+        "name": "owner",
+        "type": "address"
       },
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "operator",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "bool",
-        "name": "approved",
+        "indexed": false,
         "internalType": "bool",
-        "indexed": false
+        "name": "approved",
+        "type": "bool"
       }
     ],
-    "anonymous": false
+    "name": "ApprovalForAll",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "BetReward",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "uint256",
-        "name": "_tokenID",
+        "indexed": true,
         "internalType": "uint256",
-        "indexed": true
+        "name": "_tokenID",
+        "type": "uint256"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_reward",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       }
     ],
-    "anonymous": false
+    "name": "BetReward",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "FundingReceived",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "_funder",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_amount",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       },
       {
-        "type": "string",
-        "name": "_message",
+        "indexed": false,
         "internalType": "string",
-        "indexed": false
+        "name": "_message",
+        "type": "string"
       }
     ],
-    "anonymous": false
+    "name": "FundingReceived",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "ManagementReward",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "_manager",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_managementReward",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       }
     ],
-    "anonymous": false
+    "name": "ManagementReward",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "PlaceBet",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "_player",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256",
         "name": "tokenID",
-        "internalType": "uint256",
-        "indexed": true
+        "type": "uint256"
       },
       {
-        "type": "bytes32",
-        "name": "_tokenHash",
+        "indexed": true,
         "internalType": "bytes32",
-        "indexed": true
+        "name": "_tokenHash",
+        "type": "bytes32"
       },
       {
-        "type": "bytes32[]",
+        "indexed": false,
+        "internalType": "bytes32[]",
         "name": "_predictions",
-        "internalType": "bytes32[]",
-        "indexed": false
+        "type": "bytes32[]"
       }
     ],
-    "anonymous": false
+    "name": "PlaceBet",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "Prizes",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "uint16[]",
-        "name": "_prizes",
+        "indexed": false,
         "internalType": "uint16[]",
-        "indexed": false
+        "name": "_prizes",
+        "type": "uint16[]"
       }
     ],
-    "anonymous": false
+    "name": "Prizes",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "ProviderReward",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "_provider",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_providerReward",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       }
     ],
-    "anonymous": false
+    "name": "ProviderReward",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "QuestionsRegistered",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "bytes32[]",
-        "name": "_questionIDs",
+        "indexed": false,
         "internalType": "bytes32[]",
-        "indexed": false
+        "name": "_questionIDs",
+        "type": "bytes32[]"
       }
     ],
-    "anonymous": false
+    "name": "QuestionsRegistered",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "RankingUpdated",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256",
         "name": "_tokenID",
-        "internalType": "uint256",
-        "indexed": true
+        "type": "uint256"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_points",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       },
       {
-        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_index",
-        "internalType": "uint256",
-        "indexed": false
+        "type": "uint256"
       }
     ],
-    "anonymous": false
+    "name": "RankingUpdated",
+    "type": "event"
   },
   {
-    "type": "event",
-    "name": "Transfer",
+    "anonymous": false,
     "inputs": [
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "from",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "address",
+        "indexed": true,
+        "internalType": "address",
         "name": "to",
-        "internalType": "address",
-        "indexed": true
+        "type": "address"
       },
       {
-        "type": "uint256",
-        "name": "tokenId",
+        "indexed": true,
         "internalType": "uint256",
-        "indexed": true
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
-    "anonymous": false
+    "name": "Transfer",
+    "type": "event"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "DIVISOR",
     "outputs": [
       {
-        "type": "uint256",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "uint256"
+        "type": "uint256"
       }
     ],
-    "name": "DIVISOR",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "approve",
     "inputs": [
       {
-        "type": "address",
+        "internalType": "address",
         "name": "to",
-        "internalType": "address"
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "internalType": "uint256",
         "name": "tokenId",
-        "internalType": "uint256"
+        "type": "uint256"
       }
-    ]
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
+    "inputs": [
       {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
       }
     ],
     "name": "balanceOf",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "owner",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "string",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "string"
+        "type": "uint256"
       }
     ],
-    "name": "baseURI",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "betNFTDescriptor",
     "outputs": [
       {
-        "type": "uint256",
-        "name": "count",
-        "internalType": "uint256"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
       }
     ],
     "name": "bets",
-    "inputs": [
-      {
-        "type": "bytes32",
-        "name": "",
-        "internalType": "bytes32"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "claimRewards",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "_rankIndex",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
+        "internalType": "uint256",
+        "name": "count",
+        "type": "uint256"
       }
     ],
-    "name": "closingTime",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "distributeRemainingPrizes",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "payable",
-    "outputs": [],
-    "name": "fundPool",
     "inputs": [
       {
-        "type": "string",
-        "name": "_message",
-        "internalType": "string"
+        "internalType": "uint256",
+        "name": "_rankIndex",
+        "type": "uint256"
       }
-    ]
+    ],
+    "name": "claimRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "closingTime",
     "outputs": [
       {
-        "type": "address",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "address"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "distributeRemainingPrizes",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_message",
+        "type": "string"
+      }
+    ],
+    "name": "fundPool",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
     "name": "getApproved",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "initialize",
-    "inputs": [
-      {
-        "type": "tuple",
-        "name": "_marketInfo",
-        "internalType": "struct Market.MarketInfo",
-        "components": [
-          {
-            "type": "string",
-            "name": "marketName",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "marketSymbol",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "marketUri",
-            "internalType": "string"
-          }
-        ]
-      },
-      {
-        "type": "address",
-        "name": "_realityETH",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "_closingTime",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_price",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_submissionTimeout",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_managementFee",
-        "internalType": "uint256"
-      },
-      {
-        "type": "address",
-        "name": "_manager",
-        "internalType": "address"
-      },
-      {
-        "type": "bytes32[]",
-        "name": "_questionIDs",
-        "internalType": "bytes32[]"
-      },
-      {
-        "type": "uint16[]",
-        "name": "_prizeWeights",
-        "internalType": "uint16[]"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "bool",
+        "internalType": "address",
         "name": "",
-        "internalType": "bool"
+        "type": "address"
       }
     ],
-    "name": "initialized",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "marketName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "marketSymbol",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct Market.MarketInfo",
+        "name": "_marketInfo",
+        "type": "tuple"
+      },
+      {
+        "internalType": "address",
+        "name": "_nftDescriptor",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_realityETH",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_closingTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_submissionTimeout",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_managementFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_manager",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_questionIDs",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "uint16[]",
+        "name": "_prizeWeights",
+        "type": "uint16[]"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialized",
     "outputs": [
       {
-        "type": "bool",
+        "internalType": "bool",
         "name": "",
-        "internalType": "bool"
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
       }
     ],
     "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "managementFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "manager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "name",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nextTokenID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "type": "address",
-        "name": "owner",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "operator",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "managementFee",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
-      }
-    ],
-    "name": "manager",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "string",
-        "name": "",
-        "internalType": "string"
-      }
-    ],
-    "name": "name",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "nextTokenID",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
     "name": "ownerOf",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "payable",
     "outputs": [
       {
-        "type": "uint256",
+        "internalType": "address",
         "name": "",
-        "internalType": "uint256"
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address payable",
+        "name": "_provider",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "_results",
+        "type": "bytes32[]"
       }
     ],
     "name": "placeBet",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "_provider",
-        "internalType": "address payable"
-      },
-      {
-        "type": "bytes32[]",
-        "name": "_results",
-        "internalType": "bytes32[]"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "uint256",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "uint256"
+        "type": "uint256"
       }
     ],
-    "name": "price",
-    "inputs": []
+    "stateMutability": "payable",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "price",
     "outputs": [
       {
-        "type": "uint16",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "uint16"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "prizeWeights",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "bytes32",
+        "internalType": "uint16",
         "name": "",
-        "internalType": "bytes32"
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "questionIDs",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "bytes32",
+        "internalType": "bytes32",
         "name": "",
-        "internalType": "bytes32"
+        "type": "bytes32"
       }
     ],
-    "name": "questionsHash",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "questionsHash",
     "outputs": [
       {
-        "type": "uint256",
-        "name": "tokenID",
-        "internalType": "uint256"
-      },
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "type": "uint248",
-        "name": "points",
-        "internalType": "uint248"
-      },
-      {
-        "type": "bool",
-        "name": "claimed",
-        "internalType": "bool"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "ranking",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "address",
-        "name": "",
-        "internalType": "contract RealityETH_v3_0"
+        "internalType": "uint256",
+        "name": "tokenID",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint248",
+        "name": "points",
+        "type": "uint248"
+      },
+      {
+        "internalType": "bool",
+        "name": "claimed",
+        "type": "bool"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "realitio",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "registerAvailabilityOfResults",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "registerPoints",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "_tokenID",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_rankIndex",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "reimbursePlayer",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "_tokenID",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "uint256",
+        "internalType": "contract RealityETH_v3_0",
         "name": "",
-        "internalType": "uint256"
+        "type": "address"
       }
     ],
-    "name": "resultSubmissionPeriodStart",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
+    "inputs": [],
+    "name": "registerAvailabilityOfResults",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
-        "type": "address",
-        "name": "receiver",
-        "internalType": "address"
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
       },
       {
-        "type": "uint256",
-        "name": "royaltyAmount",
-        "internalType": "uint256"
+        "internalType": "uint256",
+        "name": "_rankIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "registerPoints",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenID",
+        "type": "uint256"
+      }
+    ],
+    "name": "reimbursePlayer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "resultSubmissionPeriodStart",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_salePrice",
+        "type": "uint256"
       }
     ],
     "name": "royaltyInfo",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_salePrice",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "safeTransferFrom",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "from",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "to",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "safeTransferFrom",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "from",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "to",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256"
-      },
-      {
-        "type": "bytes",
-        "name": "_data",
-        "internalType": "bytes"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "setApprovalForAll",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "operator",
-        "internalType": "address"
-      },
-      {
-        "type": "bool",
-        "name": "approved",
-        "internalType": "bool"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
+        "internalType": "address",
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "royaltyAmount",
+        "type": "uint256"
       }
     ],
-    "name": "submissionTimeout",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "submissionTimeout",
     "outputs": [
       {
-        "type": "bool",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "bool"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
       }
     ],
     "name": "supportsInterface",
-    "inputs": [
-      {
-        "type": "bytes4",
-        "name": "interfaceId",
-        "internalType": "bytes4"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "string",
+        "internalType": "bool",
         "name": "",
-        "internalType": "string"
+        "type": "bool"
       }
     ],
-    "name": "symbol",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
+    "inputs": [],
+    "name": "symbol",
     "outputs": [
       {
-        "type": "bytes32",
+        "internalType": "string",
         "name": "",
-        "internalType": "bytes32"
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "name": "tokenIDtoTokenHash",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "string",
+        "internalType": "bytes32",
         "name": "",
-        "internalType": "string"
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
     "name": "tokenURI",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "tokenId",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
     "outputs": [
       {
-        "type": "uint256",
+        "internalType": "string",
         "name": "",
-        "internalType": "uint256"
+        "type": "string"
       }
     ],
-    "name": "totalPrize",
-    "inputs": []
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "transferFrom",
+    "inputs": [],
+    "name": "totalPrize",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "type": "address",
+        "internalType": "address",
         "name": "from",
-        "internalType": "address"
+        "type": "address"
       },
       {
-        "type": "address",
+        "internalType": "address",
         "name": "to",
-        "internalType": "address"
+        "type": "address"
       },
       {
-        "type": "uint256",
+        "internalType": "uint256",
         "name": "tokenId",
-        "internalType": "uint256"
+        "type": "uint256"
       }
-    ]
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

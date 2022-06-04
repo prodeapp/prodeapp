@@ -1,245 +1,258 @@
 [
   {
-    "type": "constructor",
-    "stateMutability": "nonpayable",
     "inputs": [
       {
-        "type": "address",
-        "name": "_market",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "_arbitrator",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "_realitio",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "_submissionTimeout",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "event",
-    "name": "NewMarket",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "market",
         "internalType": "address",
-        "indexed": true
+        "name": "_market",
+        "type": "address"
       },
       {
-        "type": "bytes32",
-        "name": "hash",
-        "internalType": "bytes32",
-        "indexed": true
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
+        "internalType": "address",
+        "name": "_arbitrator",
+        "type": "address"
+      },
       {
-        "type": "uint32",
-        "name": "",
-        "internalType": "uint32"
-      }
-    ],
-    "name": "QUESTION_TIMEOUT",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
+        "internalType": "address",
+        "name": "_realitio",
+        "type": "address"
+      },
       {
-        "type": "address[]",
-        "name": "",
-        "internalType": "contract Market[]"
-      }
-    ],
-    "name": "allMarkets",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
+        "internalType": "address",
+        "name": "_nftDescriptor",
+        "type": "address"
+      },
       {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
+        "internalType": "uint256",
+        "name": "_submissionTimeout",
+        "type": "uint256"
       }
     ],
-    "name": "arbitrator",
-    "inputs": []
-  },
-  {
-    "type": "function",
     "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "market",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "hash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "NewMarket",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "QUESTION_TIMEOUT",
     "outputs": [
       {
-        "type": "address",
+        "internalType": "uint32",
         "name": "",
-        "internalType": "address"
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "allMarkets",
+    "outputs": [
+      {
+        "internalType": "contract Market[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "arbitrator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "string",
+            "name": "marketName",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "marketSymbol",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct Market.MarketInfo",
+        "name": "marketInfo",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "closingTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "managementFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "manager",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "minBond",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "templateID",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "question",
+            "type": "string"
+          },
+          {
+            "internalType": "uint32",
+            "name": "openingTS",
+            "type": "uint32"
+          }
+        ],
+        "internalType": "struct MarketFactory.RealitioQuestion[]",
+        "name": "questionsData",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint16[]",
+        "name": "prizeWeights",
+        "type": "uint16[]"
       }
     ],
     "name": "createMarket",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "market",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "marketCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "type": "tuple",
-        "name": "marketInfo",
-        "internalType": "struct Market.MarketInfo",
-        "components": [
-          {
-            "type": "string",
-            "name": "marketName",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "marketSymbol",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "marketUri",
-            "internalType": "string"
-          }
-        ]
-      },
-      {
-        "type": "uint256",
-        "name": "closingTime",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "price",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "managementFee",
-        "internalType": "uint256"
-      },
-      {
-        "type": "address",
-        "name": "manager",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "minBond",
-        "internalType": "uint256"
-      },
-      {
-        "type": "tuple[]",
-        "name": "questionsData",
-        "internalType": "struct MarketFactory.RealitioQuestion[]",
-        "components": [
-          {
-            "type": "uint256",
-            "name": "templateID",
-            "internalType": "uint256"
-          },
-          {
-            "type": "string",
-            "name": "question",
-            "internalType": "string"
-          },
-          {
-            "type": "uint32",
-            "name": "openingTS",
-            "internalType": "uint32"
-          }
-        ]
-      },
-      {
-        "type": "uint16[]",
-        "name": "prizeWeights",
-        "internalType": "uint16[]"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
+        "internalType": "uint256",
         "name": "",
-        "internalType": "address"
-      }
-    ],
-    "name": "realitio",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "submissionTimeout",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
-      }
-    ],
-    "name": "market",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "marketCount",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "contract Market"
+        "type": "uint256"
       }
     ],
     "name": "markets",
-    "inputs": [
+    "outputs": [
       {
-        "type": "uint256",
+        "internalType": "contract Market",
         "name": "",
-        "internalType": "uint256"
+        "type": "address"
       }
-    ]
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nftDescriptor",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "realitio",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "submissionTimeout",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ]

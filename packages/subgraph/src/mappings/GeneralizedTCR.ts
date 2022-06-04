@@ -7,7 +7,7 @@ import {
   ItemStatusChange,
   ItemSubmitted,
   MetaEvidence as MetaEvidenceEvent
-} from '../types/ClasicCurate/GeneralizedTCR';
+} from '../types/ClassicCurate/GeneralizedTCR';
 import {getOrCreateRegistry} from "./helpers";
 
 // Items on a TCR can be in 1 of 4 states:

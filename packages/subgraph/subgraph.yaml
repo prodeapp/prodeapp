@@ -9,8 +9,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0x2c053414646d5a843886F8D2912D3Df58DE891ff"
-      startBlock: 22267329
+      address: "0xFE6bd7451E92DeddD1096430e659e8af882D2eb7"
+      startBlock: 22489558
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -30,7 +30,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 22267329  
+      startBlock: 22267329
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -50,12 +50,12 @@ dataSources:
       file: ./src/mappings/Realitio.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
-    name: ClasicCurate
+    name: ClassicCurate
     network: xdai
     source:
       abi: GeneralizedTCR
       address: "0xc96514B3ad962Ae37c2d2c0AeD627306b0418Bf7"
-      startBlock: 22267329  
+      startBlock: 22267329
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
