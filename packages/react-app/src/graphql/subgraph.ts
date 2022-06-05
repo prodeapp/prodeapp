@@ -32,6 +32,7 @@ export const TOURNAMENT_FIELDS = `
       pool
       prizes
       curated
+      hasPendingAnswers
     }
 `;
 

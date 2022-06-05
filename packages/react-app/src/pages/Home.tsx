@@ -10,7 +10,11 @@ import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
-  const { isLoading, error, data: tournaments } = useTournaments({ curated: verifiedStatus? verifiedStatus: undefined });
+  const [activeStatus, setActiveStatus] = useState<boolean>(true);
+  
+  const { isLoading, error, data: tournaments } = useTournaments({
+    curated: verifiedStatus? verifiedStatus: undefined,
+    hasPendingAnswers: activeStatus? activeStatus: undefined});
 
   return (
     <>
@@ -25,6 +29,13 @@ function Home() {
                   onClick={() => setVerifiedStatus(!verifiedStatus)}
                 />}
                 label="Only Verified tournaments" />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={activeStatus}
+                  onClick={() => {setActiveStatus(!activeStatus)}}
+                />}
+                label="Only Active tournaments" />
           </FormGroup>
         </BoxRow>
       </BoxWrapper>
