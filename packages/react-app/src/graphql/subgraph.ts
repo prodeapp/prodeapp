@@ -196,6 +196,9 @@ export const QUESTION_FIELDS = `
 export interface CurateItem {
   id: string
   hash: string
+  title: string
+  timestamp: BigNumberish
+  json: string
   data: string
 }
 
@@ -204,5 +207,7 @@ export const CURATE_ITEM_FIELDS = `
     id
     hash
     data
+    json
+    timestamp
   }
 `;
