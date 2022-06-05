@@ -54,6 +54,7 @@ type CurateItem @entity {
   title: String!
   """the json file. empty if error"""
   json: String!
+  timestamp: BigInt!
 }
 
 type Match @entity {
