@@ -22,7 +22,6 @@ function Home() {
     closingTime_gt: closingTime_gt ? closingTime_gt : undefined
   });
 
-  console.log(activeStatus, pendingStatus, closedStatus, closingTime_gt, hasPendingAnswers);
   function handleActiveStatus() {
     setClosingTime_gt(String(Date.now()));
     setHasPendingAnswers(undefined);
