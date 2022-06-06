@@ -6,38 +6,75 @@ import { Link } from "react-router-dom";
 import { useTournaments } from "../hooks/useTournaments";
 import { Tournament } from "../graphql/subgraph";
 import { formatAmount, getTimeLeft } from "../lib/helpers";
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
+import { FormControlLabel, FormGroup, Grid, Switch, Typography } from "@mui/material";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
   const [activeStatus, setActiveStatus] = useState<boolean>(true);
-  
+  const [pendingStatus, setPendingStatus] = useState<boolean>(false);
+  const [closedStatus, setClosedStatus] = useState<boolean>(false);
+  const [closingTime_gt, setClosingTime_gt] = useState<string | undefined>(String(Date.now()));
+  const [hasPendingAnswers, setHasPendingAnswers] = useState<boolean | undefined>(false);
+
   const { isLoading, error, data: tournaments } = useTournaments({
-    curated: verifiedStatus? verifiedStatus: undefined,
-    hasPendingAnswers: activeStatus? activeStatus: undefined});
+    curated: verifiedStatus ? verifiedStatus : undefined,
+    hasPendingAnswers: hasPendingAnswers,
+    closingTime_gt: closingTime_gt ? closingTime_gt : undefined
+  });
+
+  console.log(activeStatus, pendingStatus, closedStatus, closingTime_gt, hasPendingAnswers);
+  function handleActiveStatus() {
+    setClosingTime_gt(String(Date.now()));
+    setHasPendingAnswers(undefined);
+    setPendingStatus(false);
+    setClosedStatus(false);
+    setActiveStatus(true);
+
+  };
+  function handlePendingStatus() {
+    setClosingTime_gt(undefined);
+    setHasPendingAnswers(true);
+    setClosedStatus(false);
+    setActiveStatus(false);
+    setPendingStatus(true);
+
+  };
+  function handleClosedStatus() {
+    setClosingTime_gt(undefined);
+    setHasPendingAnswers(false);
+    setPendingStatus(false);
+    setActiveStatus(false);
+    setClosedStatus(true);
+  };
 
   return (
     <>
       <BoxWrapper>
         <BoxRow style={{ textAlign: 'right' }}>
           <Button component={Link} to="/tournaments/new">+ New Tournament</Button>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={verifiedStatus}
-                  onClick={() => setVerifiedStatus(!verifiedStatus)}
-                />}
-                label="Only Verified tournaments" />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={activeStatus}
-                  onClick={() => {setActiveStatus(!activeStatus)}}
-                />}
-                label="Only Active tournaments" />
-          </FormGroup>
         </BoxRow>
+      </BoxWrapper>
+
+      <BoxWrapper style={{padding:'15px'}}>
+        <Grid container spacing={2}>
+          <Grid item xs={8} style={{ display:'flex', justifyContent: 'center', width: '65%',  alignItems: 'center'}}>
+            <div><Typography style={{paddingRight:'10px'}}>Markets by Status: </Typography></div>
+            <div><Button onClick={handleActiveStatus} color={activeStatus ? 'secondary' : 'primary'}>Active</Button></div>
+            <div><Button onClick={handlePendingStatus} color={pendingStatus ? 'secondary' : 'primary'}>Pending</Button></div>
+            <div><Button onClick={handleClosedStatus} color={closedStatus ? 'secondary' : 'primary'}>Closed</Button></div>
+          </Grid>
+          <Grid item xs={4} style={{ justifyContent: 'right', width: '25%' }}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={verifiedStatus}
+                    onClick={() => setVerifiedStatus(!verifiedStatus)}
+                  />}
+                label="Only Verified tournaments" />
+            </FormGroup>
+          </Grid>
+        </Grid>
       </BoxWrapper>
 
       {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments} />}

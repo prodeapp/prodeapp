@@ -15,13 +15,14 @@ const query = `
 interface Props {
   curated?: boolean,
   hasPendingAnswers?: boolean,
+  closingTime_gt?: string,
 }
 
-export const useTournaments = ({curated, hasPendingAnswers}: Props = {}) => {
+export const useTournaments = ({curated, hasPendingAnswers, closingTime_gt}: Props = {}) => {
   return useQuery<Tournament[], Error>(
-    ["useTournaments", curated, hasPendingAnswers],
+    ["useTournaments", curated, hasPendingAnswers, closingTime_gt],
     async () => {
-      const variables = {curated, hasPendingAnswers};
+      const variables = {curated, hasPendingAnswers, closingTime_gt};
       const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");
