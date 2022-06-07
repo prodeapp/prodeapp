@@ -4,7 +4,9 @@ function filterObject<T>(obj: Record<string, T>, callback: (v: T, k: string) => 
   )
 }
 
-export function buildQuery(query: string, variables: Record<string, string | boolean | undefined>) {
+export type QueryVariables = Record<string, string | boolean | undefined>;
+
+export function buildQuery(query: string, variables: QueryVariables) {
   variables = filterObject(variables, val => val !== undefined);
 
   const params = Object.entries(variables).map(([k, v]) => `$${k}: ${typeof v === 'string' ? 'String' : 'Boolean'}`).join(', ')

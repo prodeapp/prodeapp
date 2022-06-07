@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {Tournament, TOURNAMENT_FIELDS} from "../graphql/subgraph";
-import {buildQuery} from "../lib/SubgraphQueryBuilder";
+import {buildQuery, QueryVariables} from "../lib/SubgraphQueryBuilder";
 
 const query = `
     ${TOURNAMENT_FIELDS}
@@ -12,17 +12,29 @@ const query = `
     }
 `;
 
+export type TournamentStatus = 'active'|'pending'|'closed'
+
 interface Props {
-  curated?: boolean,
-  hasPendingAnswers?: boolean,
-  closingTime_gt?: string,
+  curated?: boolean
+  status?: TournamentStatus
 }
 
-export const useTournaments = ({curated, hasPendingAnswers, closingTime_gt}: Props = {}) => {
+export const useTournaments = ({curated, status}: Props = {}) => {
   return useQuery<Tournament[], Error>(
-    ["useTournaments", curated, hasPendingAnswers, closingTime_gt],
+    ["useTournaments", curated, status],
     async () => {
-      const variables = {curated, hasPendingAnswers, closingTime_gt};
+      const variables: QueryVariables = {curated};
+
+      if (status !== undefined) {
+        if (status === 'active') {
+          variables['closingTime_gt'] = String(Math.round(Date.now() / 1000))
+        } else if (status === 'pending') {
+          variables['hasPendingAnswers'] = true
+        } else if (status === 'closed') {
+          variables['hasPendingAnswers'] = false
+        }
+      }
+
       const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");

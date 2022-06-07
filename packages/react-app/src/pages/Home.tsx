@@ -3,48 +3,20 @@ import { BoxWrapper, BoxRow } from "../components";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Link } from "react-router-dom";
-import { useTournaments } from "../hooks/useTournaments";
+import {TournamentStatus, useTournaments} from "../hooks/useTournaments";
 import { Tournament } from "../graphql/subgraph";
 import { formatAmount, getTimeLeft } from "../lib/helpers";
 import { FormControlLabel, FormGroup, Grid, Switch, Typography } from "@mui/material";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
-  const [activeStatus, setActiveStatus] = useState<boolean>(true);
-  const [pendingStatus, setPendingStatus] = useState<boolean>(false);
-  const [closedStatus, setClosedStatus] = useState<boolean>(false);
-  const [closingTime_gt, setClosingTime_gt] = useState<string | undefined>(String(Math.round(Date.now() / 1000)));
-  const [hasPendingAnswers, setHasPendingAnswers] = useState<boolean | undefined>(false);
+
+  const [status, setStatus] = useState<TournamentStatus>('active');
 
   const { isLoading, error, data: tournaments } = useTournaments({
     curated: verifiedStatus ? verifiedStatus : undefined,
-    hasPendingAnswers: hasPendingAnswers,
-    closingTime_gt: closingTime_gt ? closingTime_gt : undefined
+    status
   });
-
-  function handleActiveStatus() {
-    setClosingTime_gt(String(Math.round(Date.now() / 1000)));
-    setHasPendingAnswers(undefined);
-    setPendingStatus(false);
-    setClosedStatus(false);
-    setActiveStatus(true);
-
-  };
-  function handlePendingStatus() {
-    setClosingTime_gt(undefined);
-    setHasPendingAnswers(true);
-    setClosedStatus(false);
-    setActiveStatus(false);
-    setPendingStatus(true);
-
-  };
-  function handleClosedStatus() {
-    setClosingTime_gt(undefined);
-    setHasPendingAnswers(false);
-    setPendingStatus(false);
-    setActiveStatus(false);
-    setClosedStatus(true);
-  };
 
   return (
     <>
@@ -58,9 +30,9 @@ function Home() {
         <Grid container spacing={2}>
           <Grid item xs={8} style={{ display:'flex', justifyContent: 'center', width: '65%',  alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}>Markets by Status: </Typography></div>
-            <div><Button onClick={handleActiveStatus} color={activeStatus ? 'secondary' : 'primary'}>Active</Button></div>
-            <div><Button onClick={handlePendingStatus} color={pendingStatus ? 'secondary' : 'primary'}>Pending</Button></div>
-            <div><Button onClick={handleClosedStatus} color={closedStatus ? 'secondary' : 'primary'}>Closed</Button></div>
+            <div><Button onClick={() => setStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}>Active</Button></div>
+            <div><Button onClick={() => setStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}>Pending</Button></div>
+            <div><Button onClick={() => setStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}>Closed</Button></div>
           </Grid>
           <Grid item xs={4} style={{ justifyContent: 'right', width: '25%' }}>
             <FormGroup>
@@ -76,7 +48,7 @@ function Home() {
         </Grid>
       </BoxWrapper>
 
-      {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments} activeStatus={activeStatus}/>}
+      {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments} activeStatus={status === 'active'}/>}
     </>
   );
 }
