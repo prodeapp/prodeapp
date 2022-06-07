@@ -13,7 +13,7 @@ function Home() {
   const [activeStatus, setActiveStatus] = useState<boolean>(true);
   const [pendingStatus, setPendingStatus] = useState<boolean>(false);
   const [closedStatus, setClosedStatus] = useState<boolean>(false);
-  const [closingTime_gt, setClosingTime_gt] = useState<string | undefined>(String(Date.now()));
+  const [closingTime_gt, setClosingTime_gt] = useState<string | undefined>(String(Math.round(Date.now() / 1000)));
   const [hasPendingAnswers, setHasPendingAnswers] = useState<boolean | undefined>(false);
 
   const { isLoading, error, data: tournaments } = useTournaments({
@@ -23,7 +23,7 @@ function Home() {
   });
 
   function handleActiveStatus() {
-    setClosingTime_gt(String(Date.now()));
+    setClosingTime_gt(String(Math.round(Date.now() / 1000)));
     setHasPendingAnswers(undefined);
     setPendingStatus(false);
     setClosedStatus(false);
