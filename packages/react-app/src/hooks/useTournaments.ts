@@ -30,6 +30,7 @@ export const useTournaments = ({curated, status}: Props = {}) => {
           variables['closingTime_gt'] = String(Math.round(Date.now() / 1000))
         } else if (status === 'pending') {
           variables['hasPendingAnswers'] = true
+          variables['closingTime_lt'] = String(Math.round(Date.now() / 1000))
         } else if (status === 'closed') {
           variables['hasPendingAnswers'] = false
         }
