@@ -76,22 +76,23 @@ function Home() {
         </Grid>
       </BoxWrapper>
 
-      {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments} />}
+      {!isLoading && !error && tournaments && <TournamentsTable tournaments={tournaments} activeStatus={activeStatus}/>}
     </>
   );
 }
 
 type TournamentsTableProps = {
   tournaments: Tournament[]
+  activeStatus: boolean
 }
 
-function TournamentsTable({ tournaments }: TournamentsTableProps) {
+function TournamentsTable({ tournaments, activeStatus }: TournamentsTableProps) {
   return <BoxWrapper>
     <BoxRow>
       <Box sx={{ width: { md: '25%' }, flexGrow: 1 }}>Name</Box>
       <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>Bet Price</Box>
       <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>Prize Pool</Box>
-      <Box sx={{ width: '20%', display: { xs: 'none', md: 'block' } }}>Time Remaining</Box>
+      <Box sx={{ width: '20%', display: { xs: 'none', md: 'block' } }}>{activeStatus? 'Time Remaining' : 'Pending answers'}</Box>
       <Box sx={{ width: '5%', display: { xs: 'none', md: 'block' } }}>Verified</Box>
     </BoxRow>
     {tournaments.map((tournament, i) => {
@@ -106,7 +107,7 @@ function TournamentsTable({ tournaments }: TournamentsTableProps) {
         </Box>
         <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>{formatAmount(tournament.price)}</Box>
         <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>{formatAmount(tournament.pool)}</Box>
-        <Box sx={{ width: '20%', display: { xs: 'none', md: 'block' } }}>{getTimeLeft(tournament.closingTime)}</Box>
+        <Box sx={{ width: '20%', display: { xs: 'none', md: 'block' } }}>{activeStatus? getTimeLeft(tournament.closingTime): tournament.numOfMatches - tournament.numOfMatchesWithAnswer}</Box>
         <Box sx={{ width: '5%', display: { xs: 'none', md: 'block' } }}>{tournament.curated === true ? '✅' : '🚫'}</Box>
       </BoxRow>
     })}

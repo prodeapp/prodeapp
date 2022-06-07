@@ -15,6 +15,9 @@ export interface Tournament {
   pool: BigNumberish
   prizes: string[]
   curated: boolean
+  numOfMatches: bigint
+  numOfMatchesWithAnswer: bigint
+  hasPendingAnswers: boolean
 }
 
 export const TOURNAMENT_FIELDS = `
@@ -33,6 +36,8 @@ export const TOURNAMENT_FIELDS = `
       prizes
       curated
       hasPendingAnswers
+      numOfMatchesWithAnswer
+      numOfMatches
     }
 `;
 
