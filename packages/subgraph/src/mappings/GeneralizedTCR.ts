@@ -66,7 +66,7 @@ function getHashFromData(data:Bytes): string {
     log.warning("getHashFromData: Couln't found 0x in the data array. returning 0x00 as hash", [])
   } else {
     // if the user put a hash with wrong length, this field will be misread.
-    hash = u8toString(data.slice(hashIndex, hashIndex+64))
+    hash = u8toString(data.slice(hashIndex, hashIndex+66))
     // log.debug("getHashFromData: hash slice: {}", [data.slice(hashIndex, hashIndex+64).toString()])
   }
   // log.debug("getHashFromData: hash = {}", [hash])
@@ -108,7 +108,7 @@ function getIPFSFromData(data:Bytes): string {
 
 function getTimestmapFromData(data:Bytes): BigInt {
   // 64 should be the length of the hash
-  let startIndex = getHashIndex(data).toI32() + 64 + 3;
+  let startIndex = getHashIndex(data).toI32() + 66 + 1;
   // up to the previous byte of where IPFS begins
   let endIndex = getIPFSIndex(data).toI32() - 2;
   let timestamp:BigInt
