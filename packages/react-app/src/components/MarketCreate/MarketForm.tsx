@@ -127,7 +127,6 @@ export default function MarketForm({children, handleSubmit}: FormProps) {
     await send({
         marketName: data.market,
         marketSymbol: '', // TODO
-        marketUri: '', // TODO
       },
       closingTime,
       parseUnits(String(data.price), 18),

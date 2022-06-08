@@ -50,16 +50,16 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         bet = Bet.load(betID);
     }
 
-    // update answer counter in tournament
-    let tournament = Tournament.load(match.tournament);
-    if (tournament === null) {
-        log.error("handleNewAnswer: tournament {} not found.", [match.tournament]);
+    // update answer counter in market
+    let market = Market.load(match.market);
+    if (market === null) {
+        log.error("handleNewAnswer: market {} not found.", [match.market]);
         return
     }
-    tournament.numOfMatchesWithAnswer = tournament.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
-    log.debug("handleNewAnswer: numOfMatches {}, withAnswer {}, hasPendingAnswers {}", [tournament.numOfMatches.toString(), tournament.numOfMatchesWithAnswer.toString(), tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches).toString()])
-    tournament.hasPendingAnswers = tournament.numOfMatchesWithAnswer.notEqual(tournament.numOfMatches);
-    tournament.save()
+    market.numOfMatchesWithAnswer = market.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
+    log.debug("handleNewAnswer: numOfMatches {}, withAnswer {}, hasPendingAnswers {}", [market.numOfMatches.toString(), market.numOfMatchesWithAnswer.toString(), market.numOfMatchesWithAnswer.equals(market.numOfMatches).toString()])
+    market.hasPendingAnswers = market.numOfMatchesWithAnswer.notEqual(market.numOfMatches);
+    market.save()
 
 }
 

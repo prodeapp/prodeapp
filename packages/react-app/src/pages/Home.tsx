@@ -60,7 +60,7 @@ function Home() {
 }
 
 type MarketsTableProps = {
-  markets: Market[]
+  markets?: Market[]
   activeStatus: boolean
 }
 
