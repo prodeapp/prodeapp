@@ -39,7 +39,10 @@ function TournamentsView() {
             <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
               Status: <TournamentStatus tournamentId={tournament.id} />
             </div>
-            {!tournament.curated && <Button component={RouterLink} to={`/curate/submit/${tournament.id}`} sx={{mt: 5}}>Verify Tournament</Button>}
+            <Box sx={{mt: 4}}>
+              {!tournament.curated && <Button component={RouterLink} to={`/curate/submit/${tournament.id}`}>Verify Tournament</Button>}
+              {tournament.curated && <div>Verified ✅</div>}
+            </Box>
           </BoxWrapper>
         </Box>
         <Box sx={{width: {md: '49%'}, marginLeft: {md: '2%'}}}>

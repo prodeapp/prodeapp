@@ -80,7 +80,7 @@ function TournamentsTable({ tournaments, activeStatus }: TournamentsTableProps) 
         <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>{formatAmount(tournament.price)}</Box>
         <Box sx={{ width: '130px', display: { xs: 'none', md: 'block' } }}>{formatAmount(tournament.pool)}</Box>
         <Box sx={{ width: '20%', display: { xs: 'none', md: 'block' } }}>{activeStatus? getTimeLeft(tournament.closingTime): tournament.numOfMatches - tournament.numOfMatchesWithAnswer}</Box>
-        <Box sx={{ width: '5%', display: { xs: 'none', md: 'block' } }}>{tournament.curated === true ? '✅' : '🚫'}</Box>
+        <Box sx={{ width: '5%', display: { xs: 'none', md: 'block' } }}>{tournament.curated ? '✅' : '🚫'}</Box>
       </BoxRow>
     })}
   </BoxWrapper>
