@@ -22,12 +22,6 @@ function Home() {
 
   return (
     <>
-      <BoxWrapper>
-        <BoxRow style={{ textAlign: 'right' }}>
-          <Button component={Link} to="/markets/new">+ New Market</Button>
-        </BoxRow>
-      </BoxWrapper>
-
       <BoxWrapper style={{padding:'15px'}}>
         <Grid container spacing={2}>
           <Grid item xs={8} style={{ display:'flex', justifyContent: 'center', width: '65%',  alignItems: 'center'}}>
