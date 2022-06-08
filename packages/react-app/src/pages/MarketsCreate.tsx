@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {BoxWrapper, BoxRow, BoxLabelCell, BoxTitleCell, FormError} from "../components"
+import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -85,7 +85,7 @@ function MarketsCreate() {
       />
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Market name</BoxLabelCell>
+          <BoxLabelCell>Market Name</BoxLabelCell>
           <div style={{width: '100%'}}>
             <Input {...register('market', {
               required: 'This field is required.'
@@ -94,7 +94,7 @@ function MarketsCreate() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Question</BoxLabelCell>
+          <BoxLabelCell>Question Template</BoxLabelCell>
           <div style={{width: '100%'}}>
             <div style={{display: 'flex'}}>
               <Input {...register('questionPlaceholder', {
@@ -106,11 +106,11 @@ function MarketsCreate() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Answers</BoxLabelCell>
+          <BoxLabelCell>Answers Template</BoxLabelCell>
           <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Betting deadline (UTC)</BoxLabelCell>
+          <BoxLabelCell>Betting Deadline (UTC)</BoxLabelCell>
           <div style={{textAlign: 'right'}}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
@@ -134,7 +134,28 @@ function MarketsCreate() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Bet price (xDAI)</BoxLabelCell>
+          <BoxLabelCell>Matches</BoxLabelCell>
+          <div><Button onClick={addMatch}>+ Add match</Button></div>
+        </BoxRow>
+        {matchesFields.length > 0 &&
+        <BoxRow style={{flexDirection: 'column'}}>
+          {matchesFields.map((questionField, i) => {
+            return (
+              <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
+                <MatchBuilder
+                  matchIndex={i}
+                  {...{removeMatch, placeholdersCount, control, register, errors}}
+                />
+              </div>
+            )
+          })}
+        </BoxRow>
+        }
+      </BoxWrapper>
+
+      <BoxWrapper>
+        <BoxRow>
+          <BoxLabelCell>Bet Price (xDAI)</BoxLabelCell>
           <div style={{width: '100%'}}>
             <Input {...register('price', {
               required: 'This field is required.',
@@ -175,31 +196,10 @@ function MarketsCreate() {
           <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
         </BoxRow>
       </BoxWrapper>
-      <BoxWrapper>
-        <BoxRow>
-          <BoxTitleCell>Matches</BoxTitleCell>
-          <div><Button onClick={addMatch}>+ Add match</Button></div>
-        </BoxRow>
-        {matchesFields.length > 0 &&
-          <BoxRow style={{flexDirection: 'column'}}>
-            {matchesFields.map((questionField, i) => {
-              return (
-                <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
-                  <MatchBuilder
-                    matchIndex={i}
-                    {...{removeMatch, placeholdersCount, control, register, errors}}
-                  />
-                </div>
-              )
-            })}
-          </BoxRow>
-        }
-        {matchesFields.length > 0 && answersPlaceholder.length > 1 && <BoxRow>
-          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit">Create Market</Button>
-          </div>
-        </BoxRow>}
-      </BoxWrapper>
+
+      {matchesFields.length > 0 && answersPlaceholder.length > 1 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+        <Button type="submit">Create Market</Button>
+      </div>}
     </MarketForm>
   );
 }
