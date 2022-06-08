@@ -1,7 +1,6 @@
 import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
 import React, { useEffect, useState, MouseEvent } from "react";
-
-import { Toolbar, Menu, Container, Button, Tooltip, MenuItem, Box, AppBar, IconButton, Link } from '@mui/material'
+import { Toolbar, Menu, Container, Button, MenuItem, Box, AppBar, IconButton, Link } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import Alert from "@mui/material/Alert";
 import { Link as RouterLink } from "react-router-dom";
@@ -10,6 +9,7 @@ import { ReactComponent as MetamaskIcon } from "../assets/metamask.svg";
 import { ReactComponent as WalletConnectIcon } from "../assets/wallet-connect.svg";
 import { xDai } from "@usedapp/core";
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import Blockies from 'react-blockies';
 
 export default function AppMenuBar() {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -79,7 +79,7 @@ export default function AppMenuBar() {
               to="/"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              LOGO
+              prode.eth
             </Link>
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button
@@ -153,29 +153,21 @@ function WalletDialog({open, handleClose}: DialogProps) {
 }
 
 function WalletMenu() {
-  const [rendered, setRendered] = useState("");
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const [accountName, setAccountName] = useState("");
   const [openWalletModal, setOpenWalletModal] = useState(false);
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const ens = useLookupAddress();
   const { account, deactivate } = useEthers();
 
   useEffect(() => {
     if (ens) {
-      setRendered(ens);
+      setAccountName(ens);
     } else if (account) {
-      setRendered(shortenAddress(account));
+      setAccountName(shortenAddress(account));
     } else {
-      setRendered("");
+      setAccountName("");
     }
-  }, [account, ens, setRendered]);
+  }, [account, ens, setAccountName]);
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);
@@ -190,43 +182,15 @@ function WalletMenu() {
       open={openWalletModal}
       handleClose={handleCloseWalletModal}
     />
-    <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title="Open settings">
-        <Button onClick={typeof (account) !== 'string' ? handleOpenWalletModal : handleOpenUserMenu}>
-          {rendered === "" ?
-            "Connect Wallet" :
-            rendered
-          }
+    <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
+      {!account && <Button onClick={handleOpenWalletModal}>Connect Wallet</Button>}
 
-        </Button>
-      </Tooltip>
-      {typeof (account) === 'string' ?
-        <Menu
-          sx={{ mt: '45px' }}
-          id="menu-appbar"
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}
-        >
-          <MenuItem key="profile" onClick={handleCloseUserMenu}>
-            <Link component={RouterLink} to={"/profile"} textAlign="center">Profile</Link>
-          </MenuItem>
-          <MenuItem key="logout" onClick={handleCloseUserMenu}>
-            <Link onClick={deactivate} textAlign="center">Logout</Link>
-          </MenuItem>
-
-        </Menu>
-        :
-        null}
+      {account && <>
+        <Blockies seed={account} size={7} scale={4}/>
+        <Button variant="text">{accountName}</Button>
+        <Button component={RouterLink} to={"/profile"}>Profile</Button>
+        <Button onClick={deactivate}>Logout</Button>
+      </>}
     </Box>
   </>
 }

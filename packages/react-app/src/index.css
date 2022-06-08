@@ -16,3 +16,7 @@ a{
   color: #FFF;
   text-decoration: none;
 }
+
+.identicon {
+  border-radius: 50%;
+}
