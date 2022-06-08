@@ -7,9 +7,9 @@ import { ErrorMessage } from '@hookform/error-message';
 import {getDecodedParams} from "../lib/curate";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {
-  Tournament,
+  Market,
   CurateItem,
-  TOURNAMENT_FIELDS,
+  MARKET_FIELDS,
   CURATE_ITEM_FIELDS,
 } from "../graphql/subgraph";
 import Alert from "@mui/material/Alert";
@@ -134,21 +134,21 @@ const jsonSchema = {
   additionalProperties: false
 }
 
-export const fetchTournamentByHash = async (hash: string) => {
+export const fetchMarketByHash = async (hash: string) => {
   const query = `
-    ${TOURNAMENT_FIELDS}
-    query TournamentQuery($hash: String) {
-        tournaments(where: {hash: $hash}) {
-            ...TournamentFields
+    ${MARKET_FIELDS}
+    query MarketQuery($hash: String) {
+        markets(where: {hash: $hash}) {
+            ...MarketFields
         }
     }
 `;
 
-  const response = await apolloProdeQuery<{ tournaments: Tournament[] }>(query, {hash});
+  const response = await apolloProdeQuery<{ markets: Market[] }>(query, {hash});
 
   if (!response) throw new Error("No response from TheGraph");
 
-  return response.data.tournaments[0];
+  return response.data.markets[0];
 };
 
 export const fetchCurateItemsByHash = async (hash: string) => {
@@ -179,13 +179,13 @@ function CurateValidator() {
       itemId: '',
     }});
 
-  const [tournamentId, setTournamentId] = useState('');
-  const {data: questions} = useQuestions(tournamentId);
+  const [marketId, setMarketId] = useState('');
+  const {data: questions} = useQuestions(marketId);
   const [results, setResults] = useState<ValidationResult[]>([]);
 
   const onSubmit = async (data: FormValues) => {
 
-    setTournamentId('')
+    setMarketId('')
 
     const _results: ValidationResult[] = [];
 
@@ -210,29 +210,29 @@ function CurateValidator() {
     );
 
     // validate hash
-    const tournament = await fetchTournamentByHash(itemProps.Hash);
+    const market = await fetchMarketByHash(itemProps.Hash);
 
-    if (!tournament) {
-      _results.push({type: 'error', message: 'Tournament hash not found'});
+    if (!market) {
+      _results.push({type: 'error', message: 'Market hash not found'});
     } else {
-      _results.push({type: 'success', message: 'Tournament hash found'});
+      _results.push({type: 'success', message: 'Market hash found'});
 
-      const matches = await fetchMatches(tournament.id);
+      const matches = await fetchMatches(market.id);
 
       // validate hash
       _results.push(
         (getQuestionsHash(matches.map(match => match.questionID)) !== itemProps.Hash
-          && {type: 'error', message: 'Invalid tournament hash'})
-        || {type: 'success', message: 'Valid tournament hash'}
+          && {type: 'error', message: 'Invalid market hash'})
+        || {type: 'success', message: 'Valid market hash'}
       );
 
       // validate hash is not already registered
-      const tournamentCurations = await fetchCurateItemsByHash(itemProps.Hash);
+      const marketCurations = await fetchCurateItemsByHash(itemProps.Hash);
 
       _results.push(
-        (tournamentCurations.length > 1
-          && {type: 'error', message: `This tournament has more than 1 submissions. ItemId's: ${tournamentCurations.map(tc => tc.id).join(', ')}`})
-        || {type: 'success', message: 'This is the first submission for this tournament'}
+        (marketCurations.length > 1
+          && {type: 'error', message: `This market has more than 1 submissions. ItemId's: ${marketCurations.map(tc => tc.id).join(', ')}`})
+        || {type: 'success', message: 'This is the first submission for this market'}
       );
 
       // validate timestamp
@@ -245,7 +245,7 @@ function CurateValidator() {
         || {type: 'success', message: 'Valid starting timestamp'}
       );
 
-      setTournamentId(tournament.id)
+      setMarketId(market.id)
     }
 
     setResults(_results);

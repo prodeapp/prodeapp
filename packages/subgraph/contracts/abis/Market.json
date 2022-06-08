@@ -298,12 +298,12 @@
     "stateMutability": "view",
     "outputs": [
       {
-        "type": "string",
+        "type": "address",
         "name": "",
-        "internalType": "string"
+        "internalType": "address"
       }
     ],
-    "name": "baseURI",
+    "name": "betNFTDescriptor",
     "inputs": []
   },
   {
@@ -398,25 +398,25 @@
     "inputs": [
       {
         "type": "tuple",
-        "name": "_tournamentInfo",
-        "internalType": "struct Tournament.TournamentInfo",
+        "name": "_marketInfo",
+        "internalType": "struct Market.MarketInfo",
         "components": [
           {
             "type": "string",
-            "name": "tournamentName",
+            "name": "marketName",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentSymbol",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "tournamentUri",
+            "name": "marketSymbol",
             "internalType": "string"
           }
         ]
+      },
+      {
+        "type": "address",
+        "name": "_nftDescriptor",
+        "internalType": "address"
       },
       {
         "type": "address",

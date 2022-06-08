@@ -1,41 +1,39 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Tournament as TournamentContract } from '../types/templates/Tournament/Tournament';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
 import { Realitio } from '../types/RealitioV3/Realitio';
-import { Bet, Funder, Match, Tournament, TournamentCuration } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateTournamentCuration} from './helpers';
+import { Bet, Funder, Match, Market, MarketCuration } from '../types/schema';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './helpers';
 import { RealitioAddress } from './constants';
 
 export function handleQuestionsRegistered(event: QuestionsRegistered): void {
-    // Start indexing the tournament; `event.params.tournament` is the
-    // address of the new tournament contract
-    log.info("handleInitialize: Initializing {} tournament", [event.address.toHexString()])
+    // Start indexing the market; `event.params.market` is the
+    // address of the new market contract
+    log.info("handleInitialize: Initializing {} market", [event.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
-    let tournamentContract = TournamentContract.bind(event.address);
-    let tournament = new Tournament(event.address.toHexString());
-    tournament.name = tournamentContract.name();
-    tournament.hash = hash;
-    tournament.symbol = tournamentContract.symbol();
-    tournament.uri = tournamentContract.baseURI();
-    tournament.managementFee = tournamentContract.managementFee();
-    tournament.closingTime = tournamentContract.closingTime();
-    tournament.creationTime = event.block.timestamp;
-    tournament.submissionTimeout = tournamentContract.submissionTimeout();
-    tournament.price = tournamentContract.price();
-    tournament.numOfMatchesWithAnswer = BigInt.fromI32(0);
-    tournament.hasPendingAnswers = true;
+    let marketContract = MarketContract.bind(event.address);
+    let market = new Market(event.address.toHexString());
+    market.name = marketContract.name();
+    market.hash = hash;
+    market.managementFee = marketContract.managementFee();
+    market.closingTime = marketContract.closingTime();
+    market.creationTime = event.block.timestamp;
+    market.submissionTimeout = marketContract.submissionTimeout();
+    market.price = marketContract.price();
+    market.numOfMatchesWithAnswer = BigInt.fromI32(0);
+    market.hasPendingAnswers = true;
 
-    let manager = getOrCreateManager(tournamentContract.manager());
-    tournament.manager = manager.id;
+    let manager = getOrCreateManager(marketContract.manager());
+    market.manager = manager.id;
 
     let nonce = BigInt.fromI32(0);
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
 
-    log.debug("handleQuestionsRegistered: Registering questions for tournament {}", [tournament.id.toString()])
+    log.debug("handleQuestionsRegistered: Registering questions for market {}", [market.id.toString()])
     for (let i = 0; i < event.params._questionIDs.length; i++) {
         let questionID = event.params._questionIDs[i]
         let match = new Match(questionID.toHexString());
-        match.tournament = tournament.id;
+        match.market = market.id;
         match.questionID = questionID;
         match.nonce = nonce;
         match.openingTs = realitioSC.getOpeningTS(questionID);
@@ -50,37 +48,37 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
         nonce = nonce.plus(BigInt.fromI32(1))
         log.debug("handleQuestionsRegistered: matchID {} registered", [questionID.toHexString()])
     }
-    tournament.numOfMatches = nonce;
-    tournament.save();
+    market.numOfMatches = nonce;
+    market.save();
 
-    let tournamentCuration = getOrCreateTournamentCuration(hash);
-    let tmp_tournaments = tournamentCuration.tournaments;
-    tmp_tournaments.push(tournament.id);
-    tournamentCuration.tournaments = tmp_tournaments;
-    tournamentCuration.save();
+    let marketCuration = getOrCreateMarketCuration(hash);
+    let tmp_markets = marketCuration.markets;
+    tmp_markets.push(market.id);
+    marketCuration.markets = tmp_markets;
+    marketCuration.save();
 }
 
 export function handlePrizesRegistered(event: Prizes): void {
-    // Start indexing the tournament; `event.params.tournament` is the
-    // address of the new tournament contract
-    log.info("handlePrizesRegistered: {} tournament", [event.address.toHexString()])
-    let tournament = Tournament.load(event.address.toHexString())!;
-    tournament.prizes = event.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
-    tournament.save();
+    // Start indexing the market; `event.params.market` is the
+    // address of the new market contract
+    log.info("handlePrizesRegistered: {} market", [event.address.toHexString()])
+    let market = Market.load(event.address.toHexString())!;
+    market.prizes = event.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
+    market.save();
 }
 
 export function handlePlaceBet(event: PlaceBet): void {
-    let tournament = Tournament.load(event.address.toHexString())!
-    tournament.pool = tournament.pool.plus(tournament.price)
-    tournament.save()
+    let market = Market.load(event.address.toHexString())!
+    market.pool = market.pool.plus(market.price)
+    market.save()
 
     let player = getOrCreatePlayer(event.params._player)
     
-    if (!player.tournaments.includes(tournament.id)) {
-        let tmp_tournaments = player.tournaments;
-        tmp_tournaments.push(tournament.id);
-        player.tournaments = tmp_tournaments;
-        player.numOfTournaments = player.numOfTournaments.plus(BigInt.fromI32(1));
+    if (!player.markets.includes(market.id)) {
+        let tmp_markets = player.markets;
+        tmp_markets.push(market.id);
+        player.markets = tmp_markets;
+        player.numOfMarkets = player.numOfMarkets.plus(BigInt.fromI32(1));
     }
     player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
     player.amountBet = player.amountBet.plus(event.transaction.value)
@@ -94,7 +92,7 @@ export function handlePlaceBet(event: PlaceBet): void {
         bet.tokenID = event.params.tokenID
         bet.hash = event.params._tokenHash
         bet.player = player.id
-        bet.tournament = tournament.id
+        bet.market = market.id
         bet.results = event.params._predictions
         bet.count = BigInt.fromI32(0)
         bet.points = BigInt.fromI32(0)
@@ -121,9 +119,9 @@ export function handleBetReward(event: BetReward): void {
 }
 
 export function handleFundingReceived(event: FundingReceived): void {
-    let tournament = Tournament.load(event.address.toHexString())!;
-    tournament.pool = tournament.pool.plus(event.params._amount);
-    tournament.save()
+    let market = Market.load(event.address.toHexString())!;
+    market.pool = market.pool.plus(event.params._amount);
+    market.save()
 
     let funder = Funder.load(event.params._funder.toString())
     if (funder == null) funder = new Funder(event.params._funder.toString())
@@ -135,18 +133,18 @@ export function handleFundingReceived(event: FundingReceived): void {
         msgs.push(event.params._message);
     }
     funder.messages = msgs;
-    let tournaments = funder.tournaments;
-    tournaments.push(tournament.id)
-    funder.tournaments = tournaments;
+    let markets = funder.markets;
+    markets.push(market.id)
+    funder.markets = markets;
     funder.save()
     log.info("handleFundingReceived: {} funds received from {}", [event.params._amount.toString(), event.params._funder.toString()])
 }
 
 
 export function handleManagementReward(event: ManagementReward): void {
-    let tournament = Tournament.load(event.address.toHexString())!;
-    tournament.resultSubmissionPeriodStart = event.block.timestamp;
-    tournament.save();
+    let market = Market.load(event.address.toHexString())!;
+    market.resultSubmissionPeriodStart = event.block.timestamp;
+    market.save();
 
     let manager = getOrCreateManager(event.params._manager);
     manager.managementRewards = manager.managementRewards.plus(event.params._managementReward);

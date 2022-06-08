@@ -6,15 +6,15 @@ import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import {UseFormRegister} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {TournamentFormValues} from "./TournamentForm";
+import {MarketFormValues} from "./MarketForm";
 
 type MatchBuilderProps = {
   matchIndex: number
   removeMatch: (i: number) => void
   placeholdersCount: number
-  control: Control<TournamentFormValues>
-  register: UseFormRegister<TournamentFormValues>
-  errors: FieldErrors<TournamentFormValues>
+  control: Control<MarketFormValues>
+  register: UseFormRegister<MarketFormValues>
+  errors: FieldErrors<MarketFormValues>
 }
 
 export default function MatchBuilder({matchIndex, removeMatch, placeholdersCount, control, register, errors}: MatchBuilderProps) {

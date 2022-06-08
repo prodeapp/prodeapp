@@ -9,12 +9,10 @@ enum CurationStatus {
   ClearingRequested
 }
 
-type Tournament @entity {
+type Market @entity {
   id: ID!
   hash: String!
   name: String!
-  symbol: String!
-  uri: String!
   owner: Bytes!
   closingTime: BigInt!
   creationTime: BigInt!
@@ -29,22 +27,22 @@ type Tournament @entity {
   hasPendingAnswers: Boolean!
   prizes: [BigInt!]
   curated: Boolean!
-  players: [Player!]! @derivedFrom(field: "tournaments")
-  matches: [Match!]! @derivedFrom(field: "tournament")
-  bets: [Bet!]! @derivedFrom(field: "tournament")
-  funders: [Funder!] @derivedFrom(field: "tournaments")
+  players: [Player!]! @derivedFrom(field: "markets")
+  matches: [Match!]! @derivedFrom(field: "market")
+  bets: [Bet!]! @derivedFrom(field: "market")
+  funders: [Funder!] @derivedFrom(field: "markets")
 }
 
-type TournamentCuration @entity {
-  """Hash of the tournament"""
+type MarketCuration @entity {
+  """Hash of the market"""
   id: ID!
-  tournaments: [Tournament!]!
+  markets: [Market!]!
 }
 
 type CurateItem @entity {
   """itemID in curate"""
   id: ID!
-  """Hash of the tournament"""
+  """Hash of the market"""
   hash: String!
   """Status in the curation. Enum with statuses"""
   status: CurationStatus!
@@ -62,7 +60,7 @@ type Match @entity {
   id: ID!
   questionID: Bytes!
   nonce: BigInt!
-  tournament: Tournament!
+  market: Market!
   answer: Bytes
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
@@ -79,23 +77,23 @@ type Player @entity {
   id: ID!
   amountBet: BigInt!
   pricesReceived: BigInt!
-  tournaments: [Tournament!]!
+  markets: [Market!]!
   bets: [Bet!]! @derivedFrom(field: "player")
-  numOfTournaments: BigInt!
+  numOfMarkets: BigInt!
   numOfBets: BigInt!
 }
 
 type Manager @entity {
   id: ID!
-  tournaments: [Tournament!]
+  markets: [Market!]
   managementRewards: BigInt!
 }
 
 type Bet @entity {
-  """tournamentId-tokenID"""
+  """marketId-tokenID"""
   id: ID!
   player: Player!
-  tournament: Tournament!
+  market: Market!
   tokenID: BigInt!
   hash: Bytes!
   points: BigInt!
@@ -108,7 +106,7 @@ type Bet @entity {
 type Funder @entity {
   id: ID!
   amount: BigInt!
-  tournaments: [Tournament!]!
+  markets: [Market!]!
   messages: [String!]
 }
 

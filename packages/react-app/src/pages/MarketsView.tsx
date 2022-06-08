@@ -1,21 +1,21 @@
 import React, {useState} from "react";
-import {useTournament} from "../hooks/useTournament";
+import {useMarket} from "../hooks/useMarket";
 import {Link as RouterLink, useParams, useSearchParams} from "react-router-dom";
 import {BoxWrapper, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {formatAmount} from "../lib/helpers";
-import {DIVISOR} from "../components/TournamentCreate/TournamentForm";
-import Ranking from "../components/TournamentView/Ranking";
-import Results from "../components/TournamentView/Results";
-import PlaceBet from "../components/TournamentView/PlaceBet";
+import {DIVISOR} from "../components/MarketCreate/MarketForm";
+import Ranking from "../components/MarketView/Ranking";
+import Results from "../components/MarketView/Results";
+import PlaceBet from "../components/MarketView/PlaceBet";
 import {shortenAddress, useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
-import TournamentStatus from "../components/TournamentView/TournamentStatus";
+import MarketStatus from "../components/MarketView/MarketStatus";
 
-function TournamentsView() {
+function MarketsView() {
   const { id } = useParams();
-  const { isLoading, data: tournament } = useTournament(String(id));
+  const { isLoading, data: market } = useMarket(String(id));
   const { account } = useEthers();
   const [section, setSection] = useState<'ranking'|'results'|'my-bets'>('ranking');
   const [searchParams] = useSearchParams();
@@ -24,10 +24,10 @@ function TournamentsView() {
     return <div>Loading...</div>
   }
 
-  if (!tournament) {
+  if (!market) {
     return searchParams.get('new') === '1'
-            ? <div>This tournament was just created, please wait a few seconds for it to be indexed.</div>
-            : <div>Tournament not found</div>
+            ? <div>This market was just created, please wait a few seconds for it to be indexed.</div>
+            : <div>Market not found</div>
   }
 
   return (
@@ -35,13 +35,13 @@ function TournamentsView() {
       <Box sx={{display: {md: 'flex'}, marginBottom: '20px'}}>
         <Box sx={{width: {md: '49%'}, textAlign: 'center'}}>
           <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: {xs: 2, md: 0}}}>
-            <div style={{fontSize: '25px', width: '100%'}}>{tournament.name}</div>
+            <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
             <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-              Status: <TournamentStatus tournamentId={tournament.id} />
+              Status: <MarketStatus marketId={market.id} />
             </div>
             <Box sx={{mt: 4}}>
-              {!tournament.curated && <Button component={RouterLink} to={`/curate/submit/${tournament.id}`}>Verify Tournament</Button>}
-              {tournament.curated && <div>Verified ✅</div>}
+              {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}>Verify Market</Button>}
+              {market.curated && <div>Verified ✅</div>}
             </Box>
           </BoxWrapper>
         </Box>
@@ -49,20 +49,20 @@ function TournamentsView() {
           <BoxWrapper sx={{height: '100%'}}>
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Pool</div>
-              <div style={{width: '50%'}}>{formatAmount(tournament.pool)}</div>
+              <div style={{width: '50%'}}>{formatAmount(market.pool)}</div>
             </BoxRow>
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Manager</div>
-              <div style={{width: '50%'}}><a href={`https://blockscout.com/xdai/mainnet/address/${tournament.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(tournament.manager.id)}</a></div>
+              <div style={{width: '50%'}}><a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(market.manager.id)}</a></div>
             </BoxRow>
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Management Fee</div>
-              <div style={{width: '50%'}}>{Number(tournament.managementFee) * 100 / DIVISOR}%</div>
+              <div style={{width: '50%'}}>{Number(market.managementFee) * 100 / DIVISOR}%</div>
             </BoxRow>
             <BoxRow style={{display: 'flex'}}>
               <div style={{width: '50%'}}>Prize Distribution</div>
               <div style={{width: '50%'}}>
-                {tournament.prizes.map((value, index) => {
+                {market.prizes.map((value, index) => {
                   const prizeMedal = 
                     index === 0 ? `🥇` :
                     index === 1 ? `🥈` :
@@ -75,7 +75,7 @@ function TournamentsView() {
         </Box>
       </Box>
 
-      <PlaceBet tournament={tournament} />
+      <PlaceBet market={market} />
 
       <BoxWrapper>
         <BoxRow style={{justifyContent: 'center'}}>
@@ -85,16 +85,16 @@ function TournamentsView() {
         </BoxRow>
       </BoxWrapper>
 
-      {section === 'results' && <Results tournamentId={tournament.id} />}
+      {section === 'results' && <Results marketId={market.id} />}
 
-      {section === 'ranking' && <Ranking tournamentId={tournament.id} />}
+      {section === 'ranking' && <Ranking marketId={market.id} />}
 
       {section === 'my-bets' && <>
-        {account && <Ranking tournamentId={tournament.id} playerId={account} />}
+        {account && <Ranking marketId={market.id} playerId={account} />}
         {!account && <Alert severity="error">Connect your wallet to see your bets.</Alert>}
       </>}
     </>
   );
 }
 
-export default TournamentsView;
+export default MarketsView;

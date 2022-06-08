@@ -12,11 +12,11 @@ const questionsQuery = `
   }
 `
 
-export const useQuestions = (tournamentId: string) => {
-  const {data: matches} = useMatches(tournamentId);
+export const useQuestions = (marketId: string) => {
+  const {data: matches} = useMatches(marketId);
 
   return useQuery<Record<string, Question>, Error>(
-    ["useQuestions", tournamentId],
+    ["useQuestions", marketId],
     async () => {
       if (!matches) {
         return [];

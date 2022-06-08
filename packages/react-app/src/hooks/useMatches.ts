@@ -4,15 +4,15 @@ import {apolloProdeQuery} from "../lib/apolloClient";
 
 const query = `
     ${MATCH_FIELDS}
-    query MatchesQuery ($tournamentId: String!){
-      matches(where:{tournament: $tournamentId}, orderBy: nonce, orderDirection: asc) {
+    query MatchesQuery ($marketId: String!){
+      matches(where:{market: $marketId}, orderBy: nonce, orderDirection: asc) {
         ...MatchFields
       }
     }
 `;
 
-export const fetchMatches = async (tournamentId: string) => {
-  const response = await apolloProdeQuery<{ matches: Match[] }>(query, {tournamentId});
+export const fetchMatches = async (marketId: string) => {
+  const response = await apolloProdeQuery<{ matches: Match[] }>(query, {marketId});
 
   if (!response) throw new Error("No response from TheGraph");
 
@@ -20,11 +20,11 @@ export const fetchMatches = async (tournamentId: string) => {
 };
 
 
-export const useMatches = (tournamentId: string) => {
+export const useMatches = (marketId: string) => {
   return useQuery<Match[], Error>(
-    ["useMatches", tournamentId],
+    ["useMatches", marketId],
     async () => {
-      return fetchMatches(tournamentId);
+      return fetchMatches(marketId);
     }
   );
 };

@@ -15,7 +15,7 @@ import Alert from "@mui/material/Alert";
 import {useQuestions} from "../hooks/useQuestions";
 import {Question} from "../graphql/subgraph";
 import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
-import {useTournament} from "../hooks/useTournament";
+import {useMarket} from "../hooks/useMarket";
 
 export type CurateSubmitFormValues = {
   name: string
@@ -26,9 +26,9 @@ export type CurateSubmitFormValues = {
 
 function CurateSubmit() {
 
-  const { tournamentId } = useParams();
-  const { data: tournament } = useTournament(String(tournamentId));
-  const { isLoading, data: rawQuestions } = useQuestions(String(tournamentId));
+  const { marketId } = useParams();
+  const { data: market } = useMarket(String(marketId));
+  const { isLoading, data: rawQuestions } = useQuestions(String(marketId));
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const { account, error: walletError } = useEthers();
@@ -49,14 +49,14 @@ function CurateSubmit() {
   }, [rawQuestions]);
 
   useEffect(() => {
-    if(tournament) {
-      setValue('name', tournament.name)
-      setValue('startingTimestamp', tournament.closingTime)
+    if(market) {
+      setValue('name', market.name)
+      setValue('startingTimestamp', market.closingTime)
     }
-  }, [tournament, setValue])
+  }, [market, setValue])
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to verify a Tournament.'}</Alert>
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to verify a market.'}</Alert>
   }
 
   if (isLoading) {
@@ -64,7 +64,7 @@ function CurateSubmit() {
   }
 
   if (!questions) {
-    return <Alert severity="error">Tournament not found.</Alert>
+    return <Alert severity="error">Market not found.</Alert>
   }
 
   const onSubmit = async (data: CurateSubmitFormValues) => {
@@ -83,7 +83,7 @@ function CurateSubmit() {
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success">Tournament sent to Kleros Curate</Alert>
+    return <Alert severity="success">Market sent to Kleros Curate</Alert>
   }
 
   return (
@@ -91,7 +91,7 @@ function CurateSubmit() {
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Tournament name</BoxLabelCell>
+          <BoxLabelCell>Market name</BoxLabelCell>
           <div style={{width: '100%'}}>
             <Input {...register('name', {
               required: 'This field is required.'
@@ -121,7 +121,7 @@ function CurateSubmit() {
             <FormControl fullWidth>
               <Select
                 defaultValue=""
-                id={`tournament-format`}
+                id={`market-format`}
                 {...register(`format`, {required: 'This field is required.'})}
               >
                 {Object.keys(TournamentFormats).map((format, i) => <MenuItem value={format} key={i}>{TournamentFormats[format]}</MenuItem>)}

@@ -8,13 +8,13 @@ import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {ErrorMessage} from "@hookform/error-message";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {Tournament__factory} from "../../typechain";
+import {Market__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
-import {useTournament} from "../../hooks/useTournament";
+import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
 
 export type QuestionsFormValues = {
@@ -35,7 +35,7 @@ const providers = [
 ];
 
 type QuestionsFormProps = {
-  tournamentId: string
+  marketId: string
   price: BigNumberish
   control: Control<QuestionsFormValues>
   register: UseFormRegister<QuestionsFormValues>
@@ -43,11 +43,11 @@ type QuestionsFormProps = {
   handleSubmit: UseFormHandleSubmit<QuestionsFormValues>
 }
 
-export default function QuestionsForm({tournamentId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
+export default function QuestionsForm({marketId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: matches } = useMatches(tournamentId);
-  const { isLoading: isLoadingTournament, data: tournament } = useTournament(tournamentId);
-  const { data: questions } = useQuestions(tournamentId);
+  const { isLoading, error, data: matches } = useMatches(marketId);
+  const { isLoading: isLoadingMarket, data: market } = useMarket(marketId);
+  const { data: questions } = useQuestions(marketId);
   const [success, setSuccess] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
@@ -61,23 +61,23 @@ export default function QuestionsForm({tournamentId, price, control, register, e
   }, [matches, append, remove]);
 
   const { state, send } = useContractFunction(
-    new Contract(tournamentId, Tournament__factory.createInterface()),
+    new Contract(marketId, Market__factory.createInterface()),
     'placeBet'
   );
 
   useEffect(() => {
     if (state.status === 'Success') {
-      queryClient.invalidateQueries(['useTournament', tournamentId]);
-      queryClient.invalidateQueries(['useRanking', tournamentId]);
+      queryClient.invalidateQueries(['useMarket', marketId]);
+      queryClient.invalidateQueries(['useRanking', marketId]);
       setSuccess(true);
     }
-  }, [state, tournamentId]);
+  }, [state, marketId]);
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
 
-  if (isLoading || isLoadingTournament) {
+  if (isLoading || isLoadingMarket) {
     return <div>Loading...</div>
   }
 
@@ -141,7 +141,7 @@ export default function QuestionsForm({tournamentId, price, control, register, e
           </BoxRow>
         })}
         <BoxRow>
-          <div style={{width: '60%'}}>Use {Number(tournament?.managementFee) / 100}% of this pool to: </div>
+          <div style={{width: '60%'}}>Use {Number(market?.managementFee) / 100}% of this pool to: </div>
           <div style={{width: '40%'}}>
             <FormControl fullWidth>
               <Select

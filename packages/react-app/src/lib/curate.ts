@@ -70,7 +70,7 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
     Title: data.name,
     Hash: questionsHash,
     Timestamp: data.startingTimestamp,
-    JASON: await ipfsPublish('tournament.json', JSON.stringify(json)),
+    JASON: await ipfsPublish('market.json', JSON.stringify(json)),
   }
 
   return gtcrEncode({ columns: await getRegistryColumns(), values })

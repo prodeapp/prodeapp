@@ -1,13 +1,13 @@
 /* eslint-disable prefer-const */
-import {Bytes, log, Address, BigInt, ByteArray} from '@graphprotocol/graph-ts';
-import {CurateItem, MetaEvidence, TournamentCuration, Tournament} from '../types/schema'
+import {Bytes, log, Address, BigInt} from '@graphprotocol/graph-ts';
+import {CurateItem, MetaEvidence, MarketCuration, Market} from '../types/schema';
 
 import {
   GeneralizedTCR,
   ItemStatusChange,
   ItemSubmitted,
   MetaEvidence as MetaEvidenceEvent
-} from '../types/ClasicCurate/GeneralizedTCR';
+} from '../types/ClassicCurate/GeneralizedTCR';
 import {getOrCreateRegistry} from "./helpers";
 
 // Items on a TCR can be in 1 of 4 states:
@@ -176,13 +176,13 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   curateItem.data = data;
   curateItem.save();
 
-  let tournamentCuration = TournamentCuration.load(curateItem.hash);
+  let marketCuration = MarketCuration.load(curateItem.hash);
 
-  if (curateItem.status === 'Registered' && tournamentCuration !== null) {
-    for (let i = 0; i < tournamentCuration.tournaments.length; i++) {
-      let tournament = Tournament.load(tournamentCuration.tournaments[i])!;
-      tournament.curated = true;
-      tournament.save();
+  if (curateItem.status === 'Registered' && marketCuration !== null) {
+    for (let i = 0; i < marketCuration.markets.length; i++) {
+      let market = Market.load(marketCuration.markets[i])!;
+      market.curated = true;
+      market.save();
     }
   }
 }

@@ -5,7 +5,7 @@
     "inputs": [
       {
         "type": "address",
-        "name": "_tournament",
+        "name": "_market",
         "internalType": "address"
       },
       {
@@ -19,6 +19,11 @@
         "internalType": "address"
       },
       {
+        "type": "address",
+        "name": "_nftDescriptor",
+        "internalType": "address"
+      },
+      {
         "type": "uint256",
         "name": "_submissionTimeout",
         "internalType": "uint256"
@@ -27,11 +32,11 @@
   },
   {
     "type": "event",
-    "name": "NewTournament",
+    "name": "NewMarket",
     "inputs": [
       {
         "type": "address",
-        "name": "tournament",
+        "name": "market",
         "internalType": "address",
         "indexed": true
       },
@@ -64,10 +69,10 @@
       {
         "type": "address[]",
         "name": "",
-        "internalType": "contract Tournament[]"
+        "internalType": "contract Market[]"
       }
     ],
-    "name": "allTournaments",
+    "name": "allMarkets",
     "inputs": []
   },
   {
@@ -93,26 +98,21 @@
         "internalType": "address"
       }
     ],
-    "name": "createTournament",
+    "name": "createMarket",
     "inputs": [
       {
         "type": "tuple",
-        "name": "tournamentInfo",
-        "internalType": "struct Tournament.TournamentInfo",
+        "name": "marketInfo",
+        "internalType": "struct Market.MarketInfo",
         "components": [
           {
             "type": "string",
-            "name": "tournamentName",
+            "name": "marketName",
             "internalType": "string"
           },
           {
             "type": "string",
-            "name": "tournamentSymbol",
-            "internalType": "string"
-          },
-          {
-            "type": "string",
-            "name": "tournamentUri",
+            "name": "marketSymbol",
             "internalType": "string"
           }
         ]
@@ -145,7 +145,7 @@
       {
         "type": "tuple[]",
         "name": "questionsData",
-        "internalType": "struct TournamentFactory.RealitioQuestion[]",
+        "internalType": "struct MarketFactory.RealitioQuestion[]",
         "components": [
           {
             "type": "uint256",
@@ -181,6 +181,64 @@
         "internalType": "address"
       }
     ],
+    "name": "market",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ],
+    "name": "marketCount",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "contract Market"
+      }
+    ],
+    "name": "markets",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
+    "name": "nftDescriptor",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [
+      {
+        "type": "address",
+        "name": "",
+        "internalType": "address"
+      }
+    ],
     "name": "realitio",
     "inputs": []
   },
@@ -196,50 +254,5 @@
     ],
     "name": "submissionTimeout",
     "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
-      }
-    ],
-    "name": "tournament",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "tournamentCount",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "contract Tournament"
-      }
-    ],
-    "name": "tournaments",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
   }
 ]

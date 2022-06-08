@@ -10,11 +10,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import TemplateDialog from "../components/TemplateDialog";
-import {tournamentsTemplates, TournamentTemplate} from "../lib/templates";
-import AnswersBuilder from "../components/TournamentCreate/AnswersBuilder";
-import PrizeWeightsBuilder from "../components/TournamentCreate/PrizeWeightsBuilder";
-import MatchBuilder from "../components/TournamentCreate/MatchBuilder";
-import TournamentForm, {TournamentFormValues, PLACEHOLDER_REGEX} from "../components/TournamentCreate/TournamentForm";
+import {marketsTemplates, MarketTemplate} from "../lib/templates";
+import AnswersBuilder from "../components/MarketCreate/AnswersBuilder";
+import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
+import MatchBuilder from "../components/MarketCreate/MatchBuilder";
+import MarketForm, {MarketFormValues, PLACEHOLDER_REGEX} from "../components/MarketCreate/MarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
 
@@ -22,7 +22,7 @@ const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
-function TournamentsCreate() {
+function MarketsCreate() {
 
   const [placeholdersCount, setPlaceholdersCount] = useState(0);
 
@@ -31,10 +31,10 @@ function TournamentsCreate() {
   const today = new Date();
   const defaultClosingTime = dateAdd(today, {days: 5});
 
-  const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<TournamentFormValues>({defaultValues: {
-      tournament: '',
-      questionPlaceholder: tournamentsTemplates[0].q,
-      answersPlaceholder: formatAnswers(tournamentsTemplates[0].a),
+  const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<MarketFormValues>({defaultValues: {
+      market: '',
+      questionPlaceholder: marketsTemplates[0].q,
+      answersPlaceholder: formatAnswers(marketsTemplates[0].a),
       matches: [],
       prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
       prizeDivisor: 0,
@@ -64,10 +64,10 @@ function TournamentsCreate() {
     setOpenModal(false);
   };
 
-  const onTemplateChange = (template?: TournamentTemplate) => {
+  const onTemplateChange = (template?: MarketTemplate) => {
     if (template) {
       reset({
-        tournament: getValues('tournament'),
+        market: getValues('market'),
         questionPlaceholder: template.q,
         answersPlaceholder: formatAnswers(template.a)
       });
@@ -76,21 +76,21 @@ function TournamentsCreate() {
   }
 
   return (
-    <TournamentForm handleSubmit={handleSubmit}>
+    <MarketForm handleSubmit={handleSubmit}>
       <TemplateDialog
         open={openModal}
         handleClose={handleClose}
-        tournamentsTemplates={tournamentsTemplates}
+        marketsTemplates={marketsTemplates}
         onTemplateChange={onTemplateChange}
       />
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Tournament name</BoxLabelCell>
+          <BoxLabelCell>Market name</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('tournament', {
+            <Input {...register('market', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
-            <FormError><ErrorMessage errors={errors} name="tournament" /></FormError>
+            <FormError><ErrorMessage errors={errors} name="market" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -166,7 +166,7 @@ function TournamentsCreate() {
               min: {value: 0, message: 'Fee must be greater than 0.'},
               max: {value: 100, message: 'Fee must be lower than 100.'}
             })} style={{width: '100%'}} />
-            <FormHelperText>The manager will receive this percentage of the pool as reward. In addition, the tournament creator will be rewarded when bets are traded on NFT marketplaces. UI providers may apply this fee as well for each bet.</FormHelperText>
+            <FormHelperText>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces. UI providers may apply this fee as well for each bet.</FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>
         </BoxRow>
@@ -196,12 +196,12 @@ function TournamentsCreate() {
         }
         {matchesFields.length > 0 && answersPlaceholder.length > 1 && <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit">Create Tournament</Button>
+            <Button type="submit">Create Market</Button>
           </div>
         </BoxRow>}
       </BoxWrapper>
-    </TournamentForm>
+    </MarketForm>
   );
 }
 
-export default TournamentsCreate;
+export default MarketsCreate;

@@ -7,13 +7,13 @@ import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {TournamentFormValues} from "./TournamentForm";
+import {MarketFormValues} from "./MarketForm";
 
 type PrizeWeightsBuilderProps = {
-  control: Control<TournamentFormValues>
-  register: UseFormRegister<TournamentFormValues>
-  errors: FieldErrors<TournamentFormValues>
-  setValue: UseFormSetValue<TournamentFormValues>
+  control: Control<MarketFormValues>
+  register: UseFormRegister<MarketFormValues>
+  errors: FieldErrors<MarketFormValues>
+  setValue: UseFormSetValue<MarketFormValues>
 }
 
 export default function PrizeWeightsBuilder({control, register, errors, setValue}: PrizeWeightsBuilderProps) {

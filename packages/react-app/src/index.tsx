@@ -10,8 +10,8 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
-import TournamentsCreate from "./pages/TournamentsCreate";
-import TournamentsView from "./pages/TournamentsView";
+import MarketsCreate from "./pages/MarketsCreate";
+import MarketsView from "./pages/MarketsView";
 import { ReactQueryProvider } from "./lib/react-query";
 import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
@@ -40,9 +40,9 @@ ReactDOM.render(
             <Routes>
               <Route element={<Layout />}>
                 <Route index element={<Home />} />
-                <Route path="tournaments">
-                  <Route path=":id" element={<TournamentsView />} />
-                  <Route path="new" element={<TournamentsCreate />} />
+                <Route path="markets">
+                  <Route path=":id" element={<MarketsView />} />
+                  <Route path="new" element={<MarketsCreate />} />
                 </Route>
                 <Route path="leaderboard" element={<Leaderboard />} />
                 <Route path="profile">
@@ -50,7 +50,7 @@ ReactDOM.render(
                   <Route path=":id" element={<Profile />} />
                 </Route>
                 <Route path="curate/validator" element={<CurateValidator />} />
-                <Route path="curate/submit/:tournamentId" element={<CurateSubmit />} />
+                <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
               </Route>
             </Routes>
           </HashRouter>

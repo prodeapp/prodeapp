@@ -10,8 +10,8 @@ import BetDetails from "../BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
 
-export default function Ranking({tournamentId, playerId}: {tournamentId?: string, playerId?: string}) {
-  const { isLoading, error, data: ranking } = useRanking({tournamentId, playerId});
+export default function Ranking({marketId, playerId}: {marketId?: string, playerId?: string}) {
+  const { isLoading, error, data: ranking } = useRanking({marketId: marketId, playerId});
   const [openModal, setOpenModal] = useState(false);
   const [bet, setBet] = useState<Bet | undefined>();
 
