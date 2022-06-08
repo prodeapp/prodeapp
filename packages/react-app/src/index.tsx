@@ -23,7 +23,7 @@ import CurateSubmit from "./pages/CurateSubmit";
 const config = {
   readOnlyChainId: xDai.chainId,
   readOnlyUrls: {
-    [xDai.chainId]: "https://rpc.gnosischain.com",
+    [xDai.chainId]: "https://rpc.ankr.com/gnosis",
   },
   networks: [xDai, Localhost],
   multicallAddresses: {

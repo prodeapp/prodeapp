@@ -1,4 +1,4 @@
-import { shortenAddress, useEthers, useLookupAddress } from "@usedapp/core";
+import {shortenAddress, useConfig, useEthers, useLookupAddress} from "@usedapp/core";
 import React, { useEffect, useState, MouseEvent } from "react";
 import { Toolbar, Menu, Container, Button, MenuItem, Box, AppBar, IconButton, Link } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
@@ -104,13 +104,14 @@ export interface DialogProps {
 
 function WalletDialog({open, handleClose}: DialogProps) {
   const { account, activate, activateBrowserWallet, error } = useEthers();
+  const { readOnlyUrls } = useConfig();
   const [walletError, setWalletError] = useState<Error | undefined>();
 
   async function activateWalletConnect() {
     try {
       const provider = new WalletConnectProvider({
         rpc: {
-          [xDai.chainId]: 'https://rpc.gnosischain.com',
+          [xDai.chainId]: readOnlyUrls![xDai.chainId] as string,
         },
       })
       await provider.enable()
@@ -127,8 +128,10 @@ function WalletDialog({open, handleClose}: DialogProps) {
   }, [account, handleClose])
 
   useEffect(() => {
-    setWalletError(error)
-  }, [error])
+    if (error && error.message !== walletError?.message) {
+      setWalletError(error)
+    }
+  }, [error, walletError])
 
   return (
     <AppDialog
