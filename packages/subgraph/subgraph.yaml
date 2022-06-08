@@ -54,8 +54,8 @@ dataSources:
     network: xdai
     source:
       abi: GeneralizedTCR
-      address: "0xbcf4256772f1e3751076ae28e786835543441077"
-      startBlock: 19592700  
+      address: "0xc96514B3ad962Ae37c2d2c0AeD627306b0418Bf7"
+      startBlock: 22267329  
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

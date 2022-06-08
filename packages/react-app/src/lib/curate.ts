@@ -20,9 +20,10 @@ export const TournamentFormats: Record<string, string> = {
 }
 
 interface CurateListFields {
+  Title: string,
   Hash: string,
-  JSON: string,
-  StartingTimestamp: string,
+  JASON: string,
+  Timestamp: string,
 }
 
 const registryQuery = `
@@ -61,15 +62,15 @@ async function getRegistryColumns(): Promise<any[]> {
 
 export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]) {
   const json = {
-    title: data.name,
     description: data.description,
     formats: [getTournamentFormat(data, questionsIds)]
   };
 
   const values: CurateListFields = {
+    Title: data.name,
     Hash: questionsHash,
-    JSON: await ipfsPublish('tournament.json', JSON.stringify(json)),
-    StartingTimestamp: data.startingTimestamp,
+    Timestamp: data.startingTimestamp,
+    JASON: await ipfsPublish('tournament.json', JSON.stringify(json)),
   }
 
   return gtcrEncode({ columns: await getRegistryColumns(), values })

@@ -49,6 +49,18 @@ export function handleNewAnswer(event: LogNewAnswer): void {
         betID = getBetID(tournamentId, tokenID);
         bet = Bet.load(betID);
     }
+
+    // update answer counter in tournament
+    let tournament = Tournament.load(match.tournament);
+    if (tournament === null) {
+        log.error("handleNewAnswer: tournament {} not found.", [match.tournament]);
+        return
+    }
+    tournament.numOfMatchesWithAnswer = tournament.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
+    log.debug("handleNewAnswer: numOfMatches {}, withAnswer {}, hasPendingAnswers {}", [tournament.numOfMatches.toString(), tournament.numOfMatchesWithAnswer.toString(), tournament.numOfMatchesWithAnswer.equals(tournament.numOfMatches).toString()])
+    tournament.hasPendingAnswers = tournament.numOfMatchesWithAnswer.notEqual(tournament.numOfMatches);
+    tournament.save()
+
 }
 
 export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): void {

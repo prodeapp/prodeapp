@@ -117,7 +117,6 @@ const jsonSchema = {
     },
   },
   properties: {
-    title: {type: "string"},
     description: {type: "string"},
     formats: {
       type: "array",
@@ -131,7 +130,7 @@ const jsonSchema = {
       },
     },
   },
-  required: ["title", "formats"],
+  required: ["formats"],
   additionalProperties: false
 }
 

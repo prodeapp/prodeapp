@@ -50,6 +50,11 @@ type CurateItem @entity {
   status: CurationStatus!
   "The data describing the item (encoded)"
   data: Bytes!
+  """The title of the item"""
+  title: String!
+  """the json file. empty if error"""
+  json: String!
+  timestamp: BigInt!
 }
 
 type Match @entity {
