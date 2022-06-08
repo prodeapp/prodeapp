@@ -54,9 +54,13 @@ function MarketsCreate() {
   }, [register]);
 
   useEffect(() => {
-    const placeholders = questionPlaceholder.match(PLACEHOLDER_REGEX)
+    const questionsMatch = questionPlaceholder.match(PLACEHOLDER_REGEX) || []
+    const answersMatch = answersPlaceholder.map(a => a.value).filter(a => a.match(PLACEHOLDER_REGEX) !== null)
+
+    const placeholders = [...new Set(questionsMatch.concat(answersMatch))]
+
     setPlaceholdersCount(placeholders ? placeholders.length : 0);
-  }, [questionPlaceholder])
+  }, [questionPlaceholder, answersPlaceholder])
 
   const addMatch = () => appendMatch({questionParams: []})
 

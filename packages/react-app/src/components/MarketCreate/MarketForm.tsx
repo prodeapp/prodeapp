@@ -100,12 +100,12 @@ export default function MarketForm({children, handleSubmit}: FormProps) {
     }
   }, [events, navigate]);
 
-  if (!arbitrator || !realitio || !timeout) {
-    return <div>Loading...</div>
-  }
-
   if (!account || walletError) {
     return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a market.'}</Alert>
+  }
+
+  if (!arbitrator || !realitio || !timeout) {
+    return <div>Loading...</div>
   }
 
   const onSubmit = async (data: MarketFormValues) => {
