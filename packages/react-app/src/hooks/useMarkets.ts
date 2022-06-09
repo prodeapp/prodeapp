@@ -6,7 +6,7 @@ import {buildQuery, QueryVariables} from "../lib/SubgraphQueryBuilder";
 const query = `
     ${MARKET_FIELDS}
     query MarketsQuery(#params#) {
-      markets(where: {#where#}, first: 10, orderBy: closingTime, orderDirection: desc) {
+      markets(where: {#where#}, first: 50, orderBy: closingTime, orderDirection: desc) {
         ...MarketFields
       }
     }

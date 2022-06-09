@@ -26,10 +26,12 @@ export function getTimeLeft(endDate: Date|string|number, withSeconds = false): s
 
   const duration = intervalToDuration({ start: startDate, end: endDate })
 
-  const format = ['years', 'months', 'weeks', 'days', 'hours', 'minutes']
+  const format = ['years', 'months', 'weeks', 'days', 'hours']
 
   if (withSeconds) {
-    format.push('seconds');
+    format.push('minutes', 'seconds');
+  } else if (Number(duration.days) < 1) {
+    format.push('minutes');
   }
 
   return formatDuration(duration, {format});
