@@ -16,6 +16,7 @@ import type {BigNumberish} from "ethers";
 import {useMatches} from "../../hooks/useMatches";
 import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
+import {futurizeQuestion} from "../../lib/templates";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[],
@@ -124,7 +125,7 @@ export default function QuestionsForm({marketId, price, control, register, error
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{questions[matches[i].questionID].qTitle}</div>
+            <div style={{width: '60%'}}>{futurizeQuestion(questions[matches[i].questionID].qTitle)}</div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
