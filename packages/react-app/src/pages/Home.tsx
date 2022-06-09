@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import {MarketStatus, useMarkets} from "../hooks/useMarkets";
 import { Market } from "../graphql/subgraph";
 import { formatAmount, getTimeLeft } from "../lib/helpers";
-import { FormControlLabel, FormGroup, Grid, Switch, Typography } from "@mui/material";
+import { FormControlLabel, FormGroup, Switch, Typography } from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 
@@ -23,14 +23,14 @@ function Home() {
   return (
     <>
       <BoxWrapper style={{padding:'15px'}}>
-        <Grid container spacing={2}>
-          <Grid item xs={8} style={{ display:'flex', justifyContent: 'center', width: '65%',  alignItems: 'center'}}>
+        <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
+          <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}>Status: </Typography></div>
             <div><Button onClick={() => setStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}>Active</Button></div>
             <div><Button onClick={() => setStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}>Pending</Button></div>
             <div><Button onClick={() => setStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}>Closed</Button></div>
-          </Grid>
-          <Grid item xs={4} style={{ justifyContent: 'right', width: '25%' }}>
+          </Box>
+          <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <FormGroup>
               <FormControlLabel
                 control={
@@ -40,8 +40,8 @@ function Home() {
                   />}
                 label="Only verified markets" />
             </FormGroup>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </BoxWrapper>
 
       {isLoading && <CircularProgress />}
