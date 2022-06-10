@@ -1,53 +1,73 @@
-import {Control, useFieldArray, useWatch} from "react-hook-form";
-import React, {useEffect} from "react";
-import Input from "@mui/material/Input";
-import {FormError} from "../index";
-import {ErrorMessage} from "@hookform/error-message";
+import {
+  Control,
+  UseFormRegister,
+  FieldErrors,
+  UseFormSetValue, useFieldArray
+} from "react-hook-form";
+import React, {useState} from "react";
+import {BoxLabelCell, BoxRow} from "../index";
 import Button from "@mui/material/Button";
-import {UseFormRegister} from "react-hook-form/dist/types/form";
-import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {MarketFormValues} from "./MarketForm";
+import QuestionBuilder from "./QuestionBuilder";
+import AnswersBuilder from "./AnswersBuilder";
+import {formatAnswers} from "../../pages/MarketsCreate";
+import TemplateDialog from "../TemplateDialog";
 
 type MatchBuilderProps = {
   matchIndex: number
   removeMatch: (i: number) => void
-  placeholdersCount: number
   control: Control<MarketFormValues>
+  setValue: UseFormSetValue<MarketFormValues>
   register: UseFormRegister<MarketFormValues>
   errors: FieldErrors<MarketFormValues>
 }
 
-export default function MatchBuilder({matchIndex, removeMatch, placeholdersCount, control, register, errors}: MatchBuilderProps) {
-  const {
-    fields: questionParamsFields,
-    append: appendAnswerPlaceholderField,
-    remove: removeAnswerPlaceholderField
-  } = useFieldArray({control, name: `matches.${matchIndex}.questionParams`});
-  const questionParams = useWatch({ control, name: `matches.${matchIndex}.questionParams` });
+export default function MatchBuilder({matchIndex, removeMatch, control, setValue, register, errors}: MatchBuilderProps) {
 
-  useEffect(() => {
-    if (placeholdersCount > questionParams.length) {
-      // add questionParams
-      for(let i = questionParams.length; i < placeholdersCount; i++) {
-        appendAnswerPlaceholderField({value: ''});
-      }
-    } else if (placeholdersCount < questionParams.length) {
-      // remove questionParams
-      for(let i = placeholdersCount; i < questionParams.length; i++) {
-        removeAnswerPlaceholderField(i);
-      }
-    }
-  }, [placeholdersCount, questionParams, appendAnswerPlaceholderField, removeAnswerPlaceholderField]);
+  const [openModal, setOpenModal] = useState(false);
+
+  const {
+    fields: answersFields,
+    append: appendAnswerField,
+    remove: removeAnswerField,
+    replace: replaceAnswerField
+  } = useFieldArray({control, name: `matches.${matchIndex}.answers`});
+
+  const deleteAnswer = (i: number) => {
+    return () => removeAnswerField(i);
+  }
+
+  const addAnswer = () => appendAnswerField({value: ''});
+
+  const handleClose = () => {
+    setOpenModal(false);
+  };
+
+  const onTemplateChange = (questionPlaceholder: string, answers: string[]) => {
+    setValue(`matches.${matchIndex}.questionPlaceholder`, questionPlaceholder)
+    replaceAnswerField(formatAnswers(answers))
+
+    setOpenModal(false);
+  }
 
   return <div>
-    <div style={{display: 'flex', justifyContent: 'center'}}>
-      {questionParamsFields.map((questionParamField, i) => {
-        return <div key={i} style={{margin: '0 5px'}}>
-          <Input {...register(`matches.${matchIndex}.questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
-          <FormError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionParams.${i}.value`} /></FormError>
-        </div>
-      })}
-      <div><Button onClick={() => removeMatch(matchIndex)}>- Remove match</Button></div>
-    </div>
+    <TemplateDialog
+      open={openModal}
+      handleClose={handleClose}
+      onTemplateChange={onTemplateChange}
+    />
+    <BoxRow>
+      <BoxLabelCell>Question</BoxLabelCell>
+      <div style={{width: '100%', display: 'flex'}}>
+        <QuestionBuilder {...{matchIndex, control, register, errors}} />
+        <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
+      </div>
+    </BoxRow>
+    <BoxRow>
+      <BoxLabelCell>Answers</BoxLabelCell>
+      <AnswersBuilder {...{matchIndex, answersFields, register, errors, addAnswer, deleteAnswer}} />
+    </BoxRow>
+
+    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeMatch(matchIndex)}>- Remove match</Button></div>
   </div>
 }
