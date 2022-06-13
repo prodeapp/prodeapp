@@ -1,30 +1,94 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Button from '@mui/material/Button';
-import {useForm} from "react-hook-form";
+import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import AppDialog, {DialogProps} from "../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import {MarketTemplate} from "../lib/templates";
+import {FormError} from "./index";
+import Input from "@mui/material/Input";
+import {ErrorMessage} from "@hookform/error-message";
+import {PLACEHOLDER_REGEX} from "./MarketCreate/MarketForm";
+import {marketsTemplates} from "../lib/templates";
+
+type QuestionParams = {value: string}[];
 
 type FormValues = {
   template: number
+  questionParams: QuestionParams
 }
 
 type TemplateDialogProps = DialogProps & {
-  marketsTemplates: MarketTemplate[]
-  onTemplateChange: (template?: MarketTemplate) => void
+  onTemplateChange: (questionPlaceholder: string, answers: string[]) => void
 }
 
-function TemplateDialog({open, handleClose, marketsTemplates, onTemplateChange}: TemplateDialogProps) {
-  const { register, handleSubmit } = useForm<FormValues>({defaultValues: {
-      template: 0,
+function replacePlaceholders(text: string, questionParams: string[]) {
+  return text.replace(
+    PLACEHOLDER_REGEX,
+    (match) => {
+      return questionParams[Number(match.replace('$','')) -1] || match;
+    }
+  )
+}
+
+function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogProps) {
+  const { control, register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: {
+      template: -1,
+      questionParams: [],
     }});
 
+  const {
+    fields: questionParamsFields,
+    append: appendQuestionParamsField,
+    remove: removeQuestionParamsField
+  } = useFieldArray({control, name: `questionParams`});
+
+  const questionParams = useWatch({ control, name: `questionParams` });
+  const template = useWatch({control, name: `template`});
+
+  const [questionPlaceholder, setQuestionPlaceholder] = useState('');
+
+  const [placeholdersCount, setPlaceholdersCount] = useState(0);
+
+  useEffect(() => {
+    if (marketsTemplates[template]) {
+      setQuestionPlaceholder(marketsTemplates[template].q)
+    }
+  }, [template])
+
+  useEffect(() => {
+    const placeholders = questionPlaceholder.match(PLACEHOLDER_REGEX) || []
+
+    setPlaceholdersCount(placeholders ? placeholders.length : 0);
+  }, [questionPlaceholder])
+
+  useEffect(() => {
+    if (placeholdersCount > questionParams.length) {
+      // add questionParams
+      for(let i = questionParams.length; i < placeholdersCount; i++) {
+        appendQuestionParamsField({value: ''});
+      }
+    } else if (placeholdersCount < questionParams.length) {
+      // remove questionParams
+      for(let i = placeholdersCount; i < questionParams.length; i++) {
+        removeQuestionParamsField(i);
+      }
+    }
+  }, [placeholdersCount, questionParams, appendQuestionParamsField, removeQuestionParamsField]);
+
   const onSubmit = (data: FormValues) => {
-    onTemplateChange(marketsTemplates[data.template] || undefined);
+    if (!marketsTemplates[template]) {
+      return;
+    }
+
+    onTemplateChange(
+      replacePlaceholders(questionPlaceholder, data.questionParams.map(qp => qp.value)),
+      marketsTemplates[template].a.map((answerPlaceholder) => {
+        return replacePlaceholders(answerPlaceholder, questionParams.map(qp => qp.value));
+      })
+    )
   }
 
   const clickSubmit = () => {
@@ -33,7 +97,7 @@ function TemplateDialog({open, handleClose, marketsTemplates, onTemplateChange}:
 
   const dialogActions = <DialogActions>
     <Button autoFocus onClick={clickSubmit} color="secondary">
-      Change template
+      Set question
     </Button>
   </DialogActions>
 
@@ -41,7 +105,7 @@ function TemplateDialog({open, handleClose, marketsTemplates, onTemplateChange}:
     <AppDialog
       open={open}
       handleClose={handleClose}
-      title="Market template"
+      title="Choose question"
       actions={dialogActions}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -49,14 +113,24 @@ function TemplateDialog({open, handleClose, marketsTemplates, onTemplateChange}:
           <InputLabel id="market-template-label">Choose template</InputLabel>
           <Select
             labelId="market-template-label"
-            id="demo-simple-select"
-            label="Choose template"
-            defaultValue={0}
+            id="market-template-select"
+            defaultValue={-1}
             {...register('template', {required: 'This field is required.'})}
           >
+            <MenuItem value={-1} key={-1}>Choose question format</MenuItem>
             {marketsTemplates.map((template, i) => <MenuItem value={i} key={i}>{template.q}</MenuItem>)}
           </Select>
         </FormControl>
+        <div style={{width: '100%'}}>
+          <div style={{display: 'flex'}}>
+            {questionParamsFields.map((questionParamField, i) => {
+              return <div key={i} style={{margin: '0 5px 0 0'}}>
+                <Input {...register(`questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
+                <FormError><ErrorMessage errors={errors} name={`questionParams.${i}.value`} /></FormError>
+              </div>
+            })}
+          </div>
+        </div>
       </form>
     </AppDialog>
   );

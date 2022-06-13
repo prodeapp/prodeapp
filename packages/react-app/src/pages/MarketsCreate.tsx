@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
 import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
@@ -7,34 +7,25 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import {Controller, useFieldArray, useForm, useWatch} from "react-hook-form";
+import {Controller, useFieldArray, useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import TemplateDialog from "../components/TemplateDialog";
-import {marketsTemplates, MarketTemplate} from "../lib/templates";
-import AnswersBuilder from "../components/MarketCreate/AnswersBuilder";
 import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
 import MatchBuilder from "../components/MarketCreate/MatchBuilder";
-import MarketForm, {MarketFormValues, PLACEHOLDER_REGEX} from "../components/MarketCreate/MarketForm";
+import MarketForm, {MarketFormValues} from "../components/MarketCreate/MarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
 
-const formatAnswers = (answers: string[]) => {
+export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
 function MarketsCreate() {
 
-  const [placeholdersCount, setPlaceholdersCount] = useState(0);
-
-  const [openModal, setOpenModal] = useState(false);
-
   const today = new Date();
   const defaultClosingTime = dateAdd(today, {days: 5});
 
-  const { register, handleSubmit, control, reset, getValues, setValue, formState: { errors } } = useForm<MarketFormValues>({defaultValues: {
+  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<MarketFormValues>({defaultValues: {
       market: '',
-      questionPlaceholder: marketsTemplates[0].q,
-      answersPlaceholder: formatAnswers(marketsTemplates[0].a),
       matches: [],
       prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
       prizeDivisor: 0,
@@ -44,49 +35,22 @@ function MarketsCreate() {
 
   const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
 
-  const questionPlaceholder = useWatch({control, name: 'questionPlaceholder'});
-  const answersPlaceholder = useWatch({control, name: 'answersPlaceholder'});
-
   useEffect(() => {
     register('prizeDivisor', {
       validate: value => value === 100 || 'The sum of prize weights must be 100.'
     });
   }, [register]);
 
-  useEffect(() => {
-    const questionsMatch = questionPlaceholder.match(PLACEHOLDER_REGEX) || []
-    const answersMatch = answersPlaceholder.map(a => a.value).filter(a => a.match(PLACEHOLDER_REGEX) !== null)
-
-    const placeholders = [...new Set(questionsMatch.concat(answersMatch))]
-
-    setPlaceholdersCount(placeholders ? placeholders.length : 0);
-  }, [questionPlaceholder, answersPlaceholder])
-
-  const addMatch = () => appendMatch({questionParams: []})
-
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
-  const onTemplateChange = (template?: MarketTemplate) => {
-    if (template) {
-      reset({
-        market: getValues('market'),
-        questionPlaceholder: template.q,
-        answersPlaceholder: formatAnswers(template.a)
-      });
-    }
-    setOpenModal(false);
+  const addMatch = () => {
+    return appendMatch({
+      questionPlaceholder: '',
+      answers: formatAnswers(['', ''])
+    })
   }
 
   return (
     <MarketForm handleSubmit={handleSubmit}>
-      <TemplateDialog
-        open={openModal}
-        handleClose={handleClose}
-        marketsTemplates={marketsTemplates}
-        onTemplateChange={onTemplateChange}
-      />
+
       <BoxWrapper>
         <BoxRow>
           <BoxLabelCell>Market Name</BoxLabelCell>
@@ -96,22 +60,6 @@ function MarketsCreate() {
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell>Question Template</BoxLabelCell>
-          <div style={{width: '100%'}}>
-            <div style={{display: 'flex'}}>
-              <Input {...register('questionPlaceholder', {
-                required: 'This field is required.'
-              })} style={{flexGrow: 1}}/>
-              <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Change template</Button>
-            </div>
-            <FormError><ErrorMessage errors={errors} name="questionPlaceholder" /></FormError>
-          </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell>Answers Template</BoxLabelCell>
-          <AnswersBuilder {...{control, register, errors}} />
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Betting Deadline (UTC)</BoxLabelCell>
@@ -148,7 +96,7 @@ function MarketsCreate() {
               <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
                 <MatchBuilder
                   matchIndex={i}
-                  {...{removeMatch, placeholdersCount, control, register, errors}}
+                  {...{removeMatch, control, setValue, register, errors}}
                 />
               </div>
             )
@@ -201,7 +149,7 @@ function MarketsCreate() {
         </BoxRow>
       </BoxWrapper>
 
-      {matchesFields.length > 0 && answersPlaceholder.length > 1 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+      {matchesFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
         <Button type="submit">Create Market</Button>
       </div>}
     </MarketForm>

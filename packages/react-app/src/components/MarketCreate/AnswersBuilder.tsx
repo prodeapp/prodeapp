@@ -1,43 +1,40 @@
-import {Control, useFieldArray} from "react-hook-form";
-import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
+import {FieldArrayWithId} from "react-hook-form";
+import {FormError, AnswerField} from "../index";
 import Input from "@mui/material/Input";
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
 import React from "react";
 import {UseFormRegister} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {MarketFormValues} from "./MarketForm";
 
 type AnswersBuilderProps = {
-  control: Control<MarketFormValues>
+  matchIndex: number
+  answersFields: FieldArrayWithId[]
   register: UseFormRegister<MarketFormValues>
   errors: FieldErrors<MarketFormValues>
+  addAnswer: () => void
+  deleteAnswer: (i: number) => () => void
 }
 
-export default function AnswersBuilder({control, register, errors}: AnswersBuilderProps) {
-  const {
-    fields: answersPlaceholderFields,
-    append: appendAnswerPlaceholderField,
-    remove: removeAnswerPlaceholderField
-  } = useFieldArray({control, name: 'answersPlaceholder'});
+export default function AnswersBuilder({matchIndex, answersFields, register, errors, addAnswer, deleteAnswer}: AnswersBuilderProps) {
+  return <div style={{width: '100%'}}>
 
-  const deleteAnswer = (i: number) => {
-    return () => removeAnswerPlaceholderField(i);
-  }
+    {answersFields.length < 2 && <FormError style={{marginBottom: '5px'}}>Add at least two answers.</FormError>}
 
-  const addAnswer = () => appendAnswerPlaceholderField({value: ''});
+    <Grid container spacing={2}>
+      {answersFields.map((answerField, i) => {
+        return <Grid item xs={6} md={4} key={answerField.id}>
+          <AnswerField>
+            <Input {...register(`matches.${matchIndex}.answers.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
+            <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
+          </AnswerField>
+          <FormError><ErrorMessage errors={errors} name={`matches.${matchIndex}.answers.${i}.value`} /></FormError>
+        </Grid>
+      })}
+    </Grid>
 
-  return <div>
-    {answersPlaceholderFields.length < 2 && <FormError style={{marginBottom: '5px'}}>Add at least two answers.</FormError>}
-    {answersPlaceholderFields.map((answerField, i) => {
-      return <AnswerFieldWrapper key={answerField.id}>
-        <AnswerField>
-          <Input {...register(`answersPlaceholder.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
-          <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
-        </AnswerField>
-        <FormError><ErrorMessage errors={errors} name={`answersPlaceholder.${i}.value`} /></FormError>
-      </AnswerFieldWrapper>
-    })}
-    <Button onClick={addAnswer} size="small">Add answer</Button>
+    <div><Button onClick={addAnswer} size="small">Add answer</Button></div>
   </div>
 }

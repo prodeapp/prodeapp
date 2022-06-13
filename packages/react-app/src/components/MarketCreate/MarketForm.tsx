@@ -16,15 +16,12 @@ export const PLACEHOLDER_REGEX = /\$\d/g
 
 export const DIVISOR = 10000;
 
-type AnswersPlaceholder = {value: string}[];
-type QuestionParams = {value: string}[];
+type Answers = {value: string}[];
 type PrizeWeight = {value: number};
 
 export type MarketFormValues = {
   market: string
-  questionPlaceholder: string
-  matches: {questionParams: QuestionParams}[]
-  answersPlaceholder: AnswersPlaceholder
+  matches: {questionPlaceholder: string, answers: Answers}[]
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
   price: number
@@ -43,26 +40,14 @@ interface FormProps {
   handleSubmit: UseFormHandleSubmit<MarketFormValues>;
 }
 
-function replacePlaceholders(text: string, questionParams: string[]) {
-  return text.replace(
-    PLACEHOLDER_REGEX,
-    (match) => {
-      return questionParams[Number(match.replace('$','')) -1] || match;
-    }
-  )
-}
-
 function getMatchData(
-  questionParams: QuestionParams,
   questionPlaceholder: string,
-  answersPlaceholder: AnswersPlaceholder,
+  answers: Answers,
   marketName: string
 ): MatchData {
   return {
-    question: replacePlaceholders(questionPlaceholder, questionParams.map(qp => qp.value)).replace('[market]', marketName),
-    answers: answersPlaceholder.map((answerPlaceholder, i) => {
-      return replacePlaceholders(answerPlaceholder.value, questionParams.map(qp => qp.value));
-    }),
+    question: questionPlaceholder.replace('[market]', marketName),
+    answers: answers.map((answerPlaceholder, i) => answerPlaceholder.value),
   }
 }
 
@@ -114,7 +99,7 @@ export default function MarketForm({children, handleSubmit}: FormProps) {
     const openingTS = closingTime + 1;
 
     const questionsData = data.matches.map(match => {
-      const matchData = getMatchData(match.questionParams, data.questionPlaceholder, data.answersPlaceholder, data.market);
+      const matchData = getMatchData(match.questionPlaceholder, match.answers, data.market);
       return {
         templateID: 2,
         question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),
