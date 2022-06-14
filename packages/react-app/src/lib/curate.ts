@@ -26,6 +26,10 @@ interface CurateListFields {
   Timestamp: string,
 }
 
+export interface DecodedCurateListFields extends Omit<CurateListFields, 'JASON'> {
+  JASON: Record<string, any>
+}
+
 const registryQuery = `
     query RegistryQuery ($registryId: String!) {
         registry(id: $registryId) {
@@ -76,7 +80,7 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
   return gtcrEncode({ columns: await getRegistryColumns(), values })
 }
 
-export async function getDecodedParams(itemId: string): Promise<Record<string, any>> {
+export async function getDecodedParams(itemId: string): Promise<DecodedCurateListFields> {
   const result = await apolloProdeQuery<{ curateItem: {data: string} }>(curateItemQuery, {itemId})
 
   if (!result?.data?.curateItem?.data) {
@@ -87,21 +91,21 @@ export async function getDecodedParams(itemId: string): Promise<Record<string, a
 
   const decodedItems = gtcrDecode({ values: result?.data?.curateItem?.data, columns })
 
-  const props: Record<string, any> = columns.reduce((obj, column, i) => {
+  const props: DecodedCurateListFields = columns.reduce((obj, column, i) => {
     return {...obj, [column.label]: decodedItems[i]}
   }, {})
 
-  if (props.JSON) {
+  if (props.JASON) {
     try {
-      const response = await fetch(`https://ipfs.kleros.io${props.JSON}`);
-      props.json = await response.json();
+      const response = await fetch(`https://ipfs.kleros.io${props.JASON}`);
+      props.JASON = await response.json();
     } catch (e) {
       console.log('JSON error')
-      props.JSON = {};
+      props.JASON = {};
     }
   }
 
-  return props;
+  return props ;
 }
 
 

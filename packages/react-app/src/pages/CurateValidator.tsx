@@ -4,7 +4,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {getDecodedParams} from "../lib/curate";
+import {DecodedCurateListFields, getDecodedParams} from "../lib/curate";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {
   Market,
@@ -189,7 +189,7 @@ function CurateValidator() {
 
     const _results: ValidationResult[] = [];
 
-    let itemProps: Record<string, any> = {};
+    let itemProps: DecodedCurateListFields;
 
     try {
       itemProps = await getDecodedParams(data.itemId.toLowerCase());
@@ -202,11 +202,10 @@ function CurateValidator() {
     const ajv = new Ajv()
     const validate = ajv.compile(jsonSchema)
 
-    const isValid = validate(itemProps.json);
+    const isValid = validate(itemProps.JASON);
 
-    console.log('errors', validate.errors)
     _results.push(
-      (!isValid && {type: 'error', message: 'Invalid JSON'}) || {type: 'success', message: 'Valid JSON'}
+      !isValid ? {type: 'error', message: 'Invalid JSON'} : {type: 'success', message: 'Valid JSON'}
     );
 
     // validate hash
@@ -221,28 +220,25 @@ function CurateValidator() {
 
       // validate hash
       _results.push(
-        (getQuestionsHash(matches.map(match => match.questionID)) !== itemProps.Hash
-          && {type: 'error', message: 'Invalid market hash'})
-        || {type: 'success', message: 'Valid market hash'}
+        getQuestionsHash(matches.map(match => match.questionID)) !== itemProps.Hash
+          ? {type: 'error', message: 'Invalid market hash'}
+          : {type: 'success', message: 'Valid market hash'}
       );
 
       // validate hash is not already registered
       const marketCurations = await fetchCurateItemsByHash(itemProps.Hash);
 
       _results.push(
-        (marketCurations.length > 1
-          && {type: 'error', message: `This market has more than 1 submissions. ItemId's: ${marketCurations.map(tc => tc.id).join(', ')}`})
-        || {type: 'success', message: 'This is the first submission for this market'}
+        marketCurations.length > 1
+          ? {type: 'error', message: `This market has more than 1 submissions. ItemId's: ${marketCurations.map(tc => tc.id).join(', ')}`}
+          : {type: 'success', message: 'This is the first submission for this market'}
       );
 
       // validate timestamp
-
-      const earliestMatch = matches.reduce((prev, curr) => Number(prev.openingTs) < Number(curr.openingTs) ? prev : curr)
-
       _results.push(
-        (Number(earliestMatch.openingTs) > Number(itemProps.StartingTimestamp)
-          && {type: 'error', message: 'Starting timestamp is greater than the earliest match'})
-        || {type: 'success', message: 'Valid starting timestamp'}
+        Number(market.closingTime) <= Number(itemProps.Timestamp)
+          ? {type: 'success', message: 'Valid starting timestamp'}
+          : {type: 'error', message: 'Starting timestamp is earlier than the betting deadline'}
       );
 
       setMarketId(market.id)
