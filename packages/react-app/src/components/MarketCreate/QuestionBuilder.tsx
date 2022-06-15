@@ -5,19 +5,19 @@ import {FormError} from "../index";
 import {ErrorMessage} from "@hookform/error-message";
 import {MarketFormValues} from "./MarketForm";
 
-type MatchBuilderProps = {
-  matchIndex: number
+type QuestionBuilderProps = {
+  eventIndex: number
   register: UseFormRegister<MarketFormValues>
   errors: FieldErrors<MarketFormValues>
 }
 
-export default function QuestionBuilder({matchIndex, register, errors}: MatchBuilderProps) {
+export default function QuestionBuilder({eventIndex, register, errors}: QuestionBuilderProps) {
   return <div style={{flexGrow: 1}}>
     <div style={{display: 'flex'}}>
-      <Input {...register(`matches.${matchIndex}.questionPlaceholder`, {
+      <Input {...register(`events.${eventIndex}.questionPlaceholder`, {
         required: 'This field is required.'
       })} style={{flexGrow: 1}}/>
     </div>
-    <FormError><ErrorMessage errors={errors} name={`matches.${matchIndex}.questionPlaceholder`} /></FormError>
+    <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.questionPlaceholder`} /></FormError>
   </div>
 }

@@ -15,8 +15,8 @@ export interface Market {
   pool: BigNumberish
   prizes: string[]
   curated: boolean
-  numOfMatches: bigint
-  numOfMatchesWithAnswer: bigint
+  numOfEvents: bigint
+  numOfEventsWithAnswer: bigint
   hasPendingAnswers: boolean
 }
 
@@ -36,12 +36,12 @@ export const MARKET_FIELDS = `
       prizes
       curated
       hasPendingAnswers
-      numOfMatchesWithAnswer
-      numOfMatches
+      numOfEventsWithAnswer
+      numOfEvents
     }
 `;
 
-export interface Match {
+export interface Event {
   id: string
   questionID: string
   nonce: BigNumberish
@@ -54,8 +54,8 @@ export interface Match {
   isPendingArbitration: boolean
 }
 
-export const MATCH_FIELDS = `
-  fragment MatchFields on Match {
+export const EVENT_FIELDS = `
+  fragment EventFields on Event {
     id
     questionID
     nonce
@@ -93,7 +93,7 @@ export interface Leaderboard extends Player {
     market: {
       id: string
       name: string
-      matches: {
+      events: {
         answer: string
         id: string
       }
@@ -116,7 +116,7 @@ export const LEADERBOARD_FIELDS = `
       market {
         id
         name
-        matches {
+        events {
           answer
           id
         }
@@ -133,7 +133,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    matches: {
+    events: {
       questionID: string
       answer: string | null
       nonce: string
@@ -156,7 +156,7 @@ export const BET_FIELDS = `
     market {
       id,
       name,
-      matches {
+      events {
         questionID
         answer
         nonce

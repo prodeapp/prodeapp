@@ -4,16 +4,16 @@ import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import AnswerForm, {AnswerFormValues} from "./AnswerForm";
-import {Match} from "../../graphql/subgraph";
+import {Event} from "../../graphql/subgraph";
 import {useQuestion} from "../../hooks/useQuestions";
 import Alert from "@mui/material/Alert";
 
 type AnswerDialogProps = DialogProps & {
-  match: Match
+  event: Event
 }
 
-function AnswerDialog({open, handleClose, match}: AnswerDialogProps) {
-  const { data: question, error, isLoading } = useQuestion(process.env.REACT_APP_REALITIO as string, match.questionID);
+function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
+  const { data: question, error, isLoading } = useQuestion(process.env.REACT_APP_REALITIO as string, event.questionID);
 
   const { register, control, formState: {errors}, handleSubmit } = useForm<AnswerFormValues>({defaultValues: {
     outcome: '',
@@ -33,7 +33,7 @@ function AnswerDialog({open, handleClose, match}: AnswerDialogProps) {
       actions={dialogActions}
     >
       {error && <Alert severity="error">{error.message}</Alert>}
-      {question && <AnswerForm {...{match, question, register, control, errors, handleSubmit}} />}
+      {question && <AnswerForm {...{event, question, register, control, errors, handleSubmit}} />}
     </AppDialog>
   );
 }

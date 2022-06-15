@@ -137,32 +137,32 @@ function getDataFromItemID(itemID: Bytes, contractAddress: Address): Bytes {
   return itemInfo.value0
 }
 
-export function handleItemSubmitted(event: ItemSubmitted): void {
-  let curateItem = new CurateItem(event.params._itemID.toHexString());
-  let itemHash = getHashFromData(event.params._data);
-  let itemTitle = getTitleFromData(event.params._data);
-  let json = getIPFSFromData(event.params._data);
-  let timestamp = getTimestmapFromData(event.params._data);
+export function handleItemSubmitted(evt: ItemSubmitted): void {
+  let curateItem = new CurateItem(evt.params._itemID.toHexString());
+  let itemHash = getHashFromData(evt.params._data);
+  let itemTitle = getTitleFromData(evt.params._data);
+  let json = getIPFSFromData(evt.params._data);
+  let timestamp = getTimestmapFromData(evt.params._data);
   // log.debug("handleItemSubmitted: adding item with hash {}", [itemHash]);
   curateItem.hash = itemHash;
   curateItem.status = getStatus(2);
-  curateItem.data = event.params._data;
+  curateItem.data = evt.params._data;
   curateItem.title = itemTitle;
   curateItem.json = json;
   curateItem.timestamp = timestamp;
   curateItem.save();
 }
 
-export function handleItemStatusChange(event: ItemStatusChange): void {
-  if (event.params._resolved == false) return; // No-op.
-  let data = getDataFromItemID(event.params._itemID, event.address);
+export function handleItemStatusChange(evt: ItemStatusChange): void {
+  if (evt.params._resolved == false) return; // No-op.
+  let data = getDataFromItemID(evt.params._itemID, evt.address);
   log.debug("handleItemStatusChange: data = {}", [data.toHexString()]);
 
-  let curateItem = CurateItem.load(event.params._itemID.toHexString());
+  let curateItem = CurateItem.load(evt.params._itemID.toHexString());
   if (curateItem === null) {
     log.error('handleItemStatusChange: curateItem with itemId {} not found in tcr {}. Bailing handleItemStatusChange.', [
-      event.params._itemID.toHexString(),
-      event.address.toHexString()
+      evt.params._itemID.toHexString(),
+      evt.address.toHexString()
     ]);
     return;
   }
@@ -171,7 +171,7 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   curateItem.hash = itemHash;
   // ask to the SC the status instead of create the logic whing the mapping to 
   // detect the current status.
-  curateItem.status = getStatusFromItemID(event.params._itemID, event.address)
+  curateItem.status = getStatusFromItemID(evt.params._itemID, evt.address)
   // log.debug("handleItemStatusChange: ItemID {} has status {}", [event.params._itemID.toHexString(), curateItem.status])
   curateItem.data = data;
   curateItem.save();
@@ -187,8 +187,8 @@ export function handleItemStatusChange(event: ItemStatusChange): void {
   }
 }
 
-export function handleMetaEvidence(event: MetaEvidenceEvent): void {
-  let registry = getOrCreateRegistry(event.address);
+export function handleMetaEvidence(evt: MetaEvidenceEvent): void {
+  let registry = getOrCreateRegistry(evt.address);
 
   registry.metaEvidenceCount = registry.metaEvidenceCount.plus(
     BigInt.fromI32(1),
@@ -203,7 +203,7 @@ export function handleMetaEvidence(event: MetaEvidenceEvent): void {
     );
   }
 
-  metaEvidence.URI = event.params._evidence;
+  metaEvidence.URI = evt.params._evidence;
   metaEvidence.save();
 
   if (

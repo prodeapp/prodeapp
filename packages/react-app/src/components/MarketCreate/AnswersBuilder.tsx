@@ -10,7 +10,7 @@ import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {MarketFormValues} from "./MarketForm";
 
 type AnswersBuilderProps = {
-  matchIndex: number
+  eventIndex: number
   answersFields: FieldArrayWithId[]
   register: UseFormRegister<MarketFormValues>
   errors: FieldErrors<MarketFormValues>
@@ -18,7 +18,7 @@ type AnswersBuilderProps = {
   deleteAnswer: (i: number) => () => void
 }
 
-export default function AnswersBuilder({matchIndex, answersFields, register, errors, addAnswer, deleteAnswer}: AnswersBuilderProps) {
+export default function AnswersBuilder({eventIndex, answersFields, register, errors, addAnswer, deleteAnswer}: AnswersBuilderProps) {
   return <div style={{width: '100%'}}>
 
     {answersFields.length < 2 && <FormError style={{marginBottom: '5px'}}>Add at least two answers.</FormError>}
@@ -27,10 +27,10 @@ export default function AnswersBuilder({matchIndex, answersFields, register, err
       {answersFields.map((answerField, i) => {
         return <Grid item xs={6} md={4} key={answerField.id}>
           <AnswerField>
-            <Input {...register(`matches.${matchIndex}.answers.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
+            <Input {...register(`events.${eventIndex}.answers.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
             <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
           </AnswerField>
-          <FormError><ErrorMessage errors={errors} name={`matches.${matchIndex}.answers.${i}.value`} /></FormError>
+          <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.answers.${i}.value`} /></FormError>
         </Grid>
       })}
     </Grid>

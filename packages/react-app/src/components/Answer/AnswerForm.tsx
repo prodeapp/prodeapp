@@ -11,7 +11,7 @@ import {RealityETH_v3_0__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
-import {Match, Question} from "../../graphql/subgraph";
+import {Event, Question} from "../../graphql/subgraph";
 import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
@@ -22,7 +22,7 @@ export type AnswerFormValues = {
 }
 
 type AnswerFormProps = {
-  match: Match
+  event: Event
   question: Question
   control: Control<AnswerFormValues>
   register: UseFormRegister<AnswerFormValues>
@@ -30,7 +30,7 @@ type AnswerFormProps = {
   handleSubmit: UseFormHandleSubmit<AnswerFormValues>
 }
 
-export default function AnswerForm({match, question, control, register, errors, handleSubmit}: AnswerFormProps) {
+export default function AnswerForm({event, question, control, register, errors, handleSubmit}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
 
@@ -68,15 +68,15 @@ export default function AnswerForm({match, question, control, register, errors, 
     )
   }
 
-  const finalized = isFinalized(match);
-  const openingTimeLeft = getTimeLeft(match.openingTs);
+  const finalized = isFinalized(event);
+  const openingTimeLeft = getTimeLeft(event.openingTs);
 
   if (openingTimeLeft !== false) {
     return <div>{`Open to answers in ${openingTimeLeft}`}</div>
   }
 
-  if (match.isPendingArbitration) {
-    return <div>Match result is pending arbitration.</div>
+  if (event.isPendingArbitration) {
+    return <div>Event result is pending arbitration.</div>
   }
 
   return (
@@ -89,7 +89,7 @@ export default function AnswerForm({match, question, control, register, errors, 
             Result
           </div>
           <div style={{width: '60%'}}>
-            {getAnswerText(match.answer, question.outcomes || [])}
+            {getAnswerText(event.answer, question.outcomes || [])}
           </div>
         </BoxRow>
         {question.bounty !== '0' && <BoxRow>

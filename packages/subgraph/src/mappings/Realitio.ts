@@ -1,38 +1,38 @@
 import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
-import { Bet, Match, Market } from "../types/schema";
+import { Bet, Event, Market } from "../types/schema";
 import { correctAnswerPoints } from "./constants";
 import { getBetID } from "./helpers";
 
-export function handleNewAnswer(event: LogNewAnswer): void {
-    let id = event.params.question_id.toHexString();
-    let match = Match.load(id);
-    if (match === null) return; // this is not a question from the Dapp
+export function handleNewAnswer(evt: LogNewAnswer): void {
+    let id = evt.params.question_id.toHexString();
+    let event = Event.load(id);
+    if (event === null) return; // this is not a question from the Dapp
 
-    const ts = event.params.ts;
-    match.answerFinalizedTimestamp = match.arbitrationOccurred ? ts : ts.plus(match.timeout);
+    const ts = evt.params.ts;
+    event.answerFinalizedTimestamp = event.arbitrationOccurred ? ts : ts.plus(event.timeout);
 
     let changeAnswer = false;
     let oldAnswer: Bytes;
-    let tmpAnswer = match.answer;
+    let tmpAnswer = event.answer;
     if (tmpAnswer !== null) {
         // the answer is changing
         changeAnswer = true;
         oldAnswer = tmpAnswer;
     }
-    match.answer = event.params.answer
-    match.save();
+    event.answer = evt.params.answer
+    event.save();
 
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
-    const questionNonce = match.nonce;
-    let marketId = ByteArray.fromHexString(match.market);
-    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(),match.answer!.toHexString()]);
+    const questionNonce = event.nonce;
+    let marketId = ByteArray.fromHexString(event.market);
+    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(),event.answer!.toHexString()]);
     let betID = getBetID(marketId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
         let betResult = bet.results[questionNonce.toI32()];
-        if (betResult.equals(match.answer!)) {
+        if (betResult.equals(event.answer!)) {
             // The player has the correct answer
             log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
             bet.points = bet.points.plus(correctAnswerPoints);
@@ -51,35 +51,35 @@ export function handleNewAnswer(event: LogNewAnswer): void {
     }
 
     // update answer counter in market
-    let market = Market.load(match.market);
+    let market = Market.load(event.market);
     if (market === null) {
-        log.error("handleNewAnswer: market {} not found.", [match.market]);
+        log.error("handleNewAnswer: market {} not found.", [event.market]);
         return
     }
-    market.numOfMatchesWithAnswer = market.numOfMatchesWithAnswer.plus(BigInt.fromI32(1));
-    log.debug("handleNewAnswer: numOfMatches {}, withAnswer {}, hasPendingAnswers {}", [market.numOfMatches.toString(), market.numOfMatchesWithAnswer.toString(), market.numOfMatchesWithAnswer.equals(market.numOfMatches).toString()])
-    market.hasPendingAnswers = market.numOfMatchesWithAnswer.notEqual(market.numOfMatches);
+    market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
+    log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
+    market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
     market.save()
 
 }
 
-export function handleArbitrationRequest(event: LogNotifyOfArbitrationRequest): void {
-    let match = Match.load(event.params.question_id.toHexString());
-    if (match === null) return; // not a question for our markets
-    log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
+export function handleArbitrationRequest(evt: LogNotifyOfArbitrationRequest): void {
+    let event = Event.load(evt.params.question_id.toHexString());
+    if (event === null) return; // not a question for our markets
+    log.debug("handleArbitrationRequest: Dispute raise for question {}", [event.id]);
 
-    match.isPendingArbitration = true;
-    match.answerFinalizedTimestamp = null;
-    match.save();
+    event.isPendingArbitration = true;
+    event.answerFinalizedTimestamp = null;
+    event.save();
 }
 
-export function handleFinalize(event: LogFinalize): void {
-    let match = Match.load(event.params.question_id.toHexString());
-    if (match === null) return; // not a question for our markets
-    log.debug("handleArbitrationRequest: Dispute raise for question {}", [match.id]);
+export function handleFinalize(evt: LogFinalize): void {
+    let event = Event.load(evt.params.question_id.toHexString());
+    if (event === null) return; // not a question for our markets
+    log.debug("handleArbitrationRequest: Dispute raise for question {}", [event.id]);
 
-    match.answer = event.params.answer;
-    match.isPendingArbitration = false;
-    match.arbitrationOccurred = true;
-    match.save();
+    event.answer = evt.params.answer;
+    event.isPendingArbitration = false;
+    event.arbitrationOccurred = true;
+    event.save();
 }

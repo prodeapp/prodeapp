@@ -14,7 +14,7 @@ import {
 } from "../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
-import {fetchMatches} from "../hooks/useMatches";
+import {fetchEvents} from "../hooks/useEvents";
 import {useQuestions} from "../hooks/useQuestions";
 const Ajv = require("ajv")
 
@@ -216,11 +216,11 @@ function CurateValidator() {
     } else {
       _results.push({type: 'success', message: 'Market hash found'});
 
-      const matches = await fetchMatches(market.id);
+      const events = await fetchEvents(market.id);
 
       // validate hash
       _results.push(
-        getQuestionsHash(matches.map(match => match.questionID)) !== itemProps.Hash
+        getQuestionsHash(events.map(event => event.questionID)) !== itemProps.Hash
           ? {type: 'error', message: 'Invalid market hash'}
           : {type: 'success', message: 'Valid market hash'}
       );

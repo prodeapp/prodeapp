@@ -38,7 +38,7 @@ dataSources:
         - name: Realitio
           file: ./contracts/abis/Realitio.json
       entities:
-        - Match
+        - Event
         - Bet
       eventHandlers:
         - event: LogNewAnswer(bytes32,indexed bytes32,bytes32,indexed address,uint256,uint256,bool)
@@ -90,7 +90,7 @@ templates:
         - Market
         - Bet
         - Player
-        - Match
+        - Event
         - Manager
       abis:
         - name: Market

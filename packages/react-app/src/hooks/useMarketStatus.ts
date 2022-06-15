@@ -3,18 +3,18 @@ import compareAsc from "date-fns/compareAsc";
 import fromUnixTime from "date-fns/fromUnixTime";
 import {useMarket} from "./useMarket";
 import {isFinalized} from "../lib/helpers";
-import {useMatches} from "./useMatches";
+import {useEvents} from "./useEvents";
 
 type MarketStatus = 'ACCEPTING_BETS' | 'WAITING_ANSWERS' | 'WAITING_AVAILABITILY_OF_RESULTS' | 'WAITING_REGISTER_POINTS' | 'FINALIZED';
 
 export const useMarketStatus = (marketId: string) => {
   const {data: market} = useMarket(marketId)
-  const {data: matches} = useMatches(marketId)
+  const {data: events} = useEvents(marketId)
 
   return useQuery<MarketStatus | '', Error>(
     ["useMarketStatus", marketId],
     async () => {
-      if (!market || !matches) {
+      if (!market || !events) {
         return '';
       }
 
@@ -23,7 +23,7 @@ export const useMarketStatus = (marketId: string) => {
         return 'ACCEPTING_BETS';
       }
 
-      const hasPendingAnswers = matches.filter(q => !isFinalized(q)).length > 0
+      const hasPendingAnswers = events.filter(q => !isFinalized(q)).length > 0
 
       if (hasPendingAnswers) {
         return 'WAITING_ANSWERS'
@@ -48,7 +48,7 @@ export const useMarketStatus = (marketId: string) => {
       return 'FINALIZED';
     },
     {
-      enabled: !!market && !!matches
+      enabled: !!market && !!events
     }
   );
 };

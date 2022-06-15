@@ -10,7 +10,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import {Controller, useFieldArray, useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
-import MatchBuilder from "../components/MarketCreate/MatchBuilder";
+import EventBuilder from "../components/MarketCreate/EventBuilder";
 import MarketForm, {MarketFormValues} from "../components/MarketCreate/MarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
@@ -26,14 +26,14 @@ function MarketsCreate() {
 
   const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<MarketFormValues>({defaultValues: {
       market: '',
-      matches: [],
+      events: [],
       prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
       prizeDivisor: 0,
       closingTime: defaultClosingTime,
       manager: '',
     }});
 
-  const { fields: matchesFields, append: appendMatch, remove: removeMatch } = useFieldArray({control, name: 'matches'});
+  const { fields: eventsFields, append: appendEvent, remove: removeEvent } = useFieldArray({control, name: 'events'});
 
   useEffect(() => {
     register('prizeDivisor', {
@@ -41,8 +41,8 @@ function MarketsCreate() {
     });
   }, [register]);
 
-  const addMatch = () => {
-    return appendMatch({
+  const addEvent = () => {
+    return appendEvent({
       questionPlaceholder: '',
       answers: formatAnswers(['', ''])
     })
@@ -81,22 +81,22 @@ function MarketsCreate() {
                 )}
               />
             </LocalizationProvider>
-            <FormHelperText>Bets will not be accepted passed this time. It should be before the beginning of the first match.</FormHelperText>
+            <FormHelperText>Bets will not be accepted passed this time. It should be before the beginning of the first event.</FormHelperText>
             <FormError><ErrorMessage errors={errors} name="closingTime" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Matches</BoxLabelCell>
-          <div><Button onClick={addMatch}>+ Add match</Button></div>
+          <BoxLabelCell>Events</BoxLabelCell>
+          <div><Button onClick={addEvent}>+ Add event</Button></div>
         </BoxRow>
-        {matchesFields.length > 0 &&
+        {eventsFields.length > 0 &&
         <BoxRow style={{flexDirection: 'column'}}>
-          {matchesFields.map((questionField, i) => {
+          {eventsFields.map((questionField, i) => {
             return (
               <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
-                <MatchBuilder
-                  matchIndex={i}
-                  {...{removeMatch, control, setValue, register, errors}}
+                <EventBuilder
+                  eventIndex={i}
+                  {...{removeEvent, control, setValue, register, errors}}
                 />
               </div>
             )
@@ -149,7 +149,7 @@ function MarketsCreate() {
         </BoxRow>
       </BoxWrapper>
 
-      {matchesFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+      {eventsFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
         <Button type="submit">Create Market</Button>
       </div>}
     </MarketForm>

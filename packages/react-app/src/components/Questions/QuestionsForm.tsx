@@ -13,7 +13,7 @@ import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import type {BigNumberish} from "ethers";
-import {useMatches} from "../../hooks/useMatches";
+import {useEvents} from "../../hooks/useEvents";
 import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
 import {futurizeQuestion} from "../../lib/templates";
@@ -46,7 +46,7 @@ type QuestionsFormProps = {
 
 export default function QuestionsForm({marketId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: matches } = useMatches(marketId);
+  const { isLoading, error, data: events } = useEvents(marketId);
   const { isLoading: isLoadingMarket, data: market } = useMarket(marketId);
   const { data: questions } = useQuestions(marketId);
   const [success, setSuccess] = useState(false);
@@ -58,8 +58,8 @@ export default function QuestionsForm({marketId, price, control, register, error
 
   useEffect(()=> {
     remove();
-    matches && matches.forEach(() => append({value: ''}))
-  }, [matches, append, remove]);
+    events && events.forEach(() => append({value: ''}))
+  }, [events, append, remove]);
 
   const { state, send } = useContractFunction(
     new Contract(marketId, Market__factory.createInterface()),
@@ -121,11 +121,11 @@ export default function QuestionsForm({marketId, price, control, register, error
           <div style={{width: '20%'}}>Outcome</div>
         </BoxRow>
         {fields.map((field, i) => {
-          if (!matches || !matches[i] || !questions?.[matches[i].questionID]) {
+          if (!events || !events[i] || !questions?.[events[i].questionID]) {
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{futurizeQuestion(questions[matches[i].questionID].qTitle)}</div>
+            <div style={{width: '60%'}}>{futurizeQuestion(questions[events[i].questionID].qTitle)}</div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
@@ -133,7 +133,7 @@ export default function QuestionsForm({marketId, price, control, register, error
                   id={`question-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
                 >
-                  {questions[matches[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  {questions[events[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>

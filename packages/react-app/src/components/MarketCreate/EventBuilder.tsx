@@ -13,16 +13,16 @@ import AnswersBuilder from "./AnswersBuilder";
 import {formatAnswers} from "../../pages/MarketsCreate";
 import TemplateDialog from "../TemplateDialog";
 
-type MatchBuilderProps = {
-  matchIndex: number
-  removeMatch: (i: number) => void
+type EventBuilderProps = {
+  eventIndex: number
+  removeEvent: (i: number) => void
   control: Control<MarketFormValues>
   setValue: UseFormSetValue<MarketFormValues>
   register: UseFormRegister<MarketFormValues>
   errors: FieldErrors<MarketFormValues>
 }
 
-export default function MatchBuilder({matchIndex, removeMatch, control, setValue, register, errors}: MatchBuilderProps) {
+export default function EventBuilder({eventIndex, removeEvent, control, setValue, register, errors}: EventBuilderProps) {
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -31,7 +31,7 @@ export default function MatchBuilder({matchIndex, removeMatch, control, setValue
     append: appendAnswerField,
     remove: removeAnswerField,
     replace: replaceAnswerField
-  } = useFieldArray({control, name: `matches.${matchIndex}.answers`});
+  } = useFieldArray({control, name: `events.${eventIndex}.answers`});
 
   const deleteAnswer = (i: number) => {
     return () => removeAnswerField(i);
@@ -44,7 +44,7 @@ export default function MatchBuilder({matchIndex, removeMatch, control, setValue
   };
 
   const onTemplateChange = (questionPlaceholder: string, answers: string[]) => {
-    setValue(`matches.${matchIndex}.questionPlaceholder`, questionPlaceholder)
+    setValue(`events.${eventIndex}.questionPlaceholder`, questionPlaceholder)
     replaceAnswerField(formatAnswers(answers))
 
     setOpenModal(false);
@@ -59,15 +59,15 @@ export default function MatchBuilder({matchIndex, removeMatch, control, setValue
     <BoxRow>
       <BoxLabelCell>Question</BoxLabelCell>
       <div style={{width: '100%', display: 'flex'}}>
-        <QuestionBuilder {...{matchIndex, control, register, errors}} />
+        <QuestionBuilder {...{eventIndex, control, register, errors}} />
         <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
       </div>
     </BoxRow>
     <BoxRow>
       <BoxLabelCell>Answers</BoxLabelCell>
-      <AnswersBuilder {...{matchIndex, answersFields, register, errors, addAnswer, deleteAnswer}} />
+      <AnswersBuilder {...{eventIndex, answersFields, register, errors, addAnswer, deleteAnswer}} />
     </BoxRow>
 
-    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeMatch(matchIndex)}>- Remove match</Button></div>
+    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeEvent(eventIndex)}>- Remove event</Button></div>
   </div>
 }

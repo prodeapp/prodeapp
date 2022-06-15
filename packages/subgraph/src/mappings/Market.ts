@@ -1,26 +1,26 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
 import { Realitio } from '../types/RealitioV3/Realitio';
-import { Bet, Funder, Match, Market, MarketCuration } from '../types/schema';
+import { Bet, Funder, Event, Market } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './helpers';
 import { RealitioAddress } from './constants';
 
-export function handleQuestionsRegistered(event: QuestionsRegistered): void {
+export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
     // address of the new market contract
-    log.info("handleInitialize: Initializing {} market", [event.address.toHexString()])
+    log.info("handleInitialize: Initializing {} market", [evt.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
-    let marketContract = MarketContract.bind(event.address);
-    let market = new Market(event.address.toHexString());
+    let marketContract = MarketContract.bind(evt.address);
+    let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
     market.managementFee = marketContract.managementFee();
     market.closingTime = marketContract.closingTime();
-    market.creationTime = event.block.timestamp;
+    market.creationTime = evt.block.timestamp;
     market.submissionTimeout = marketContract.submissionTimeout();
     market.price = marketContract.price();
-    market.numOfMatchesWithAnswer = BigInt.fromI32(0);
+    market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
 
     let manager = getOrCreateManager(marketContract.manager());
@@ -30,25 +30,25 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
 
     log.debug("handleQuestionsRegistered: Registering questions for market {}", [market.id.toString()])
-    for (let i = 0; i < event.params._questionIDs.length; i++) {
-        let questionID = event.params._questionIDs[i]
-        let match = new Match(questionID.toHexString());
-        match.market = market.id;
-        match.questionID = questionID;
-        match.nonce = nonce;
-        match.openingTs = realitioSC.getOpeningTS(questionID);
-        match.timeout = realitioSC.getTimeout(questionID);
-        match.minBond = realitioSC.getMinBond(questionID);
-        match.finalizeTs = realitioSC.getFinalizeTS(questionID);
-        match.contentHash = realitioSC.getContentHash(questionID);
-        match.historyHash = realitioSC.getHistoryHash(questionID);
-        match.arbitrationOccurred = false;
-        match.isPendingArbitration = false;
-        match.save();
+    for (let i = 0; i < evt.params._questionIDs.length; i++) {
+        let questionID = evt.params._questionIDs[i]
+        let event = new Event(questionID.toHexString());
+        event.market = market.id;
+        event.questionID = questionID;
+        event.nonce = nonce;
+        event.openingTs = realitioSC.getOpeningTS(questionID);
+        event.timeout = realitioSC.getTimeout(questionID);
+        event.minBond = realitioSC.getMinBond(questionID);
+        event.finalizeTs = realitioSC.getFinalizeTS(questionID);
+        event.contentHash = realitioSC.getContentHash(questionID);
+        event.historyHash = realitioSC.getHistoryHash(questionID);
+        event.arbitrationOccurred = false;
+        event.isPendingArbitration = false;
+        event.save();
         nonce = nonce.plus(BigInt.fromI32(1))
-        log.debug("handleQuestionsRegistered: matchID {} registered", [questionID.toHexString()])
+        log.debug("handleQuestionsRegistered: eventID {} registered", [questionID.toHexString()])
     }
-    market.numOfMatches = nonce;
+    market.numOfEvents = nonce;
     market.save();
 
     let marketCuration = getOrCreateMarketCuration(hash);
@@ -58,21 +58,21 @@ export function handleQuestionsRegistered(event: QuestionsRegistered): void {
     marketCuration.save();
 }
 
-export function handlePrizesRegistered(event: Prizes): void {
+export function handlePrizesRegistered(evt: Prizes): void {
     // Start indexing the market; `event.params.market` is the
     // address of the new market contract
-    log.info("handlePrizesRegistered: {} market", [event.address.toHexString()])
-    let market = Market.load(event.address.toHexString())!;
-    market.prizes = event.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
+    log.info("handlePrizesRegistered: {} market", [evt.address.toHexString()])
+    let market = Market.load(evt.address.toHexString())!;
+    market.prizes = evt.params._prizes.map<BigInt>(prize => BigInt.fromI32(prize));
     market.save();
 }
 
-export function handlePlaceBet(event: PlaceBet): void {
-    let market = Market.load(event.address.toHexString())!
+export function handlePlaceBet(evt: PlaceBet): void {
+    let market = Market.load(evt.address.toHexString())!
     market.pool = market.pool.plus(market.price)
     market.save()
 
-    let player = getOrCreatePlayer(event.params._player)
+    let player = getOrCreatePlayer(evt.params._player)
     
     if (!player.markets.includes(market.id)) {
         let tmp_markets = player.markets;
@@ -81,19 +81,19 @@ export function handlePlaceBet(event: PlaceBet): void {
         player.numOfMarkets = player.numOfMarkets.plus(BigInt.fromI32(1));
     }
     player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
-    player.amountBet = player.amountBet.plus(event.transaction.value)
+    player.amountBet = player.amountBet.plus(evt.transaction.value)
     player.save()
 
-    let betID = getBetID(event.address, event.params.tokenID)
+    let betID = getBetID(evt.address, evt.params.tokenID)
     log.info("handlePlaceBet: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)
     if (bet == null) {
         bet = new Bet(betID)
-        bet.tokenID = event.params.tokenID
-        bet.hash = event.params._tokenHash
+        bet.tokenID = evt.params.tokenID
+        bet.hash = evt.params._tokenHash
         bet.player = player.id
         bet.market = market.id
-        bet.results = event.params._predictions
+        bet.results = evt.params._predictions
         bet.count = BigInt.fromI32(0)
         bet.points = BigInt.fromI32(0)
         bet.reward = BigInt.fromI32(0)
@@ -104,49 +104,49 @@ export function handlePlaceBet(event: PlaceBet): void {
     bet.save()
 }
 
-export function handleBetReward(event: BetReward): void {
-    let betID = getBetID(event.address, event.params._tokenID)
+export function handleBetReward(evt: BetReward): void {
+    let betID = getBetID(evt.address, evt.params._tokenID)
     log.info("handleBetReward: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     bet.claim = true;
-    bet.reward = event.params._reward;
+    bet.reward = evt.params._reward;
     bet.save()
-    log.debug("handleBetReward: {} reward claimed from token {}", [event.params._reward.toString(), event.params._tokenID.toString()])
+    log.debug("handleBetReward: {} reward claimed from token {}", [evt.params._reward.toString(), evt.params._tokenID.toString()])
 
     let player = getOrCreatePlayer(Address.fromString(bet.player));
-    player.pricesReceived = player.pricesReceived.plus(event.params._reward)
+    player.pricesReceived = player.pricesReceived.plus(evt.params._reward)
     player.save()
 }
 
-export function handleFundingReceived(event: FundingReceived): void {
-    let market = Market.load(event.address.toHexString())!;
-    market.pool = market.pool.plus(event.params._amount);
+export function handleFundingReceived(evt: FundingReceived): void {
+    let market = Market.load(evt.address.toHexString())!;
+    market.pool = market.pool.plus(evt.params._amount);
     market.save()
 
-    let funder = Funder.load(event.params._funder.toString())
-    if (funder == null) funder = new Funder(event.params._funder.toString())
-    funder.amount = funder.amount.plus(event.params._amount)
+    let funder = Funder.load(evt.params._funder.toString())
+    if (funder == null) funder = new Funder(evt.params._funder.toString())
+    funder.amount = funder.amount.plus(evt.params._amount)
     let msgs = funder.messages
     if (msgs === null) {
-        msgs = [event.params._message];
+        msgs = [evt.params._message];
     } else {
-        msgs.push(event.params._message);
+        msgs.push(evt.params._message);
     }
     funder.messages = msgs;
     let markets = funder.markets;
     markets.push(market.id)
     funder.markets = markets;
     funder.save()
-    log.info("handleFundingReceived: {} funds received from {}", [event.params._amount.toString(), event.params._funder.toString()])
+    log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toString()])
 }
 
 
-export function handleManagementReward(event: ManagementReward): void {
-    let market = Market.load(event.address.toHexString())!;
-    market.resultSubmissionPeriodStart = event.block.timestamp;
+export function handleManagementReward(evt: ManagementReward): void {
+    let market = Market.load(evt.address.toHexString())!;
+    market.resultSubmissionPeriodStart = evt.block.timestamp;
     market.save();
 
-    let manager = getOrCreateManager(event.params._manager);
-    manager.managementRewards = manager.managementRewards.plus(event.params._managementReward);
+    let manager = getOrCreateManager(evt.params._manager);
+    manager.managementRewards = manager.managementRewards.plus(evt.params._managementReward);
     manager.save()
 }

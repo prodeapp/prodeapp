@@ -21,7 +21,7 @@ type PrizeWeight = {value: number};
 
 export type MarketFormValues = {
   market: string
-  matches: {questionPlaceholder: string, answers: Answers}[]
+  events: {questionPlaceholder: string, answers: Answers}[]
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
   price: number
@@ -30,7 +30,7 @@ export type MarketFormValues = {
   closingTime: Date
 }
 
-type MatchData = {
+type EventData = {
   question: string
   answers: string[]
 }
@@ -40,11 +40,11 @@ interface FormProps {
   handleSubmit: UseFormHandleSubmit<MarketFormValues>;
 }
 
-function getMatchData(
+function getEventData(
   questionPlaceholder: string,
   answers: Answers,
   marketName: string
-): MatchData {
+): EventData {
   return {
     question: questionPlaceholder.replace('[market]', marketName),
     answers: answers.map((answerPlaceholder, i) => answerPlaceholder.value),
@@ -98,11 +98,11 @@ export default function MarketForm({children, handleSubmit}: FormProps) {
     const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
     const openingTS = closingTime + 1;
 
-    const questionsData = data.matches.map(match => {
-      const matchData = getMatchData(match.questionPlaceholder, match.answers, data.market);
+    const questionsData = data.events.map(event => {
+      const eventData = getEventData(event.questionPlaceholder, event.answers, data.market);
       return {
         templateID: 2,
-        question: encodeQuestionText('single-select', matchData.question, matchData.answers, 'sports', 'en_US'),
+        question: encodeQuestionText('single-select', eventData.question, eventData.answers, 'sports', 'en_US'),
         openingTS: openingTS,
       }
     })

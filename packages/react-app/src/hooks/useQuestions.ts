@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import {Question, QUESTION_FIELDS} from "../graphql/subgraph";
 import {apolloRealityQuery} from "../lib/apolloClient";
-import {useMatches} from "./useMatches";
+import {useEvents} from "./useEvents";
 
 const questionsQuery = `
   ${QUESTION_FIELDS}
@@ -13,16 +13,16 @@ const questionsQuery = `
 `
 
 export const useQuestions = (marketId: string) => {
-  const {data: matches} = useMatches(marketId);
+  const {data: events} = useEvents(marketId);
 
   return useQuery<Record<string, Question>, Error>(
     ["useQuestions", marketId],
     async () => {
-      if (!matches) {
+      if (!events) {
         return [];
       }
 
-      const questionIds = matches.map(match => match.questionID);
+      const questionIds = events.map(event => event.questionID);
 
       const response = await apolloRealityQuery<{ questions: Question[] }>(questionsQuery, {questionIds});
 
@@ -33,7 +33,7 @@ export const useQuestions = (marketId: string) => {
       }, {})
     },
     {
-      enabled: !!matches
+      enabled: !!events
     }
   );
 };

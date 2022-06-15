@@ -6,7 +6,7 @@ export interface Ranking {
   points: BigNumber
 }
 
-export interface Match {
+export interface Event {
   marketId: BigNumber
   question: string
   result: string

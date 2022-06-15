@@ -22,13 +22,13 @@ type Market @entity {
   pool: BigInt!
   managementFee: BigInt
   manager: Manager!
-  numOfMatches: BigInt!
-  numOfMatchesWithAnswer: BigInt!
+  numOfEvents: BigInt!
+  numOfEventsWithAnswer: BigInt!
   hasPendingAnswers: Boolean!
   prizes: [BigInt!]
   curated: Boolean!
   players: [Player!]! @derivedFrom(field: "markets")
-  matches: [Match!]! @derivedFrom(field: "market")
+  events: [Event!]! @derivedFrom(field: "market")
   bets: [Bet!]! @derivedFrom(field: "market")
   funders: [Funder!] @derivedFrom(field: "markets")
 }
@@ -55,7 +55,7 @@ type CurateItem @entity {
   timestamp: BigInt!
 }
 
-type Match @entity {
+type Event @entity {
   "questionID"
   id: ID!
   questionID: Bytes!

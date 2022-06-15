@@ -27,8 +27,8 @@ type TemplateDialogProps = DialogProps & {
 function replacePlaceholders(text: string, questionParams: string[]) {
   return text.replace(
     PLACEHOLDER_REGEX,
-    (match) => {
-      return questionParams[Number(match.replace('$','')) -1] || match;
+    (event) => {
+      return questionParams[Number(event.replace('$','')) -1] || event;
     }
   )
 }

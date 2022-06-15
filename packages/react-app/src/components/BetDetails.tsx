@@ -4,12 +4,12 @@ import {getAnswerText} from '../lib/helpers';
 import {useQuestions} from "../hooks/useQuestions";
 import {BigNumber} from "@ethersproject/bignumber";
 
-function getBetResult(matchResult: string, playerBet: string) {
-  if (matchResult === "") {
+function getBetResult(eventResult: string, playerBet: string) {
+  if (eventResult === "") {
     return 0
   }
 
-  return playerBet === matchResult ? 1 : 2
+  return playerBet === eventResult ? 1 : 2
 }
 
 export default function BetDetails({bet}: {bet: Bet}) {
@@ -17,21 +17,21 @@ export default function BetDetails({bet}: {bet: Bet}) {
   return <BoxWrapper>
     <BoxRow>
       <div style={{ width: '40%'}}>Your Bet</div>
-      <div style={{ width: '40%'}}>Match Result</div>
+      <div style={{ width: '40%'}}>Event Result</div>
       <div style={{ width: '20%' }}>Points Earned</div>
     </BoxRow>
-    {bet.market.matches.map((match, i) => {
-      const matchNonce = BigNumber.from(match.nonce).toNumber();
-      const playerBet = getAnswerText(bet.results[matchNonce], questions?.[match.questionID].outcomes || []);
-      const matchResult = getAnswerText(match.answer, questions?.[match.questionID].outcomes || [], '');
-      const betResult = getBetResult(matchResult, playerBet);
+    {bet.market.events.map((event, i) => {
+      const eventNonce = BigNumber.from(event.nonce).toNumber();
+      const playerBet = getAnswerText(bet.results[eventNonce], questions?.[event.questionID].outcomes || []);
+      const eventResult = getAnswerText(event.answer, questions?.[event.questionID].outcomes || [], '');
+      const betResult = getBetResult(eventResult, playerBet);
       const backgroundColor = betResult === 0 ? undefined : (betResult === 1 ? 'rgba(0, 128, 0, 0.15)' : 'rgba(255, 0, 0, 0.15)')
 
       return <BoxRow key={i} style={{flexDirection: 'column', backgroundColor}}>
-        <div style={{ width: '100%', wordBreak: 'break-word' }}>{questions?.[match.questionID].qTitle}</div>
+        <div style={{ width: '100%', wordBreak: 'break-word' }}>{questions?.[event.questionID].qTitle}</div>
         <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
           <div style={{ width: '40%', wordBreak: 'break-word' }}>{playerBet}</div>
-          <div style={{ width: '40%', wordBreak: 'break-word' }}>{matchResult || 'Unknown'}</div>
+          <div style={{ width: '40%', wordBreak: 'break-word' }}>{eventResult || 'Unknown'}</div>
           <div style={{ width: '20%' }}>
             {betResult === 0 && <span>Waiting result</span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}
