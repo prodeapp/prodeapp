@@ -92,17 +92,13 @@ function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
                   <div style={{fontWeight: 'normal', marginBottom: '5px'}}>{status}</div>
                   <Link to={`/markets/${market.id.toString()}`} style={{ display: 'flex', fontSize: '24px' }}>{market.name}</Link>
                 </div>
-                <div>
-                  {timeLeft && <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth>Place Bet</Button>}
-                </div>
+                {timeLeft && <div>
+                  <div style={{textAlign: 'center', marginBottom: 10}}>{timeLeft}</div>
+                  <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth>Place Bet</Button>
+                </div>}
               </div>
             </Box>
             <Box sx={{width: {md: '47%'}}}>
-              {timeLeft && <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}>Time left</div>
-                <div>{timeLeft}</div>
-              </Box>}
-
               <Box sx={{ mb: 3 }}>
                 <div style={{fontWeight: 'normal'}}>Bet price</div>
                 <div>{formatAmount(market.price)}</div>

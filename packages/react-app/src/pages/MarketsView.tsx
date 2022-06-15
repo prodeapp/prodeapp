@@ -4,20 +4,19 @@ import {Link as RouterLink, useParams, useSearchParams} from "react-router-dom";
 import {BoxWrapper, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import {formatAmount} from "../lib/helpers";
 import {DIVISOR} from "../components/MarketCreate/MarketForm";
-import Ranking from "../components/MarketView/Ranking";
+import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";
-import {shortenAddress, useEthers} from "@usedapp/core";
-import Alert from "@mui/material/Alert";
+import {shortenAddress} from "@usedapp/core";
 import MarketStatus from "../components/MarketView/MarketStatus";
 
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
-  const { account } = useEthers();
-  const [section, setSection] = useState<'ranking'|'results'|'my-bets'>('ranking');
+  const [section, setSection] = useState<'bets'|'results'>('bets');
   const [searchParams] = useSearchParams();
 
   if (isLoading) {
@@ -32,67 +31,67 @@ function MarketsView() {
 
   return (
     <>
-      <Box sx={{display: {md: 'flex'}, marginBottom: '20px'}}>
-        <Box sx={{width: {md: '49%'}, textAlign: 'center'}}>
-          <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: {xs: 2, md: 0}}}>
-            <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
-            <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-              Status: <MarketStatus marketId={market.id} />
-            </div>
-            <Box sx={{mt: 4}}>
-              {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}>Verify Market</Button>}
-              {market.curated && <div>Verified ✅</div>}
-            </Box>
-          </BoxWrapper>
-        </Box>
-        <Box sx={{width: {md: '49%'}, marginLeft: {md: '2%'}}}>
-          <BoxWrapper sx={{height: '100%'}}>
-            <BoxRow style={{display: 'flex'}}>
-              <div style={{width: '50%'}}>Pool</div>
-              <div style={{width: '50%'}}>{formatAmount(market.pool)}</div>
-            </BoxRow>
-            <BoxRow style={{display: 'flex'}}>
-              <div style={{width: '50%'}}>Manager</div>
-              <div style={{width: '50%'}}><a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(market.manager.id)}</a></div>
-            </BoxRow>
-            <BoxRow style={{display: 'flex'}}>
-              <div style={{width: '50%'}}>Management Fee</div>
-              <div style={{width: '50%'}}>{Number(market.managementFee) * 100 / DIVISOR}%</div>
-            </BoxRow>
-            <BoxRow style={{display: 'flex'}}>
-              <div style={{width: '50%'}}>Prize Distribution</div>
-              <div style={{width: '50%'}}>
-                {market.prizes.map((value, index) => {
-                  const prizeMedal = 
-                    index === 0 ? `🥇` :
-                    index === 1 ? `🥈` :
-                    index === 2 ? `🥉` : `#${index+1}`;
-                  return <div key={index}>{prizeMedal}: {Number(value) * 100 / DIVISOR}%</div>;
-                })}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={4}>
+          <Box sx={{textAlign: 'center'}}>
+            <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2}}>
+              <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
+              <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
+                Status: <MarketStatus marketId={market.id} />
               </div>
+              <Box sx={{mt: 4}}>
+                {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}>Verify Market</Button>}
+                {market.curated && <div>Verified ✅</div>}
+              </Box>
+            </BoxWrapper>
+
+            <PlaceBet market={market} />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Box sx={{marginBottom: '20px'}}>
+            <BoxWrapper sx={{padding: 2}}>
+              <Grid container spacing={2}>
+                <Grid item xs={6} md={3}>
+                  <div style={{marginBottom: 10}}>Pool</div>
+                  <div>{formatAmount(market.pool)}</div>
+                </Grid>
+                <Grid item xs={6} md={3}>
+                  <div style={{marginBottom: 10}}>Prize Distribution</div>
+                  <div>
+                    {market.prizes.map((value, index) => {
+                      const prizeMedal =
+                        index === 0 ? `🥇` :
+                          index === 1 ? `🥈` :
+                            index === 2 ? `🥉` : `#${index+1}`;
+                      return <div key={index}>{prizeMedal}: {Number(value) * 100 / DIVISOR}%</div>;
+                    })}
+                  </div>
+                </Grid>
+                <Grid item xs={6} md={3}>
+                  <div style={{marginBottom: 10}}>Management Fee</div>
+                  <div>{Number(market.managementFee) * 100 / DIVISOR}%</div>
+                </Grid>
+                <Grid item xs={6} md={3}>
+                  <div style={{marginBottom: 10}}>Manager</div>
+                  <div><a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(market.manager.id)}</a></div>
+                </Grid>
+              </Grid>
+            </BoxWrapper>
+          </Box>
+
+          <BoxWrapper>
+            <BoxRow style={{justifyContent: 'center'}}>
+              <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}>Bets</Button></div>
+              <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
             </BoxRow>
           </BoxWrapper>
-        </Box>
-      </Box>
 
-      <PlaceBet market={market} />
+          {section === 'results' && <Results marketId={market.id} />}
 
-      <BoxWrapper>
-        <BoxRow style={{justifyContent: 'center'}}>
-          <div><Button onClick={() => setSection('ranking')} color={section === 'ranking' ? 'secondary' : 'primary'}>Ranking</Button></div>
-          <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
-          <div><Button onClick={() => setSection('my-bets')} color={section === 'my-bets' ? 'secondary' : 'primary'}>My Bets</Button></div>
-        </BoxRow>
-      </BoxWrapper>
-
-      {section === 'results' && <Results marketId={market.id} />}
-
-      {section === 'ranking' && <Ranking marketId={market.id} />}
-
-      {section === 'my-bets' && <>
-        {account && <Ranking marketId={market.id} playerId={account} />}
-        {!account && <Alert severity="error">Connect your wallet to see your bets.</Alert>}
-      </>}
+          {section === 'bets' && <Bets marketId={market.id} />}
+        </Grid>
+      </Grid>
     </>
   );
 }
