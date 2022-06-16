@@ -6,6 +6,14 @@ export type MarketTemplate = {
   a: string[]
 }
 
+export const buildBasicTemplate = (q: string): MarketTemplate => {
+  return {
+    q,
+    futurizeQuestion: (questionPast: string) => questionPast,
+    a:[],
+  }
+}
+
 export const marketsTemplates: MarketTemplate[] = [
   {
     q: 'Who won the match between $1 and $2 at [market]?',
