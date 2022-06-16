@@ -9,7 +9,7 @@ import {getQuestionsHash} from "../lib/reality";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {GeneralizedTCR__factory} from "../typechain";
-import Input from "@mui/material/Input";
+import TextField from '@mui/material/TextField';
 import {useParams} from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import {useQuestions} from "../hooks/useQuestions";
@@ -93,7 +93,7 @@ function CurateSubmit() {
         <BoxRow>
           <BoxLabelCell>Market name</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('name', {
+            <TextField {...register('name', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="name" /></FormError>
@@ -102,14 +102,14 @@ function CurateSubmit() {
         <BoxRow>
           <BoxLabelCell>Description</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('description')} style={{width: '100%'}}/>
+            <TextField {...register('description')} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="description" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Starting timestamp</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('startingTimestamp', {
+            <TextField {...register('startingTimestamp', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="startingTimestamp" /></FormError>

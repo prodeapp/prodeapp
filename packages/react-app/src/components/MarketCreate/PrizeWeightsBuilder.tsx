@@ -1,7 +1,7 @@
 import {Control, useFieldArray, useWatch} from "react-hook-form";
 import React, {useEffect} from "react";
 import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
-import Input from "@mui/material/Input";
+import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
@@ -41,7 +41,7 @@ export default function PrizeWeightsBuilder({control, register, errors, setValue
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
           <div style={{marginRight: '10px'}}>{prizeMedal}</div>
-          <Input {...register(`prizeWeights.${i}.value`, {required: 'This field is required.'})} style={{width: '100px'}} type="number" />
+          <TextField {...register(`prizeWeights.${i}.value`, {required: 'This field is required.'})} style={{width: '100px'}} type="number" />
           <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deletePrizeWeight(i)}>[x]</div>
         </AnswerField>
         <FormError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></FormError>

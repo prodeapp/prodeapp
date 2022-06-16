@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
-import Input from '@mui/material/Input';
+import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
@@ -253,7 +253,7 @@ function CurateValidator() {
         <BoxRow>
           <BoxLabelCell>Item Id</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('itemId', {
+            <TextField {...register('itemId', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="itemId" /></FormError>

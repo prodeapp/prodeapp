@@ -8,7 +8,7 @@ import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import AppDialog, {DialogProps} from "../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import {FormError} from "./index";
-import Input from "@mui/material/Input";
+import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import {PLACEHOLDER_REGEX} from "./MarketCreate/MarketForm";
 import {marketsTemplates} from "../lib/templates";
@@ -125,7 +125,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
           <div style={{display: 'flex'}}>
             {questionParamsFields.map((questionParamField, i) => {
               return <div key={i} style={{margin: '0 5px 0 0'}}>
-                <Input {...register(`questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
+                <TextField {...register(`questionParams.${i}.value`, {required: 'This field is required.'})} placeholder={`$${i+1}`} />
                 <FormError><ErrorMessage errors={errors} name={`questionParams.${i}.value`} /></FormError>
               </div>
             })}

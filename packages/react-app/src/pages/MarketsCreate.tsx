@@ -1,8 +1,7 @@
 import React, {useEffect} from "react";
 import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
-import Input from '@mui/material/Input';
-import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -55,7 +54,7 @@ function MarketsCreate() {
         <BoxRow>
           <BoxLabelCell>Market Name</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('market', {
+            <TextField {...register('market', {
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
@@ -109,7 +108,7 @@ function MarketsCreate() {
         <BoxRow>
           <BoxLabelCell>Bet Price (xDAI)</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('price', {
+            <TextField {...register('price', {
               required: 'This field is required.',
               valueAsNumber: true,
               validate: v => !isNaN(Number(v)) || 'Invalid number.',
@@ -121,7 +120,7 @@ function MarketsCreate() {
         <BoxRow>
           <BoxLabelCell>Manager</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('manager', {
+            <TextField {...register('manager', {
               required: 'This field is required.',
               validate: v => isAddress(v) || 'Invalid address.',
             })} style={{width: '100%'}} />
@@ -132,7 +131,7 @@ function MarketsCreate() {
         <BoxRow>
           <BoxLabelCell>Management Fee (%)</BoxLabelCell>
           <div style={{width: '100%'}}>
-            <Input {...register('managementFee', {
+            <TextField {...register('managementFee', {
               required: 'This field is required.',
               valueAsNumber: true,
               validate: v => !isNaN(Number(v)) || 'Invalid number.',

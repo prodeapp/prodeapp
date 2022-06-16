@@ -1,6 +1,6 @@
 import {FieldArrayWithId} from "react-hook-form";
 import {FormError, AnswerField} from "../index";
-import Input from "@mui/material/Input";
+import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
@@ -27,7 +27,7 @@ export default function AnswersBuilder({eventIndex, answersFields, register, err
       {answersFields.map((answerField, i) => {
         return <Grid item xs={6} md={4} key={answerField.id}>
           <AnswerField>
-            <Input {...register(`events.${eventIndex}.answers.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
+            <TextField {...register(`events.${eventIndex}.answers.${i}.value`, {required: 'This field is required.'})} style={{width: '150px'}} />
             <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
           </AnswerField>
           <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.answers.${i}.value`} /></FormError>

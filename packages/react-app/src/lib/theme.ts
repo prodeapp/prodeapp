@@ -12,24 +12,27 @@ const darkTheme = createTheme({
       defaultProps: {
         disableUnderline: true,
       },
-      styleOverrides: {
-        root: {
-          padding: '3px',
-          border: '1px solid #e2e8f0',
-          borderRadius: '6px',
-        },
-        input: {
-          textAlign: 'center',
-        },
-      },
     },
     MuiOutlinedInput:{
       styleOverrides: {
         notchedOutline: {
           borderColor: '#e2e8f0',
+          borderRadius: '6px',
         },
         input: {
           padding: '8.5px 14px',
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '.MuiOutlinedInput-root': {
+            padding: 0,
+          },
+          '.MuiOutlinedInput-root .MuiAutocomplete-input': {
+            padding: '8.5px 14px',
+          }
         },
       },
     },
