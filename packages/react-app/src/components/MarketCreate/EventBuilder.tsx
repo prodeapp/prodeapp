@@ -4,14 +4,13 @@ import {
   FieldErrors,
   UseFormSetValue, useFieldArray
 } from "react-hook-form";
-import React, {useState} from "react";
+import React from "react";
 import {BoxLabelCell, BoxRow} from "../index";
 import Button from "@mui/material/Button";
 import {MarketFormValues} from "./MarketForm";
 import QuestionBuilder from "./QuestionBuilder";
 import AnswersBuilder from "./AnswersBuilder";
 import {formatAnswers} from "../../pages/MarketsCreate";
-import TemplateDialog from "../TemplateDialog";
 
 type EventBuilderProps = {
   eventIndex: number
@@ -23,8 +22,6 @@ type EventBuilderProps = {
 }
 
 export default function EventBuilder({eventIndex, removeEvent, control, setValue, register, errors}: EventBuilderProps) {
-
-  const [openModal, setOpenModal] = useState(false);
 
   const {
     fields: answersFields,
@@ -39,28 +36,19 @@ export default function EventBuilder({eventIndex, removeEvent, control, setValue
 
   const addAnswer = () => appendAnswerField({value: ''});
 
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
   const onTemplateChange = (questionPlaceholder: string, answers: string[]) => {
     setValue(`events.${eventIndex}.questionPlaceholder`, questionPlaceholder)
-    replaceAnswerField(formatAnswers(answers))
 
-    setOpenModal(false);
+    if (answers.length > 0) {
+      replaceAnswerField(formatAnswers(answers))
+    }
   }
 
   return <div>
-    <TemplateDialog
-      open={openModal}
-      handleClose={handleClose}
-      onTemplateChange={onTemplateChange}
-    />
     <BoxRow>
       <BoxLabelCell>Question</BoxLabelCell>
       <div style={{width: '100%', display: 'flex'}}>
-        <QuestionBuilder {...{eventIndex, control, register, errors}} />
-        <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
+        <QuestionBuilder {...{eventIndex, onTemplateChange, control, register, errors}} />
       </div>
     </BoxRow>
     <BoxRow>
