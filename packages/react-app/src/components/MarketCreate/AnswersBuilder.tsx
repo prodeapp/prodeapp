@@ -1,24 +1,22 @@
-import {FieldArrayWithId} from "react-hook-form";
+import {FieldArrayWithId, useFormContext} from "react-hook-form";
 import {FormError, AnswerField} from "../index";
 import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
 import React from "react";
-import {UseFormRegister} from "react-hook-form/dist/types/form";
-import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {MarketFormValues} from "./MarketForm";
+import {MarketFormStep1Values} from "../../hooks/useMarketForm";
 
 type AnswersBuilderProps = {
   eventIndex: number
   answersFields: FieldArrayWithId[]
-  register: UseFormRegister<MarketFormValues>
-  errors: FieldErrors<MarketFormValues>
   addAnswer: () => void
   deleteAnswer: (i: number) => () => void
 }
 
-export default function AnswersBuilder({eventIndex, answersFields, register, errors, addAnswer, deleteAnswer}: AnswersBuilderProps) {
+export default function AnswersBuilder({eventIndex, answersFields, addAnswer, deleteAnswer}: AnswersBuilderProps) {
+  const { register, formState: { errors } } = useFormContext<MarketFormStep1Values>();
+
   return <div style={{width: '100%'}}>
 
     {answersFields.length < 2 && <FormError style={{marginBottom: '5px'}}>Add at least two answers.</FormError>}

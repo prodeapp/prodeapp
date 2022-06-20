@@ -1,44 +1,53 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import {Controller, useFieldArray, useForm} from "react-hook-form";
+import {Controller, useFieldArray, useForm, FormProvider} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
 import EventBuilder from "../components/MarketCreate/EventBuilder";
-import MarketForm, {MarketFormValues} from "../components/MarketCreate/MarketForm";
+import useMarketForm, { MarketFormStep1Values, MarketFormStep2Values} from "../hooks/useMarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
+import {useEthers} from "@usedapp/core";
+import Alert from "@mui/material/Alert";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
-function MarketsCreate() {
+const today = new Date();
 
-  const today = new Date();
+interface StepFormProps<T> {
+  onSubmit: (data: T) => void
+}
+
+interface Step3Props {
+  onSubmit: () => void
+}
+
+function Step1Form({onSubmit}: StepFormProps<MarketFormStep1Values>) {
   const defaultClosingTime = dateAdd(today, {days: 5});
 
-  const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<MarketFormValues>({defaultValues: {
+  const methods = useForm<MarketFormStep1Values>({
+    mode: 'all',
+    defaultValues: {
       market: '',
-      events: [],
-      prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
-      prizeDivisor: 0,
       closingTime: defaultClosingTime,
-      manager: '',
-    }});
+      events: [],
+    }
+  });
+
+  const { register, control, formState: { errors, isValid }, handleSubmit } = methods;
 
   const { fields: eventsFields, append: appendEvent, remove: removeEvent } = useFieldArray({control, name: 'events'});
-
-  useEffect(() => {
-    register('prizeDivisor', {
-      validate: value => value === 100 || 'The sum of prize weights must be 100.'
-    });
-  }, [register]);
 
   const addEvent = () => {
     return appendEvent({
@@ -47,9 +56,8 @@ function MarketsCreate() {
     })
   }
 
-  return (
-    <MarketForm handleSubmit={handleSubmit}>
-
+  return <FormProvider {...methods}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
           <BoxLabelCell>Market Name</BoxLabelCell>
@@ -95,7 +103,7 @@ function MarketsCreate() {
               <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
                 <EventBuilder
                   eventIndex={i}
-                  {...{removeEvent, control, setValue, register, errors}}
+                  {...{removeEvent}}
                 />
               </div>
             )
@@ -104,6 +112,33 @@ function MarketsCreate() {
         }
       </BoxWrapper>
 
+      {isValid && eventsFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+        <Button type="submit">Next step</Button>
+      </div>}
+    </form>
+  </FormProvider>
+}
+
+function Step2Form({onSubmit}: StepFormProps<MarketFormStep2Values>) {
+  const methods = useForm<MarketFormStep2Values>({
+    mode: 'all',
+    defaultValues: {
+      prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
+      prizeDivisor: 0,
+      manager: '',
+    }
+  });
+
+  const { register, formState: {errors, isValid}, handleSubmit } = methods;
+
+  useEffect(() => {
+    methods.register('prizeDivisor', {
+      validate: value => value === 100 || 'The sum of prize weights must be 100.'
+    });
+  }, [methods]);
+
+  return <FormProvider {...methods}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
           <BoxLabelCell>Bet Price (xDAI)</BoxLabelCell>
@@ -144,15 +179,81 @@ function MarketsCreate() {
         </BoxRow>
         <BoxRow>
           <BoxLabelCell>Prize Distribution (%)</BoxLabelCell>
-          <PrizeWeightsBuilder {...{control, register, errors, setValue}} />
+          <PrizeWeightsBuilder />
         </BoxRow>
       </BoxWrapper>
 
-      {eventsFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <Button type="submit">Create Market</Button>
+      {isValid && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+        <Button type="submit">Next step</Button>
       </div>}
-    </MarketForm>
-  );
+    </form>
+  </FormProvider>
+}
+
+function Step3Form({onSubmit}: Step3Props) {
+  return <div>
+    <div>[PREVIEW]</div>
+
+    <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
+      <Button onClick={onSubmit}>Create Market</Button>
+    </div>
+  </div>
+}
+
+function MarketsCreate() {
+  const { account, error: walletError } = useEthers();
+  const [activeStep, setActiveStep] = useState(0);
+
+  const [step1State, setStep1State] = useState<MarketFormStep1Values | undefined>();
+  const [step2State, setStep2State] = useState<MarketFormStep2Values | undefined>();
+
+  const {state, createMarket} = useMarketForm();
+
+  const onSubmit1 = (data: MarketFormStep1Values) => {
+    setStep1State(data)
+    setActiveStep(1)
+  }
+
+  const onSubmit2 = (data: MarketFormStep2Values) => {
+    setStep2State(data)
+    setActiveStep(2)
+  }
+
+  const onSubmit3 = async () => {
+    if (step1State && step2State) {
+      await createMarket(step1State, step2State);
+    }
+  }
+
+  useEffect(() => {
+    if (state.status === 'Success') {
+      setActiveStep(3)
+    }
+  }, [state]);
+
+  if (!account || walletError) {
+    return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a market.'}</Alert>
+  }
+
+  return <>
+    {activeStep < 3 && <div style={{marginBottom: 20}}>
+      <Stepper activeStep={activeStep} alternativeLabel>
+        <Step><StepLabel>Market</StepLabel></Step>
+        <Step><StepLabel>Price</StepLabel></Step>
+        <Step><StepLabel>Publish</StepLabel></Step>
+      </Stepper>
+    </div>}
+
+    {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+
+    {activeStep === 0 && <Step1Form onSubmit={onSubmit1} />}
+
+    {activeStep === 1 && <Step2Form onSubmit={onSubmit2} />}
+
+    {activeStep === 2 && <Step3Form onSubmit={onSubmit3} />}
+
+    {activeStep === 3 && <div>[SUCCESS]</div>}
+  </>
 }
 
 export default MarketsCreate;

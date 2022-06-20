@@ -10,7 +10,7 @@ import DialogActions from "@mui/material/DialogActions";
 import {FormError} from "./index";
 import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
-import {PLACEHOLDER_REGEX} from "./MarketCreate/MarketForm";
+import {PLACEHOLDER_REGEX} from "../hooks/useMarketForm";
 import {marketsTemplates} from "../lib/templates";
 
 type QuestionParams = {value: string}[];

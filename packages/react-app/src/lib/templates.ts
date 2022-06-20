@@ -1,4 +1,4 @@
-import {PLACEHOLDER_REGEX} from "../components/MarketCreate/MarketForm";
+import {PLACEHOLDER_REGEX} from "../hooks/useMarketForm";
 
 export type MarketTemplate = {
   q: string

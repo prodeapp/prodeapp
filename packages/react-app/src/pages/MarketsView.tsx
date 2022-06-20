@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import {formatAmount} from "../lib/helpers";
-import {DIVISOR} from "../components/MarketCreate/MarketForm";
+import {DIVISOR} from "../hooks/useMarketForm";
 import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";

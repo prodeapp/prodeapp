@@ -1,22 +1,15 @@
-import {Control, useFieldArray, useWatch} from "react-hook-form";
+import {useFieldArray, useFormContext, useWatch} from "react-hook-form";
 import React, {useEffect} from "react";
 import {FormError, AnswerField, AnswerFieldWrapper} from "../index";
 import TextField from '@mui/material/TextField';
 import FormHelperText from '@mui/material/FormHelperText';
 import {ErrorMessage} from "@hookform/error-message";
 import Button from "@mui/material/Button";
-import {UseFormRegister, UseFormSetValue} from "react-hook-form/dist/types/form";
-import {FieldErrors} from "react-hook-form/dist/types/errors";
-import {MarketFormValues} from "./MarketForm";
+import {MarketFormStep2Values} from "../../hooks/useMarketForm";
 
-type PrizeWeightsBuilderProps = {
-  control: Control<MarketFormValues>
-  register: UseFormRegister<MarketFormValues>
-  errors: FieldErrors<MarketFormValues>
-  setValue: UseFormSetValue<MarketFormValues>
-}
+export default function PrizeWeightsBuilder() {
+  const { control, setValue, register, formState: { errors } } = useFormContext<MarketFormStep2Values>();
 
-export default function PrizeWeightsBuilder({control, register, errors, setValue}: PrizeWeightsBuilderProps) {
   const { fields: prizesFields, append: appendPrizesField, remove: removePrizesField } = useFieldArray({control, name: 'prizeWeights'});
 
   const prizeWeights = useWatch({control, name: 'prizeWeights'});

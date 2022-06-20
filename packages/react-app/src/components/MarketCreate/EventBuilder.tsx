@@ -1,28 +1,21 @@
-import {
-  Control,
-  UseFormRegister,
-  FieldErrors,
-  UseFormSetValue, useFieldArray
-} from "react-hook-form";
+import { useFieldArray, useFormContext} from "react-hook-form";
 import React, {useState} from "react";
 import {BoxLabelCell, BoxRow} from "../index";
 import Button from "@mui/material/Button";
-import {MarketFormValues} from "./MarketForm";
 import QuestionBuilder from "./QuestionBuilder";
 import AnswersBuilder from "./AnswersBuilder";
 import {formatAnswers} from "../../pages/MarketsCreate";
 import TemplateDialog from "../TemplateDialog";
+import {MarketFormStep1Values} from "../../hooks/useMarketForm";
 
 type EventBuilderProps = {
   eventIndex: number
   removeEvent: (i: number) => void
-  control: Control<MarketFormValues>
-  setValue: UseFormSetValue<MarketFormValues>
-  register: UseFormRegister<MarketFormValues>
-  errors: FieldErrors<MarketFormValues>
 }
 
-export default function EventBuilder({eventIndex, removeEvent, control, setValue, register, errors}: EventBuilderProps) {
+export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProps) {
+
+  const { control, setValue } = useFormContext<MarketFormStep1Values>();
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -59,13 +52,13 @@ export default function EventBuilder({eventIndex, removeEvent, control, setValue
     <BoxRow>
       <BoxLabelCell>Question</BoxLabelCell>
       <div style={{width: '100%', display: 'flex'}}>
-        <QuestionBuilder {...{eventIndex, control, register, errors}} />
+        <QuestionBuilder {...{eventIndex}} />
         <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
       </div>
     </BoxRow>
     <BoxRow>
       <BoxLabelCell>Answers</BoxLabelCell>
-      <AnswersBuilder {...{eventIndex, answersFields, register, errors, addAnswer, deleteAnswer}} />
+      <AnswersBuilder {...{eventIndex, answersFields, addAnswer, deleteAnswer}} />
     </BoxRow>
 
     <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeEvent(eventIndex)}>- Remove event</Button></div>
