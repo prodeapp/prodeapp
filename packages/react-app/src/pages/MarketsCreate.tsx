@@ -13,39 +13,42 @@ import {Controller, useFieldArray, useForm, FormProvider} from "react-hook-form"
 import { ErrorMessage } from '@hookform/error-message';
 import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
 import EventBuilder from "../components/MarketCreate/EventBuilder";
-import useMarketForm, { MarketFormStep1Values, MarketFormStep2Values} from "../hooks/useMarketForm";
+import useMarketForm, {getEventData, MarketFormStep1Values, MarketFormStep2Values} from "../hooks/useMarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
+import {UseFormReturn} from "react-hook-form/dist/types";
+import format from 'date-fns/format'
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
+const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
+
 const today = new Date();
 
-interface StepFormProps<T> {
-  onSubmit: (data: T) => void
+interface Step1Props {
+  onSubmit: (data: MarketFormStep1Values) => void
+  useFormReturn: UseFormReturn<MarketFormStep1Values>
+}
+
+interface Step2Props {
+  onSubmit: (data: MarketFormStep2Values) => void
+  useFormReturn: UseFormReturn<MarketFormStep2Values>
+  setActiveStep: (step: number) => void
 }
 
 interface Step3Props {
   onSubmit: () => void
+  step1State: MarketFormStep1Values
+  step2State: MarketFormStep2Values
+  setActiveStep: (step: number) => void
 }
 
-function Step1Form({onSubmit}: StepFormProps<MarketFormStep1Values>) {
-  const defaultClosingTime = dateAdd(today, {days: 5});
-
-  const methods = useForm<MarketFormStep1Values>({
-    mode: 'all',
-    defaultValues: {
-      market: '',
-      closingTime: defaultClosingTime,
-      events: [],
-    }
-  });
-
-  const { register, control, formState: { errors, isValid }, handleSubmit } = methods;
+function Step1Form({onSubmit, useFormReturn}: Step1Props) {
+  const { register, control, formState: { errors, isValid }, handleSubmit } = useFormReturn;
 
   const { fields: eventsFields, append: appendEvent, remove: removeEvent } = useFieldArray({control, name: 'events'});
 
@@ -56,7 +59,7 @@ function Step1Form({onSubmit}: StepFormProps<MarketFormStep1Values>) {
     })
   }
 
-  return <FormProvider {...methods}>
+  return <FormProvider {...useFormReturn}>
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
@@ -82,7 +85,7 @@ function Step1Form({onSubmit}: StepFormProps<MarketFormStep1Values>) {
                     minDate={today}
                     onChange={field.onChange}
                     value={field.value}
-                    inputFormat='yyyy-MM-dd hh:mm aaa'
+                    inputFormat={DATE_FORMAT}
                     renderInput={(params) => <TextField {...params} />}
                   />
                 )}
@@ -119,25 +122,16 @@ function Step1Form({onSubmit}: StepFormProps<MarketFormStep1Values>) {
   </FormProvider>
 }
 
-function Step2Form({onSubmit}: StepFormProps<MarketFormStep2Values>) {
-  const methods = useForm<MarketFormStep2Values>({
-    mode: 'all',
-    defaultValues: {
-      prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
-      prizeDivisor: 0,
-      manager: '',
-    }
-  });
-
-  const { register, formState: {errors, isValid}, handleSubmit } = methods;
+function Step2Form({onSubmit, useFormReturn, setActiveStep}: Step2Props) {
+  const { register, formState: {errors, isValid}, handleSubmit } = useFormReturn;
 
   useEffect(() => {
-    methods.register('prizeDivisor', {
+    useFormReturn.register('prizeDivisor', {
       validate: value => value === 100 || 'The sum of prize weights must be 100.'
     });
-  }, [methods]);
+  }, [useFormReturn]);
 
-  return <FormProvider {...methods}>
+  return <FormProvider {...useFormReturn}>
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
@@ -184,18 +178,52 @@ function Step2Form({onSubmit}: StepFormProps<MarketFormStep2Values>) {
       </BoxWrapper>
 
       {isValid && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <Button type="submit">Next step</Button>
+        <div><Button type="submit">Next step</Button></div>
+        <Button variant="text" onClick={()=> setActiveStep(0)}>Go to step 1</Button>
       </div>}
     </form>
   </FormProvider>
 }
 
-function Step3Form({onSubmit}: Step3Props) {
+function PreviewText({title, value, setActiveStep, step}: {title: string, value: string|number, setActiveStep: (step: number) => void, step: number}) {
+  return <div style={{display: 'flex', justifyItems: 'space-between', marginBottom: '20px'}}>
+    <div style={{flexGrow: 1, border: '1px solid #ccc', padding: '15px'}}>
+      <div style={{opacity: '0.85'}}>{title}</div>
+      <div dangerouslySetInnerHTML={{__html: String(value)}}></div>
+    </div>
+    <div style={{display: 'flex'}}><Button variant="text" onClick={()=> setActiveStep(step)}>Edit</Button></div>
+  </div>
+}
+
+function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1Values, setActiveStep: (step: number) => void}) {
+  return <div style={{marginLeft: '20px'}}>
+    {step1State.events.map(event => {
+      const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
+      return <PreviewText title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
+    })}
+  </div>
+}
+
+function Step3Form({onSubmit, step1State, step2State, setActiveStep}: Step3Props) {
   return <div>
-    <div>[PREVIEW]</div>
+    <PreviewText title="Market Name" value={step1State.market} setActiveStep={setActiveStep} step={0} />
+
+    <div style={{fontWeight: 'bold', marginBottom: '10px'}}>Events</div>
+    <PreviewEvents step1State={step1State} setActiveStep={setActiveStep} />
+
+    <PreviewText title="Betting Deadline (UTC)" value={format(step1State.closingTime, DATE_FORMAT)} setActiveStep={setActiveStep} step={0} />
+
+    <PreviewText title="Bet price" value={`${step2State.price} xDAI`} setActiveStep={setActiveStep} step={1} />
+
+    <PreviewText title="Manager" value={step2State.manager} setActiveStep={setActiveStep} step={1} />
+
+    <PreviewText title="Management Fee" value={`${step2State.managementFee}%`} setActiveStep={setActiveStep} step={1} />
+
+    <PreviewText title="Prizes" value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
 
     <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-      <Button onClick={onSubmit}>Create Market</Button>
+      <div><Button onClick={onSubmit}>Create Market</Button></div>
+      <div><Button variant="text" onClick={()=> setActiveStep(1)}>Go to step 2</Button></div>
     </div>
   </div>
 }
@@ -206,6 +234,25 @@ function MarketsCreate() {
 
   const [step1State, setStep1State] = useState<MarketFormStep1Values | undefined>();
   const [step2State, setStep2State] = useState<MarketFormStep2Values | undefined>();
+
+  const defaultClosingTime = dateAdd(today, {days: 5});
+  const useForm1Return = useForm<MarketFormStep1Values>({
+    mode: 'all',
+    defaultValues: {
+      market: '',
+      closingTime: defaultClosingTime,
+      events: [],
+    }
+  });
+
+  const useForm2Return = useForm<MarketFormStep2Values>({
+    mode: 'all',
+    defaultValues: {
+      prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
+      prizeDivisor: 0,
+      manager: '',
+    }
+  });
 
   const {state, createMarket} = useMarketForm();
 
@@ -246,11 +293,11 @@ function MarketsCreate() {
 
     {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
 
-    {activeStep === 0 && <Step1Form onSubmit={onSubmit1} />}
+    {activeStep === 0 && <Step1Form onSubmit={onSubmit1} useFormReturn={useForm1Return} />}
 
-    {activeStep === 1 && <Step2Form onSubmit={onSubmit2} />}
+    {activeStep === 1 && <Step2Form onSubmit={onSubmit2} useFormReturn={useForm2Return} setActiveStep={setActiveStep}/>}
 
-    {activeStep === 2 && <Step3Form onSubmit={onSubmit3} />}
+    {activeStep === 2 && <Step3Form onSubmit={onSubmit3} setActiveStep={setActiveStep} step1State={step1State!} step2State={step2State!} />}
 
     {activeStep === 3 && <div>[SUCCESS]</div>}
   </>

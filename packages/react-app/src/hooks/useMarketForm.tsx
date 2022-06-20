@@ -32,7 +32,7 @@ type EventData = {
   answers: string[]
 }
 
-function getEventData(
+export function getEventData(
   questionPlaceholder: string,
   answers: Answers,
   marketName: string
