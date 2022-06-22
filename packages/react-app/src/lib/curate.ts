@@ -3,12 +3,12 @@ import {gtcrDecode, gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
 import {CurateSubmitFormValues} from "../pages/CurateSubmit";
 
-const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
-const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
-const FORMAT_ROUND_ROBIN = 'round-robin';
-const FORMAT_GROUPS = 'groups';
-const FORMAT_UNCORRELATED = 'uncorrelated';
-const FORMAT_OTHER = 'other';
+export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
+export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
+export const FORMAT_ROUND_ROBIN = 'round-robin';
+export const FORMAT_GROUPS = 'groups';
+export const FORMAT_UNCORRELATED = 'uncorrelated';
+export const FORMAT_OTHER = 'other';
 
 export const TournamentFormats: Record<string, string> = {
   [FORMAT_SINGLE_ELIMINATION]: 'Single Elimination',
@@ -113,11 +113,20 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
   const format = {
     type: data.format,
     questions: questionsIds,
-    extraData: {}
+    extraData: {},
   }
 
-  if ([FORMAT_ROUND_ROBIN, FORMAT_GROUPS].includes(data.format)) {
-    // TODO: add extraData
+  if (data.format === FORMAT_ROUND_ROBIN) {
+    const extraData: Record<string, any> = data.extraDataRoundRobin;
+    extraData.names = data.extraDataRoundRobin.names.map(n => n.value)
+    format.extraData = extraData;
+  }
+
+  if (data.format === FORMAT_GROUPS) {
+    const extraData: Record<string, any> = data.extraDataGroups;
+    extraData.names = data.extraDataGroups.names.map(n => n.value)
+    extraData.sizes = data.extraDataGroups.sizes.map(s => s.value)
+    format.extraData = extraData;
   }
 
   return format;

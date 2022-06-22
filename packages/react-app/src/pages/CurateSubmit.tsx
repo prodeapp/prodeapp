@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {BoxWrapper, BoxRow, FormError, BoxLabelCell} from "../components"
 import Button from '@mui/material/Button';
-import {useForm} from "react-hook-form";
+import {useFieldArray, useForm, useFormContext, useWatch, FormProvider} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {FormControl, MenuItem, Select} from "@mui/material";
-import {getEncodedParams, TournamentFormats} from "../lib/curate";
+import {FORMAT_GROUPS, FORMAT_ROUND_ROBIN, getEncodedParams, TournamentFormats} from "../lib/curate";
 import {getQuestionsHash} from "../lib/reality";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -22,6 +22,187 @@ export type CurateSubmitFormValues = {
   description: string
   format: string
   startingTimestamp: string
+  extraDataRoundRobin: {
+    totalTournaments: number
+    competitors: number
+    rounds: number
+    names: {value: string}[]
+  }
+  extraDataGroups: {
+    // TODO: groups can also be number[] if there are subgroups
+    groups: number
+    sizes: {value: number|''}[]
+    names: {value: string}[]
+  }
+}
+
+function RoundRobinForm() {
+  const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
+
+  const {
+    fields: names,
+    append: appendNameField,
+    remove: removeNameField
+  } = useFieldArray({control, name: `extraDataRoundRobin.names`});
+
+  const tournaments = useWatch({control, name: 'extraDataRoundRobin.totalTournaments'});
+
+  useEffect(() => {
+    if (names.length > tournaments) {
+      const to = names.length
+      for(let i = tournaments; i < to; i++) {
+        removeNameField(i);
+      }
+    } else if (names.length < tournaments) {
+      const from = names.length
+      for(let i = from; i < tournaments; i++) {
+        appendNameField({value: ''});
+      }
+    }
+    // eslint-disable-next-line
+  }, [tournaments, names]);
+
+
+  return <BoxWrapper>
+    <BoxRow>
+      <BoxLabelCell>Total Tournaments</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        <TextField {...register('extraDataRoundRobin.totalTournaments', {
+          required: 'This field is required.',
+          valueAsNumber: true,
+          validate: v => !isNaN(Number(v)) || 'Invalid number.',
+          min: {value: 1, message: 'Value must be greater than 0.'},
+        })} style={{width: '100%'}}/>
+        <FormError><ErrorMessage errors={errors} name="extraDataRoundRobin.totalTournaments" /></FormError>
+      </div>
+    </BoxRow>
+    <BoxRow>
+      <BoxLabelCell>Competitors</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        <TextField {...register('extraDataRoundRobin.competitors', {
+          required: 'This field is required.',
+          valueAsNumber: true,
+          validate: v => !isNaN(Number(v)) || 'Invalid number.',
+          min: {value: 1, message: 'Value must be greater than 0.'},
+        })} style={{width: '100%'}}/>
+        <FormError><ErrorMessage errors={errors} name="extraDataRoundRobin.competitors" /></FormError>
+      </div>
+    </BoxRow>
+    <BoxRow>
+      <BoxLabelCell>Rounds</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        <TextField {...register('extraDataRoundRobin.rounds', {
+          required: 'This field is required.',
+          valueAsNumber: true,
+          validate: v => !isNaN(Number(v)) || 'Invalid number.',
+          min: {value: 1, message: 'Value must be greater than 0.'},
+        })} style={{width: '100%'}}/>
+        <FormError><ErrorMessage errors={errors} name="extraDataRoundRobin.rounds" /></FormError>
+      </div>
+    </BoxRow>
+    {names.length > 0 && <BoxRow>
+      <BoxLabelCell>Tournaments Names</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        {names.map((_, i) => {
+          return <div key={i} style={{margin: '0 5px 0 0'}}>
+            <TextField {...register(`extraDataRoundRobin.names.${i}.value`, {required: 'This field is required.'})} placeholder={`Tournament ${i+1}`} />
+            <FormError><ErrorMessage errors={errors} name={`extraDataRoundRobin.names.${i}.value`} /></FormError>
+          </div>
+        })}
+      </div>
+    </BoxRow>}
+  </BoxWrapper>
+}
+
+function GroupsForm() {
+  const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
+
+  const {
+    fields: names,
+    append: appendNameField,
+    remove: removeNameField
+  } = useFieldArray({control, name: `extraDataGroups.names`});
+
+  const {
+    fields: sizes,
+    append: appendSizeField,
+    remove: removeSizeField
+  } = useFieldArray({control, name: `extraDataGroups.sizes`});
+
+  const groups = useWatch({control, name: 'extraDataGroups.groups'});
+
+  useEffect(() => {
+    if (names.length > groups) {
+      const to = names.length
+      for(let i = groups; i < to; i++) {
+        removeNameField(i);
+      }
+    } else if (names.length < groups) {
+      const from = names.length
+      for(let i = from; i < groups; i++) {
+        appendNameField({value: ''});
+      }
+    }
+    // eslint-disable-next-line
+  }, [groups, names]);
+
+  useEffect(() => {
+    if (sizes.length > groups) {
+      const to = sizes.length
+      for(let i = groups; i < to; i++) {
+        removeSizeField(i);
+      }
+    } else if (sizes.length < groups) {
+      const from = sizes.length
+      for(let i = from; i < groups; i++) {
+        appendSizeField({value: ''});
+      }
+    }
+    // eslint-disable-next-line
+  }, [groups, sizes]);
+
+  return <BoxWrapper>
+    <BoxRow>
+      <BoxLabelCell>Total Groups</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        <TextField {...register('extraDataGroups.groups', {
+          required: 'This field is required.',
+          valueAsNumber: true,
+          validate: v => !isNaN(Number(v)) || 'Invalid number.',
+          min: {value: 1, message: 'Value must be greater than 0.'},
+        })} style={{width: '100%'}}/>
+        <FormError><ErrorMessage errors={errors} name="extraDataGroups.groups" /></FormError>
+      </div>
+    </BoxRow>
+    {sizes.length > 0 && <BoxRow>
+      <BoxLabelCell>Groups Sizes</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        {sizes.map((_, i) => {
+          return <div key={i} style={{margin: '0 5px 0 0'}}>
+            <TextField {...register(`extraDataGroups.sizes.${i}.value`, {
+              required: 'This field is required.',
+              valueAsNumber: true,
+              validate: v => !isNaN(Number(v)) || 'Invalid number.',
+              min: {value: 1, message: 'Value must be greater than 0.'},
+            })} placeholder={`Group ${i+1}`} />
+            <FormError><ErrorMessage errors={errors} name={`extraDataGroups.sizes.${i}.value`} /></FormError>
+          </div>
+        })}
+      </div>
+    </BoxRow>}
+
+    {names.length > 0 && <BoxRow>
+      <BoxLabelCell>Groups Names</BoxLabelCell>
+      <div style={{width: '100%'}}>
+        {names.map((_, i) => {
+          return <div key={i} style={{margin: '0 5px 0 0'}}>
+            <TextField {...register(`extraDataGroups.names.${i}.value`, {required: 'This field is required.'})} placeholder={`Group ${i+1}`} />
+            <FormError><ErrorMessage errors={errors} name={`extraDataGroups.names.${i}.value`} /></FormError>
+          </div>
+        })}
+      </div>
+    </BoxRow>}
+  </BoxWrapper>
 }
 
 function CurateSubmit() {
@@ -35,12 +216,22 @@ function CurateSubmit() {
 
   const submissionDeposit = useSubmissionDeposit();
 
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<CurateSubmitFormValues>({defaultValues: {
+  const useFormReturn = useForm<CurateSubmitFormValues>({defaultValues: {
     name: '',
     description: '',
     format: '',
     startingTimestamp: '',
+    extraDataRoundRobin: {
+      totalTournaments: 0,
+      competitors: 0,
+      rounds: 0,
+      names: [],
+    }
   }});
+
+  const { register, control, handleSubmit, formState: { errors }, setValue } = useFormReturn;
+
+  const format = useWatch({control, name: 'format'});
 
   const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_CURATE_REGISTRY as string, GeneralizedTCR__factory.createInterface()), 'addItem');
 
@@ -86,7 +277,7 @@ function CurateSubmit() {
     return <Alert severity="success">Market sent to Kleros Curate</Alert>
   }
 
-  return (
+  return <FormProvider {...useFormReturn}>
     <form onSubmit={handleSubmit(onSubmit)}>
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
@@ -130,6 +321,13 @@ function CurateSubmit() {
             </FormControl>
           </div>
         </BoxRow>
+      </BoxWrapper>
+
+      {format === FORMAT_ROUND_ROBIN && <RoundRobinForm />}
+
+      {format === FORMAT_GROUPS && <GroupsForm />}
+
+      <BoxWrapper>
         <BoxRow>
           <div style={{width: '100%'}}>
             {questions.map((question, i) => <div key={i}>{question.qTitle}</div>)}
@@ -142,7 +340,7 @@ function CurateSubmit() {
         </BoxRow>
       </BoxWrapper>
     </form>
-  );
+  </FormProvider>
 }
 
 export default CurateSubmit;
