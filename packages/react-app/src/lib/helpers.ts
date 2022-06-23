@@ -64,3 +64,18 @@ export function isFinalized(event: Event) {
     && (compareAsc(new Date(), fromUnixTime(finalizeTs)) === 1)
   );
 }
+
+export const MARKET_CATEGORIES: {id: string, text: string}[] = [
+  {id: "arts", text: "Arts"},
+  {id: "business-finance", text: "Business & Finance"},
+  {id: "cryptocurrency", text: "Cryptocurrency"},
+  {id: "news-politics", text: "News & Politics"},
+  {id: "science-tech", text: "Science & Tech"},
+  {id: "sports", text: "Sports"},
+  {id: "weather", text: "Weather"},
+  {id: "misc", text: "Miscellaneous"},
+]
+
+export function getCategoryText(id: string): string {
+  return MARKET_CATEGORIES.filter(c => c.id === id)[0].text;
+}

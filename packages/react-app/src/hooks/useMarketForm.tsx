@@ -16,6 +16,7 @@ type PrizeWeight = {value: number};
 
 export type MarketFormStep1Values = {
   market: string
+  category: string
   closingTime: Date
   events: {questionPlaceholder: string, answers: Answers}[]
 }
@@ -84,7 +85,7 @@ export default function useMarketForm() {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
         templateID: 2,
-        question: encodeQuestionText('single-select', eventData.question, eventData.answers, 'sports', 'en_US'),
+        question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
         openingTS: openingTS,
       }
     })
