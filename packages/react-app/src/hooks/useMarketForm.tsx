@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react";
 import {encodeQuestionText, getQuestionId} from "../lib/reality";
 import {parseUnits} from "@ethersproject/units";
 import {useCall, useContractFunction} from "@usedapp/core";
@@ -59,11 +60,20 @@ function orderByQuestionId(questionsData: MarketFactory.RealitioQuestionStruct[]
 const marketFactoryContract = new Contract(process.env.REACT_APP_MARKET_FACTORY as string, MarketFactory__factory.createInterface())
 
 export default function useMarketForm() {
-  const { state, send } = useContractFunction(marketFactoryContract, 'createMarket');
+  const { state, send, events } = useContractFunction(marketFactoryContract, 'createMarket');
 
   const { value: arbitrator } = useCall({ contract: marketFactoryContract, method: 'arbitrator', args: [] }) || {}
   const { value: realitio } = useCall({ contract: marketFactoryContract, method: 'realitio', args: [] }) || {}
   const { value: timeout } = useCall({ contract: marketFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
+
+  const [marketId, setMarketId] = useState('');
+
+  useEffect(()=> {
+    if (events && events[0].args.market) {
+
+      setMarketId(events?.[0].args.market.toLowerCase());
+    }
+  }, [events]);
 
   const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
     const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC');
@@ -99,5 +109,6 @@ export default function useMarketForm() {
     isLoading: !arbitrator || !realitio || !timeout,
     state,
     createMarket,
+    marketId,
   }
 }
