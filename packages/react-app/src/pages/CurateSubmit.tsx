@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BoxWrapper, BoxRow, FormError, BoxLabelCell} from "../components"
 import Button from '@mui/material/Button';
-import {useFieldArray, useForm, useFormContext, useWatch, FormProvider} from "react-hook-form";
+import {useFieldArray, useForm, useFormContext, useWatch, FormProvider, UnpackNestedValue, FieldArray, FieldArrayPath, UseFieldArrayReturn} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {FORMAT_GROUPS, FORMAT_ROUND_ROBIN, getEncodedParams, TournamentFormats} from "../lib/curate";
@@ -36,32 +36,39 @@ export type CurateSubmitFormValues = {
   }
 }
 
+function modifyArrayField<TFieldValues, TFieldArrayName extends FieldArrayPath<TFieldValues>>(
+  useFieldArrayReturn: UseFieldArrayReturn<TFieldValues, TFieldArrayName>,
+  expectedLength: number,
+  value: Partial<UnpackNestedValue<FieldArray<TFieldValues, TFieldArrayName>>> | Partial<UnpackNestedValue<FieldArray<TFieldValues, TFieldArrayName>>>[]
+) {
+  const {fields, remove, append} = useFieldArrayReturn;
+
+  if (fields.length > expectedLength) {
+    const to = fields.length
+    for(let i = expectedLength; i < to; i++) {
+      remove(i);
+    }
+  } else if (fields.length < expectedLength) {
+    const from = fields.length
+    for(let i = from; i < expectedLength; i++) {
+      append(value);
+    }
+  }
+}
+
 function RoundRobinForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
 
-  const {
-    fields: names,
-    append: appendNameField,
-    remove: removeNameField
-  } = useFieldArray({control, name: `extraDataRoundRobin.names`});
+  const useFieldArrayReturn = useFieldArray({control, name: `extraDataRoundRobin.names`});
+
+  const {fields: names} = useFieldArrayReturn;
 
   const tournaments = useWatch({control, name: 'extraDataRoundRobin.totalTournaments'});
 
   useEffect(() => {
-    if (names.length > tournaments) {
-      const to = names.length
-      for(let i = tournaments; i < to; i++) {
-        removeNameField(i);
-      }
-    } else if (names.length < tournaments) {
-      const from = names.length
-      for(let i = from; i < tournaments; i++) {
-        appendNameField({value: ''});
-      }
-    }
+    modifyArrayField<CurateSubmitFormValues, 'extraDataRoundRobin.names'>(useFieldArrayReturn, tournaments, {value: ''})
     // eslint-disable-next-line
   }, [tournaments, names]);
-
 
   return <BoxWrapper>
     <BoxRow>
@@ -117,49 +124,23 @@ function RoundRobinForm() {
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
 
-  const {
-    fields: names,
-    append: appendNameField,
-    remove: removeNameField
-  } = useFieldArray({control, name: `extraDataGroups.names`});
+  const useFieldNameArrayReturn = useFieldArray({control, name: `extraDataGroups.names`});
+  const {fields: nameFields} = useFieldNameArrayReturn;
 
-  const {
-    fields: sizes,
-    append: appendSizeField,
-    remove: removeSizeField
-  } = useFieldArray({control, name: `extraDataGroups.sizes`});
+  const useFieldSizeArrayReturn = useFieldArray({control, name: `extraDataGroups.sizes`});
+  const {fields: sizeFields} = useFieldSizeArrayReturn;
 
   const groups = useWatch({control, name: 'extraDataGroups.groups'});
 
   useEffect(() => {
-    if (names.length > groups) {
-      const to = names.length
-      for(let i = groups; i < to; i++) {
-        removeNameField(i);
-      }
-    } else if (names.length < groups) {
-      const from = names.length
-      for(let i = from; i < groups; i++) {
-        appendNameField({value: ''});
-      }
-    }
+    modifyArrayField<CurateSubmitFormValues, 'extraDataGroups.names'>(useFieldNameArrayReturn, groups, {value: ''});
     // eslint-disable-next-line
-  }, [groups, names]);
+  }, [groups, nameFields]);
 
   useEffect(() => {
-    if (sizes.length > groups) {
-      const to = sizes.length
-      for(let i = groups; i < to; i++) {
-        removeSizeField(i);
-      }
-    } else if (sizes.length < groups) {
-      const from = sizes.length
-      for(let i = from; i < groups; i++) {
-        appendSizeField({value: ''});
-      }
-    }
+    modifyArrayField<CurateSubmitFormValues, 'extraDataGroups.sizes'>(useFieldSizeArrayReturn, groups, {value: ''});
     // eslint-disable-next-line
-  }, [groups, sizes]);
+  }, [groups, sizeFields]);
 
   return <BoxWrapper>
     <BoxRow>
@@ -174,10 +155,10 @@ function GroupsForm() {
         <FormError><ErrorMessage errors={errors} name="extraDataGroups.groups" /></FormError>
       </div>
     </BoxRow>
-    {sizes.length > 0 && <BoxRow>
+    {sizeFields.length > 0 && <BoxRow>
       <BoxLabelCell>Groups Sizes</BoxLabelCell>
       <div style={{width: '100%'}}>
-        {sizes.map((_, i) => {
+        {sizeFields.map((_, i) => {
           return <div key={i} style={{margin: '0 5px 0 0'}}>
             <TextField {...register(`extraDataGroups.sizes.${i}.value`, {
               required: 'This field is required.',
@@ -191,10 +172,10 @@ function GroupsForm() {
       </div>
     </BoxRow>}
 
-    {names.length > 0 && <BoxRow>
+    {nameFields.length > 0 && <BoxRow>
       <BoxLabelCell>Groups Names</BoxLabelCell>
       <div style={{width: '100%'}}>
-        {names.map((_, i) => {
+        {nameFields.map((_, i) => {
           return <div key={i} style={{margin: '0 5px 0 0'}}>
             <TextField {...register(`extraDataGroups.names.${i}.value`, {required: 'This field is required.'})} placeholder={`Group ${i+1}`} />
             <FormError><ErrorMessage errors={errors} name={`extraDataGroups.names.${i}.value`} /></FormError>
