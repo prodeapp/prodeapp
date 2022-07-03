@@ -17,12 +17,17 @@ dataSources:
       abis:
         - name: MarketFactory
           file: ./contracts/abis/MarketFactory.json
+        - name: Market
+          file: ./contracts/abis/Market.json
       entities:
         - Market
         - Event
       eventHandlers:
         - event: NewMarket(indexed address,indexed bytes32,address)
           handler: handleNewMarket
+      callHandlers:
+        - function: createMarket(string,string,address,uint256,uint256,uint256,uint256,(uint256,string,uint32)[],uint16[])
+          handler: handleCreateMarket
       file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract

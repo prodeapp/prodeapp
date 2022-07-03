@@ -14,25 +14,25 @@ export function handleNewMarket(evt: NewMarket): void {
   log.info("handleNewMarket: {}", [evt.params.market.toHexString()])
 }
 
-// export function handleCreateMarket(call: CreateMarketCall): void {
-//   log.debug("handleCreateMarket: call for create Market", []);
-//   const marketAddress = call.outputs.value0;
-//   const marketSC = MarketSC.bind(marketAddress);
-//   let i = 0;
-//   while (true) {
-//     let questionID = marketSC.try_questionIDs(BigInt.fromI32(i));
-//     if (questionID.reverted) {
-//       log.warning("handleCreateMarket: questionID ask reverted. Breaking while", [])
-//       break;
-//     };
-//     let event = Event.load(questionID.value.toHexString());
-//     if (event === null) {
-//       log.error("handleCreateMarket: Could not found event with questionID {} ", [questionID.value.toHexString()]);
-//       break;
-//     }
-//     let questionData = call.inputs.questionsData[i]; 
-//     let fields = questionData.question.split('\u241f');   
-//     log.debug("handleCreateMarket: question: []", [questionData.question]);
-//     log.debug("handleCreateMarket: question fields: {}", [fields.toString()])
-//   }
-// }
+export function handleCreateMarket(call: CreateMarketCall): void {
+  log.debug("handleCreateMarket: call for create Market", []);
+  const marketAddress = call.outputs.value0;
+  const marketSC = MarketSC.bind(marketAddress);
+  let i = 0;
+  while (true) {
+    let questionID = marketSC.try_questionIDs(BigInt.fromI32(i));
+    if (questionID.reverted) {
+      log.warning("handleCreateMarket: questionID ask reverted. Breaking while", [])
+      break;
+    };
+    let event = Event.load(questionID.value.toHexString());
+    if (event === null) {
+      log.error("handleCreateMarket: Could not found event with questionID {} ", [questionID.value.toHexString()]);
+      break;
+    }
+    let questionData = call.inputs.questionsData[i]; 
+    let fields = questionData.question.split('\u241f');   
+    log.debug("handleCreateMarket: question: []", [questionData.question]);
+    log.debug("handleCreateMarket: question fields: {}", [fields.toString()])
+  }
+}
