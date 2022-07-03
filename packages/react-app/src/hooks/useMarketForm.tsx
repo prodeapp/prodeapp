@@ -92,14 +92,13 @@ export default function useMarketForm() {
 
     const minBond = parseUnits('0.5', 18); // TODO
 
-    await send({
-        marketName: step1State.market,
-        marketSymbol: '', // TODO
-      },
+    await send(
+      step1State.market,
+      '', // TODO
+      step2State.manager,
+      Math.round(step2State.managementFee * DIVISOR / 100),
       closingTime,
       parseUnits(String(step2State.price), 18),
-      Math.round(step2State.managementFee * DIVISOR / 100),
-      step2State.manager,
       minBond,
       orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),
       step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
