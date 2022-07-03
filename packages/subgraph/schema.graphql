@@ -14,6 +14,7 @@ type Market @entity {
   hash: String!
   name: String!
   owner: Bytes!
+  category: String!
   closingTime: BigInt!
   creationTime: BigInt!
   resultSubmissionPeriodStart: BigInt!
@@ -62,6 +63,7 @@ type Event @entity {
   nonce: BigInt!
   market: Market!
   answer: Bytes
+  category: String!
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!

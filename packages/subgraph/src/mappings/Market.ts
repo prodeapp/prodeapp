@@ -11,11 +11,12 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     log.info("handleInitialize: Initializing {} market", [evt.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
+    let managerAddress = Address.fromHexString(context.getString('manager'));
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
-    market.managementFee = marketContract.managementFee();
+    market.managementFee = marketContract.managementReward();
     market.closingTime = marketContract.closingTime();
     market.creationTime = evt.block.timestamp;
     market.submissionTimeout = marketContract.submissionTimeout();
@@ -23,7 +24,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
 
-    let manager = getOrCreateManager(marketContract.manager());
+    let manager = getOrCreateManager(Address.fromBytes(managerAddress));
     market.manager = manager.id;
 
     let nonce = BigInt.fromI32(0);
@@ -42,6 +43,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
         event.finalizeTs = realitioSC.getFinalizeTS(questionID);
         event.contentHash = realitioSC.getContentHash(questionID);
         event.historyHash = realitioSC.getHistoryHash(questionID);
+        event.category = '';
         event.arbitrationOccurred = false;
         event.isPendingArbitration = false;
         event.save();
@@ -141,7 +143,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
 }
 
 
-export function handleManagementReward(evt: ManagementReward): void {
+export function handleManagerReward(evt: ManagementReward): void {
     let market = Market.load(evt.address.toHexString())!;
     market.resultSubmissionPeriodStart = evt.block.timestamp;
     market.save();

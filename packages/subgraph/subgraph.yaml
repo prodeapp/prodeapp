@@ -19,8 +19,9 @@ dataSources:
           file: ./contracts/abis/MarketFactory.json
       entities:
         - Market
+        - Event
       eventHandlers:
-        - event: NewMarket(indexed address,indexed bytes32)
+        - event: NewMarket(indexed address,indexed bytes32,address)
           handler: handleNewMarket
       file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
@@ -97,6 +98,8 @@ templates:
           file: ./contracts/abis/Market.json
         - name: Realitio
           file: ./contracts/abis/Realitio.json
+        - name: Manager
+          file: ./contracts/abis/Manager.json
       eventHandlers:
         - event: QuestionsRegistered(bytes32[])
           handler: handleQuestionsRegistered
@@ -108,5 +111,5 @@ templates:
           handler: handleFundingReceived
         - event: BetReward(indexed uint256,uint256)
           handler: handleBetReward
-        - event: ManagementReward(indexed address,uint256)
-          handler: handleManagementReward
+        - event: ManagementReward(address,uint256)
+          handler: handleManagerReward
