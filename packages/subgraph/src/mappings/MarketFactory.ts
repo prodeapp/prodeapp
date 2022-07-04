@@ -45,7 +45,7 @@ export function handleCreateMarket(call: CreateMarketCall): void {
     let questionText = data.question;
     let fields = questionText.split('\u241f');
     event.title = fields[0];
-    let outcomes = fields[1].replace("\"", "").split(',');
+    let outcomes = fields[1].split('"').join('').split(',');
     event.outcomes = outcomes;
     event.category = fields[2];
     event.lang = fields[3];
