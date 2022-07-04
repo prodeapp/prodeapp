@@ -1,7 +1,7 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
 import { Bet, Funder, Event, Market } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the

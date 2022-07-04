@@ -8,7 +8,7 @@ import {
   ItemSubmitted,
   MetaEvidence as MetaEvidenceEvent
 } from '../types/ClassicCurate/GeneralizedTCR';
-import {getOrCreateRegistry} from "./helpers";
+import {getOrCreateRegistry} from "./utils/helpers";
 
 // Items on a TCR can be in 1 of 4 states:
 // - (0) Absent: The item is not registered on the TCR and there are no pending requests.

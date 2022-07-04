@@ -1,8 +1,8 @@
 import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
 import { Bet, Event, Market } from "../types/schema";
-import { correctAnswerPoints } from "./constants";
-import { getBetID } from "./helpers";
+import { correctAnswerPoints } from "./utils/constants";
+import { getBetID } from "./utils/helpers";
 
 export function handleNewAnswer(evt: LogNewAnswer): void {
     let id = evt.params.question_id.toHexString();
