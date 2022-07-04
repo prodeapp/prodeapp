@@ -58,7 +58,6 @@ type CurateItem @entity {
 type Event @entity {
   "questionID"
   id: ID!
-  questionID: Bytes!
   nonce: BigInt!
   market: Market!
   answer: Bytes

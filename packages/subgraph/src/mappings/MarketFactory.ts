@@ -1,11 +1,10 @@
-import { Address, BigInt, ByteArray, Bytes, DataSourceContext, json, JSONValue, JSONValueKind, log } from '@graphprotocol/graph-ts';
+import { Address, BigInt, DataSourceContext, log } from '@graphprotocol/graph-ts';
 import { Market } from '../types/templates';
 import { NewMarket, CreateMarketCall } from '../types/MarketFactory/MarketFactory';
 import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Event } from '../types/schema';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { RealitioAddress } from './utils/constants';
-import { sprintf } from './utils/sprintf';
 
 export function handleNewMarket(evt: NewMarket): void {
   // Start indexing the market; `event.params.market` is the
@@ -31,7 +30,6 @@ export function handleCreateMarket(call: CreateMarketCall): void {
     };
     let event = new Event(questionID.value.toHexString());
     event.market = marketAddress.toHexString();
-    event.questionID = questionID.value;
     event.nonce = BigInt.fromI32(nonce);
     event.openingTs = realitioSC.getOpeningTS(questionID.value);
     event.timeout = realitioSC.getTimeout(questionID.value);
