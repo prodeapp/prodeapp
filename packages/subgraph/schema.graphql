@@ -13,7 +13,6 @@ type Market @entity {
   id: ID!
   hash: String!
   name: String!
-  owner: Bytes!
   category: String!
   closingTime: BigInt!
   creationTime: BigInt!
