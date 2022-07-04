@@ -6,20 +6,23 @@ import Grid from '@mui/material/Grid';
 import {Link as RouterLink, Link} from "react-router-dom";
 import {MarketStatus, useMarkets} from "../hooks/useMarkets";
 import { Market } from "../graphql/subgraph";
-import { formatAmount, getTimeLeft } from "../lib/helpers";
-import { FormControlLabel, FormGroup, Switch, Typography } from "@mui/material";
+import {formatAmount, getTimeLeft, MARKET_CATEGORIES} from "../lib/helpers";
+import {FormControlLabel, FormGroup, MenuItem, Switch, Typography} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import {BigNumber} from "@ethersproject/bignumber";
+import TextField from "@mui/material/TextField";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
 
   const [status, setStatus] = useState<MarketStatus | undefined>('active');
+  const [category, setCategory] = useState('');
 
   const { isLoading, error, data: markets } = useMarkets({
     curated: verifiedStatus ? verifiedStatus : undefined,
-    status
+    status,
+    category
   });
 
   const changeStatus = (newStatus: MarketStatus) => {
@@ -35,6 +38,17 @@ function Home() {
             <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}>Active</Button></div>
             <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}>Pending</Button></div>
             <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}>Closed</Button></div>
+          </Box>
+          <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <div><Typography style={{paddingRight:'10px'}}>Category: </Typography></div>
+            <TextField
+              select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              style={{width: '200px'}}>
+              <MenuItem value="">All</MenuItem>
+              {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}>{category.text}</MenuItem>)}
+            </TextField>
           </Box>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <FormGroup>
