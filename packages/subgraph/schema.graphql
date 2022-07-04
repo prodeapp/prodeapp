@@ -64,6 +64,9 @@ type Event @entity {
   market: Market!
   answer: Bytes
   category: String!
+  title: String!
+  lang: String!
+  outcomes: [String!]!
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!

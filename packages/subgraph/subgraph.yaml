@@ -9,8 +9,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0xFE6bd7451E92DeddD1096430e659e8af882D2eb7"
-      startBlock: 22489558
+      address: "0xf0254936564F85CB139c889976aC17DEC44afeB3"
+      startBlock: 22982499
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -19,6 +19,8 @@ dataSources:
           file: ./contracts/abis/MarketFactory.json
         - name: Market
           file: ./contracts/abis/Market.json
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
       entities:
         - Market
         - Event
@@ -101,8 +103,6 @@ templates:
       abis:
         - name: Market
           file: ./contracts/abis/Market.json
-        - name: Realitio
-          file: ./contracts/abis/Realitio.json
         - name: Manager
           file: ./contracts/abis/Manager.json
       eventHandlers:
