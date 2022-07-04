@@ -4,8 +4,8 @@ import { NewMarket, CreateMarketCall } from '../types/MarketFactory/MarketFactor
 import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Event } from '../types/schema';
 import { Realitio } from '../types/RealitioV3/Realitio';
-import { RealitioAddress } from './constants';
-import { sprintf } from './sprintf';
+import { RealitioAddress } from './utils/constants';
+import { sprintf } from './utils/sprintf';
 
 export function handleNewMarket(evt: NewMarket): void {
   // Start indexing the market; `event.params.market` is the
