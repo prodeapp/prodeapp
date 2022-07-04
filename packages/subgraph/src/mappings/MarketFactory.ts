@@ -34,6 +34,8 @@ export function handleCreateMarket(call: CreateMarketCall): void {
     event.openingTs = realitioSC.getOpeningTS(questionID.value);
     event.timeout = realitioSC.getTimeout(questionID.value);
     event.minBond = realitioSC.getMinBond(questionID.value);
+    event.bounty = realitioSC.getBounty(questionID.value);
+    event.lastBond = BigInt.fromI32(0);
     event.finalizeTs = realitioSC.getFinalizeTS(questionID.value);
     event.contentHash = realitioSC.getContentHash(questionID.value);
     event.historyHash = realitioSC.getHistoryHash(questionID.value);

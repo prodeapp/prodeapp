@@ -55,6 +55,8 @@ dataSources:
           handler: handleFinalize
         - event: LogNotifyOfArbitrationRequest(indexed bytes32,indexed address)
           handler: handleArbitrationRequest
+        - event: LogFundAnswerBounty(indexed bytes32,uint256,uint256,indexed address)
+          handler: handleFundAnswerBounty
       file: ./src/mappings/Realitio.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract

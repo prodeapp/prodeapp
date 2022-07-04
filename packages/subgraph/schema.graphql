@@ -68,10 +68,12 @@ type Event @entity {
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!
-  openingTs: BigInt!,
-  finalizeTs: BigInt!,
-  timeout: BigInt!,
-  minBond: BigInt!,
+  openingTs: BigInt!
+  finalizeTs: BigInt!
+  timeout: BigInt!
+  minBond: BigInt!
+  lastBond: BigInt!
+  bounty: BigInt!
   contentHash: Bytes!
   historyHash: Bytes!
 }

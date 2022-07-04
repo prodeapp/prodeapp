@@ -1,5 +1,5 @@
 import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
-import { LogFinalize, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
+import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
 import { Bet, Event, Market } from "../types/schema";
 import { correctAnswerPoints } from "./utils/constants";
 import { getBetID } from "./utils/helpers";
@@ -21,13 +21,14 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
         oldAnswer = tmpAnswer;
     }
     event.answer = evt.params.answer
+    event.lastBond = evt.params.bond;
     event.save();
 
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
     const questionNonce = event.nonce;
     let marketId = ByteArray.fromHexString(event.market);
-    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(),event.answer!.toHexString()]);
+    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
     let betID = getBetID(marketId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
@@ -42,7 +43,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
                 if (betResult.equals(oldAnswer)) {
                     bet.points = bet.points.minus(correctAnswerPoints);
                 }
-            } 
+            }
         }
         bet.save()
         tokenID = tokenID.plus(BigInt.fromI32(1));
@@ -82,4 +83,15 @@ export function handleFinalize(evt: LogFinalize): void {
     event.isPendingArbitration = false;
     event.arbitrationOccurred = true;
     event.save();
+}
+
+export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
+    let questionID = event.params.question_id.toHexString();
+    let evnt = Event.load(questionID);
+    if (evnt == null) {
+        log.info('cannot find question {} to finalize', [questionID]);
+        return;
+    }
+    evnt.bounty = event.params.bounty;
+    evnt.save()
 }
