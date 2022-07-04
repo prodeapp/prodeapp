@@ -16,8 +16,8 @@ import {useQuestions} from "../hooks/useQuestions";
 import {Question} from "../graphql/subgraph";
 import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
-import QuestionsList from "../components/CurateSubmit/QuestionsList";
-import {CurateSubmitFormValues} from "../components/CurateSubmit";
+import QuestionsList from "../components/Curate/QuestionsList";
+import {CurateSubmitFormValues} from "../components/Curate";
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -131,7 +131,8 @@ function CurateSubmit() {
     })
 
     setQuestions(_questions)
-  }, [rawQuestions, questionsUseFieldArrayReturn]);
+  // eslint-disable-next-line
+  }, [rawQuestions]);
 
   useEffect(() => {
     if(market) {
@@ -153,18 +154,23 @@ function CurateSubmit() {
   }
 
   const onSubmit = async (data: CurateSubmitFormValues) => {
-    const encodedParams = await getEncodedParams(
-      data,
-      getQuestionsHash(questions.map(question => question.questionId)),
-      questions.map(question => question.questionId)
-    )
 
-    await send(
-      encodedParams,
-      {
-        value: submissionDeposit
-      }
-    );
+    try {
+      const encodedParams = await getEncodedParams(
+        data,
+        getQuestionsHash(questions.map(question => question.questionId)),
+        questions.map(question => question.questionId)
+      )
+
+      await send(
+        encodedParams,
+        {
+          value: submissionDeposit
+        }
+      );
+    } catch (e: any) {
+      alert(e?.message || 'Unexpected error');
+    }
   }
 
   if (state.status === 'Success') {

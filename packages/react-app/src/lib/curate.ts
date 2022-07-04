@@ -1,13 +1,12 @@
 import {apolloProdeQuery} from "./apolloClient";
 import {gtcrDecode, gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
-import {CurateSubmitFormValues} from "../components/CurateSubmit";
+import {CurateSubmitFormValues} from "../components/Curate";
+import validate from "../components/Curate/schema";
 
 export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
 export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
 export const FORMAT_GROUPS = 'groups';
-export const FORMAT_UNCORRELATED = 'uncorrelated';
-export const FORMAT_OTHER = 'other';
 
 export const TournamentFormats: Record<string, string> = {
   [FORMAT_SINGLE_ELIMINATION]: 'Single Elimination',
@@ -65,6 +64,12 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
     description: data.description,
     formats: [getTournamentFormat(data, questionsIds)]
   };
+
+  const isValid = validate(json);
+
+  if (!isValid) {
+    throw new Error('Invalid JSON schema')
+  }
 
   const values: CurateListFields = {
     Title: data.name,

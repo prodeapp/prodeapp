@@ -16,122 +16,10 @@ import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
 import {fetchEvents} from "../hooks/useEvents";
 import {useQuestions} from "../hooks/useQuestions";
-const Ajv = require("ajv")
+import validate from "../components/Curate/schema";
 
 type FormValues = {
   itemId: string
-}
-
-const jsonSchema = {
-  type: "object",
-  definitions: {
-    BaseFormat: {
-      type: "object",
-      properties: {
-        questions: {
-          type: "array",
-          minItems: 1,
-          items: {
-            type: "string",
-          }
-        }
-      },
-      required: ["questions"]
-    },
-    // formats without extra data
-    FormatSimple: {
-      type: "object",
-      allOf: [
-        {"$ref": "#/definitions/BaseFormat"},
-      ],
-      properties: {
-        type: {
-          type: "string",
-          enum: ["single-elimination", "double-elimination", "uncorrelated", "other"],
-        },
-      },
-    },
-    FormatRoundRobin: {
-      type: "object",
-      allOf: [
-        {"$ref": "#/definitions/BaseFormat"},
-      ],
-      properties: {
-        type: {
-          type: "string",
-          const: "round-robin",
-        },
-        extraData: {
-          type: "object",
-          properties: {
-            totalTournaments: {
-              type: "number",
-            },
-            competitors: {
-              type: "number",
-            },
-            rounds: {
-              type: "number",
-            },
-            names: {
-              type: "array",
-              items: {
-                type: "string",
-              }
-            }
-          },
-          required: ["totalTournaments", "competitors", "rounds"]
-        },
-      },
-    },
-    FormatGroups: {
-      type: "object",
-      allOf: [
-        {"$ref": "#/definitions/BaseFormat"},
-      ],
-      properties: {
-        type: {
-          type: "string",
-          const: "groups",
-        },
-        extraData: {
-          type: "object",
-          properties: {
-            groups: {
-              anyOf: [
-                {type: "number"},
-                {type: "array", items: {type: "number"}},
-              ],
-            },
-            names: {
-              type: "array",
-              items: {
-                type: "string",
-              }
-            }
-          },
-          required: ["groups"],
-        },
-
-      },
-    },
-  },
-  properties: {
-    description: {type: "string"},
-    formats: {
-      type: "array",
-      minItems: 1,
-      items: {
-        anyOf: [
-          {"$ref": "#/definitions/FormatSimple"},
-          {"$ref": "#/definitions/FormatRoundRobin"},
-          {"$ref": "#/definitions/FormatGroups"},
-        ],
-      },
-    },
-  },
-  required: ["formats"],
-  additionalProperties: false
 }
 
 export const fetchMarketByHash = async (hash: string) => {
@@ -197,10 +85,6 @@ function CurateValidator() {
       setResults([{type: 'error', message: 'Item id not found'}]);
       return;
     }
-
-    // validate json
-    const ajv = new Ajv()
-    const validate = ajv.compile(jsonSchema)
 
     const isValid = validate(itemProps.JASON);
 
