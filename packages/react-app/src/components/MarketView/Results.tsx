@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {BoxWrapper, BoxRow} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
-import {useQuestions} from "../../hooks/useQuestions";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
 import AnswerDialog from "../Answer/AnswerDialog";
@@ -10,7 +9,6 @@ import {queryClient} from "../../lib/react-query";
 
 export default function Results({marketId}: {marketId: string}) {
   const { data: events } = useEvents(marketId);
-  const { data: questions } = useQuestions(marketId);
   const [currentEvent, setCurrentEvent] = useState<Event|undefined>();
   const [openModal, setOpenModal] = useState(false);
 
@@ -19,7 +17,7 @@ export default function Results({marketId}: {marketId: string}) {
     if (currentEvent) {
       // refetch events and question just in case the user has provided an answer
       queryClient.invalidateQueries(['useEvents', currentEvent.market.id]);
-      queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentEvent.questionID]);
+      queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentEvent.id]);
     }
   }
 
@@ -35,16 +33,16 @@ export default function Results({marketId}: {marketId: string}) {
       <div style={{width: '33%'}}>Status</div>
       <div style={{width: '33%'}}></div>
     </BoxRow>
-    {events && questions && events.map((event, i) => {
+    {events && events.map((event, i) => {
       const finalized = isFinalized(event);
       const openingTimeLeft = getTimeLeft(event.openingTs);
       const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0);
 
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
-          <div>{questions?.[event.questionID].qTitle}</div>
+          <div>{event.title}</div>
           <div style={{display: 'flex', marginTop: 20, width: '100%', fontWeight: 'normal'}}>
-            <div style={{width: '33%'}}>{openingTimeLeft !== false ? `Open to answers in ${openingTimeLeft}` : getAnswerText(event.answer, questions?.[event.questionID].outcomes || [])}</div>
+            <div style={{width: '33%'}}>{openingTimeLeft !== false ? `Open to answers in ${openingTimeLeft}` : getAnswerText(event.answer, event.outcomes || [])}</div>
             <div style={{width: '33%'}}>
               {finalized && <span style={{color: 'green'}}>Finalized</span>}
               {!finalized && (

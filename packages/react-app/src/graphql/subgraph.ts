@@ -3,6 +3,7 @@ import { BigNumberish } from "@ethersproject/bignumber";
 export interface Market {
   id: string
   name: string
+  category: string
   price: BigNumberish
   creationTime: string
   closingTime: string
@@ -23,8 +24,8 @@ export interface Market {
 export const MARKET_FIELDS = `
     fragment MarketFields on Market {
       id
-      hash
       name
+      category
       price
       creationTime
       closingTime
@@ -41,29 +42,39 @@ export const MARKET_FIELDS = `
     }
 `;
 
+export type Outcome = string
+
 export interface Event {
   id: string
-  questionID: string
   nonce: BigNumberish
   market: {
     id: string
   }
+  title: string
   answer: string | null
+  outcomes: Outcome[]
   openingTs: string
   answerFinalizedTimestamp: string | null
   isPendingArbitration: boolean
+  minBond: string
+  lastBond: string
+  bounty: string
 }
 
 export const EVENT_FIELDS = `
   fragment EventFields on Event {
     id
-    questionID
     nonce
     market{id}
+    title
     answer
+    outcomes
     openingTs
     answerFinalizedTimestamp
     isPendingArbitration
+    minBond
+    lastBond
+    bounty
   }
 `;
 
@@ -133,11 +144,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    events: {
-      questionID: string
-      answer: string | null
-      nonce: string
-    }[]
+    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes'>[]
   }
   tokenID: BigNumberish
   points: BigNumberish
@@ -157,9 +164,11 @@ export const BET_FIELDS = `
       id,
       name,
       events {
-        questionID
+        id
         answer
         nonce
+        title
+        outcomes
       }
     }
     tokenID
@@ -168,34 +177,6 @@ export const BET_FIELDS = `
     count
     claim
     reward
-  }
-`;
-
-export interface Outcome {
-  id: string
-  answer: string
-}
-
-export interface Question {
-  questionId: string
-  qTitle: string
-  outcomes: Outcome[]
-  minBond: string
-  lastBond: string
-  bounty: string
-}
-
-export const QUESTION_FIELDS = `
-  fragment QuestionFields on Question {
-    questionId
-    qTitle
-    outcomes {
-      id
-      answer
-    }
-    minBond
-    lastBond
-    bounty
   }
 `;
 

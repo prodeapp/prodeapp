@@ -219,9 +219,9 @@ function PreviewText({title, value, setActiveStep, step}: {title: string, value:
 
 function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1Values, setActiveStep: (step: number) => void}) {
   return <div style={{marginLeft: '20px'}}>
-    {step1State.events.map(event => {
+    {step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
-      return <PreviewText title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
+      return <PreviewText key={i} title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
     })}
   </div>
 }

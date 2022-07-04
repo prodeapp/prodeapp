@@ -19,7 +19,6 @@ export const fetchEvents = async (marketId: string) => {
   return response.data.events;
 };
 
-
 export const useEvents = (marketId: string) => {
   return useQuery<Event[], Error>(
     ["useEvents", marketId],

@@ -5,16 +5,12 @@ import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import AnswerForm, {AnswerFormValues} from "./AnswerForm";
 import {Event} from "../../graphql/subgraph";
-import {useQuestion} from "../../hooks/useQuestions";
-import Alert from "@mui/material/Alert";
 
 type AnswerDialogProps = DialogProps & {
   event: Event
 }
 
 function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
-  const { data: question, error, isLoading } = useQuestion(process.env.REACT_APP_REALITIO as string, event.questionID);
-
   const { register, control, formState: {errors}, handleSubmit } = useForm<AnswerFormValues>({defaultValues: {
     outcome: '',
   }});
@@ -29,11 +25,10 @@ function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
     <AppDialog
       open={open}
       handleClose={handleClose}
-      title={question?.qTitle || (isLoading && 'Loading...') || ''}
+      title={event.title}
       actions={dialogActions}
     >
-      {error && <Alert severity="error">{error.message}</Alert>}
-      {question && <AnswerForm {...{event, question, register, control, errors, handleSubmit}} />}
+      <AnswerForm {...{event, register, control, errors, handleSubmit}} />
     </AppDialog>
   );
 }
