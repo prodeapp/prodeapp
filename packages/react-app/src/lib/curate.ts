@@ -1,11 +1,10 @@
 import {apolloProdeQuery} from "./apolloClient";
 import {gtcrDecode, gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
-import {CurateSubmitFormValues} from "../pages/CurateSubmit";
+import {CurateSubmitFormValues} from "../components/CurateSubmit";
 
 export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
 export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
-export const FORMAT_ROUND_ROBIN = 'round-robin';
 export const FORMAT_GROUPS = 'groups';
 export const FORMAT_UNCORRELATED = 'uncorrelated';
 export const FORMAT_OTHER = 'other';
@@ -13,10 +12,7 @@ export const FORMAT_OTHER = 'other';
 export const TournamentFormats: Record<string, string> = {
   [FORMAT_SINGLE_ELIMINATION]: 'Single Elimination',
   [FORMAT_DOUBLE_ELIMINATION]: 'Double Elimination',
-  [FORMAT_ROUND_ROBIN]: 'Round Robin',
   [FORMAT_GROUPS]: 'Groups',
-  [FORMAT_UNCORRELATED]: 'Uncorrelated',
-  [FORMAT_OTHER]: 'Other',
 }
 
 interface CurateListFields {
@@ -116,17 +112,12 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
     extraData: {},
   }
 
-  if (data.format === FORMAT_ROUND_ROBIN) {
-    const extraData: Record<string, any> = data.extraDataRoundRobin;
-    extraData.names = data.extraDataRoundRobin.names.map(n => n.value)
-    format.extraData = extraData;
-  }
-
   if (data.format === FORMAT_GROUPS) {
-    const extraData: Record<string, any> = data.extraDataGroups;
-    extraData.names = data.extraDataGroups.names.map(n => n.value)
-    extraData.sizes = data.extraDataGroups.sizes.map(s => s.value)
-    format.extraData = extraData;
+    format.extraData = {
+      sizes: data.extraDataGroups.groups.map(g => g.size),
+      names: data.extraDataGroups.groups.map(g => g.name),
+      rounds: data.extraDataGroups.rounds
+    };
   }
 
   return format;
