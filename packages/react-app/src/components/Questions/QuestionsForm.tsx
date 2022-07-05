@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {FormError, BoxWrapper, BoxRow} from "../../components"
-import {useQuestions} from "../../hooks/useQuestions";
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {Control, useFieldArray} from "react-hook-form";
 import {UseFormHandleSubmit, UseFormRegister} from "react-hook-form/dist/types/form";
@@ -48,7 +47,6 @@ export default function QuestionsForm({marketId, price, control, register, error
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(marketId);
   const { isLoading: isLoadingMarket, data: market } = useMarket(marketId);
-  const { data: questions } = useQuestions(marketId);
   const [success, setSuccess] = useState(false);
 
   const { fields, append, remove } = useFieldArray({
@@ -121,11 +119,11 @@ export default function QuestionsForm({marketId, price, control, register, error
           <div style={{width: '20%'}}>Outcome</div>
         </BoxRow>
         {fields.map((field, i) => {
-          if (!events || !events[i] || !questions?.[events[i].questionID]) {
+          if (!events || !events[i]) {
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{futurizeQuestion(questions[events[i].questionID].qTitle)}</div>
+            <div style={{width: '60%'}}>{futurizeQuestion(events[i].title)}</div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
@@ -133,7 +131,7 @@ export default function QuestionsForm({marketId, price, control, register, error
                   id={`question-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
                 >
-                  {questions[events[i].questionID].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>

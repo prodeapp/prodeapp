@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {BoxWrapper, BoxRow, FormError, BoxLabelCell} from "../components"
 import Button from '@mui/material/Button';
 import {useFieldArray, useForm, useFormContext, useWatch, FormProvider} from "react-hook-form";
@@ -12,8 +12,7 @@ import {GeneralizedTCR__factory} from "../typechain";
 import TextField from '@mui/material/TextField';
 import {useParams} from "react-router-dom";
 import Alert from "@mui/material/Alert";
-import {useQuestions} from "../hooks/useQuestions";
-import {Question} from "../graphql/subgraph";
+import {useEvents} from "../hooks/useEvents";
 import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
 import QuestionsList from "../components/Curate/QuestionsList";
@@ -92,8 +91,7 @@ function CurateSubmit() {
 
   const { marketId } = useParams();
   const { data: market } = useMarket(String(marketId));
-  const { isLoading, data: rawQuestions } = useQuestions(String(marketId));
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const { isLoading, data: events } = useEvents(String(marketId));
 
   const { account, error: walletError } = useEthers();
 
@@ -120,19 +118,15 @@ function CurateSubmit() {
   const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_CURATE_REGISTRY as string, GeneralizedTCR__factory.createInterface()), 'addItem');
 
   useEffect(() => {
-    if (questionsUseFieldArrayReturn.fields.length > 0) {
+    if (questionsUseFieldArrayReturn.fields.length > 0 || !events) {
       return;
     }
 
-    const _questions = Object.values(rawQuestions || []);
-
-    _questions.forEach(q => {
-      questionsUseFieldArrayReturn.append({value: q.questionId})
+    events.forEach(e => {
+      questionsUseFieldArrayReturn.append({value: e.id})
     })
-
-    setQuestions(_questions)
   // eslint-disable-next-line
-  }, [rawQuestions]);
+  }, [events]);
 
   useEffect(() => {
     if(market) {
@@ -149,7 +143,7 @@ function CurateSubmit() {
     return <div>Loading...</div>
   }
 
-  if (!questions) {
+  if (!events) {
     return <Alert severity="error">Market not found.</Alert>
   }
 
@@ -158,8 +152,8 @@ function CurateSubmit() {
     try {
       const encodedParams = await getEncodedParams(
         data,
-        getQuestionsHash(questions.map(question => question.questionId)),
-        questions.map(question => question.questionId)
+        getQuestionsHash(data.questions.map(question => question.value)),
+        data.questions.map(question => question.value)
       )
 
       await send(
@@ -226,9 +220,9 @@ function CurateSubmit() {
       {format === FORMAT_GROUPS && <GroupsForm />}
 
       <BoxWrapper>
-        {rawQuestions && <BoxRow>
+        {events && <BoxRow>
           <div style={{width: '100%'}}>
-            <QuestionsList useFieldArrayReturn={questionsUseFieldArrayReturn} rawQuestions={rawQuestions}/>
+            <QuestionsList useFieldArrayReturn={questionsUseFieldArrayReturn} events={events}/>
           </div>
         </BoxRow>}
         <BoxRow>

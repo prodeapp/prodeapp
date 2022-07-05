@@ -8,10 +8,11 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import {MenuItem} from "@mui/material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import {Controller, useFieldArray, useForm, FormProvider} from "react-hook-form";
+import {Controller, useFieldArray, useForm, FormProvider, useWatch} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import PrizeWeightsBuilder from "../components/MarketCreate/PrizeWeightsBuilder";
 import EventBuilder from "../components/MarketCreate/EventBuilder";
@@ -23,6 +24,7 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
+import {getCategoryText, MARKET_CATEGORIES} from "../lib/helpers";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -49,6 +51,8 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
 
   const { fields: eventsFields, append: appendEvent, remove: removeEvent } = useFieldArray({control, name: 'events'});
 
+  const category = useWatch({ control, name: `category` });
+
   const addEvent = () => {
     return appendEvent({
       questionPlaceholder: '',
@@ -68,6 +72,21 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
               required: 'This field is required.'
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
+          </div>
+        </BoxRow>
+        <BoxRow>
+          <BoxLabelCell>Category</BoxLabelCell>
+          <div style={{width: '100%'}}>
+            <TextField
+              select
+              value={category}
+              {...register('category', {
+                required: 'This field is required.'
+              })}
+              style={{width: '100%'}}>
+              {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}>{category.text}</MenuItem>)}
+            </TextField>
+            <FormError><ErrorMessage errors={errors} name="category" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
@@ -200,9 +219,9 @@ function PreviewText({title, value, setActiveStep, step}: {title: string, value:
 
 function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1Values, setActiveStep: (step: number) => void}) {
   return <div style={{marginLeft: '20px'}}>
-    {step1State.events.map(event => {
+    {step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
-      return <PreviewText title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
+      return <PreviewText key={i} title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
     })}
   </div>
 }
@@ -213,6 +232,8 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
     <h2>Review the market data</h2>
 
     <PreviewText title="Market Name" value={step1State.market} setActiveStep={setActiveStep} step={0} />
+
+    <PreviewText title="Category" value={getCategoryText(step1State.category)} setActiveStep={setActiveStep} step={0} />
 
     <div style={{fontWeight: 'bold', marginBottom: '10px'}}>Events</div>
     <PreviewEvents step1State={step1State} setActiveStep={setActiveStep} />
@@ -276,6 +297,7 @@ function MarketsCreate() {
     mode: 'all',
     defaultValues: {
       market: '',
+      category: '',
       closingTime: defaultClosingTime,
       events: [],
     }

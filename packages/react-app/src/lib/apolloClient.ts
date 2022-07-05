@@ -5,17 +5,8 @@ const prodeClient = new ApolloClient({
     cache: new InMemoryCache(),
   });
 
-const realityClient = new ApolloClient({
-    uri: "https://api.thegraph.com/subgraphs/name/realityeth/realityeth-xdai",
-    cache: new InMemoryCache(),
-  });
-
 const apolloProdeQuery = async<T>(queryString: string, variables: Record<string, any> = {}) => {
   return apolloQuery<T>(prodeClient, queryString, variables);
-};
-
-const apolloRealityQuery = async<T>(queryString: string, variables: Record<string, any> = {}) => {
-  return apolloQuery<T>(realityClient, queryString, variables);
 };
 
 const apolloQuery = async<T>(client: ApolloClient<NormalizedCacheObject >, queryString: string, variables: Record<string, any> = {}) => {
@@ -29,4 +20,4 @@ const apolloQuery = async<T>(client: ApolloClient<NormalizedCacheObject >, query
   }
 };
 
-export {apolloProdeQuery, apolloRealityQuery};
+export {apolloProdeQuery};

@@ -16,6 +16,7 @@ type PrizeWeight = {value: number};
 
 export type MarketFormStep1Values = {
   market: string
+  category: string
   closingTime: Date
   events: {questionPlaceholder: string, answers: Answers}[]
 }
@@ -84,21 +85,20 @@ export default function useMarketForm() {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
         templateID: 2,
-        question: encodeQuestionText('single-select', eventData.question, eventData.answers, 'sports', 'en_US'),
+        question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
         openingTS: openingTS,
       }
     })
 
     const minBond = parseUnits('0.5', 18); // TODO
 
-    await send({
-        marketName: step1State.market,
-        marketSymbol: '', // TODO
-      },
+    await send(
+      step1State.market,
+      '', // TODO
+      step2State.manager,
+      Math.round(step2State.managementFee * DIVISOR / 100),
       closingTime,
       parseUnits(String(step2State.price), 18),
-      Math.round(step2State.managementFee * DIVISOR / 100),
-      step2State.manager,
       minBond,
       orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),
       step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))

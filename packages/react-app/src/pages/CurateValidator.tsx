@@ -14,8 +14,7 @@ import {
 } from "../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
-import {fetchEvents} from "../hooks/useEvents";
-import {useQuestions} from "../hooks/useQuestions";
+import {fetchEvents, useEvents} from "../hooks/useEvents";
 import validate from "../components/Curate/schema";
 
 type FormValues = {
@@ -68,7 +67,7 @@ function CurateValidator() {
     }});
 
   const [marketId, setMarketId] = useState('');
-  const {data: questions} = useQuestions(marketId);
+  const {data: events} = useEvents(marketId);
   const [results, setResults] = useState<ValidationResult[]>([]);
 
   const onSubmit = async (data: FormValues) => {
@@ -104,7 +103,7 @@ function CurateValidator() {
 
       // validate hash
       _results.push(
-        getQuestionsHash(events.map(event => event.questionID)) !== itemProps.Hash
+        getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
           ? {type: 'error', message: 'Invalid market hash'}
           : {type: 'success', message: 'Valid market hash'}
       );
@@ -151,7 +150,7 @@ function CurateValidator() {
       </BoxWrapper>
 
       {results.map((result, i) => <Alert severity={result.type} key={i}>{result.message}</Alert>)}
-      {questions && Object.values(questions).map((question, i) => <div key={i} style={{margin: '10px 0'}}>{question.qTitle}</div>)}
+      {events && events.map((event, i) => <div key={i} style={{margin: '10px 0'}}>{event.title}</div>)}
     </form>
   );
 }

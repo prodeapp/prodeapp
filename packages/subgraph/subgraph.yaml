@@ -9,19 +9,27 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0xFE6bd7451E92DeddD1096430e659e8af882D2eb7"
-      startBlock: 22489558
+      address: "0xf0254936564F85CB139c889976aC17DEC44afeB3"
+      startBlock: 22982499
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       abis:
         - name: MarketFactory
           file: ./contracts/abis/MarketFactory.json
+        - name: Market
+          file: ./contracts/abis/Market.json
+        - name: Realitio
+          file: ./contracts/abis/Realitio.json
       entities:
         - Market
+        - Event
       eventHandlers:
-        - event: NewMarket(indexed address,indexed bytes32)
+        - event: NewMarket(indexed address,indexed bytes32,address)
           handler: handleNewMarket
+      callHandlers:
+        - function: createMarket(string,string,address,uint256,uint256,uint256,uint256,(uint256,string,uint32)[],uint16[])
+          handler: handleCreateMarket
       file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
@@ -47,6 +55,8 @@ dataSources:
           handler: handleFinalize
         - event: LogNotifyOfArbitrationRequest(indexed bytes32,indexed address)
           handler: handleArbitrationRequest
+        - event: LogFundAnswerBounty(indexed bytes32,uint256,uint256,indexed address)
+          handler: handleFundAnswerBounty
       file: ./src/mappings/Realitio.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
@@ -95,8 +105,8 @@ templates:
       abis:
         - name: Market
           file: ./contracts/abis/Market.json
-        - name: Realitio
-          file: ./contracts/abis/Realitio.json
+        - name: Manager
+          file: ./contracts/abis/Manager.json
       eventHandlers:
         - event: QuestionsRegistered(bytes32[])
           handler: handleQuestionsRegistered
@@ -108,5 +118,5 @@ templates:
           handler: handleFundingReceived
         - event: BetReward(indexed uint256,uint256)
           handler: handleBetReward
-        - event: ManagementReward(indexed address,uint256)
-          handler: handleManagementReward
+        - event: ManagementReward(address,uint256)
+          handler: handleManagerReward

@@ -52,7 +52,7 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
   }
 
   const value = BigNumber.from(currentAnswer);
-  return outcomes[value.toNumber()]?.answer || noAnswerText;
+  return outcomes[value.toNumber()] || noAnswerText;
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490
@@ -63,4 +63,19 @@ export function isFinalized(event: Event) {
     && (finalizeTs > 0)
     && (compareAsc(new Date(), fromUnixTime(finalizeTs)) === 1)
   );
+}
+
+export const MARKET_CATEGORIES: {id: string, text: string}[] = [
+  {id: "arts", text: "Arts"},
+  {id: "business-finance", text: "Business & Finance"},
+  {id: "cryptocurrency", text: "Cryptocurrency"},
+  {id: "news-politics", text: "News & Politics"},
+  {id: "science-tech", text: "Science & Tech"},
+  {id: "sports", text: "Sports"},
+  {id: "weather", text: "Weather"},
+  {id: "misc", text: "Miscellaneous"},
+]
+
+export function getCategoryText(id: string): string {
+  return MARKET_CATEGORIES.filter(c => c.id === id)[0].text;
 }

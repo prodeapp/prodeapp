@@ -11,7 +11,7 @@ import {RealityETH_v3_0__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
-import {Event, Question} from "../../graphql/subgraph";
+import {Event} from "../../graphql/subgraph";
 import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
@@ -23,14 +23,13 @@ export type AnswerFormValues = {
 
 type AnswerFormProps = {
   event: Event
-  question: Question
   control: Control<AnswerFormValues>
   register: UseFormRegister<AnswerFormValues>
   errors: FieldErrors<AnswerFormValues>
   handleSubmit: UseFormHandleSubmit<AnswerFormValues>
 }
 
-export default function AnswerForm({event, question, control, register, errors, handleSubmit}: AnswerFormProps) {
+export default function AnswerForm({event, register, errors, handleSubmit}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
 
@@ -40,10 +39,10 @@ export default function AnswerForm({event, question, control, register, errors, 
   );
 
   useEffect(() => {
-    const minBond = BigNumber.from(question.minBond);
-    const lastBond = BigNumber.from(question.lastBond);
+    const minBond = BigNumber.from(event.minBond);
+    const lastBond = BigNumber.from(event.lastBond);
     setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
-  }, [question]);
+  }, [event]);
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -59,7 +58,7 @@ export default function AnswerForm({event, question, control, register, errors, 
 
   const onSubmit = async (data: AnswerFormValues) => {
     await send(
-      question.questionId,
+      event.id,
       hexZeroPad(hexlify(data.outcome), 32),
       currentBond,
       {
@@ -89,15 +88,15 @@ export default function AnswerForm({event, question, control, register, errors, 
             Result
           </div>
           <div style={{width: '60%'}}>
-            {getAnswerText(event.answer, question.outcomes || [])}
+            {getAnswerText(event.answer, event.outcomes || [])}
           </div>
         </BoxRow>
-        {question.bounty !== '0' && <BoxRow>
+        {event.bounty !== '0' && <BoxRow>
           <div style={{width: '40%'}}>
             Reward
           </div>
           <div style={{width: '60%'}}>
-            {formatAmount(question.bounty)}
+            {formatAmount(event.bounty)}
           </div>
         </BoxRow>}
         {!finalized && <>
@@ -112,7 +111,7 @@ export default function AnswerForm({event, question, control, register, errors, 
                   id={`question-outcome-select`}
                   {...register(`outcome`, {required: 'This field is required.'})}
                 >
-                  {question.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome.answer}</MenuItem>)}
+                  {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcome`} /></FormError>

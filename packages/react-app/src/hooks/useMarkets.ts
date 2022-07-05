@@ -17,13 +17,18 @@ export type MarketStatus = 'active'|'pending'|'closed'
 interface Props {
   curated?: boolean
   status?: MarketStatus
+  category?: string
 }
 
-export const useMarkets = ({curated, status}: Props = {}) => {
+export const useMarkets = ({curated, status, category}: Props = {}) => {
   return useQuery<Market[], Error>(
-    ["useMarkets", curated, status],
+    ["useMarkets", curated, status, category],
     async () => {
       const variables: QueryVariables = {curated};
+
+      if (category !== '') {
+        variables['category'] = category;
+      }
 
       if (status !== undefined) {
         if (status === 'active') {

@@ -1,9 +1,7 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
-import { Realitio } from '../types/RealitioV3/Realitio';
 import { Bet, Funder, Event, Market } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './helpers';
-import { RealitioAddress } from './constants';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
@@ -11,44 +9,28 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     log.info("handleInitialize: Initializing {} market", [evt.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
+    let managerAddress = Address.fromHexString(context.getString('manager'));
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
-    market.managementFee = marketContract.managementFee();
+    market.managementFee = marketContract.managementReward();
     market.closingTime = marketContract.closingTime();
     market.creationTime = evt.block.timestamp;
     market.submissionTimeout = marketContract.submissionTimeout();
     market.price = marketContract.price();
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
-
-    let manager = getOrCreateManager(marketContract.manager());
+    let manager = getOrCreateManager(Address.fromBytes(managerAddress));
     market.manager = manager.id;
-
-    let nonce = BigInt.fromI32(0);
-    let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
-
-    log.debug("handleQuestionsRegistered: Registering questions for market {}", [market.id.toString()])
-    for (let i = 0; i < evt.params._questionIDs.length; i++) {
-        let questionID = evt.params._questionIDs[i]
-        let event = new Event(questionID.toHexString());
-        event.market = market.id;
-        event.questionID = questionID;
-        event.nonce = nonce;
-        event.openingTs = realitioSC.getOpeningTS(questionID);
-        event.timeout = realitioSC.getTimeout(questionID);
-        event.minBond = realitioSC.getMinBond(questionID);
-        event.finalizeTs = realitioSC.getFinalizeTS(questionID);
-        event.contentHash = realitioSC.getContentHash(questionID);
-        event.historyHash = realitioSC.getHistoryHash(questionID);
-        event.arbitrationOccurred = false;
-        event.isPendingArbitration = false;
-        event.save();
-        nonce = nonce.plus(BigInt.fromI32(1))
-        log.debug("handleQuestionsRegistered: eventID {} registered", [questionID.toHexString()])
+    market.numOfEvents = BigInt.fromI32(evt.params._questionIDs.length);
+    let event = Event.load(evt.params._questionIDs[0].toHexString())
+    if (event === null) {
+        market.category = '';
+        log.warning("handleQuestionsRegistered: Event not found for questionID: {}. Defining empty category", [evt.params._questionIDs[0].toHexString()]);
+    } else {
+        market.category = event.category;
     }
-    market.numOfEvents = nonce;
     market.save();
 
     let marketCuration = getOrCreateMarketCuration(hash);
@@ -141,7 +123,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
 }
 
 
-export function handleManagementReward(evt: ManagementReward): void {
+export function handleManagerReward(evt: ManagementReward): void {
     let market = Market.load(evt.address.toHexString())!;
     market.resultSubmissionPeriodStart = evt.block.timestamp;
     market.save();

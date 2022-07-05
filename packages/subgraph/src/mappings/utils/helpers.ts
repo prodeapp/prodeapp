@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration} from "../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration} from "../../types/schema";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();

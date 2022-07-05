@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {Question} from "../../graphql/subgraph";
+import {Event} from "../../graphql/subgraph";
 import {UseFieldArrayReturn, useFormContext, useWatch} from "react-hook-form";
 import {DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd";
 import {FORMAT_GROUPS} from "../../lib/curate";
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import Alert from "@mui/material/Alert";
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
-  rawQuestions: Record<string, Question>
+  events: Event[]
 }
 
 function GroupsPreview({questions, config}: {questions: string[], config: ExtraDataGroups}) {
@@ -43,8 +43,14 @@ function GroupsPreview({questions, config}: {questions: string[], config: ExtraD
   })}</>
 }
 
-export default function QuestionsList({useFieldArrayReturn, rawQuestions}: Props) {
+export default function QuestionsList({useFieldArrayReturn, events}: Props) {
   const { control } = useFormContext<CurateSubmitFormValues>();
+
+  const indexedEvents: Record<string, Event> = useMemo(() => {
+    return events.reduce((obj, event) => {
+      return {...obj, [event.id]: event}
+    }, {})
+  }, [events]);
 
   const format = useWatch({control, name: 'format'});
   const extraDataGroups = useWatch({control, name: 'extraDataGroups'});
@@ -84,7 +90,7 @@ export default function QuestionsList({useFieldArrayReturn, rawQuestions}: Props
                       {...provided.dragHandleProps}
                       className="panel"
                     >
-                      <div style={{padding: '5px 0'}}>{rawQuestions[field.value].qTitle}</div>
+                      <div style={{padding: '5px 0'}}>{indexedEvents[field.value].title}</div>
                     </div>
                   )}
                 </Draggable>
@@ -97,7 +103,7 @@ export default function QuestionsList({useFieldArrayReturn, rawQuestions}: Props
     </div>
     {format === FORMAT_GROUPS && <div style={{width: '50%'}}>
       <h3 style={{marginBottom: '30px'}}>Groups preview</h3>
-      <GroupsPreview questions={useFieldArrayReturn.fields.map(f => rawQuestions[f.value].qTitle)} config={extraDataGroups} />
+      <GroupsPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} config={extraDataGroups} />
     </div>}
   </div>
 }

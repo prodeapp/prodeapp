@@ -13,7 +13,7 @@ type Market @entity {
   id: ID!
   hash: String!
   name: String!
-  owner: Bytes!
+  category: String!
   closingTime: BigInt!
   creationTime: BigInt!
   resultSubmissionPeriodStart: BigInt!
@@ -58,17 +58,22 @@ type CurateItem @entity {
 type Event @entity {
   "questionID"
   id: ID!
-  questionID: Bytes!
   nonce: BigInt!
   market: Market!
   answer: Bytes
+  category: String!
+  title: String!
+  lang: String!
+  outcomes: [String!]!
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!
-  openingTs: BigInt!,
-  finalizeTs: BigInt!,
-  timeout: BigInt!,
-  minBond: BigInt!,
+  openingTs: BigInt!
+  finalizeTs: BigInt!
+  timeout: BigInt!
+  minBond: BigInt!
+  lastBond: BigInt!
+  bounty: BigInt!
   contentHash: Bytes!
   historyHash: Bytes!
 }
