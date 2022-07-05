@@ -51,8 +51,10 @@ function EliminationPreview({questions}: {questions: string[]}) {
 
     const config: ExtraDataGroups = {groups: [], rounds: 1};
 
+    const roundNames = ['Final', 'Semifinals', 'Quarterfinals'];
+
     while(accumEvents <= totalEvents) {
-      config.groups.unshift({size: currentEvents, name: ''});
+      config.groups.unshift({size: currentEvents, name: roundNames[n] || ''});
 
       if ((accumEvents + 1) === totalEvents) {
         // third place match
