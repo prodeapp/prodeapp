@@ -17,12 +17,12 @@ function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
 
   const [status, setStatus] = useState<MarketStatus | undefined>('active');
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('All');
 
   const { isLoading, error, data: markets } = useMarkets({
     curated: verifiedStatus ? verifiedStatus : undefined,
     status,
-    category
+    category: category === 'All'? '' : category
   });
 
   const changeStatus = (newStatus: MarketStatus) => {
@@ -46,7 +46,7 @@ function Home() {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               style={{width: '200px'}}>
-              <MenuItem value="">All</MenuItem>
+              <MenuItem value="All">All</MenuItem>
               {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}>{category.text}</MenuItem>)}
             </TextField>
           </Box>
