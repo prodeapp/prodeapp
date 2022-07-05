@@ -44,7 +44,7 @@ function GroupsForm() {
     groupsFields.map((groupField, i) => {
         return <BoxRow key={groupField.id} style={{flexDirection: 'column'}}>
           <div style={{width: '100%', display: 'flex', padding: '5px 0'}}>
-            <BoxLabelCell>Size</BoxLabelCell>
+            <BoxLabelCell>Number of questions</BoxLabelCell>
             <div style={{width: '100%', display: 'flex'}}>
               <TextField {...register(`extraDataGroups.groups.${i}.size`, {
                 required: 'This field is required.',

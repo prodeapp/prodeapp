@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Event} from "../../graphql/subgraph";
 import {UseFieldArrayReturn, useFormContext, useWatch} from "react-hook-form";
 import {DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd";
-import {FORMAT_GROUPS} from "../../lib/curate";
+import {FORMAT_GROUPS, FORMAT_SINGLE_ELIMINATION} from "../../lib/curate";
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
 import {useEffect, useMemo, useState} from "react";
 import Alert from "@mui/material/Alert";
@@ -29,7 +29,7 @@ function GroupsPreview({questions, config}: {questions: string[], config: ExtraD
 
   return <>{config.groups.map((group, i) => {
     return <div style={{border: '1px solid #fff', padding: '5px', marginBottom: '10px'}} key={i}>
-      <div>Group {group.name || (i+1)}</div>
+      <div>{group.name || `Group ${i+1}`}</div>
       <div style={{padding: '5px 10px'}}>
         {Array.from({length: group.size}, (_, i) => i + 1).map(j => {
           const n = t++;
@@ -41,6 +41,40 @@ function GroupsPreview({questions, config}: {questions: string[], config: ExtraD
       </div>
     </div>
   })}</>
+}
+
+function EliminationPreview({questions}: {questions: string[]}) {
+  const getConfig = (totalEvents: number): ExtraDataGroups => {
+    let n = 0;
+    let accumEvents = Math.pow(2, n);
+    let currentEvents = accumEvents;
+
+    const config: ExtraDataGroups = {groups: [], rounds: 1};
+
+    while(accumEvents <= totalEvents) {
+      config.groups.unshift({size: currentEvents, name: ''});
+
+      if ((accumEvents + 1) === totalEvents) {
+        // third place match
+        config.groups.push({size: 1, name: 'Third place'})
+      }
+
+      n++;
+      currentEvents = Math.pow(2, n);
+      accumEvents += currentEvents;
+    }
+
+    config.groups = config.groups.map((group, n) => {
+      if (group.name === '') {
+        group.name = `Round ${n+1}`
+      }
+      return group;
+    })
+
+    return config;
+  }
+
+  return <GroupsPreview questions={questions} config={getConfig(questions.length)} />
 }
 
 export default function QuestionsList({useFieldArrayReturn, events}: Props) {
@@ -71,7 +105,7 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
   }
 
   return <div style={{display: 'flex'}}>
-    <div style={{width: format === FORMAT_GROUPS ? '50%' : '100%'}}>
+    <div style={{width: format === FORMAT_GROUPS || format === FORMAT_SINGLE_ELIMINATION ? '50%' : '100%'}}>
       <h3 style={{marginBottom: '30px'}}>Drag and drop each question to the correct position</h3>
       <DragDropContext onDragEnd={handleFieldDragEnd}>
         <Droppable droppableId="panel-dropzone">
@@ -104,6 +138,10 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
     {format === FORMAT_GROUPS && <div style={{width: '50%'}}>
       <h3 style={{marginBottom: '30px'}}>Groups preview</h3>
       <GroupsPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} config={extraDataGroups} />
+    </div>}
+    {format === FORMAT_SINGLE_ELIMINATION && <div style={{width: '50%'}}>
+      <h3 style={{marginBottom: '30px'}}>Single-Elimination preview</h3>
+      <EliminationPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} />
     </div>}
   </div>
 }
