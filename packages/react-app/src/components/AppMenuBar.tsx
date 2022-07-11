@@ -12,6 +12,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
+import { Trans } from "@lingui/react";
 
 export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -25,7 +26,7 @@ export default function AppMenuBar() {
     setAnchorElNav(null);
   };
 
-  return (<>
+  return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -98,7 +99,7 @@ export default function AppMenuBar() {
               sx={{ my: 2, color: 'white', display: 'block' }}
               component={RouterLink} to='/markets/new'
             >
-              Create Market
+              <Trans id="message.create_market">Create Market</Trans>
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -113,7 +114,7 @@ export default function AppMenuBar() {
         </Toolbar>
       </Container>
     </AppBar>
-  </>);
+    );
 };
 
 export interface DialogProps {
@@ -163,11 +164,11 @@ function WalletDialog({ open, handleClose }: DialogProps) {
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>
           <MetamaskIcon width={100} />
-          <div style={{ marginTop: 10 }}>Connect with your MetaMask Wallet</div>
+          <div style={{ marginTop: 10 }}><Trans id="message.connect_with_your_metamask_wallet">Connect with your MetaMask Wallet</Trans></div>
         </div>
         <div onClick={activateWalletConnect} style={{ cursor: 'pointer' }}>
           <WalletConnectIcon width={100} />
-          <div style={{ marginTop: 10 }}>Scan with WalletConnect to connect</div>
+          <div style={{ marginTop: 10 }}><Trans id="message.scan_with_walletconnect_to_connect">Scan with WalletConnect to connect</Trans></div>
         </div>
       </div>
     </AppDialog>
@@ -205,13 +206,13 @@ function WalletMenu() {
       handleClose={handleCloseWalletModal}
     />
     <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
-      {!account && <Button onClick={handleOpenWalletModal}>Connect Wallet</Button>}
+      {!account && <Button onClick={handleOpenWalletModal}><Trans id="message.connect_wallet">Connect Wallet</Trans></Button>}
 
       {account && <>
         <Blockies seed={account} size={7} scale={4} />
         <Button variant="text">{accountName}</Button>
-        <Button component={RouterLink} to={"/profile"}>Profile</Button>
-        <Button onClick={deactivate}>Logout</Button>
+        <Button component={RouterLink} to={"/profile"}><Trans id="message.profile">Profile</Trans></Button>
+        <Button onClick={deactivate}><Trans id="message.logout">Logout</Trans></Button>
       </>}
     </Box>
   </>

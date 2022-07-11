@@ -55,3 +55,27 @@ msgstr "Premio en pozo"
 #: src/pages/Home.tsx:133
 msgid "Verified"
 msgstr "Verificado"
+
+#: src/components/AppMenuBar.tsx:209
+msgid "message.connect_wallet"
+msgstr "Conectar billetera"
+
+#: src/components/AppMenuBar.tsx:167
+msgid "message.connect_with_your_metamask_wallet"
+msgstr "Conectar con Metamask"
+
+#: src/components/AppMenuBar.tsx:102
+msgid "message.create_market"
+msgstr "Crear Mercado"
+
+#: src/components/AppMenuBar.tsx:215
+msgid "message.logout"
+msgstr "Desconectar"
+
+#: src/components/AppMenuBar.tsx:214
+msgid "message.profile"
+msgstr "Perfil"
+
+#: src/components/AppMenuBar.tsx:171
+msgid "message.scan_with_walletconnect_to_connect"
+msgstr "Scan con WalletConnect para conectar"

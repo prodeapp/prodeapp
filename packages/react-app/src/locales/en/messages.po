@@ -56,6 +56,26 @@ msgstr "Pool prize"
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/Home.tsx:107
-#~ msgid "{status}"
-#~ msgstr "{status}"
+#: src/components/AppMenuBar.tsx:209
+msgid "message.connect_wallet"
+msgstr "Connect wallet"
+
+#: src/components/AppMenuBar.tsx:167
+msgid "message.connect_with_your_metamask_wallet"
+msgstr "Connect with your Metamask wallet"
+
+#: src/components/AppMenuBar.tsx:102
+msgid "message.create_market"
+msgstr "Create Market"
+
+#: src/components/AppMenuBar.tsx:215
+msgid "message.logout"
+msgstr "Logout"
+
+#: src/components/AppMenuBar.tsx:214
+msgid "message.profile"
+msgstr "Profile"
+
+#: src/components/AppMenuBar.tsx:171
+msgid "message.scan_with_walletconnect_to_connect"
+msgstr "Scan with WalletConnect to connect"
