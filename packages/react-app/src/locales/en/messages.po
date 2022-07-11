@@ -18,6 +18,22 @@ msgstr ""
 msgid "Active"
 msgstr "Active"
 
+#: src/components/MarketView/Results.tsx:53
+#~ msgid "Answer closes in ${answerCountdown}"
+#~ msgstr "Answer closes in ${answerCountdown}"
+
+#: src/components/MarketView/Results.tsx:57
+msgid "Answer closes in {answerCountdown}"
+msgstr "Answer closes in {answerCountdown}"
+
+#: src/components/MarketView/Results.tsx:67
+msgid "Answer result"
+msgstr "Answer result"
+
+#: src/components/MarketView/PlaceBet.tsx:42
+msgid "Bet Price:"
+msgstr "Bet Price:"
+
 #: src/pages/Home.tsx:118
 msgid "Bet price"
 msgstr "Bet price"
@@ -47,6 +63,14 @@ msgstr "Connect with your MetaMask Wallet"
 msgid "Create Market"
 msgstr "Create Market"
 
+#: src/components/MarketView/Bets.tsx:57
+msgid "Details"
+msgstr "Details"
+
+#: src/components/MarketView/Results.tsx:48
+msgid "Finalized"
+msgstr "Finalized"
+
 #: src/pages/MarketsView.tsx:24
 msgid "Loading..."
 msgstr "Loading..."
@@ -67,6 +91,10 @@ msgstr "Manager"
 msgid "Market not found"
 msgstr "Market not found"
 
+#: src/components/MarketView/Bets.tsx:51
+msgid "No bets found."
+msgstr "No bets found."
+
 #: src/pages/Home.tsx:85
 msgid "No markets found."
 msgstr "No markets found."
@@ -75,18 +103,41 @@ msgstr "No markets found."
 msgid "Only verified markets"
 msgstr "Only verified markets"
 
+#: src/components/MarketView/Results.tsx:46
+#~ msgid "Open to answers in ${openingTimeLeft}"
+#~ msgstr "Open to answers in ${openingTimeLeft}"
+
+#: src/components/MarketView/Results.tsx:46
+msgid "Open to answers in {openingTimeLeft}"
+msgstr "Open to answers in {openingTimeLeft}"
+
 #: src/pages/Home.tsx:128
 msgid "Participants"
 msgstr "Participants"
 
+#: src/components/MarketView/Results.tsx:52
+#: src/components/MarketView/Results.tsx:56
 #: src/pages/Home.tsx:40
 #: src/pages/Home.tsx:97
 msgid "Pending"
 msgstr "Pending"
 
+#: src/components/MarketView/Results.tsx:54
+msgid "Pending arbitration"
+msgstr "Pending arbitration"
+
+#: src/components/MarketView/PlaceBet.tsx:43
 #: src/pages/Home.tsx:112
 msgid "Place Bet"
 msgstr "Place Bet"
+
+#: src/components/MarketView/Bets.tsx:47
+msgid "Player"
+msgstr "Player"
+
+#: src/components/MarketView/Bets.tsx:48
+msgid "Points"
+msgstr "Points"
 
 #: src/pages/MarketsView.tsx:57
 msgid "Pool"
@@ -104,6 +155,10 @@ msgstr "Prize Distribution"
 msgid "Profile"
 msgstr "Profile"
 
+#: src/components/MarketView/Results.tsx:33
+msgid "Result"
+msgstr "Result"
+
 #: src/pages/MarketsView.tsx:87
 msgid "Results"
 msgstr "Results"
@@ -111,6 +166,10 @@ msgstr "Results"
 #: src/components/AppMenuBar.tsx:171
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
+
+#: src/components/MarketView/Results.tsx:34
+msgid "Status"
+msgstr "Status"
 
 #: src/pages/MarketsView.tsx:41
 msgid "Status: <0/>"

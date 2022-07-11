@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
+import { Trans } from "@lingui/macro";
 
 export default function Results({marketId}: {marketId: string}) {
   const { data: events } = useEvents(marketId);
@@ -29,8 +30,8 @@ export default function Results({marketId}: {marketId: string}) {
     />}
   <BoxWrapper>
     <BoxRow>
-      <div style={{width: '33%'}}>Result</div>
-      <div style={{width: '33%'}}>Status</div>
+      <div style={{width: '33%'}}><Trans>Result</Trans></div>
+      <div style={{width: '33%'}}><Trans>Status</Trans></div>
       <div style={{width: '33%'}}></div>
     </BoxRow>
     {events && events.map((event, i) => {
@@ -42,14 +43,19 @@ export default function Results({marketId}: {marketId: string}) {
         <div style={{width: '100%'}}>
           <div>{event.title}</div>
           <div style={{display: 'flex', marginTop: 20, width: '100%', fontWeight: 'normal'}}>
-            <div style={{width: '33%'}}>{openingTimeLeft !== false ? `Open to answers in ${openingTimeLeft}` : getAnswerText(event.answer, event.outcomes || [])}</div>
+            <div style={{width: '33%'}}>{openingTimeLeft !== false ? <Trans>Open to answers in {openingTimeLeft}</Trans> : getAnswerText(event.answer, event.outcomes || [])}</div>
             <div style={{width: '33%'}}>
-              {finalized && <span style={{color: 'green'}}>Finalized</span>}
+              {finalized && <span style={{color: 'green'}}><Trans>Finalized</Trans></span>}
               {!finalized && (
                 <span style={{color: 'red'}}>
                   {
-                    (openingTimeLeft !== false && 'Pending') ||
-                    (event.isPendingArbitration ? 'Pending arbitration' : !answerCountdown ? 'Pending' : `Answer closes in ${answerCountdown}`)
+                    (openingTimeLeft !== false && <Trans>Pending</Trans>) ||
+                    (event.isPendingArbitration
+                      ? <Trans>Pending arbitration</Trans>
+                      : !answerCountdown
+                        ? <Trans>Pending</Trans>
+                        : <Trans>Answer closes in {answerCountdown}</Trans>
+                    )
                   }
                 </span>
               )}
@@ -58,7 +64,7 @@ export default function Results({marketId}: {marketId: string}) {
               {!finalized && <Button
                 color="primary" size="small"
                 onClick={() => {setCurrentEvent(event);setOpenModal(true);}}>
-                Answer result
+                <Trans>Answer result</Trans>
               </Button>}
             </div>
           </div>

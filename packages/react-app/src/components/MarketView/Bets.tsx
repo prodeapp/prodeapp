@@ -9,6 +9,7 @@ import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
+import { Trans } from "@lingui/macro";
 
 export default function Bets({marketId, playerId}: {marketId?: string, playerId?: string}) {
   const { isLoading, error, data: ranking } = useRanking({marketId: marketId, playerId});
@@ -43,17 +44,17 @@ export default function Bets({marketId, playerId}: {marketId?: string, playerId?
     <BoxWrapper>
       <BoxRow>
         <div style={{width: '10%'}}>#</div>
-        <div style={{width: '40%'}}>Player</div>
-        <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>Points</Box>
+        <div style={{width: '40%'}}><Trans>Player</Trans></div>
+        <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}><Trans>Points</Trans></Box>
         <div style={{width: '120px'}}></div>
       </BoxRow>
-      {ranking && ranking.length === 0 && <Alert severity="info">No bets found.</Alert>}
+      {ranking && ranking.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
       {ranking && ranking.length > 0 && ranking.map((rank, i) => {
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>{rank.points.toString()}</Box>
-          <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}>Details</Button></div>
+          <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}><Trans>Details</Trans></Button></div>
         </BoxRow>
       })}
     </BoxWrapper>
