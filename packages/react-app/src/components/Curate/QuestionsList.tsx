@@ -6,6 +6,7 @@ import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_SINGLE_ELIMINATION} fro
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
 import {useEffect, useMemo, useState} from "react";
 import Alert from "@mui/material/Alert";
+import { Trans } from '@lingui/macro';
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
@@ -22,7 +23,7 @@ function GroupsPreview({questions, config}: {questions: string[], config: ExtraD
   }, [config]);
 
   if (sizeCount !== questions.length) {
-    return <Alert severity="error">The sum of group sizes must be equal to the amount of events.</Alert>
+    return <Alert severity="error"><Trans>The sum of group sizes must be equal to the amount of events</Trans>.</Alert>
   }
 
   let t = 0;
@@ -81,7 +82,7 @@ function EliminationPreview({questions, type}: {questions: string[], type: 'sing
   const totalTeams = singleMatchFinal ? ((questions.length + 2) / 2) : ((questions.length + 1) / 2);
 
   if (Math.log2(totalTeams) % 1 !== 0) {
-    return <Alert severity="error">Double elimination tournaments must have a quantity of teams power of 2.</Alert>
+    return <Alert severity="error"><Trans>Double elimination tournaments must have a quantity of teams power of 2</Trans>.</Alert>
   }
 
   const questionsCopy = [...questions];
@@ -162,7 +163,7 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
 
   return <div style={{display: 'flex'}}>
     <div style={{width: format === FORMAT_GROUPS || format === FORMAT_SINGLE_ELIMINATION ? '50%' : '100%'}}>
-      <h3 style={{marginBottom: '30px'}}>Drag and drop each question to the correct position</h3>
+      <h3 style={{marginBottom: '30px'}}><Trans>Drag and drop each question to the correct position</Trans></h3>
       <DragDropContext onDragEnd={handleFieldDragEnd}>
         <Droppable droppableId="panel-dropzone">
           {provided => (
@@ -192,15 +193,15 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
       </DragDropContext>
     </div>
     {format === FORMAT_GROUPS && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}>Groups preview</h3>
+      <h3 style={{marginBottom: '30px'}}><Trans>Groups preview</Trans></h3>
       <GroupsPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} config={extraDataGroups} />
     </div>}
     {format === FORMAT_SINGLE_ELIMINATION && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}>Single-Elimination preview</h3>
+      <h3 style={{marginBottom: '30px'}}><Trans>Single-Elimination preview</Trans></h3>
       <EliminationPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} type="single" />
     </div>}
     {format === FORMAT_DOUBLE_ELIMINATION && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}>Double-Elimination preview</h3>
+      <h3 style={{marginBottom: '30px'}}><Trans>Double-Elimination preview</Trans></h3>
       <EliminationPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} type="double"/>
     </div>}
   </div>

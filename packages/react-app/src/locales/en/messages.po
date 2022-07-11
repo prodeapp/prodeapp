@@ -107,6 +107,18 @@ msgstr "Create Market"
 msgid "Details"
 msgstr "Details"
 
+#: src/components/Curate/QuestionsList.tsx:85
+msgid "Double elimination tournaments must have a quantity of teams power of 2"
+msgstr "Double elimination tournaments must have a quantity of teams power of 2"
+
+#: src/components/Curate/QuestionsList.tsx:204
+msgid "Double-Elimination preview"
+msgstr "Double-Elimination preview"
+
+#: src/components/Curate/QuestionsList.tsx:166
+msgid "Drag and drop each question to the correct position"
+msgstr "Drag and drop each question to the correct position"
+
 #: src/components/Questions/QuestionsForm.tsx:89
 msgid "Error loading questions"
 msgstr "Error loading questions"
@@ -122,6 +134,10 @@ msgstr "Finished"
 #: src/components/MarketView/MarketStatus.tsx:19
 #~ msgid "FinishedTrans"
 #~ msgstr "FinishedTrans"
+
+#: src/components/Curate/QuestionsList.tsx:196
+msgid "Groups preview"
+msgstr "Groups preview"
 
 #: src/components/Questions/QuestionsForm.tsx:136
 msgid "Invalid result"
@@ -245,6 +261,10 @@ msgstr "Results"
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
 
+#: src/components/Curate/QuestionsList.tsx:200
+msgid "Single-Elimination preview"
+msgstr "Single-Elimination preview"
+
 #: src/components/MarketView/Results.tsx:34
 msgid "Status"
 msgstr "Status"
@@ -252,6 +272,10 @@ msgstr "Status"
 #: src/pages/MarketsView.tsx:41
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
+
+#: src/components/Curate/QuestionsList.tsx:26
+msgid "The sum of group sizes must be equal to the amount of events"
+msgstr "The sum of group sizes must be equal to the amount of events"
 
 #: src/pages/MarketsView.tsx:29
 msgid "This market was just created, please wait a few seconds for it to be indexed."
