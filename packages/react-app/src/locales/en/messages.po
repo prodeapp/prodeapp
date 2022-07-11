@@ -22,6 +22,22 @@ msgstr "Accepting bets"
 msgid "Active"
 msgstr "Active"
 
+#: src/components/MarketCreate/AnswersBuilder.tsx:37
+msgid "Add answer"
+msgstr "Add answer"
+
+#: src/components/MarketCreate/PrizeWeightsBuilder.tsx:29
+msgid "Add at least one prize weight."
+msgstr "Add at least one prize weight."
+
+#: src/components/MarketCreate/AnswersBuilder.tsx:23
+msgid "Add at least two answers"
+msgstr "Add at least two answers"
+
+#: src/components/MarketCreate/PrizeWeightsBuilder.tsx:46
+msgid "Add prize weight"
+msgstr "Add prize weight"
+
 #: src/components/MarketView/Results.tsx:53
 #~ msgid "Answer closes in ${answerCountdown}"
 #~ msgstr "Answer closes in ${answerCountdown}"
@@ -34,9 +50,17 @@ msgstr "Answer closes in {answerCountdown}"
 msgid "Answer result"
 msgstr "Answer result"
 
+#: src/components/MarketCreate/EventBuilder.tsx:61
+msgid "Answers"
+msgstr "Answers"
+
 #: src/components/MarketView/PlaceBet.tsx:42
 msgid "Bet Price:"
 msgstr "Bet Price:"
+
+#: src/components/Questions/QuestionsForm.tsx:93
+msgid "Bet placed"
+msgstr "Bet placed"
 
 #: src/pages/Home.tsx:118
 msgid "Bet price"
@@ -71,6 +95,10 @@ msgstr "Connect Wallet"
 msgid "Connect with your MetaMask Wallet"
 msgstr "Connect with your MetaMask Wallet"
 
+#: src/components/Questions/QuestionsForm.tsx:85
+msgid "Connect your wallet to place a bet."
+msgstr "Connect your wallet to place a bet."
+
 #: src/components/AppMenuBar.tsx:102
 msgid "Create Market"
 msgstr "Create Market"
@@ -78,6 +106,10 @@ msgstr "Create Market"
 #: src/components/MarketView/Bets.tsx:57
 msgid "Details"
 msgstr "Details"
+
+#: src/components/Questions/QuestionsForm.tsx:89
+msgid "Error loading questions"
+msgstr "Error loading questions"
 
 #: src/components/MarketView/Results.tsx:48
 msgid "Finalized"
@@ -91,6 +123,11 @@ msgstr "Finished"
 #~ msgid "FinishedTrans"
 #~ msgstr "FinishedTrans"
 
+#: src/components/Questions/QuestionsForm.tsx:136
+msgid "Invalid result"
+msgstr "Invalid result"
+
+#: src/components/Questions/QuestionsForm.tsx:81
 #: src/pages/MarketsView.tsx:24
 msgid "Loading..."
 msgstr "Loading..."
@@ -131,6 +168,10 @@ msgstr "Only verified markets"
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Open to answers in {openingTimeLeft}"
 
+#: src/components/Questions/QuestionsForm.tsx:120
+msgid "Outcome"
+msgstr "Outcome"
+
 #: src/pages/Home.tsx:128
 msgid "Participants"
 msgstr "Participants"
@@ -150,6 +191,14 @@ msgstr "Pending arbitration"
 #: src/pages/Home.tsx:112
 msgid "Place Bet"
 msgstr "Place Bet"
+
+#: src/components/Questions/QuestionsDialog.tsx:22
+msgid "Place bets"
+msgstr "Place bets"
+
+#: src/components/Questions/QuestionsDialog.tsx:30
+#~ msgid "Place your bets"
+#~ msgstr "Place your bets"
 
 #: src/components/MarketView/Bets.tsx:47
 msgid "Player"
@@ -175,6 +224,15 @@ msgstr "Prize Distribution"
 msgid "Profile"
 msgstr "Profile"
 
+#: src/components/MarketCreate/EventBuilder.tsx:54
+#: src/components/Questions/QuestionsForm.tsx:119
+msgid "Question"
+msgstr "Question"
+
+#: src/components/MarketCreate/EventBuilder.tsx:65
+msgid "Remove event"
+msgstr "Remove event"
+
 #: src/components/MarketView/Results.tsx:33
 msgid "Result"
 msgstr "Result"
@@ -199,6 +257,10 @@ msgstr "Status: <0/>"
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
 
+#: src/components/Questions/QuestionsForm.tsx:144
+msgid "Use {0}% of this pool to:"
+msgstr "Use {0}% of this pool to:"
+
 #: src/pages/Home.tsx:133
 #: src/pages/MarketsView.tsx:45
 msgid "Verified"
@@ -211,6 +273,10 @@ msgstr "Verify Market"
 #: src/components/MarketView/MarketStatus.tsx:15
 msgid "Waiting for results"
 msgstr "Waiting for results"
+
+#: src/components/MarketCreate/PrizeWeightsBuilder.tsx:44
+msgid "What % of the pool will win the player ranked at position #X."
+msgstr "What % of the pool will win the player ranked at position #X."
 
 #: src/components/AppMenuBar.tsx:209
 #~ msgid "message.connect_wallet"

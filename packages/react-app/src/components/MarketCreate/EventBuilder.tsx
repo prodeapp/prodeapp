@@ -7,6 +7,7 @@ import AnswersBuilder from "./AnswersBuilder";
 import {formatAnswers} from "../../pages/MarketsCreate";
 import TemplateDialog from "../TemplateDialog";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
+import { Trans } from "@lingui/macro";
 
 type EventBuilderProps = {
   eventIndex: number
@@ -50,17 +51,17 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
       onTemplateChange={onTemplateChange}
     />
     <BoxRow>
-      <BoxLabelCell>Question</BoxLabelCell>
+      <BoxLabelCell><Trans>Question</Trans></BoxLabelCell>
       <div style={{width: '100%', display: 'flex'}}>
         <QuestionBuilder {...{eventIndex}} />
         <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
       </div>
     </BoxRow>
     <BoxRow>
-      <BoxLabelCell>Answers</BoxLabelCell>
+      <BoxLabelCell><Trans>Answers</Trans></BoxLabelCell>
       <AnswersBuilder {...{eventIndex, answersFields, addAnswer, deleteAnswer}} />
     </BoxRow>
 
-    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeEvent(eventIndex)}>- Remove event</Button></div>
+    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeEvent(eventIndex)}>- <Trans>Remove event</Trans></Button></div>
   </div>
 }

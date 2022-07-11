@@ -16,6 +16,7 @@ import {useEvents} from "../../hooks/useEvents";
 import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
 import {futurizeQuestion} from "../../lib/templates";
+import { Trans } from "@lingui/macro";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[],
@@ -77,19 +78,19 @@ export default function QuestionsForm({marketId, price, control, register, error
   }, []);
 
   if (isLoading || isLoadingMarket) {
-    return <div>Loading...</div>
+    return <div><Trans>Loading...</Trans></div>
   }
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to place a bet.'}</Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to place a bet.</Trans>}</Alert>
   }
 
   if (error) {
-    return <Alert severity="error">Error loading questions.</Alert>
+    return <Alert severity="error"><Trans>Error loading questions</Trans>.</Alert>
   }
 
   if (success) {
-    return <Alert severity="success">Bet placed!</Alert>
+    return <Alert severity="success"><Trans>Bet placed</Trans>!</Alert>
   }
 
   const onSubmit = async (data: QuestionsFormValues) => {
@@ -115,8 +116,8 @@ export default function QuestionsForm({marketId, price, control, register, error
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <div style={{width: '80%'}}>Question</div>
-          <div style={{width: '20%'}}>Outcome</div>
+          <div style={{width: '80%'}}><Trans>Question</Trans></div>
+          <div style={{width: '20%'}}><Trans>Outcome</Trans></div>
         </BoxRow>
         {fields.map((field, i) => {
           if (!events || !events[i]) {
@@ -129,10 +130,10 @@ export default function QuestionsForm({marketId, price, control, register, error
                 <Select
                   defaultValue=""
                   id={`question-${i}-outcome-select`}
-                  {...register(`outcomes.${i}.value`, {required: 'This field is required.'})}
+                  {...register(`outcomes.${i}.value`, {required: 'This field is required'})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
-                  <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
+                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
@@ -140,7 +141,7 @@ export default function QuestionsForm({marketId, price, control, register, error
           </BoxRow>
         })}
         <BoxRow>
-          <div style={{width: '60%'}}>Use {Number(market?.managementFee) / 100}% of this pool to: </div>
+          <div style={{width: '60%'}}><Trans>Use {Number(market?.managementFee) / 100}% of this pool to: </Trans></div>
           <div style={{width: '40%'}}>
             <FormControl fullWidth>
               <Select
