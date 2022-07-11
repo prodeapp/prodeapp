@@ -31,6 +31,26 @@ msgstr "Categoría"
 msgid "Closed"
 msgstr "Cerrado"
 
+#: src/components/AppMenuBar.tsx:209
+msgid "Connect Wallet"
+msgstr "Conectar Billetera"
+
+#: src/components/AppMenuBar.tsx:167
+msgid "Connect with your MetaMask Wallet"
+msgstr "Conectar con billetera Metamask"
+
+#: src/components/AppMenuBar.tsx:102
+msgid "Create Market"
+msgstr "Crear Mercado"
+
+#: src/components/AppMenuBar.tsx:215
+msgid "Logout"
+msgstr "Desconectar"
+
+#: src/pages/MarketsView.tsx:30
+msgid "Market not found"
+msgstr "Mercado no encontrado"
+
 #: src/pages/Home.tsx:85
 msgid "No markets found."
 msgstr "No se encontraron mercados"
@@ -56,30 +76,42 @@ msgstr "Apostar"
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
+#: src/components/AppMenuBar.tsx:214
+msgid "Profile"
+msgstr "Perfil"
+
+#: src/components/AppMenuBar.tsx:171
+msgid "Scan with WalletConnect to connect"
+msgstr "Scan con WalletConnect para conectar"
+
+#: src/pages/MarketsView.tsx:29
+msgid "This market was just created, please wait a few seconds for it to be indexed."
+msgstr "Este mercado fue creado recientemente, por favor espere unos segundos hasta que sea indexado"
+
 #: src/pages/Home.tsx:133
 msgid "Verified"
 msgstr "Verificado"
 
 #: src/components/AppMenuBar.tsx:209
-msgid "message.connect_wallet"
-msgstr "Conectar billetera"
+#~ msgid "message.connect_wallet"
+#~ msgstr "Conectar billetera"
 
 #: src/components/AppMenuBar.tsx:167
-msgid "message.connect_with_your_metamask_wallet"
-msgstr "Conectar con Metamask"
+#~ msgid "message.connect_with_your_metamask_wallet"
+#~ msgstr "Conectar con Metamask"
 
 #: src/components/AppMenuBar.tsx:102
-msgid "message.create_market"
-msgstr "Crear Mercado"
+#~ msgid "message.create_market"
+#~ msgstr "Crear Mercado"
 
 #: src/components/AppMenuBar.tsx:215
-msgid "message.logout"
-msgstr "Desconectar"
+#~ msgid "message.logout"
+#~ msgstr "Desconectar"
 
 #: src/components/AppMenuBar.tsx:214
-msgid "message.profile"
-msgstr "Perfil"
+#~ msgid "message.profile"
+#~ msgstr "Perfil"
 
 #: src/components/AppMenuBar.tsx:171
-msgid "message.scan_with_walletconnect_to_connect"
-msgstr "Scan con WalletConnect para conectar"
+#~ msgid "message.scan_with_walletconnect_to_connect"
+#~ msgstr "Scan con WalletConnect para conectar"

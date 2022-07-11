@@ -31,6 +31,26 @@ msgstr "Category:"
 msgid "Closed"
 msgstr "Closed"
 
+#: src/components/AppMenuBar.tsx:209
+msgid "Connect Wallet"
+msgstr "Connect Wallet"
+
+#: src/components/AppMenuBar.tsx:167
+msgid "Connect with your MetaMask Wallet"
+msgstr "Connect with your MetaMask Wallet"
+
+#: src/components/AppMenuBar.tsx:102
+msgid "Create Market"
+msgstr "Create Market"
+
+#: src/components/AppMenuBar.tsx:215
+msgid "Logout"
+msgstr "Logout"
+
+#: src/pages/MarketsView.tsx:30
+msgid "Market not found"
+msgstr "Market not found"
+
 #: src/pages/Home.tsx:85
 msgid "No markets found."
 msgstr "No markets found."
@@ -56,30 +76,42 @@ msgstr "Place Bet"
 msgid "Pool prize"
 msgstr "Pool prize"
 
+#: src/components/AppMenuBar.tsx:214
+msgid "Profile"
+msgstr "Profile"
+
+#: src/components/AppMenuBar.tsx:171
+msgid "Scan with WalletConnect to connect"
+msgstr "Scan with WalletConnect to connect"
+
+#: src/pages/MarketsView.tsx:29
+msgid "This market was just created, please wait a few seconds for it to be indexed."
+msgstr "This market was just created, please wait a few seconds for it to be indexed."
+
 #: src/pages/Home.tsx:133
 msgid "Verified"
 msgstr "Verified"
 
 #: src/components/AppMenuBar.tsx:209
-msgid "message.connect_wallet"
-msgstr "Connect wallet"
+#~ msgid "message.connect_wallet"
+#~ msgstr "Connect wallet"
 
 #: src/components/AppMenuBar.tsx:167
-msgid "message.connect_with_your_metamask_wallet"
-msgstr "Connect with your Metamask wallet"
+#~ msgid "message.connect_with_your_metamask_wallet"
+#~ msgstr "Connect with your Metamask wallet"
 
 #: src/components/AppMenuBar.tsx:102
-msgid "message.create_market"
-msgstr "Create Market"
+#~ msgid "message.create_market"
+#~ msgstr "Create Market"
 
 #: src/components/AppMenuBar.tsx:215
-msgid "message.logout"
-msgstr "Logout"
+#~ msgid "message.logout"
+#~ msgstr "Logout"
 
 #: src/components/AppMenuBar.tsx:214
-msgid "message.profile"
-msgstr "Profile"
+#~ msgid "message.profile"
+#~ msgstr "Profile"
 
 #: src/components/AppMenuBar.tsx:171
-msgid "message.scan_with_walletconnect_to_connect"
-msgstr "Scan with WalletConnect to connect"
+#~ msgid "message.scan_with_walletconnect_to_connect"
+#~ msgstr "Scan with WalletConnect to connect"
