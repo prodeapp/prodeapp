@@ -19,10 +19,7 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 import CurateValidator from "./pages/CurateValidator";
 import CurateSubmit from "./pages/CurateSubmit";
-import { i18n } from '@lingui/core'
-import { I18nProvider } from '@lingui/react'
-import { messages as enMessages } from './locales/en/messages'
-import { messages as esMessages } from './locales/es/messages'
+import { I18nProvider } from "./lib/I18nProvider";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -35,36 +32,30 @@ const config = {
   },
 }
 
-i18n.load({
-  en: enMessages,
-  es: esMessages,
-})
-i18n.activate('en')
-
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ReactQueryProvider>
         <ThemeProvider theme={theme}>
-        <I18nProvider i18n={i18n}>
-          <HashRouter>
-            <Routes>
-              <Route element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="markets">
-                  <Route path=":id" element={<MarketsView />} />
-                  <Route path="new" element={<MarketsCreate />} />
+          <I18nProvider>
+            <HashRouter>
+              <Routes>
+                <Route element={<Layout />}>
+                  <Route index element={<Home />} />
+                  <Route path="markets">
+                    <Route path=":id" element={<MarketsView />} />
+                    <Route path="new" element={<MarketsCreate />} />
+                  </Route>
+                  <Route path="leaderboard" element={<Leaderboard />} />
+                  <Route path="profile">
+                    <Route index element={<Profile />} />
+                    <Route path=":id" element={<Profile />} />
+                  </Route>
+                  <Route path="curate/validator" element={<CurateValidator />} />
+                  <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
                 </Route>
-                <Route path="leaderboard" element={<Leaderboard />} />
-                <Route path="profile">
-                  <Route index element={<Profile />} />
-                  <Route path=":id" element={<Profile />} />
-                </Route>
-                <Route path="curate/validator" element={<CurateValidator />} />
-                <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
-              </Route>
-            </Routes>
-          </HashRouter>
+              </Routes>
+            </HashRouter>
           </I18nProvider>
         </ThemeProvider>
       </ReactQueryProvider>
