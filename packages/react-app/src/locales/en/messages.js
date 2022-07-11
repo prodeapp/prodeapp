@@ -1,0 +1,1 @@
+/*eslint-disable*/module.exports={messages:{"Active":"Active","Bet price":"Bet price","Category:":"Category:","Closed":"Closed","No markets found.":"No markets found.","Participants":"Participants","Pending":"Pending","Place Bet":"Place Bet","Pool prize":"Pool prize","Verified":"Verified","{status}":[["status"]]}};

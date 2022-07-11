@@ -1,0 +1,1 @@
+/*eslint-disable*/module.exports={messages:{"Active":"Activo","Bet price":"Precio de Apuesta","Category:":"Categoría","Closed":"Cerrado","No markets found.":"No se encontraron mercados","Participants":"Participantes","Pending":"Pendiente","Place Bet":"Realizar Apuesta","Pool prize":"Premio en pozo","Verified":"Verificado"}};
