@@ -21,6 +21,7 @@
     "@emotion/styled": "^11.8.1",
     "@ethersproject/contracts": "^5.6.0",
     "@ethersproject/providers": "^5.6.0",
+    "@g-loot/react-tournament-brackets": "^1.0.18-beta.1",
     "@hookform/error-message": "^2.0.0",
     "@kleros/gtcr-encoder": "^1.6.1",
     "@lingui/detect-locale": "^3.14.0",

@@ -4,134 +4,52 @@ import {UseFieldArrayReturn, useFormContext, useWatch} from "react-hook-form";
 import {DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd";
 import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_SINGLE_ELIMINATION} from "../../lib/curate";
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo} from "react";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from '@lingui/macro';
+import { Trans } from '@lingui/macro';
+import {getDoubleEliminationConfig, getEliminationConfig, parseEliminationConfig} from "../../lib/brackets";
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
   events: Event[]
 }
 
-function GroupsPreview({questions, config}: {questions: string[], config: ExtraDataGroups}) {
-  const [sizeCount, setSizeCount] = useState(0);
+function GroupsPreview({events, config}: {events: Event[], config: ExtraDataGroups}) {
+  try {
+    const parsedConfig = parseEliminationConfig(events, config);
 
-  useEffect(() => {
-    setSizeCount(
-      config.groups.map((group) => Number(group.size)).reduce((partialSum, a) => partialSum + a, 0)
-    );
-  }, [config]);
-
-  if (sizeCount !== questions.length) {
-    return <Alert severity="error"><Trans>The sum of group sizes must be equal to the amount of events</Trans>.</Alert>
-  }
-
-  let t = 0;
-
-  return <>{config.groups.map((group, i) => {
-    return <div style={{border: '1px solid #fff', padding: '5px', marginBottom: '10px'}} key={i}>
-      <div>{group.name || `Group ${i+1}`}</div>
-      <div style={{padding: '5px 10px'}}>
-        {Array.from({length: group.size}, (_, i) => i + 1).map(j => {
-          const n = t++;
-          if (!questions[n]) {
-            return null
-          }
-          return <div style={{padding: '5px 0'}} key={j}>{questions[n]}</div>
-        })}
+    return <>{parsedConfig.map((group, i) => {
+      return <div style={{border: '1px solid #fff', padding: '5px', marginBottom: '10px'}} key={i}>
+        <div>{group.name || `Group ${i+1}`}</div>
+        <div style={{padding: '5px 10px'}}>
+          {group.events.map(event => {
+            return <div style={{padding: '5px 0'}} key={event.id}>{event.title}</div>
+          })}
+        </div>
       </div>
-    </div>
-  })}</>
+    })}</>
+  } catch (e: any) {
+    return <Alert severity="error">{e?.message || 'Unexpected error'}</Alert>
+  }
 }
 
-function EliminationPreview({questions, type}: {questions: string[], type: 'single'|'double'}) {
-  const getConfig = (totalEvents: number, mainRoundNames: string[] = [], altRoundNames: string = t`Round of %`, addThirdPlace: boolean = false): ExtraDataGroups => {
-    let n = 0;
-    let accumEvents = Math.pow(2, n);
-    let currentEvents = accumEvents;
-
-    const config: ExtraDataGroups = {groups: [], rounds: 1};
-
-    while(accumEvents <= totalEvents) {
-      config.groups.unshift({size: currentEvents, name: mainRoundNames[n] || `${altRoundNames.replace('%', String(currentEvents * 2))}`});
-
-      if (totalEvents === 2) {
-        break;
-      }
-
-      if (addThirdPlace && (accumEvents + 1) === totalEvents) {
-        // third place match
-        config.groups.push({size: 1, name: t`Third place`})
-      }
-
-      n++;
-      currentEvents = Math.pow(2, n);
-      accumEvents += currentEvents;
-    }
-
-    return config;
-  }
+function EliminationPreview({events, type}: {events: Event[], type: 'single'|'double'}) {
 
   if (type === 'single') {
     return <GroupsPreview
-            questions={questions}
-            config={getConfig(questions.length, [t`Final`, t`Semifinals`, t`Quarterfinals`], '', true)} />
+            events={events}
+            config={getEliminationConfig(events.length, ['Final', 'Semifinals', 'Quarterfinals'], '', true)} />
   }
 
-  const singleMatchFinal = questions.length % 2 === 0;
-  const totalTeams = singleMatchFinal ? ((questions.length + 2) / 2) : ((questions.length + 1) / 2);
+  try {
+    const brackets = getDoubleEliminationConfig(events);
 
-  if (Math.log2(totalTeams) % 1 !== 0) {
-    return <Alert severity="error"><Trans>Double elimination tournaments must have a quantity of teams power of 2</Trans>.</Alert>
+    return <>
+      {brackets.map((bracket, i) => <GroupsPreview events={bracket.questions} config={bracket.config} key={i} />)}
+    </>
+  } catch (e: any) {
+    return <Alert severity="error">{e?.message || 'Unexpected error'}</Alert>
   }
-
-  const questionsCopy = [...questions];
-
-  const brackets = [];
-
-  // winners bracket
-  brackets.push(
-    {
-      questions: questionsCopy.splice(0, totalTeams - 1),
-      config: getConfig(totalTeams - 1, [t`Winners Final`, t`Winners Semifinals`, t`Winners Quarterfinals`], t`Winners Round of %`)
-    }
-  );
-
-  // final match 1
-  brackets.push(
-    {questions: questionsCopy.splice(0, 1), config: getConfig(1, [], t`Final #1`)}
-  );
-
-  if (!singleMatchFinal) {
-    // final match 2
-    brackets.push(
-      {questions: questionsCopy.splice(0, 1), config: getConfig(1, [], 'Final #2')}
-    );
-  }
-
-  // losers bracket
-  const totalLosersTeams = totalTeams / 2;
-  const losersConfig = getConfig(totalLosersTeams, [t`Losers Final #1`, t`Losers Semifinals #1`, t`Losers Quarterfinals #1`], t`Losers Round of % #1`);
-
-  const loserGroups: ExtraDataGroups['groups'] = [];
-
-  losersConfig.groups.forEach((group) => {
-    loserGroups.push(group);
-
-    const tmp = Object.assign({}, group);
-    tmp.name = tmp.name.replace('#1', '#2');
-    loserGroups.push(tmp);
-  });
-
-  losersConfig.groups = loserGroups;
-
-  brackets.push(
-    {questions: questionsCopy, config: losersConfig}
-  );
-
-  return <>
-    {brackets.map((bracket, i) => <GroupsPreview questions={bracket.questions} config={bracket.config} key={i} />)}
-  </>
 }
 
 export default function QuestionsList({useFieldArrayReturn, events}: Props) {
@@ -193,16 +111,16 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
       </DragDropContext>
     </div>
     {format === FORMAT_GROUPS && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}><Trans>Groups preview</Trans></h3>
-      <GroupsPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} config={extraDataGroups} />
+      <h3 style={{marginBottom: '30px'}}>Groups preview</h3>
+      <GroupsPreview events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} config={extraDataGroups} />
     </div>}
     {format === FORMAT_SINGLE_ELIMINATION && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}><Trans>Single-Elimination preview</Trans></h3>
-      <EliminationPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} type="single" />
+      <h3 style={{marginBottom: '30px'}}>Single-Elimination preview</h3>
+      <EliminationPreview events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} type="single" />
     </div>}
     {format === FORMAT_DOUBLE_ELIMINATION && <div style={{width: '50%'}}>
-      <h3 style={{marginBottom: '30px'}}><Trans>Double-Elimination preview</Trans></h3>
-      <EliminationPreview questions={useFieldArrayReturn.fields.map(f => indexedEvents[f.value].title)} type="double"/>
+      <h3 style={{marginBottom: '30px'}}>Double-Elimination preview</h3>
+      <EliminationPreview events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} type="double"/>
     </div>}
   </div>
 }

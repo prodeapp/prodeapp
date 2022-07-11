@@ -12,6 +12,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import MarketsCreate from "./pages/MarketsCreate";
 import MarketsView from "./pages/MarketsView";
+import Tournament from "./pages/Tournament";
 import { ReactQueryProvider } from "./lib/react-query";
 import { ThemeProvider } from "@mui/material";
 import theme from "./lib/theme"
@@ -43,7 +44,10 @@ ReactDOM.render(
                 <Route element={<Layout />}>
                   <Route index element={<Home />} />
                   <Route path="markets">
-                    <Route path=":id" element={<MarketsView />} />
+                    <Route path=":id">
+                      <Route index element={<MarketsView />} />
+                      <Route path="tournament" element={<Tournament />} />
+                    </Route>
                     <Route path="new" element={<MarketsCreate />} />
                   </Route>
                   <Route path="leaderboard" element={<Leaderboard />} />
