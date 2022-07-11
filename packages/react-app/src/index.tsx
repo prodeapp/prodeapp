@@ -21,7 +21,8 @@ import CurateValidator from "./pages/CurateValidator";
 import CurateSubmit from "./pages/CurateSubmit";
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { messages } from './locales/en/messages'
+import { messages as enMessages } from './locales/en/messages'
+import { messages as esMessages } from './locales/es/messages'
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -34,7 +35,10 @@ const config = {
   },
 }
 
-i18n.load('en', messages)
+i18n.load({
+  en: enMessages,
+  es: esMessages,
+})
 i18n.activate('en')
 
 ReactDOM.render(

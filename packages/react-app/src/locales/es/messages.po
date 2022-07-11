@@ -46,7 +46,7 @@ msgstr "Pendiente"
 
 #: src/pages/Home.tsx:112
 msgid "Place Bet"
-msgstr "Realizar Apuesta"
+msgstr "Apostar"
 
 #: src/pages/Home.tsx:123
 msgid "Pool prize"
