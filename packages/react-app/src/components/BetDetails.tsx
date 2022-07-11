@@ -2,6 +2,7 @@ import { BoxWrapper, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
 import {getAnswerText} from '../lib/helpers';
 import {BigNumber} from "@ethersproject/bignumber";
+import { Trans } from '@lingui/macro';
 
 function getBetResult(eventResult: string, playerBet: string) {
   if (eventResult === "") {
@@ -14,9 +15,9 @@ function getBetResult(eventResult: string, playerBet: string) {
 export default function BetDetails({bet}: {bet: Bet}) {
   return <BoxWrapper>
     <BoxRow>
-      <div style={{ width: '40%'}}>Your Bet</div>
-      <div style={{ width: '40%'}}>Event Result</div>
-      <div style={{ width: '20%' }}>Points Earned</div>
+      <div style={{ width: '40%'}}><Trans>Your Bet</Trans></div>
+      <div style={{ width: '40%'}}><Trans>Event Result</Trans></div>
+      <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
     </BoxRow>
     {bet.market.events.map((event, i) => {
       const eventNonce = BigNumber.from(event.nonce).toNumber();
@@ -31,7 +32,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
           <div style={{ width: '40%', wordBreak: 'break-word' }}>{playerBet}</div>
           <div style={{ width: '40%', wordBreak: 'break-word' }}>{eventResult || 'Unknown'}</div>
           <div style={{ width: '20%' }}>
-            {betResult === 0 && <span>Waiting result</span>}
+            {betResult === 0 && <span><Trans>Waiting result</Trans></span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}
             {betResult === 2 && <span style={{color: 'red'}}>0</span>}
           </div>

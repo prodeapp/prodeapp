@@ -50,6 +50,10 @@ msgstr "Answer closes in {answerCountdown}"
 msgid "Answer result"
 msgstr "Answer result"
 
+#: src/components/Answer/AnswerForm.tsx:57
+msgid "Answer sent"
+msgstr "Answer sent"
+
 #: src/components/MarketCreate/EventBuilder.tsx:61
 msgid "Answers"
 msgstr "Answers"
@@ -95,6 +99,10 @@ msgstr "Connect Wallet"
 msgid "Connect with your MetaMask Wallet"
 msgstr "Connect with your MetaMask Wallet"
 
+#: src/components/Answer/AnswerForm.tsx:53
+msgid "Connect your wallet to answer"
+msgstr "Connect your wallet to answer"
+
 #: src/components/Questions/QuestionsForm.tsx:85
 msgid "Connect your wallet to place a bet."
 msgstr "Connect your wallet to place a bet."
@@ -123,6 +131,14 @@ msgstr "Drag and drop each question to the correct position"
 msgid "Error loading questions"
 msgstr "Error loading questions"
 
+#: src/components/BetDetails.tsx:19
+msgid "Event Result"
+msgstr "Event Result"
+
+#: src/components/Answer/AnswerForm.tsx:79
+msgid "Event result is pending arbitration."
+msgstr "Event result is pending arbitration."
+
 #: src/components/MarketView/Results.tsx:48
 msgid "Finalized"
 msgstr "Finalized"
@@ -139,6 +155,7 @@ msgstr "Finished"
 msgid "Groups preview"
 msgstr "Groups preview"
 
+#: src/components/Answer/AnswerForm.tsx:116
 #: src/components/Questions/QuestionsForm.tsx:136
 msgid "Invalid result"
 msgstr "Invalid result"
@@ -176,10 +193,11 @@ msgstr "No markets found."
 msgid "Only verified markets"
 msgstr "Only verified markets"
 
-#: src/components/MarketView/Results.tsx:46
+#: src/components/Answer/AnswerForm.tsx:75
 #~ msgid "Open to answers in ${openingTimeLeft}"
 #~ msgstr "Open to answers in ${openingTimeLeft}"
 
+#: src/components/Answer/AnswerForm.tsx:75
 #: src/components/MarketView/Results.tsx:46
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Open to answers in {openingTimeLeft}"
@@ -224,6 +242,10 @@ msgstr "Player"
 msgid "Points"
 msgstr "Points"
 
+#: src/components/BetDetails.tsx:20
+msgid "Points Earned"
+msgstr "Points Earned"
+
 #: src/pages/MarketsView.tsx:57
 msgid "Pool"
 msgstr "Pool"
@@ -249,6 +271,7 @@ msgstr "Question"
 msgid "Remove event"
 msgstr "Remove event"
 
+#: src/components/Answer/AnswerForm.tsx:89
 #: src/components/MarketView/Results.tsx:33
 msgid "Result"
 msgstr "Result"
@@ -256,6 +279,10 @@ msgstr "Result"
 #: src/pages/MarketsView.tsx:87
 msgid "Results"
 msgstr "Results"
+
+#: src/components/Answer/AnswerForm.tsx:97
+msgid "Reward"
+msgstr "Reward"
 
 #: src/components/AppMenuBar.tsx:171
 msgid "Scan with WalletConnect to connect"
@@ -273,6 +300,10 @@ msgstr "Status"
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
 
+#: src/components/Answer/AnswerDialog.tsx:21
+msgid "Submit answer"
+msgstr "Submit answer"
+
 #: src/components/Curate/QuestionsList.tsx:26
 msgid "The sum of group sizes must be equal to the amount of events"
 msgstr "The sum of group sizes must be equal to the amount of events"
@@ -280,6 +311,10 @@ msgstr "The sum of group sizes must be equal to the amount of events"
 #: src/pages/MarketsView.tsx:29
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
+
+#: src/components/Answer/AnswerForm.tsx:123
+msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
+msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 
 #: src/components/Questions/QuestionsForm.tsx:144
 msgid "Use {0}% of this pool to:"
@@ -298,9 +333,21 @@ msgstr "Verify Market"
 msgid "Waiting for results"
 msgstr "Waiting for results"
 
+#: src/components/BetDetails.tsx:35
+msgid "Waiting result"
+msgstr "Waiting result"
+
 #: src/components/MarketCreate/PrizeWeightsBuilder.tsx:44
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
+
+#: src/components/BetDetails.tsx:18
+msgid "Your Bet"
+msgstr "Your Bet"
+
+#: src/components/Answer/AnswerForm.tsx:106
+msgid "Your answer"
+msgstr "Your answer"
 
 #: src/components/AppMenuBar.tsx:209
 #~ msgid "message.connect_wallet"
