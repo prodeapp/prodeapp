@@ -59,7 +59,7 @@ function Home() {
                     checked={verifiedStatus}
                     onClick={() => setVerifiedStatus(!verifiedStatus)}
                   />}
-                label="Only verified markets" />
+                label={<Trans>Only verified markets</Trans>}/>
             </FormGroup>
           </Box>
         </Box>

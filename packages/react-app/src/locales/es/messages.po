@@ -35,6 +35,10 @@ msgstr "Cerrado"
 msgid "No markets found."
 msgstr "No se encontraron mercados"
 
+#: src/pages/Home.tsx:62
+msgid "Only verified markets"
+msgstr "Solo mercados verificados"
+
 #: src/pages/Home.tsx:128
 msgid "Participants"
 msgstr "Participantes"
