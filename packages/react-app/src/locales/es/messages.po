@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/MarketView/MarketStatus.tsx:13
+msgid "Accepting bets"
+msgstr "Aceptando Apuestas"
+
 #: src/pages/Home.tsx:39
 #: src/pages/Home.tsx:95
 msgid "Active"
@@ -37,6 +41,10 @@ msgstr "Precio de Apuesta"
 #: src/pages/MarketsView.tsx:86
 msgid "Bets"
 msgstr "Apuestas"
+
+#: src/components/MarketView/MarketStatus.tsx:17
+msgid "Building ranking"
+msgstr "Construyendo Ranking"
 
 #: src/pages/Home.tsx:44
 msgid "Category:"
@@ -65,6 +73,10 @@ msgstr "Detalles"
 
 #: src/components/MarketView/Results.tsx:48
 msgid "Finalized"
+msgstr "Finalizado"
+
+#: src/components/MarketView/MarketStatus.tsx:19
+msgid "Finished"
 msgstr "Finalizado"
 
 #: src/pages/MarketsView.tsx:24
@@ -179,6 +191,10 @@ msgstr "Verificado"
 #: src/pages/MarketsView.tsx:44
 msgid "Verify Market"
 msgstr "Verificar Mercado"
+
+#: src/components/MarketView/MarketStatus.tsx:15
+msgid "Waiting for results"
+msgstr ""
 
 #: src/components/AppMenuBar.tsx:209
 #~ msgid "message.connect_wallet"
