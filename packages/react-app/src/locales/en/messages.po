@@ -6,3 +6,56 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Home.tsx:39
+#: src/pages/Home.tsx:95
+msgid "Active"
+msgstr "Active"
+
+#: src/pages/Home.tsx:118
+msgid "Bet price"
+msgstr "Bet price"
+
+#: src/pages/Home.tsx:44
+msgid "Category:"
+msgstr "Category:"
+
+#: src/pages/Home.tsx:41
+#: src/pages/Home.tsx:92
+msgid "Closed"
+msgstr "Closed"
+
+#: src/pages/Home.tsx:85
+msgid "No markets found."
+msgstr "No markets found."
+
+#: src/pages/Home.tsx:128
+msgid "Participants"
+msgstr "Participants"
+
+#: src/pages/Home.tsx:40
+#: src/pages/Home.tsx:97
+msgid "Pending"
+msgstr "Pending"
+
+#: src/pages/Home.tsx:112
+msgid "Place Bet"
+msgstr "Place Bet"
+
+#: src/pages/Home.tsx:123
+msgid "Pool prize"
+msgstr "Pool prize"
+
+#: src/pages/Home.tsx:133
+msgid "Verified"
+msgstr "Verified"
+
+#: src/pages/Home.tsx:107
+#~ msgid "{status}"
+#~ msgstr "{status}"

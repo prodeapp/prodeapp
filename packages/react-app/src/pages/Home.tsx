@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import {BigNumber} from "@ethersproject/bignumber";
 import TextField from "@mui/material/TextField";
+import { Trans } from '@lingui/macro'
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
@@ -35,12 +36,12 @@ function Home() {
         <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}>Status: </Typography></div>
-            <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}>Active</Button></div>
-            <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}>Pending</Button></div>
-            <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}>Closed</Button></div>
+            <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}><Trans>Active</Trans></Button></div>
+            <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}><Trans>Pending</Trans></Button></div>
+            <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}><Trans>Closed</Trans></Button></div>
           </Box>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div><Typography style={{paddingRight:'10px'}}>Category: </Typography></div>
+            <div><Typography style={{paddingRight:'10px'}}><Trans>Category: </Trans></Typography></div>
             <TextField
               select
               value={category}
@@ -81,19 +82,19 @@ type MarketsTableProps = {
 function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
 
   if (!markets || markets.length === 0) {
-    return <Alert severity="info">No markets found.</Alert>
+    return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
   }
 
   return <Grid container spacing={2}>
     {markets.map((market, i) => {
       const timeLeft = getTimeLeft(market.closingTime);
 
-      let status = 'Closed';
+      let status = <Trans>Closed</Trans>;
 
       if (timeLeft !== false) {
-        status = 'Active';
+        status = <Trans>Active</Trans>;
       } else if (market.hasPendingAnswers) {
-        status = 'Pending';
+        status = <Trans>Pending</Trans>;
       }
 
       return <Grid item xs={12} sm={6} md={4} key={i}>
@@ -108,28 +109,28 @@ function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
                 </div>
                 {timeLeft && <div>
                   <div style={{textAlign: 'center', marginBottom: 10}}>{timeLeft}</div>
-                  <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth>Place Bet</Button>
+                  <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth><Trans>Place Bet</Trans></Button>
                 </div>}
               </div>
             </Box>
             <Box sx={{width: {md: '47%'}}}>
               <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}>Bet price</div>
+                <div style={{fontWeight: 'normal'}}><Trans>Bet price</Trans></div>
                 <div>{formatAmount(market.price)}</div>
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}>Pool prize</div>
+                <div style={{fontWeight: 'normal'}}><Trans>Pool prize</Trans></div>
                 <div>{formatAmount(market.pool)}</div>
               </Box>
 
               <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}>Participants</div>
+                <div style={{fontWeight: 'normal'}}><Trans>Participants</Trans></div>
                 <div>{BigNumber.from(market.pool).div(market.price).toString()}</div>
               </Box>
 
               <Box>
-                <div style={{fontWeight: 'normal'}}>Verified</div>
+                <div style={{fontWeight: 'normal'}}><Trans>Verified</Trans></div>
                 <div>{market.curated ? '✅' : '🚫'}</div>
               </Box>
             </Box>

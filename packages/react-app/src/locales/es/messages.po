@@ -6,3 +6,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: es\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Home.tsx:39
+#: src/pages/Home.tsx:95
+msgid "Active"
+msgstr "Activo"
+
+#: src/pages/Home.tsx:118
+msgid "Bet price"
+msgstr "Precio de Apuesta"
+
+#: src/pages/Home.tsx:44
+msgid "Category:"
+msgstr "Categoría"
+
+#: src/pages/Home.tsx:41
+#: src/pages/Home.tsx:92
+msgid "Closed"
+msgstr "Cerrado"
+
+#: src/pages/Home.tsx:85
+msgid "No markets found."
+msgstr "No se encontraron mercados"
+
+#: src/pages/Home.tsx:128
+msgid "Participants"
+msgstr "Participantes"
+
+#: src/pages/Home.tsx:40
+#: src/pages/Home.tsx:97
+msgid "Pending"
+msgstr "Pendiente"
+
+#: src/pages/Home.tsx:112
+msgid "Place Bet"
+msgstr "Realizar Apuesta"
+
+#: src/pages/Home.tsx:123
+msgid "Pool prize"
+msgstr "Premio en pozo"
+
+#: src/pages/Home.tsx:133
+msgid "Verified"
+msgstr "Verificado"

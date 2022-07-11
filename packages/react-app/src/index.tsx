@@ -19,6 +19,9 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 import CurateValidator from "./pages/CurateValidator";
 import CurateSubmit from "./pages/CurateSubmit";
+import { i18n } from '@lingui/core'
+import { I18nProvider } from '@lingui/react'
+import { messages } from './locales/en/messages'
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -31,11 +34,15 @@ const config = {
   },
 }
 
+i18n.load('en', messages)
+i18n.activate('en')
+
 ReactDOM.render(
   <React.StrictMode>
     <DAppProvider config={config}>
       <ReactQueryProvider>
         <ThemeProvider theme={theme}>
+        <I18nProvider i18n={i18n}>
           <HashRouter>
             <Routes>
               <Route element={<Layout />}>
@@ -54,6 +61,7 @@ ReactDOM.render(
               </Route>
             </Routes>
           </HashRouter>
+          </I18nProvider>
         </ThemeProvider>
       </ReactQueryProvider>
     </DAppProvider>
