@@ -22,6 +22,10 @@ msgstr "Active"
 msgid "Bet price"
 msgstr "Bet price"
 
+#: src/pages/MarketsView.tsx:86
+msgid "Bets"
+msgstr "Bets"
+
 #: src/pages/Home.tsx:44
 msgid "Category:"
 msgstr "Category:"
@@ -43,9 +47,21 @@ msgstr "Connect with your MetaMask Wallet"
 msgid "Create Market"
 msgstr "Create Market"
 
+#: src/pages/MarketsView.tsx:24
+msgid "Loading..."
+msgstr "Loading..."
+
 #: src/components/AppMenuBar.tsx:215
 msgid "Logout"
 msgstr "Logout"
+
+#: src/pages/MarketsView.tsx:73
+msgid "Management Fee"
+msgstr "Management Fee"
+
+#: src/pages/MarketsView.tsx:77
+msgid "Manager"
+msgstr "Manager"
 
 #: src/pages/MarketsView.tsx:30
 msgid "Market not found"
@@ -72,25 +88,46 @@ msgstr "Pending"
 msgid "Place Bet"
 msgstr "Place Bet"
 
+#: src/pages/MarketsView.tsx:57
+msgid "Pool"
+msgstr "Pool"
+
 #: src/pages/Home.tsx:123
 msgid "Pool prize"
 msgstr "Pool prize"
+
+#: src/pages/MarketsView.tsx:61
+msgid "Prize Distribution"
+msgstr "Prize Distribution"
 
 #: src/components/AppMenuBar.tsx:214
 msgid "Profile"
 msgstr "Profile"
 
+#: src/pages/MarketsView.tsx:87
+msgid "Results"
+msgstr "Results"
+
 #: src/components/AppMenuBar.tsx:171
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
+
+#: src/pages/MarketsView.tsx:41
+msgid "Status: <0/>"
+msgstr "Status: <0/>"
 
 #: src/pages/MarketsView.tsx:29
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
 
 #: src/pages/Home.tsx:133
+#: src/pages/MarketsView.tsx:45
 msgid "Verified"
 msgstr "Verified"
+
+#: src/pages/MarketsView.tsx:44
+msgid "Verify Market"
+msgstr "Verify Market"
 
 #: src/components/AppMenuBar.tsx:209
 #~ msgid "message.connect_wallet"

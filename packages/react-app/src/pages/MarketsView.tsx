@@ -12,6 +12,7 @@ import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";
 import {shortenAddress} from "@usedapp/core";
 import MarketStatus from "../components/MarketView/MarketStatus";
+import { Trans } from "@lingui/macro";
 
 function MarketsView() {
   const { id } = useParams();
@@ -20,13 +21,13 @@ function MarketsView() {
   const [searchParams] = useSearchParams();
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div><Trans>Loading...</Trans></div>
   }
 
   if (!market) {
     return searchParams.get('new') === '1'
-            ? <div>This market was just created, please wait a few seconds for it to be indexed.</div>
-            : <div>Market not found</div>
+            ? <div><Trans>This market was just created, please wait a few seconds for it to be indexed.</Trans></div>
+            : <div><Trans>Market not found</Trans></div>
   }
 
   return (
@@ -37,11 +38,11 @@ function MarketsView() {
             <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2}}>
               <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
               <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-                Status: <MarketStatus marketId={market.id} />
+                <Trans>Status: <MarketStatus marketId={market.id} /></Trans>
               </div>
               <Box sx={{mt: 4}}>
-                {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}>Verify Market</Button>}
-                {market.curated && <div>Verified ✅</div>}
+                {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}><Trans>Verify Market</Trans></Button>}
+                {market.curated && <div><Trans>Verified</Trans> ✅</div>}
               </Box>
             </BoxWrapper>
 
@@ -53,11 +54,11 @@ function MarketsView() {
             <BoxWrapper sx={{padding: 2}}>
               <Grid container spacing={2}>
                 <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}>Pool</div>
+                  <div style={{marginBottom: 10}}><Trans>Pool</Trans></div>
                   <div>{formatAmount(market.pool)}</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}>Prize Distribution</div>
+                  <div style={{marginBottom: 10}}><Trans>Prize Distribution</Trans></div>
                   <div>
                     {market.prizes.map((value, index) => {
                       const prizeMedal =
@@ -69,11 +70,11 @@ function MarketsView() {
                   </div>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}>Management Fee</div>
+                  <div style={{marginBottom: 10}}><Trans>Management Fee</Trans></div>
                   <div>{Number(market.managementFee) * 100 / DIVISOR}%</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}>Manager</div>
+                  <div style={{marginBottom: 10}}><Trans>Manager</Trans></div>
                   <div><a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(market.manager.id)}</a></div>
                 </Grid>
               </Grid>
@@ -82,8 +83,8 @@ function MarketsView() {
 
           <BoxWrapper>
             <BoxRow style={{justifyContent: 'center'}}>
-              <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}>Bets</Button></div>
-              <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}>Results</Button></div>
+              <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
+              <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}><Trans>Results</Trans></Button></div>
             </BoxRow>
           </BoxWrapper>
 
