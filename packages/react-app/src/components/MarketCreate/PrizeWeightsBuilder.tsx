@@ -6,7 +6,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { ErrorMessage } from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import { MarketFormStep2Values } from "../../hooks/useMarketForm";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 export default function PrizeWeightsBuilder() {
   const { control, setValue, register, formState: { errors } } = useFormContext<MarketFormStep2Values>();
@@ -35,7 +35,7 @@ export default function PrizeWeightsBuilder() {
       return <AnswerFieldWrapper key={answerField.id}>
         <AnswerField>
           <div style={{ marginRight: '10px' }}>{prizeMedal}</div>
-          <TextField {...register(`prizeWeights.${i}.value`, { required: 'This field is required.' })} style={{ width: '100px' }} type="number" />
+          <TextField {...register(`prizeWeights.${i}.value`, { required: t`This field is required.` })} style={{ width: '100px' }} type="number" />
           <div style={{ cursor: 'pointer', marginLeft: '10px' }} onClick={deletePrizeWeight(i)}>[x]</div>
         </AnswerField>
         <FormError><ErrorMessage errors={errors} name={`prizeWeights.${i}.value`} /></FormError>

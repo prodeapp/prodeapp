@@ -30,7 +30,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
         <div style={{ width: '100%', wordBreak: 'break-word' }}>{event.title}</div>
         <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
           <div style={{ width: '40%', wordBreak: 'break-word' }}>{playerBet}</div>
-          <div style={{ width: '40%', wordBreak: 'break-word' }}>{eventResult || 'Unknown'}</div>
+          <div style={{ width: '40%', wordBreak: 'break-word' }}>{eventResult || t`Unknown`}</div>
           <div style={{ width: '20%' }}>
             {betResult === 0 && <span><Trans>Waiting result</Trans></span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}

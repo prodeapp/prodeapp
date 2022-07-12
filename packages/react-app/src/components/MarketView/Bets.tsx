@@ -9,7 +9,7 @@ import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 export default function Bets({marketId, playerId}: {marketId?: string, playerId?: string}) {
   const { isLoading, error, data: ranking } = useRanking({marketId: marketId, playerId});
@@ -37,7 +37,7 @@ export default function Bets({marketId, playerId}: {marketId?: string, playerId?
     {bet && <AppDialog
       open={openModal}
       handleClose={handleClose}
-      title="Details"
+      title={t`Details`}
     >
       <BetDetails bet={bet} />
     </AppDialog>}

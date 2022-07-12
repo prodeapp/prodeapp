@@ -16,7 +16,7 @@ import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -110,7 +110,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
                 <Select
                   defaultValue=""
                   id={`question-outcome-select`}
-                  {...register(`outcome`, {required: 'This field is required.'})}
+                  {...register(`outcome`, {required: t`This field is required.`})}
                 >
                   {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>

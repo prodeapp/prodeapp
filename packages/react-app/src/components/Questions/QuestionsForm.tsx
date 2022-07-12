@@ -16,7 +16,7 @@ import {useEvents} from "../../hooks/useEvents";
 import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
 import {futurizeQuestion} from "../../lib/templates";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 export type QuestionsFormValues = {
   outcomes: {value: number|''}[],
@@ -29,10 +29,10 @@ const DEVS = "0x9b59eeEA37618ed5227c3Fb2420F68fe5cD1151A";
 const UBI_BURNER_ADDRESS = "0x43E9062F3D4B87C49b96ada5De230B1Ce69485c3";
 const SPLITTER_DONATION_ADDRESS = "0x9378C3F269F5A3f87956FF8DBF2d83E361a7166c";
 const providers = [
-  { text: "support dev team", address: DEVS },
-  { text: "support UBI", address: UBI_BURNER_ADDRESS },
-  { text: "support UBI & dev team", address: SPLITTER_DONATION_ADDRESS },
-  { text: "reward pool winners", address: AddressZero }
+  { text: t`support dev team`, address: DEVS },
+  { text: t`support UBI`, address: UBI_BURNER_ADDRESS },
+  { text: t`support UBI & dev team`, address: SPLITTER_DONATION_ADDRESS },
+  { text: t`reward pool winners`, address: AddressZero }
 ];
 
 type QuestionsFormProps = {
@@ -96,7 +96,7 @@ export default function QuestionsForm({marketId, price, control, register, error
   const onSubmit = async (data: QuestionsFormValues) => {
     const results = data.outcomes.map(outcome => {
       if (outcome.value === '') {
-        throw Error('Invalid outcome')
+        throw Error(t`Invalid outcome`)
       }
 
       return hexZeroPad(hexlify(outcome.value), 32)
@@ -130,7 +130,7 @@ export default function QuestionsForm({marketId, price, control, register, error
                 <Select
                   defaultValue=""
                   id={`question-${i}-outcome-select`}
-                  {...register(`outcomes.${i}.value`, {required: 'This field is required'})}
+                  {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
@@ -147,7 +147,7 @@ export default function QuestionsForm({marketId, price, control, register, error
               <Select
                 defaultValue={DEVS}
                 id={`provider-select`}
-                {...register(`provider`, {required: 'This field is required.'})}
+                {...register(`provider`, {required: t`This field is required.`})}
               >
                 {providers.map((prov, i) => <MenuItem value={prov.address} key={i}>{prov.text}</MenuItem>)}
               </Select>

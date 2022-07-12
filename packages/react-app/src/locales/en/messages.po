@@ -74,6 +74,10 @@ msgstr "Answer sent"
 msgid "Answers"
 msgstr "Answers"
 
+#: src/pages/MarketsCreate.tsx:244
+msgid "Bet Price"
+msgstr "Bet Price"
+
 #: src/pages/MarketsCreate.tsx:161
 msgid "Bet Price (xDAI)"
 msgstr "Bet Price (xDAI)"
@@ -99,6 +103,7 @@ msgid "Bets will not be accepted passed this time. It should be before the begin
 msgstr "Bets will not be accepted passed this time. It should be before the beginning of the first event."
 
 #: src/pages/MarketsCreate.tsx:94
+#: src/pages/MarketsCreate.tsx:242
 msgid "Betting Deadline (UTC)"
 msgstr "Betting Deadline (UTC)"
 
@@ -111,6 +116,7 @@ msgstr "Building ranking"
 #~ msgstr "Building rankingTrans>"
 
 #: src/pages/MarketsCreate.tsx:79
+#: src/pages/MarketsCreate.tsx:237
 msgid "Category"
 msgstr "Category"
 
@@ -122,9 +128,17 @@ msgstr "Category:"
 msgid "Choose Question"
 msgstr "Choose Question"
 
+#: src/components/TemplateDialog.tsx:109
+msgid "Choose question"
+msgstr "Choose question"
+
 #: src/components/TemplateDialog.tsx:121
 msgid "Choose question format"
 msgstr "Choose question format"
+
+#: src/components/TemplateDialog.tsx:114
+msgid "Choose template"
+msgstr "Choose template"
 
 #: src/pages/Home.tsx:41
 #: src/pages/Home.tsx:92
@@ -155,6 +169,10 @@ msgstr "Connect your wallet to create a market."
 msgid "Connect your wallet to place a bet."
 msgstr "Connect your wallet to place a bet."
 
+#: src/pages/CurateSubmit.tsx:140
+msgid "Connect your wallet to verify a market."
+msgstr "Connect your wallet to verify a market."
+
 #: src/pages/Profile.tsx:27
 msgid "Connect your wallet to view your profile."
 msgstr "Connect your wallet to view your profile."
@@ -168,6 +186,7 @@ msgstr "Create Market"
 msgid "Description"
 msgstr "Description"
 
+#: src/components/MarketView/Bets.tsx:40
 #: src/components/MarketView/Bets.tsx:57
 msgid "Details"
 msgstr "Details"
@@ -205,6 +224,22 @@ msgstr "Event result is pending arbitration."
 msgid "Events"
 msgstr "Events"
 
+#: src/pages/MarketsCreate.tsx:190
+msgid "Fee must be greater than 0."
+msgstr "Fee must be greater than 0."
+
+#: src/pages/MarketsCreate.tsx:191
+msgid "Fee must be lower than 100."
+msgstr "Fee must be lower than 100."
+
+#: src/components/Curate/QuestionsList.tsx:78
+msgid "Final"
+msgstr "Final"
+
+#: src/components/Curate/QuestionsList.tsx:102
+msgid "Final #1"
+msgstr "Final #1"
+
 #: src/components/MarketView/Results.tsx:48
 msgid "Finalized"
 msgstr "Finalized"
@@ -230,9 +265,34 @@ msgstr "Go to step"
 msgid "Go to the market"
 msgstr "Go to the market"
 
+#: src/pages/CurateSubmit.tsx:42
+msgid "Groups"
+msgstr "Groups"
+
 #: src/components/Curate/QuestionsList.tsx:196
 msgid "Groups preview"
 msgstr "Groups preview"
+
+#: src/pages/MarketsCreate.tsx:260
+msgid "I have created a new market on @prode_eth: {marketName} {0}//{1}/#/markets/{marketId}"
+msgstr "I have created a new market on @prode_eth: {marketName} {0}//{1}/#/markets/{marketId}"
+
+#: src/pages/CurateValidator.tsx:92
+msgid "Invalid JSON"
+msgstr "Invalid JSON"
+
+#: src/pages/CurateValidator.tsx:108
+msgid "Invalid market hash"
+msgstr "Invalid market hash"
+
+#: src/pages/CurateSubmit.tsx:81
+#: src/pages/MarketsCreate.tsx:166
+msgid "Invalid number."
+msgstr "Invalid number."
+
+#: src/components/Questions/QuestionsForm.tsx:99
+msgid "Invalid outcome"
+msgstr "Invalid outcome"
 
 #: src/components/Answer/AnswerForm.tsx:116
 #: src/components/Questions/QuestionsForm.tsx:136
@@ -243,7 +303,12 @@ msgstr "Invalid result"
 msgid "Item Id"
 msgstr "Item Id"
 
+#: src/pages/CurateValidator.tsx:85
+msgid "Item id not found"
+msgstr "Item id not found"
+
 #: src/components/Questions/QuestionsForm.tsx:81
+#: src/pages/CurateSubmit.tsx:144
 #: src/pages/MarketsView.tsx:24
 msgid "Loading..."
 msgstr "Loading..."
@@ -252,6 +317,23 @@ msgstr "Loading..."
 msgid "Logout"
 msgstr "Logout"
 
+#: src/components/Curate/QuestionsList.tsx:114
+msgid "Losers Final #1"
+msgstr "Losers Final #1"
+
+#: src/components/Curate/QuestionsList.tsx:114
+msgid "Losers Quarterfinals #1"
+msgstr "Losers Quarterfinals #1"
+
+#: src/components/Curate/QuestionsList.tsx:114
+msgid "Losers Round of % #1"
+msgstr "Losers Round of % #1"
+
+#: src/components/Curate/QuestionsList.tsx:114
+msgid "Losers Semifinals #1"
+msgstr "Losers Semifinals #1"
+
+#: src/pages/MarketsCreate.tsx:248
 #: src/pages/MarketsView.tsx:73
 msgid "Management Fee"
 msgstr "Management Fee"
@@ -261,6 +343,7 @@ msgid "Management Fee (%)"
 msgstr "Management Fee (%)"
 
 #: src/pages/MarketsCreate.tsx:173
+#: src/pages/MarketsCreate.tsx:246
 #: src/pages/MarketsView.tsx:77
 msgid "Manager"
 msgstr "Manager"
@@ -271,8 +354,17 @@ msgid "Market"
 msgstr "Market"
 
 #: src/pages/MarketsCreate.tsx:70
+#: src/pages/MarketsCreate.tsx:235
 msgid "Market Name"
 msgstr "Market Name"
+
+#: src/pages/CurateValidator.tsx:101
+msgid "Market hash found"
+msgstr "Market hash found"
+
+#: src/pages/CurateValidator.tsx:99
+msgid "Market hash not found"
+msgstr "Market hash not found"
 
 #: src/pages/CurateSubmit.tsx:180
 msgid "Market name"
@@ -281,6 +373,14 @@ msgstr "Market name"
 #: src/pages/MarketsView.tsx:30
 msgid "Market not found"
 msgstr "Market not found"
+
+#: src/pages/CurateSubmit.tsx:148
+msgid "Market not found."
+msgstr "Market not found."
+
+#: src/pages/CurateSubmit.tsx:172
+msgid "Market sent to Kleros Curate"
+msgstr "Market sent to Kleros Curate"
 
 #: src/pages/MarketsCreate.tsx:140
 #: src/pages/MarketsCreate.tsx:204
@@ -295,6 +395,10 @@ msgstr "No bets found."
 #: src/pages/Home.tsx:85
 msgid "No markets found."
 msgstr "No markets found."
+
+#: src/pages/CurateSubmit.tsx:48
+msgid "Number of questions"
+msgstr "Number of questions"
 
 #: src/pages/Home.tsx:62
 msgid "Only verified markets"
@@ -338,8 +442,8 @@ msgid "Place bets"
 msgstr "Place bets"
 
 #: src/components/Questions/QuestionsDialog.tsx:30
-#~ msgid "Place your bets"
-#~ msgstr "Place your bets"
+msgid "Place your bets"
+msgstr "Place your bets"
 
 #: src/components/MarketView/Bets.tsx:47
 msgid "Player"
@@ -366,6 +470,10 @@ msgstr "Pool prize"
 msgid "Price"
 msgstr "Price"
 
+#: src/pages/MarketsCreate.tsx:167
+msgid "Price must be greater than 0.01"
+msgstr "Price must be greater than 0.01"
+
 #: src/pages/MarketsView.tsx:61
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
@@ -375,8 +483,8 @@ msgid "Prize Distribution (%)"
 msgstr "Prize Distribution (%)"
 
 #: src/pages/MarketsCreate.tsx:250
-#~ msgid "Prizes"
-#~ msgstr "Prizes"
+msgid "Prizes"
+msgstr "Prizes"
 
 #: src/components/AppMenuBar.tsx:215
 msgid "Profile"
@@ -385,6 +493,10 @@ msgstr "Profile"
 #: src/pages/MarketsCreate.tsx:350
 msgid "Publish"
 msgstr "Publish"
+
+#: src/components/Curate/QuestionsList.tsx:78
+msgid "Quarterfinals"
+msgstr "Quarterfinals"
 
 #: src/components/MarketCreate/EventBuilder.tsx:54
 #: src/components/Questions/QuestionsForm.tsx:119
@@ -417,9 +529,21 @@ msgstr "Review the market data"
 msgid "Reward"
 msgstr "Reward"
 
+#: src/components/Curate/QuestionsList.tsx:48
+msgid "Round of %"
+msgstr "Round of %"
+
 #: src/components/AppMenuBar.tsx:172
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
+
+#: src/pages/MarketsCreate.tsx:103
+msgid "Select date"
+msgstr "Select date"
+
+#: src/components/Curate/QuestionsList.tsx:78
+msgid "Semifinals"
+msgstr "Semifinals"
 
 #: src/components/TemplateDialog.tsx:101
 msgid "Set question"
@@ -433,6 +557,10 @@ msgstr "Single-Elimination preview"
 msgid "Starting timestamp"
 msgstr "Starting timestamp"
 
+#: src/pages/CurateValidator.tsx:125
+msgid "Starting timestamp is earlier than the betting deadline"
+msgstr "Starting timestamp is earlier than the betting deadline"
+
 #: src/components/MarketView/Results.tsx:34
 msgid "Status"
 msgstr "Status"
@@ -440,6 +568,10 @@ msgstr "Status"
 #: src/pages/MarketsView.tsx:41
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
+
+#: src/pages/CurateSubmit.tsx:231
+msgid "Submit"
+msgstr "Submit"
 
 #: src/components/Answer/AnswerDialog.tsx:21
 msgid "Submit answer"
@@ -465,6 +597,49 @@ msgstr "The market was successfully created and is ready to take bets."
 msgid "The sum of group sizes must be equal to the amount of events"
 msgstr "The sum of group sizes must be equal to the amount of events"
 
+#: src/pages/MarketsCreate.tsx:151
+msgid "The sum of prize weights must be 100."
+msgstr "The sum of prize weights must be 100."
+
+#: src/components/Curate/QuestionsList.tsx:64
+msgid "Third place"
+msgstr "Third place"
+
+#: src/components/Questions/QuestionsForm.tsx:133
+#: src/pages/MarketsCreate.tsx:100
+msgid "This field is required"
+msgstr "This field is required"
+
+#: src/components/Answer/AnswerForm.tsx:113
+#: src/components/MarketCreate/AnswersBuilder.tsx:29
+#: src/components/MarketCreate/PrizeWeightsBuilder.tsx:38
+#: src/components/MarketCreate/QuestionBuilder.tsx:19
+#: src/components/Questions/QuestionsForm.tsx:150
+#: src/components/TemplateDialog.tsx:119
+#: src/components/TemplateDialog.tsx:129
+#: src/pages/CurateSubmit.tsx:51
+#: src/pages/CurateSubmit.tsx:63
+#: src/pages/CurateSubmit.tsx:79
+#: src/pages/CurateSubmit.tsx:183
+#: src/pages/CurateSubmit.tsx:199
+#: src/pages/CurateSubmit.tsx:211
+#: src/pages/CurateValidator.tsx:141
+#: src/pages/MarketsCreate.tsx:73
+#: src/pages/MarketsCreate.tsx:85
+#: src/pages/MarketsCreate.tsx:164
+#: src/pages/MarketsCreate.tsx:176
+#: src/pages/MarketsCreate.tsx:187
+msgid "This field is required."
+msgstr "This field is required."
+
+#: src/pages/CurateValidator.tsx:118
+msgid "This is the first submission for this market"
+msgstr "This is the first submission for this market"
+
+#: src/pages/CurateValidator.tsx:117
+msgid "This market has more than 1 submissions. ItemId's: {0}"
+msgstr "This market has more than 1 submissions. ItemId's: {0}"
+
 #: src/pages/MarketsView.tsx:29
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
@@ -485,13 +660,34 @@ msgstr "Total Bet: {0}"
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
+#: src/pages/CurateSubmit.tsx:167
+msgid "Unexpected error"
+msgstr "Unexpected error"
+
 #: src/components/Questions/QuestionsForm.tsx:144
 msgid "Use {0}% of this pool to:"
 msgstr "Use {0}% of this pool to:"
 
+#: src/pages/CurateValidator.tsx:92
+msgid "Valid JSON"
+msgstr "Valid JSON"
+
+#: src/pages/CurateValidator.tsx:109
+msgid "Valid market hash"
+msgstr "Valid market hash"
+
+#: src/pages/CurateValidator.tsx:124
+msgid "Valid starting timestamp"
+msgstr "Valid starting timestamp"
+
 #: src/pages/CurateValidator.tsx:148
 msgid "Validate"
 msgstr "Validate"
+
+#: src/pages/CurateSubmit.tsx:54
+#: src/pages/CurateSubmit.tsx:82
+msgid "Value must be greater than 0."
+msgstr "Value must be greater than 0."
 
 #: src/pages/Home.tsx:133
 #: src/pages/MarketsView.tsx:45
@@ -521,6 +717,22 @@ msgstr "Waiting result"
 #: src/components/MarketCreate/PrizeWeightsBuilder.tsx:44
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
+
+#: src/components/Curate/QuestionsList.tsx:96
+msgid "Winners Final"
+msgstr "Winners Final"
+
+#: src/components/Curate/QuestionsList.tsx:96
+msgid "Winners Quarterfinals"
+msgstr "Winners Quarterfinals"
+
+#: src/components/Curate/QuestionsList.tsx:96
+msgid "Winners Round of %"
+msgstr "Winners Round of %"
+
+#: src/components/Curate/QuestionsList.tsx:96
+msgid "Winners Semifinals"
+msgstr "Winners Semifinals"
 
 #: src/components/BetDetails.tsx:18
 msgid "Your Bet"
@@ -553,3 +765,19 @@ msgstr "Your answer"
 #: src/components/AppMenuBar.tsx:171
 #~ msgid "message.scan_with_walletconnect_to_connect"
 #~ msgstr "Scan with WalletConnect to connect"
+
+#: src/components/Questions/QuestionsForm.tsx:35
+msgid "reward pool winners"
+msgstr "reward pool winners"
+
+#: src/components/Questions/QuestionsForm.tsx:33
+msgid "support UBI"
+msgstr "support UBI"
+
+#: src/components/Questions/QuestionsForm.tsx:34
+msgid "support UBI & dev team"
+msgstr "support UBI & dev team"
+
+#: src/components/Questions/QuestionsForm.tsx:32
+msgid "support dev team"
+msgstr "support dev team"

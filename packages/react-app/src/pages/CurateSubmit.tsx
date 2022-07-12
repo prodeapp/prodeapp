@@ -17,7 +17,7 @@ import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
 import QuestionsList from "../components/Curate/QuestionsList";
 import {CurateSubmitFormValues} from "../components/Curate";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -39,19 +39,19 @@ function GroupsForm() {
   return <>
   <BoxWrapper>
     <BoxRow>
-      <BoxLabelCell>Groups</BoxLabelCell>
+      <BoxLabelCell><Trans>Groups</Trans></BoxLabelCell>
     </BoxRow>
     {groupsFields.length > 0 &&
     groupsFields.map((groupField, i) => {
         return <BoxRow key={groupField.id} style={{flexDirection: 'column'}}>
           <div style={{width: '100%', display: 'flex', padding: '5px 0'}}>
-            <BoxLabelCell>Number of questions</BoxLabelCell>
+            <BoxLabelCell><Trans>Number of questions</Trans></BoxLabelCell>
             <div style={{width: '100%', display: 'flex'}}>
               <TextField {...register(`extraDataGroups.groups.${i}.size`, {
-                required: 'This field is required.',
+                required: t`This field is required.`,
                 valueAsNumber: true,
                 validate: v => !isNaN(Number(v)) || 'Invalid number.',
-                min: {value: 1, message: 'Value must be greater than 0.'},
+                min: {value: 1, message: t`Value must be greater than 0.`},
               })} style={{width: '100%'}} />
               <FormError><ErrorMessage errors={errors} name={`extraDataGroups.groups.${i}.size`} /></FormError>
             </div>
@@ -60,7 +60,7 @@ function GroupsForm() {
             <BoxLabelCell>Name</BoxLabelCell>
             <div style={{width: '100%', display: 'flex'}}>
               <TextField {...register(`extraDataGroups.groups.${i}.name`, {
-                required: 'This field is required.',
+                required: t`This field is required.`,
               })} style={{width: '100%'}} />
               <FormError><ErrorMessage errors={errors} name={`extraDataGroups.groups.${i}.name`} /></FormError>
             </div>
@@ -76,10 +76,10 @@ function GroupsForm() {
       <BoxLabelCell>Rounds</BoxLabelCell>
       <div style={{width: '100%'}}>
         <TextField {...register(`extraDataGroups.rounds`, {
-          required: 'This field is required.',
+          required: t`This field is required.`,
           valueAsNumber: true,
-          validate: v => !isNaN(Number(v)) || 'Invalid number.',
-          min: {value: 1, message: 'Value must be greater than 0.'},
+          validate: v => !isNaN(Number(v)) || t`Invalid number.`,
+          min: {value: 1, message: t`Value must be greater than 0.`},
         })} />
         <FormError><ErrorMessage errors={errors} name={`extraDataGroups.rounds`} /></FormError>
       </div>
@@ -137,15 +137,15 @@ function CurateSubmit() {
   }, [market, setValue])
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to verify a market.'}</Alert>
+    return <Alert severity="error">{walletError?.message || t`Connect your wallet to verify a market.`}</Alert>
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div><Trans>Loading...</Trans></div>
   }
 
   if (!events) {
-    return <Alert severity="error">Market not found.</Alert>
+    return <Alert severity="error"><Trans>Market not found.</Trans></Alert>
   }
 
   const onSubmit = async (data: CurateSubmitFormValues) => {
@@ -164,12 +164,12 @@ function CurateSubmit() {
         }
       );
     } catch (e: any) {
-      alert(e?.message || 'Unexpected error');
+      alert(e?.message || t`Unexpected error`);
     }
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success">Market sent to Kleros Curate</Alert>
+    return <Alert severity="success"><Trans>Market sent to Kleros Curate</Trans></Alert>
   }
 
   return <FormProvider {...useFormReturn}>
@@ -180,7 +180,7 @@ function CurateSubmit() {
           <BoxLabelCell><Trans>Market name</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('name', {
-              required: 'This field is required.'
+              required: t`This field is required.`
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="name" /></FormError>
           </div>
@@ -196,7 +196,7 @@ function CurateSubmit() {
           <BoxLabelCell><Trans>Starting timestamp</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('startingTimestamp', {
-              required: 'This field is required.'
+              required: t`This field is required.`
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="startingTimestamp" /></FormError>
           </div>
@@ -208,7 +208,7 @@ function CurateSubmit() {
               <Select
                 defaultValue=""
                 id={`market-format`}
-                {...register(`format`, {required: 'This field is required.'})}
+                {...register(`format`, {required: t`This field is required.`})}
               >
                 {Object.keys(TournamentFormats).map((format, i) => <MenuItem value={format} key={i}>{TournamentFormats[format]}</MenuItem>)}
               </Select>
@@ -228,7 +228,7 @@ function CurateSubmit() {
         </BoxRow>}
         <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit">Submit</Button>
+            <Button type="submit"><Trans>Submit</Trans></Button>
           </div>
         </BoxRow>
       </BoxWrapper>

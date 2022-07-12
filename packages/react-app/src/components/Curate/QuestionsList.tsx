@@ -6,7 +6,7 @@ import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_SINGLE_ELIMINATION} fro
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
 import {useEffect, useMemo, useState} from "react";
 import Alert from "@mui/material/Alert";
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
@@ -45,7 +45,7 @@ function GroupsPreview({questions, config}: {questions: string[], config: ExtraD
 }
 
 function EliminationPreview({questions, type}: {questions: string[], type: 'single'|'double'}) {
-  const getConfig = (totalEvents: number, mainRoundNames: string[] = [], altRoundNames: string = 'Round of %', addThirdPlace: boolean = false): ExtraDataGroups => {
+  const getConfig = (totalEvents: number, mainRoundNames: string[] = [], altRoundNames: string = t`Round of %`, addThirdPlace: boolean = false): ExtraDataGroups => {
     let n = 0;
     let accumEvents = Math.pow(2, n);
     let currentEvents = accumEvents;
@@ -61,7 +61,7 @@ function EliminationPreview({questions, type}: {questions: string[], type: 'sing
 
       if (addThirdPlace && (accumEvents + 1) === totalEvents) {
         // third place match
-        config.groups.push({size: 1, name: 'Third place'})
+        config.groups.push({size: 1, name: t`Third place`})
       }
 
       n++;
@@ -75,7 +75,7 @@ function EliminationPreview({questions, type}: {questions: string[], type: 'sing
   if (type === 'single') {
     return <GroupsPreview
             questions={questions}
-            config={getConfig(questions.length, ['Final', 'Semifinals', 'Quarterfinals'], '', true)} />
+            config={getConfig(questions.length, [t`Final`, t`Semifinals`, t`Quarterfinals`], '', true)} />
   }
 
   const singleMatchFinal = questions.length % 2 === 0;
@@ -93,13 +93,13 @@ function EliminationPreview({questions, type}: {questions: string[], type: 'sing
   brackets.push(
     {
       questions: questionsCopy.splice(0, totalTeams - 1),
-      config: getConfig(totalTeams - 1, ['Winners Final', 'Winners Semifinals', 'Winners Quarterfinals'], 'Winners Round of %')
+      config: getConfig(totalTeams - 1, [t`Winners Final`, t`Winners Semifinals`, t`Winners Quarterfinals`], t`Winners Round of %`)
     }
   );
 
   // final match 1
   brackets.push(
-    {questions: questionsCopy.splice(0, 1), config: getConfig(1, [], 'Final #1')}
+    {questions: questionsCopy.splice(0, 1), config: getConfig(1, [], t`Final #1`)}
   );
 
   if (!singleMatchFinal) {
@@ -111,7 +111,7 @@ function EliminationPreview({questions, type}: {questions: string[], type: 'sing
 
   // losers bracket
   const totalLosersTeams = totalTeams / 2;
-  const losersConfig = getConfig(totalLosersTeams, ['Losers Final #1', 'Losers Semifinals #1', 'Losers Quarterfinals #1'], 'Losers Round of % #1');
+  const losersConfig = getConfig(totalLosersTeams, [t`Losers Final #1`, t`Losers Semifinals #1`, t`Losers Quarterfinals #1`], t`Losers Round of % #1`);
 
   const loserGroups: ExtraDataGroups['groups'] = [];
 

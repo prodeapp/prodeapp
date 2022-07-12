@@ -25,7 +25,7 @@ import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
 import {getCategoryText, MARKET_CATEGORIES} from "../lib/helpers";
-import { Trans } from "@lingui/macro";
+import { Trans, t } from "@lingui/macro";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -70,7 +70,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
           <BoxLabelCell><Trans>Market Name</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('market', {
-              required: 'This field is required.'
+              required: t`This field is required.`
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
           </div>
@@ -82,7 +82,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
               select
               value={category}
               {...register('category', {
-                required: 'This field is required.'
+                required: t`This field is required.`
               })}
               style={{width: '100%'}}>
               {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}>{category.text}</MenuItem>)}
@@ -97,10 +97,10 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
               <Controller
                 control={control}
                 name='closingTime'
-                rules={{required: 'This field is required'}}
+                rules={{required: t`This field is required`}}
                 render={({ field }) => (
                   <DateTimePicker
-                    label='Select date'
+                    label={t`Select date`}
                     minDate={today}
                     onChange={field.onChange}
                     value={field.value}
@@ -148,7 +148,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
 
   useEffect(() => {
     useFormReturn.register('prizeDivisor', {
-      validate: value => value === 100 || 'The sum of prize weights must be 100.'
+      validate: value => value === 100 || t`The sum of prize weights must be 100.`
     });
   }, [useFormReturn]);
 
@@ -161,10 +161,10 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
           <BoxLabelCell><Trans>Bet Price (xDAI)</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('price', {
-              required: 'This field is required.',
+              required: t`This field is required.`,
               valueAsNumber: true,
-              validate: v => !isNaN(Number(v)) || 'Invalid number.',
-              min: { value: 0.01, message: 'Price must be greater than 0.01' }
+              validate: v => !isNaN(Number(v)) || t`Invalid number.`,
+              min: { value: 0.01, message: t`Price must be greater than 0.01` }
             })} style={{width: '100%'}} />
             <FormError><ErrorMessage errors={errors} name="price" /></FormError>
           </div>
@@ -173,7 +173,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
           <BoxLabelCell><Trans>Manager</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('manager', {
-              required: 'This field is required.',
+              required: t`This field is required.`,
               validate: v => isAddress(v) || 'Invalid address.',
             })} style={{width: '100%'}} />
             <FormHelperText><Trans>Address to send management fees to.</Trans></FormHelperText>
@@ -184,11 +184,11 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
           <BoxLabelCell><Trans>Management Fee (%)</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('managementFee', {
-              required: 'This field is required.',
+              required: t`This field is required.`,
               valueAsNumber: true,
               validate: v => !isNaN(Number(v)) || 'Invalid number.',
-              min: {value: 0, message: 'Fee must be greater than 0.'},
-              max: {value: 100, message: 'Fee must be lower than 100.'}
+              min: {value: 0, message: t`Fee must be greater than 0.`},
+              max: {value: 100, message: t`Fee must be lower than 100.`}
             })} style={{width: '100%'}} />
             <FormHelperText><Trans>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
@@ -232,22 +232,22 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
 
     <h2><Trans>Review the market data</Trans></h2>
 
-    <PreviewText title="Market Name" value={step1State.market} setActiveStep={setActiveStep} step={0} />
+    <PreviewText title={t`Market Name`} value={step1State.market} setActiveStep={setActiveStep} step={0} />
 
-    <PreviewText title="Category" value={getCategoryText(step1State.category)} setActiveStep={setActiveStep} step={0} />
+    <PreviewText title={t`Category`} value={getCategoryText(step1State.category)} setActiveStep={setActiveStep} step={0} />
 
     <div style={{fontWeight: 'bold', marginBottom: '10px'}}><Trans>Events</Trans></div>
     <PreviewEvents step1State={step1State} setActiveStep={setActiveStep} />
 
-    <PreviewText title="Betting Deadline (UTC)" value={format(step1State.closingTime, DATE_FORMAT)} setActiveStep={setActiveStep} step={0} />
+    <PreviewText title={t`Betting Deadline (UTC)`} value={format(step1State.closingTime, DATE_FORMAT)} setActiveStep={setActiveStep} step={0} />
 
-    <PreviewText title="Bet price" value={`${step2State.price} xDAI`} setActiveStep={setActiveStep} step={1} />
+    <PreviewText title={t`Bet Price`} value={`${step2State.price} xDAI`} setActiveStep={setActiveStep} step={1} />
 
-    <PreviewText title="Manager" value={step2State.manager} setActiveStep={setActiveStep} step={1} />
+    <PreviewText title={t`Manager`} value={step2State.manager} setActiveStep={setActiveStep} step={1} />
 
-    <PreviewText title="Management Fee" value={`${step2State.managementFee}%`} setActiveStep={setActiveStep} step={1} />
+    <PreviewText title={t`Management Fee`} value={`${step2State.managementFee}%`} setActiveStep={setActiveStep} step={1} />
 
-    <PreviewText title="Prizes" value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
+    <PreviewText title={t`Prizes`} value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
 
     <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
       <div><Button onClick={onSubmit}><Trans>Create Market</Trans></Button></div>
@@ -257,7 +257,7 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
 }
 
 function SuccessStep({marketName, marketId}: {marketName: string, marketId: string}) {
-  const message = `I have created a new market on @prode_eth: ${marketName} ${window.location.protocol}//${window.location.hostname}/#/markets/${marketId}`
+  const message = t`I have created a new market on @prode_eth: ${marketName} ${window.location.protocol}//${window.location.hostname}/#/markets/${marketId}`
 
   const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
 
