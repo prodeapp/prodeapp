@@ -3092,6 +3092,11 @@
     make-plural "^6.2.2"
     messageformat-parser "^4.1.3"
 
+"@lingui/detect-locale@^3.14.0":
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/@lingui/detect-locale/-/detect-locale-3.14.0.tgz#efbec423a8bf0e2785db320c5d015e4023ae8f8b"
+  integrity sha512-IELWULt9I+iyVlxGES21cXoOwTcPSIisElAmr3/KJlqvJ9zXT3s4w4Jxw9j5oHJjdxBDRkifwpnVmGd57wrmzg==
+
 "@lingui/macro@^3.14.0":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-3.14.0.tgz#4d97cd548967c2b4b2b2f92715eec4d69e84545c"

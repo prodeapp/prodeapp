@@ -16,7 +16,7 @@ import { Trans } from "@lingui/macro";
 
 export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const { locale, setLocale } = useI18nContext();
+  const { locale, handleChangeLocale } = useI18nContext();
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -75,7 +75,8 @@ export default function AppMenuBar() {
               </MenuItem>
               <MenuItem>
                 <Select value={locale} onChange={(e) => {
-                  setLocale(e.target.value as LocaleEnum)
+                  handleChangeLocale(e.target.value as LocaleEnum);
+                  localStorage.setItem("locale", e.target.value as LocaleEnum)
                 }}>
                   <MenuItem value={LocaleEnum.English}>English</MenuItem>
                   <MenuItem value={LocaleEnum.Spanish}>Español</MenuItem>
@@ -104,7 +105,7 @@ export default function AppMenuBar() {
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Select defaultValue={locale} onChange={(e) => {
-              setLocale(e.target.value as LocaleEnum)
+              handleChangeLocale(e.target.value as LocaleEnum)
             }}>
               <MenuItem value={LocaleEnum.English}>English</MenuItem>
               <MenuItem value={LocaleEnum.Spanish}>Español</MenuItem>

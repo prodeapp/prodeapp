@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch } from "react";
 
 /**
  * Assertion function
@@ -9,7 +9,7 @@ export function assert(value: unknown, message: string | Error): asserts value {
 
 export interface I18nContextProps {
   locale: LocaleEnum,
-  setLocale: Dispatch<SetStateAction<LocaleEnum>>,
+  handleChangeLocale: Dispatch<LocaleEnum>
 }
 
 export enum LocaleEnum {

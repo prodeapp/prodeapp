@@ -3,7 +3,7 @@ import { I18nContextProps, LocaleEnum } from "./types";
 
 const InitialState: I18nContextProps = {
     locale: LocaleEnum.English,
-    setLocale: () => undefined,
+    handleChangeLocale: () => undefined
 };
 
 export const I18nContext = React.createContext<I18nContextProps>(InitialState);
