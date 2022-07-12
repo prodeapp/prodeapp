@@ -13,6 +13,7 @@ import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
+import { Language } from "@mui/icons-material";
 
 export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -73,7 +74,8 @@ export default function AppMenuBar() {
               <MenuItem>
                 <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}>Create Market</Button>
               </MenuItem>
-              <MenuItem>
+              <MenuItem sx={{display: {alignItems: 'center'}}}>
+                <Language />
                 <Select value={locale} onChange={(e) => {
                   handleChangeLocale(e.target.value as LocaleEnum);
                   localStorage.setItem("locale", e.target.value as LocaleEnum)
@@ -94,7 +96,7 @@ export default function AppMenuBar() {
           >
             prode.eth
           </Link>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1,display: { xs: 'none', md: 'flex'} }}>
             <Button
               onClick={handleCloseNavMenu}
               sx={{ my: 2, color: 'white', display: 'block' }}
@@ -103,7 +105,8 @@ export default function AppMenuBar() {
               <Trans>Create Market</Trans>
             </Button>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', alignItems: 'center'} }}>
+            <Language />
             <Select defaultValue={locale} onChange={(e) => {
               handleChangeLocale(e.target.value as LocaleEnum)
             }}>
