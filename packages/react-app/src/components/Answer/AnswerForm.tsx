@@ -50,7 +50,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   }, []);
 
   if (!account || walletError) {
-    return <Alert severity="error">walletError?.message || <Trans>Connect your wallet to answer</Trans></Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to answer</Trans>}</Alert>
   }
 
   if (state.status === 'Success') {
