@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import {PLACEHOLDER_REGEX} from "../hooks/useMarketForm";
 import {marketsTemplates} from "../lib/templates";
+import { Trans } from "@lingui/macro";
 
 type QuestionParams = {value: string}[];
 
@@ -97,7 +98,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
 
   const dialogActions = <DialogActions>
     <Button autoFocus onClick={clickSubmit} color="secondary">
-      Set question
+      <Trans>Set question</Trans>
     </Button>
   </DialogActions>
 
@@ -117,7 +118,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
             defaultValue={-1}
             {...register('template', {required: 'This field is required.'})}
           >
-            <MenuItem value={-1} key={-1}>Choose question format</MenuItem>
+            <MenuItem value={-1} key={-1}><Trans>Choose question format</Trans></MenuItem>
             {marketsTemplates.map((template, i) => <MenuItem value={i} key={i}>{template.q}</MenuItem>)}
           </Select>
         </FormControl>

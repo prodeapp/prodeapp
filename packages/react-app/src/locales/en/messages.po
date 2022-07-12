@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/pages/MarketsCreate.tsx:342
+#~ msgid "'Connect your wallet to create a market."
+#~ msgstr "'Connect your wallet to create a market."
+
 #: src/components/MarketView/MarketStatus.tsx:13
 msgid "Accepting bets"
 msgstr "Accepting bets"
@@ -114,6 +118,14 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
+#: src/components/MarketCreate/EventBuilder.tsx:57
+msgid "Choose Question"
+msgstr "Choose Question"
+
+#: src/components/TemplateDialog.tsx:121
+msgid "Choose question format"
+msgstr "Choose question format"
+
 #: src/pages/Home.tsx:41
 #: src/pages/Home.tsx:92
 msgid "Closed"
@@ -134,6 +146,10 @@ msgstr "Connect with your MetaMask Wallet"
 #: src/components/Answer/AnswerForm.tsx:53
 msgid "Connect your wallet to answer"
 msgstr "Connect your wallet to answer"
+
+#: src/pages/MarketsCreate.tsx:342
+msgid "Connect your wallet to create a market."
+msgstr "Connect your wallet to create a market."
 
 #: src/components/Questions/QuestionsForm.tsx:85
 msgid "Connect your wallet to place a bet."
@@ -185,6 +201,7 @@ msgid "Event result is pending arbitration."
 msgstr "Event result is pending arbitration."
 
 #: src/pages/MarketsCreate.tsx:118
+#: src/pages/MarketsCreate.tsx:239
 msgid "Events"
 msgstr "Events"
 
@@ -248,6 +265,7 @@ msgstr "Management Fee (%)"
 msgid "Manager"
 msgstr "Manager"
 
+#: src/pages/MarketsCreate.tsx:348
 #: src/pages/Profile.tsx:56
 msgid "Market"
 msgstr "Market"
@@ -344,6 +362,10 @@ msgstr "Pool"
 msgid "Pool prize"
 msgstr "Pool prize"
 
+#: src/pages/MarketsCreate.tsx:349
+msgid "Price"
+msgstr "Price"
+
 #: src/pages/MarketsView.tsx:61
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
@@ -352,9 +374,17 @@ msgstr "Prize Distribution"
 msgid "Prize Distribution (%)"
 msgstr "Prize Distribution (%)"
 
+#: src/pages/MarketsCreate.tsx:250
+#~ msgid "Prizes"
+#~ msgstr "Prizes"
+
 #: src/components/AppMenuBar.tsx:215
 msgid "Profile"
 msgstr "Profile"
+
+#: src/pages/MarketsCreate.tsx:350
+msgid "Publish"
+msgstr "Publish"
 
 #: src/components/MarketCreate/EventBuilder.tsx:54
 #: src/components/Questions/QuestionsForm.tsx:119
@@ -378,6 +408,10 @@ msgstr "Result"
 msgid "Results"
 msgstr "Results"
 
+#: src/pages/MarketsCreate.tsx:233
+msgid "Review the market data"
+msgstr "Review the market data"
+
 #: src/components/Answer/AnswerForm.tsx:97
 #: src/pages/Profile.tsx:58
 msgid "Reward"
@@ -386,6 +420,10 @@ msgstr "Reward"
 #: src/components/AppMenuBar.tsx:172
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
+
+#: src/components/TemplateDialog.tsx:101
+msgid "Set question"
+msgstr "Set question"
 
 #: src/components/Curate/QuestionsList.tsx:200
 msgid "Single-Elimination preview"

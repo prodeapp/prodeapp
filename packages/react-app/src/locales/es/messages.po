@@ -106,6 +106,14 @@ msgstr "Categoría"
 msgid "Category:"
 msgstr "Categoría"
 
+#: src/components/MarketCreate/EventBuilder.tsx:57
+msgid "Choose Question"
+msgstr "Elegir pregunta"
+
+#: src/components/TemplateDialog.tsx:121
+msgid "Choose question format"
+msgstr "Elegir el formato de pregunta"
+
 #: src/pages/Home.tsx:41
 #: src/pages/Home.tsx:92
 msgid "Closed"
@@ -126,6 +134,10 @@ msgstr "Conectar con billetera Metamask"
 #: src/components/Answer/AnswerForm.tsx:53
 msgid "Connect your wallet to answer"
 msgstr "Connecte su billetera para contestar"
+
+#: src/pages/MarketsCreate.tsx:342
+msgid "Connect your wallet to create a market."
+msgstr "Conectar la billetera para crear un mercado"
 
 #: src/components/Questions/QuestionsForm.tsx:85
 msgid "Connect your wallet to place a bet."
@@ -177,6 +189,7 @@ msgid "Event result is pending arbitration."
 msgstr "Resultado del evento está en disputa."
 
 #: src/pages/MarketsCreate.tsx:118
+#: src/pages/MarketsCreate.tsx:239
 msgid "Events"
 msgstr "Eventos"
 
@@ -236,6 +249,7 @@ msgstr "Fee del creador (%)"
 msgid "Manager"
 msgstr "Creador"
 
+#: src/pages/MarketsCreate.tsx:348
 #: src/pages/Profile.tsx:56
 msgid "Market"
 msgstr "Mercado"
@@ -324,6 +338,10 @@ msgstr "Pozo"
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
+#: src/pages/MarketsCreate.tsx:349
+msgid "Price"
+msgstr "Precios"
+
 #: src/pages/MarketsView.tsx:61
 msgid "Prize Distribution"
 msgstr "Distribución de premios"
@@ -332,9 +350,17 @@ msgstr "Distribución de premios"
 msgid "Prize Distribution (%)"
 msgstr "Distribución de premios (%)"
 
+#: src/pages/MarketsCreate.tsx:250
+#~ msgid "Prizes"
+#~ msgstr "Premios"
+
 #: src/components/AppMenuBar.tsx:215
 msgid "Profile"
 msgstr "Perfil"
+
+#: src/pages/MarketsCreate.tsx:350
+msgid "Publish"
+msgstr "Publicar"
 
 #: src/components/MarketCreate/EventBuilder.tsx:54
 #: src/components/Questions/QuestionsForm.tsx:119
@@ -358,6 +384,10 @@ msgstr "Resultado"
 msgid "Results"
 msgstr "Resultados"
 
+#: src/pages/MarketsCreate.tsx:233
+msgid "Review the market data"
+msgstr "Revisar la información del mercado"
+
 #: src/components/Answer/AnswerForm.tsx:97
 #: src/pages/Profile.tsx:58
 msgid "Reward"
@@ -366,6 +396,10 @@ msgstr "Recompensa"
 #: src/components/AppMenuBar.tsx:172
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan con WalletConnect para conectar"
+
+#: src/components/TemplateDialog.tsx:101
+msgid "Set question"
+msgstr "Definir pregunta"
 
 #: src/components/Curate/QuestionsList.tsx:200
 msgid "Single-Elimination preview"

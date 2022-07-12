@@ -54,7 +54,7 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
       <BoxLabelCell><Trans>Question</Trans></BoxLabelCell>
       <div style={{width: '100%', display: 'flex'}}>
         <QuestionBuilder {...{eventIndex}} />
-        <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}>Choose Question</Button>
+        <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}><Trans>Choose Question</Trans></Button>
       </div>
     </BoxRow>
     <BoxRow>

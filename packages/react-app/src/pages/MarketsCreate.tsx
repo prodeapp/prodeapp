@@ -230,13 +230,13 @@ function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1
 function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewStepProps) {
   return <div>
 
-    <h2>Review the market data</h2>
+    <h2><Trans>Review the market data</Trans></h2>
 
     <PreviewText title="Market Name" value={step1State.market} setActiveStep={setActiveStep} step={0} />
 
     <PreviewText title="Category" value={getCategoryText(step1State.category)} setActiveStep={setActiveStep} step={0} />
 
-    <div style={{fontWeight: 'bold', marginBottom: '10px'}}>Events</div>
+    <div style={{fontWeight: 'bold', marginBottom: '10px'}}><Trans>Events</Trans></div>
     <PreviewEvents step1State={step1State} setActiveStep={setActiveStep} />
 
     <PreviewText title="Betting Deadline (UTC)" value={format(step1State.closingTime, DATE_FORMAT)} setActiveStep={setActiveStep} step={0} />
@@ -339,15 +339,15 @@ function MarketsCreate() {
   }, [account]);
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to create a market.'}</Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
   }
 
   return <>
     {activeStep < 3 && <div style={{marginBottom: 20}}>
       <Stepper activeStep={activeStep} alternativeLabel>
-        <Step><StepLabel>Market</StepLabel></Step>
-        <Step><StepLabel>Price</StepLabel></Step>
-        <Step><StepLabel>Publish</StepLabel></Step>
+        <Step><StepLabel><Trans>Market</Trans></StepLabel></Step>
+        <Step><StepLabel><Trans>Price</Trans></StepLabel></Step>
+        <Step><StepLabel><Trans>Publish</Trans></StepLabel></Step>
       </Stepper>
     </div>}
 
