@@ -280,6 +280,7 @@ msgstr "Salida inválida"
 
 #: src/components/Answer/AnswerForm.tsx:116
 #: src/components/Questions/QuestionsForm.tsx:136
+#: src/lib/helpers.ts:51
 msgid "Invalid result"
 msgstr "Respuesta inválida"
 
@@ -379,6 +380,10 @@ msgstr "No se encontraron apuestas"
 #: src/pages/Home.tsx:85
 msgid "No markets found."
 msgstr "No se encontraron mercados"
+
+#: src/lib/helpers.ts:45
+msgid "Not answered yet"
+msgstr "Sin respuesta todavía"
 
 #: src/pages/CurateSubmit.tsx:48
 msgid "Number of questions"
@@ -635,6 +640,10 @@ msgstr "Premios recibidos: {0}"
 #: src/pages/CurateSubmit.tsx:167
 msgid "Unexpected error"
 msgstr "Error inesperado"
+
+#: src/components/BetDetails.tsx:33
+msgid "Unknown"
+msgstr "Desconocido"
 
 #: src/components/Questions/QuestionsForm.tsx:144
 msgid "Use {0}% of this pool to:"

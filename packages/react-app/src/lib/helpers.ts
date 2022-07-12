@@ -7,7 +7,7 @@ import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
 import {INVALID_RESULT} from "../components/Questions/QuestionsForm";
-
+import {t} from "@lingui/macro";
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);
   return format(date, 'MMMM d yyyy, HH:mm')
@@ -42,13 +42,13 @@ export function formatAmount(amount: BigNumberish) {
   return `${number.toString()} xDAI`
 }
 
-export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], noAnswerText = 'Not answered yet') {
+export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], noAnswerText = t`Not answered yet`) {
   if (currentAnswer === null) {
     return noAnswerText;
   }
 
   if (currentAnswer === INVALID_RESULT) {
-    return 'Invalid result';
+    return t`Invalid result`;
   }
 
   const value = BigNumber.from(currentAnswer);
