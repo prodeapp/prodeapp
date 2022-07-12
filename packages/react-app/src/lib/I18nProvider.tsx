@@ -36,7 +36,6 @@ export const I18nProvider: React.FC = ({ children }) => {
 
     const setLocaleIfPresent = useCallback((locale: string) => {
         if (isLocalePresent(locale)) {
-            console.log('SET locale', locale)
             setLocale(locale as LocaleEnum);
         }
     }, [])
@@ -61,7 +60,6 @@ export const I18nProvider: React.FC = ({ children }) => {
         // Dynamically load the catalogs
         import(`../locales/${locale}/messages`).then(module => {
             const messages = module.messages;
-            console.log('Messages', messages)
             i18n.load(locale, messages)
             i18n.activate(locale)
         });
