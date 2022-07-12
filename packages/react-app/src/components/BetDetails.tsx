@@ -2,7 +2,7 @@ import { BoxWrapper, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
 import {getAnswerText} from '../lib/helpers';
 import {BigNumber} from "@ethersproject/bignumber";
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 
 function getBetResult(eventResult: string, playerBet: string) {
   if (eventResult === "") {
