@@ -5,6 +5,7 @@ import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import QuestionsForm, {QuestionsFormValues} from "./QuestionsForm";
 import type {BigNumberish} from "ethers";
+import { Trans, t } from "@lingui/macro";
 
 type QuestionsDialogProps = DialogProps & {
   marketId: string
@@ -18,7 +19,7 @@ function QuestionsDialog({open, handleClose, marketId, price}: QuestionsDialogPr
 
   const dialogActions = <DialogActions>
     <Button autoFocus color="secondary" type="submit" form="questions-form">
-      Place bets
+      <Trans>Place bets</Trans>
     </Button>
   </DialogActions>
 
@@ -26,7 +27,7 @@ function QuestionsDialog({open, handleClose, marketId, price}: QuestionsDialogPr
     <AppDialog
       open={open}
       handleClose={handleClose}
-      title="Place your bets"
+      title={t`Place your bets`}
       actions={dialogActions}
     >
       <QuestionsForm {...{marketId: marketId, price, register, control, errors, handleSubmit}} />

@@ -16,6 +16,7 @@ import {INVALID_RESULT} from "../Questions/QuestionsForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
+import { Trans, t } from "@lingui/macro";
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -49,11 +50,11 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   }, []);
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to answer.'}</Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to answer</Trans>}</Alert>
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success">Answer sent!</Alert>
+    return <Alert severity="success"><Trans>Answer sent</Trans>!</Alert>
   }
 
   const onSubmit = async (data: AnswerFormValues) => {
@@ -71,11 +72,11 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   const openingTimeLeft = getTimeLeft(event.openingTs);
 
   if (openingTimeLeft !== false) {
-    return <div>{`Open to answers in ${openingTimeLeft}`}</div>
+    return <div><Trans>Open to answers in {openingTimeLeft}</Trans></div>
   }
 
   if (event.isPendingArbitration) {
-    return <div>Event result is pending arbitration.</div>
+    return <div><Trans>Event result is pending arbitration.</Trans></div>
   }
 
   return (
@@ -85,7 +86,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
       <BoxWrapper>
         <BoxRow>
           <div style={{width: '40%'}}>
-            Result
+          <Trans>Result</Trans>
           </div>
           <div style={{width: '60%'}}>
             {getAnswerText(event.answer, event.outcomes || [])}
@@ -93,7 +94,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
         </BoxRow>
         {event.bounty !== '0' && <BoxRow>
           <div style={{width: '40%'}}>
-            Reward
+          <Trans>Reward</Trans>
           </div>
           <div style={{width: '60%'}}>
             {formatAmount(event.bounty)}
@@ -102,24 +103,24 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
         {!finalized && <>
           <BoxRow>
             <div style={{width: '40%'}}>
-              Your answer
+            <Trans>Your answer</Trans>
             </div>
             <div style={{width: '60%'}}>
               <FormControl fullWidth>
                 <Select
                   defaultValue=""
                   id={`question-outcome-select`}
-                  {...register(`outcome`, {required: 'This field is required.'})}
+                  {...register(`outcome`, {required: t`This field is required.`})}
                 >
                   {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
-                  <MenuItem value={INVALID_RESULT}>Invalid result</MenuItem>
+                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcome`} /></FormError>
               </FormControl>
             </div>
           </BoxRow>
           <BoxRow>
-            <FormHelperText>To submit the answer you need to deposit a bond of {formatAmount(currentBond)} that will be returned if the answer is correct.</FormHelperText>
+            <FormHelperText><Trans>To submit the answer you need to deposit a bond of {formatAmount(currentBond)} that will be returned if the answer is correct.</Trans></FormHelperText>
           </BoxRow>
         </>}
       </BoxWrapper>
