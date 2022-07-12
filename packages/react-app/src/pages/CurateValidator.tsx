@@ -16,6 +16,7 @@ import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
 import {fetchEvents, useEvents} from "../hooks/useEvents";
 import validate from "../components/Curate/schema";
+import { Trans } from "@lingui/macro";
 
 type FormValues = {
   itemId: string
@@ -134,7 +135,7 @@ function CurateValidator() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Item Id</BoxLabelCell>
+          <BoxLabelCell><Trans>Item Id</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('itemId', {
               required: 'This field is required.'
@@ -144,7 +145,7 @@ function CurateValidator() {
         </BoxRow>
         <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit">Validate</Button>
+            <Button type="submit"><Trans>Validate</Trans></Button>
           </div>
         </BoxRow>
       </BoxWrapper>

@@ -10,6 +10,7 @@ import Alert from "@mui/material/Alert";
 import * as React from "react";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
+import { Trans } from '@lingui/macro';
 
 export default function Profile() {
   const { id } = useParams();
@@ -23,7 +24,7 @@ export default function Profile() {
   }, [id, account]);
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || 'Connect your wallet to view your profile.'}</Alert>
+    return <Alert severity="error">walletError?.message || <Trans>Connect your wallet to view your profile.</Trans></Alert>
   }
 
   if (error) {
@@ -35,26 +36,26 @@ export default function Profile() {
   }
 
   if (!bets || bets.length === 0) {
-    return <Alert severity="error">No bets found.</Alert>
+    return <Alert severity="error"><Trans>No bets found.</Trans></Alert>
   }
 
   return (
     <Container>
       {player && <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'center' }}>
         <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'>Total Bet: {formatAmount(player.amountBet)}</Typography>
+          <Typography variant='h5'><Trans>Total Bet: {formatAmount(player.amountBet)}</Trans></Typography>
         </Grid>
         <Grid item sm={6} md={6} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'>Total Rewards: {formatAmount(player.pricesReceived)}</Typography>
+          <Typography variant='h5'><Trans>Total Rewards: {formatAmount(player.pricesReceived)}</Trans></Typography>
         </Grid>
       </Grid>}
       <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
         <Grid item sm={12} md={12}>
           <BoxRow>
-            <div style={{ width: '20%' }}>Token ID</div>
-            <div style={{ width: '40%' }}>Market</div>
-            <div style={{ width: '60%' }}>Points</div>
-            <div style={{ width: '20%' }}>Reward</div>
+            <div style={{ width: '20%' }}><Trans>Token ID</Trans></div>
+            <div style={{ width: '40%' }}><Trans>Market</Trans></div>
+            <div style={{ width: '60%' }}><Trans>Points</Trans></div>
+            <div style={{ width: '20%' }}><Trans>Reward</Trans></div>
           </BoxRow>
 
           {bets && bets.map(bet => {

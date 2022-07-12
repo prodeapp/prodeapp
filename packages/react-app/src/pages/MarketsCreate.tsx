@@ -25,6 +25,7 @@ import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
 import {getCategoryText, MARKET_CATEGORIES} from "../lib/helpers";
+import { Trans } from "@lingui/macro";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -66,7 +67,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Market Name</BoxLabelCell>
+          <BoxLabelCell><Trans>Market Name</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('market', {
               required: 'This field is required.'
@@ -75,7 +76,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Category</BoxLabelCell>
+          <BoxLabelCell><Trans>Category</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField
               select
@@ -90,7 +91,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Betting Deadline (UTC)</BoxLabelCell>
+          <BoxLabelCell><Trans>Betting Deadline (UTC)</Trans></BoxLabelCell>
           <div style={{textAlign: 'right'}}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
@@ -109,12 +110,12 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
                 )}
               />
             </LocalizationProvider>
-            <FormHelperText>Bets will not be accepted passed this time. It should be before the beginning of the first event.</FormHelperText>
+            <FormHelperText><Trans>Bets will not be accepted passed this time. It should be before the beginning of the first event.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="closingTime" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Events</BoxLabelCell>
+          <BoxLabelCell><Trans>Events</Trans></BoxLabelCell>
         </BoxRow>
         {eventsFields.length > 0 &&
         <BoxRow style={{flexDirection: 'column'}}>
@@ -131,12 +132,12 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
         </BoxRow>
         }
         <BoxRow>
-          <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addEvent}>+ Add event</Button></div>
+          <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addEvent}>+ <Trans>Add event</Trans></Button></div>
         </BoxRow>
       </BoxWrapper>
 
       {isValid && eventsFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <Button type="submit">Next step</Button>
+        <Button type="submit"><Trans>Next step</Trans></Button>
       </div>}
     </form>
   </FormProvider>
@@ -157,7 +158,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Bet Price (xDAI)</BoxLabelCell>
+          <BoxLabelCell><Trans>Bet Price (xDAI)</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('price', {
               required: 'This field is required.',
@@ -169,18 +170,18 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Manager</BoxLabelCell>
+          <BoxLabelCell><Trans>Manager</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('manager', {
               required: 'This field is required.',
               validate: v => isAddress(v) || 'Invalid address.',
             })} style={{width: '100%'}} />
-            <FormHelperText>Address to send management fees to.</FormHelperText>
+            <FormHelperText><Trans>Address to send management fees to.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="manager" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Management Fee (%)</BoxLabelCell>
+          <BoxLabelCell><Trans>Management Fee (%)</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('managementFee', {
               required: 'This field is required.',
@@ -189,19 +190,19 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
               min: {value: 0, message: 'Fee must be greater than 0.'},
               max: {value: 100, message: 'Fee must be lower than 100.'}
             })} style={{width: '100%'}} />
-            <FormHelperText>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces. UI providers may apply this fee as well for each bet.</FormHelperText>
+            <FormHelperText><Trans>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Prize Distribution (%)</BoxLabelCell>
+          <BoxLabelCell><Trans>Prize Distribution (%)</Trans></BoxLabelCell>
           <PrizeWeightsBuilder />
         </BoxRow>
       </BoxWrapper>
 
       {isValid && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <div><Button type="submit">Next step</Button></div>
-        <Button variant="text" onClick={()=> setActiveStep(0)}>Go to step 1</Button>
+        <div><Button type="submit"><Trans>Next step</Trans></Button></div>
+        <Button variant="text" onClick={()=> setActiveStep(0)}><Trans>Go to step</Trans> 1</Button>
       </div>}
     </form>
   </FormProvider>
@@ -213,7 +214,7 @@ function PreviewText({title, value, setActiveStep, step}: {title: string, value:
       <div style={{opacity: '0.85'}}>{title}</div>
       <div dangerouslySetInnerHTML={{__html: String(value)}}></div>
     </div>
-    <div style={{display: 'flex'}}><Button variant="text" onClick={()=> setActiveStep(step)}>Edit</Button></div>
+    <div style={{display: 'flex'}}><Button variant="text" onClick={()=> setActiveStep(step)}><Trans>Edit</Trans></Button></div>
   </div>
 }
 
@@ -249,8 +250,8 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
     <PreviewText title="Prizes" value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
 
     <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-      <div><Button onClick={onSubmit}>Create Market</Button></div>
-      <div><Button variant="text" onClick={()=> setActiveStep(1)}>Go to step 2</Button></div>
+      <div><Button onClick={onSubmit}><Trans>Create Market</Trans></Button></div>
+      <div><Button variant="text" onClick={()=> setActiveStep(1)}><Trans>Go to step</Trans> 2</Button></div>
     </div>
   </div>
 }
@@ -263,8 +264,8 @@ function SuccessStep({marketName, marketId}: {marketName: string, marketId: stri
   return <div>
     <BoxWrapper sx={{display: 'flex', justifyContent: 'space-between', padding: 2}}>
       <div>
-        <div>Congratulations!</div>
-        <div>The market was successfully created and is ready to  take bets.</div>
+        <div><Trans>Congratulations!</Trans></div>
+        <div><Trans>The market was successfully created and is ready to take bets.</Trans></div>
       </div>
       <div>
         <Button component={Link} href={shareUrl} target="_blank" rel="noopener">Share on Twitter</Button>
@@ -274,14 +275,14 @@ function SuccessStep({marketName, marketId}: {marketName: string, marketId: stri
     <Grid container spacing={2}>
       <Grid item xs={6} md={6}>
         <BoxWrapper sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', textAlign: 'center', padding: 2}}>
-          <h3>Verify your market</h3>
+          <h3><Trans>Verify your market</Trans></h3>
           <div style={{margin: '15px 0'}}>[REASONS...]</div>
-          <div><Button component={RouterLink} to={`/curate/submit/${marketId}`}>Verify market</Button></div>
+          <div><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify market</Trans></Button></div>
         </BoxWrapper>
       </Grid>
       <Grid item xs={6} md={6}>
         <BoxWrapper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: 2}}>
-          <div><Button component={RouterLink} to={`/markets/${marketId}`}>Go to the market</Button></div>
+          <div><Button component={RouterLink} to={`/markets/${marketId}`}><Trans>Go to the market</Trans></Button></div>
         </BoxWrapper>
       </Grid>
     </Grid>

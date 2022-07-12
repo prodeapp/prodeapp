@@ -17,6 +17,7 @@ import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
 import QuestionsList from "../components/Curate/QuestionsList";
 import {CurateSubmitFormValues} from "../components/Curate";
+import { Trans } from "@lingui/macro";
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -64,11 +65,11 @@ function GroupsForm() {
               <FormError><ErrorMessage errors={errors} name={`extraDataGroups.groups.${i}.name`} /></FormError>
             </div>
           </div>
-          <div style={{width: '100%', textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeGroup(i)}>- Remove group</Button></div>
+          <div style={{width: '100%', textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeGroup(i)}>- <Trans>Remove group</Trans></Button></div>
         </BoxRow>
       })}
     <BoxRow>
-      <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addGroup}>+ Add group</Button></div>
+      <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addGroup}>+ <Trans>Add group</Trans></Button></div>
     </BoxRow>
 
     <BoxRow>
@@ -176,7 +177,7 @@ function CurateSubmit() {
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell>Market name</BoxLabelCell>
+          <BoxLabelCell><Trans>Market name</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('name', {
               required: 'This field is required.'
@@ -185,14 +186,14 @@ function CurateSubmit() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Description</BoxLabelCell>
+          <BoxLabelCell><Trans>Description</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('description')} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="description" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Starting timestamp</BoxLabelCell>
+          <BoxLabelCell><Trans>Starting timestamp</Trans></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('startingTimestamp', {
               required: 'This field is required.'
@@ -201,7 +202,7 @@ function CurateSubmit() {
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell>Format</BoxLabelCell>
+          <BoxLabelCell><Trans>Format</Trans></BoxLabelCell>
           <div style={{width: 200}}>
             <FormControl fullWidth>
               <Select
