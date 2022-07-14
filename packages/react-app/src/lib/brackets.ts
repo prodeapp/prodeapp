@@ -1,10 +1,11 @@
-import {ExtraDataGroups} from "../components/Curate";
+import {CurateSubmitFormExtraDataGroups} from "../components/Curate";
 import {Event} from "../graphql/subgraph";
 import {DoubleElimLeaderboardProps, Match} from "@g-loot/react-tournament-brackets/dist/src/types";
+import {convertExtraDataGroups, ExtraDataGroups} from "./curate";
 
 type EliminationConfig = {
   questions: Event[]
-  config: ExtraDataGroups
+  config: CurateSubmitFormExtraDataGroups
 }
 
 export type ParsedEliminationConfig = {
@@ -17,12 +18,12 @@ export const getEliminationConfig = (
   mainRoundNames: string[] = [],
   altRoundNames: string = 'Round of %',
   addThirdPlace: boolean = false
-): ExtraDataGroups => {
+): CurateSubmitFormExtraDataGroups => {
   let n = 0;
   let accumEvents = Math.pow(2, n);
   let currentEvents = accumEvents;
 
-  const config: ExtraDataGroups = {groups: [], rounds: 1};
+  const config: CurateSubmitFormExtraDataGroups = {groups: [], rounds: 1};
 
   while(accumEvents <= totalEvents) {
     config.groups.unshift({size: currentEvents, name: mainRoundNames[n] || `${altRoundNames.replace('%', String(currentEvents * 2))}`});
@@ -80,7 +81,7 @@ export const getDoubleEliminationConfig = (events: Event[]): EliminationConfig[]
   const totalLosersTeams = totalTeams / 2;
   const losersConfig = getEliminationConfig(totalLosersTeams, ['Losers Final #1', 'Losers Semifinals #1', 'Losers Quarterfinals #1'], 'Losers Round of % #1');
 
-  const loserGroups: ExtraDataGroups['groups'] = [];
+  const loserGroups: CurateSubmitFormExtraDataGroups['groups'] = [];
 
   losersConfig.groups.forEach((group) => {
     loserGroups.push(group);
@@ -99,7 +100,7 @@ export const getDoubleEliminationConfig = (events: Event[]): EliminationConfig[]
   return brackets;
 }
 
-export const getGSLConfig = (): ExtraDataGroups => {
+export const getGSLConfig = (): CurateSubmitFormExtraDataGroups => {
   const groups = [
     {
       size: 2,
@@ -126,7 +127,7 @@ export const getGSLConfig = (): ExtraDataGroups => {
 }
 
 export const parseEliminationConfig = (events: Event[], config: ExtraDataGroups): ParsedEliminationConfig[] => {
-  const sizeCount = config.groups.map((group) => Number(group.size)).reduce((partialSum, a) => partialSum + a, 0)
+  const sizeCount = config.sizes.map((size) => Number(size)).reduce((partialSum, a) => partialSum + a, 0)
 
   if (sizeCount !== events.length) {
     throw new Error('The sum of group sizes must be equal to the amount of events.')
@@ -134,13 +135,13 @@ export const parseEliminationConfig = (events: Event[], config: ExtraDataGroups)
 
   let t = 0;
 
-  return config.groups.map((group, i) => {
+  return config.sizes.map((size, i) => {
     return {
-      events: Array.from({length: group.size}, (_, i) => i + 1).map(j => {
+      events: Array.from({length: size}, (_, i) => i + 1).map(j => {
         const n = t++;
         return events[n];
       }),
-      name: group.name
+      name: config.names[i] || ''
     }
   })
 }
@@ -155,27 +156,28 @@ function buildMatch(event: Event, nextMatchId: string | null = null, nextLoserMa
     startTime: '',
     tournamentRoundText: '',
     state: 'SCHEDULED',
+    eventTitle: event.title,
     participants: [
       {
-        id: hasTwoOutcomes ? `${event.id}-1`: event.outcomes[0],
+        id: hasTwoOutcomes ? event.outcomes[0] : `${event.id}-1`,
         resultText: '',
         isWinner: false,
         status: 'PLAYED',
-        name: hasTwoOutcomes ? '' : event.outcomes[0],
+        name: hasTwoOutcomes ? event.outcomes[0] : '',
       },
       {
-        id: hasTwoOutcomes ? `${event.id}-2`: event.outcomes[1],
+        id: hasTwoOutcomes ? event.outcomes[1] : `${event.id}-2`,
         resultText: '',
         isWinner: false,
         status: 'PLAYED',
-        name: hasTwoOutcomes ? '' : event.outcomes[1],
+        name: hasTwoOutcomes ? event.outcomes[1] : '',
       },
     ],
   }
 }
 
 export const getDoubleEliminationMatches = (events: Event[]): DoubleElimLeaderboardProps['matches'] => {
-  const doubleEliminationConfig = getDoubleEliminationConfig(events).map(data => parseEliminationConfig(data.questions, data.config));
+  const doubleEliminationConfig = getDoubleEliminationConfig(events).map(data => parseEliminationConfig(data.questions, convertExtraDataGroups(data.config)));
 
   const matches: DoubleElimLeaderboardProps['matches'] = {upper: [], lower: []};
 
@@ -229,9 +231,8 @@ export const getGSLMatches = (events: Event[]): DoubleElimLeaderboardProps['matc
   return matches;
 }
 
-
 export const getSingleEliminationMatches = (events: Event[]): Match[] => {
-  const bracketConfig = parseEliminationConfig(events, getEliminationConfig(events.length, ['Final', 'Semifinals', 'Quarterfinals'], '', true))
+  const bracketConfig = parseEliminationConfig(events, convertExtraDataGroups(getEliminationConfig(events.length, ['Final', 'Semifinals', 'Quarterfinals'], '', true)))
 
   const matches: Match[] = [];
 

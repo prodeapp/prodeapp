@@ -6,14 +6,14 @@ import {
   fetchCurateItemsByHash,
   getDecodedParams
 } from "../lib/curate";
-import {BracketsFromList} from "../components/Brackets/Brackets";
 import {useMarket} from "../hooks/useMarket";
 import Alert from "@mui/material/Alert";
+import {RenderTournament} from "../components/Tournament/RenderTournament";
 
 function Tournament() {
   const { id } = useParams();
-  const { data: market } = useMarket(String(id))
-  const { isLoading, data: events } = useEvents(String(id));
+  const { isLoading: isLoadingMarket, data: market } = useMarket(String(id))
+  const { isLoading: isLoadingEvents, data: events } = useEvents(String(id));
   const [itemJson, setItemJson] = useState<DecodedCurateListFields['JASON'] | null>(null);
 
   useEffect(() => {
@@ -30,11 +30,14 @@ function Tournament() {
     })();
   }, [market])
 
+  if (isLoadingMarket || isLoadingEvents) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div>
-      {isLoading && <div>Loading...</div>}
       {events && !itemJson && <Alert severity="error">This market is not verified.</Alert>}
-      {events && itemJson && <BracketsFromList events={events} itemJson={itemJson}/>}
+      {events && itemJson && <RenderTournament events={events} itemJson={itemJson}/>}
     </div>
   );
 }

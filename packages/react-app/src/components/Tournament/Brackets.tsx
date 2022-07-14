@@ -4,23 +4,23 @@ import {getSingleEliminationMatches, getDoubleEliminationMatches, getGSLMatches}
 import {Event} from "../../graphql/subgraph";
 import {
   FORMAT_SINGLE_ELIMINATION,
-  FORMAT_DOUBLE_ELIMINATION,
   FORMAT_GSL,
-  DecodedCurateListFields
+  TournamentFormats
 } from "../../lib/curate";
 import Alert from "@mui/material/Alert";
-import {useIndexedEvents} from "../../hooks/useEvents";
+import MatchPreview from "./MatchPreview";
 
 type RenderBracketsProps = {
   events: Event[]
   width: number
   height: number
-  type: typeof FORMAT_SINGLE_ELIMINATION | typeof FORMAT_DOUBLE_ELIMINATION | typeof FORMAT_GSL
+  type: TournamentFormats
+  preview?: boolean
 }
 
-type BracketsProps = Pick<RenderBracketsProps, 'events' | 'type'>
+type BracketsProps = Pick<RenderBracketsProps, 'events' | 'type' | 'preview'>
 
-function RenderBrackets({events, width, height, type}: RenderBracketsProps) {
+function RenderBrackets({events, width, height, type, preview = false}: RenderBracketsProps) {
 
   try {
     if (type === FORMAT_GSL) {
@@ -28,7 +28,7 @@ function RenderBrackets({events, width, height, type}: RenderBracketsProps) {
 
       return <DoubleEliminationBracket
         matches={matches}
-        matchComponent={Match}
+        matchComponent={preview ? MatchPreview : Match}
         svgWrapper={({ children, ...props }) => (
           <SVGViewer width={width} height={height} {...props}>
             {children}
@@ -42,7 +42,7 @@ function RenderBrackets({events, width, height, type}: RenderBracketsProps) {
 
       return <SingleEliminationBracket
         matches={matches}
-        matchComponent={Match}
+        matchComponent={preview ? MatchPreview : Match}
         svgWrapper={({ children, ...props }) => (
           <SVGViewer width={width} height={height} {...props}>
             {children}
@@ -55,7 +55,7 @@ function RenderBrackets({events, width, height, type}: RenderBracketsProps) {
 
     return <DoubleEliminationBracket
       matches={matches}
-      matchComponent={Match}
+      matchComponent={preview ? MatchPreview : Match}
       svgWrapper={({ children, ...props }) => (
         <SVGViewer width={width} height={height} {...props}>
           {children}
@@ -68,7 +68,7 @@ function RenderBrackets({events, width, height, type}: RenderBracketsProps) {
 
 }
 
-function Brackets({events, type}: BracketsProps) {
+function Brackets({events, type, preview = false}: BracketsProps) {
   const [width, setWidth] = useState(0);
   const elementRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,23 +82,9 @@ function Brackets({events, type}: BracketsProps) {
 
   return (
     <div ref={elementRef} style={{background: '#FFF'}}>
-      {events && <RenderBrackets events={events} width={width} height={700} type={type} />}
+      {events && <RenderBrackets events={events} width={width} height={700} type={type} preview={preview} />}
     </div>
   );
-}
-
-export function BracketsFromList({events, itemJson}: {events: Event[], itemJson: DecodedCurateListFields['JASON']}) {
-  const indexedEvents = useIndexedEvents(events);
-
-  return <>{Object.keys(indexedEvents).length > 0 && itemJson && <div style={{marginTop: '20px'}}>
-    {itemJson.formats.map((format: any, i: number) => {
-      return <Brackets
-        key={i}
-        events={format.questions.map((event: string) => indexedEvents[event])}
-        type={format.type} />
-    })}
-  </div>}
-  </>
 }
 
 export default Brackets;

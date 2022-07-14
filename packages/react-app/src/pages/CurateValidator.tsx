@@ -19,7 +19,7 @@ import {getQuestionsHash} from "../lib/reality";
 import {fetchEvents, useEvents} from "../hooks/useEvents";
 import validate from "../components/Curate/schema";
 import { Trans, t } from "@lingui/macro";
-import {BracketsFromList} from "../components/Brackets/Brackets";
+import {RenderTournament} from "../components/Tournament/RenderTournament";
 
 type FormValues = {
   itemId: string
@@ -67,6 +67,7 @@ function CurateValidator() {
     let itemProps: DecodedCurateListFields;
 
     setItemJson(null);
+    setResults(_results);
 
     try {
       itemProps = await getDecodedParams(data.itemId.toLowerCase());
@@ -142,7 +143,7 @@ function CurateValidator() {
 
       {results.map((result, i) => <Alert severity={result.type} key={i}>{result.message}</Alert>)}
 
-      {events && itemJson && <BracketsFromList events={events} itemJson={itemJson}/>}
+      {events && itemJson && <RenderTournament events={events} itemJson={itemJson}/>}
     </form>
   );
 }

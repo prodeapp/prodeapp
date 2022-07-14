@@ -10,12 +10,14 @@ export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
 export const FORMAT_GROUPS = 'groups';
 export const FORMAT_GSL = 'gsl';
 
-export const TournamentFormats: Record<string, string> = {
+export const TOURNAMENT_FORMATS: Record<string, string> = {
   [FORMAT_SINGLE_ELIMINATION]: 'Single Elimination',
   [FORMAT_DOUBLE_ELIMINATION]: 'Double Elimination',
   [FORMAT_GROUPS]: 'Groups',
   [FORMAT_GSL]: 'GSL',
 }
+
+export type TournamentFormats = keyof typeof TOURNAMENT_FORMATS;
 
 interface CurateListFields {
   Title: string,
@@ -26,6 +28,12 @@ interface CurateListFields {
 
 export interface DecodedCurateListFields extends Omit<CurateListFields, 'JASON'> {
   JASON: Record<string, any>
+}
+
+export interface ExtraDataGroups {
+  sizes: number[]
+  names: string[]
+  rounds: number
 }
 
 const registryQuery = `
@@ -112,6 +120,13 @@ export async function getDecodedParams(itemId: string): Promise<DecodedCurateLis
   return props ;
 }
 
+export function convertExtraDataGroups(extraDataGroups: CurateSubmitFormValues['extraDataGroups']): ExtraDataGroups {
+  return {
+    sizes: extraDataGroups.groups.map(g => g.size),
+    names: extraDataGroups.groups.map(g => g.name),
+    rounds: extraDataGroups.rounds
+  }
+}
 
 function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[]) {
   const format = {
@@ -121,11 +136,7 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
   }
 
   if (data.format === FORMAT_GROUPS) {
-    format.extraData = {
-      sizes: data.extraDataGroups.groups.map(g => g.size),
-      names: data.extraDataGroups.groups.map(g => g.name),
-      rounds: data.extraDataGroups.rounds
-    };
+    format.extraData = convertExtraDataGroups(data.extraDataGroups);
   }
 
   return format;
