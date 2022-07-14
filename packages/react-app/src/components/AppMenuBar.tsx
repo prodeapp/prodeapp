@@ -126,8 +126,8 @@ export interface DialogProps {
   handleClose: () => void;
 }
 
-function WalletDialog({ open, handleClose }: DialogProps) {
-  const { account, activate, activateBrowserWallet, error } = useEthers();
+function WalletDialog({open, handleClose}: DialogProps) {
+  const { account, activate, activateBrowserWallet, error, switchNetwork } = useEthers();
   const { readOnlyUrls } = useConfig();
   const [walletError, setWalletError] = useState<Error | undefined>();
 
@@ -153,9 +153,14 @@ function WalletDialog({ open, handleClose }: DialogProps) {
 
   useEffect(() => {
     if (error && error.message !== walletError?.message) {
-      setWalletError(error)
+      if (error.message.includes('Unsupported chain id')) {
+        // Ask to change the network in the wallet.
+        switchNetwork(100)
+      } else {
+        setWalletError(error)
+      }
     }
-  }, [error, walletError])
+  }, [error, walletError, switchNetwork])
 
   return (
     <AppDialog
@@ -183,8 +188,8 @@ function WalletMenu() {
   const [accountName, setAccountName] = useState("");
   const [openWalletModal, setOpenWalletModal] = useState(false);
 
-  const ens = useLookupAddress();
   const { account, deactivate } = useEthers();
+  const {ens, isLoading: ensIsLoading} = useLookupAddress(account);
 
   useEffect(() => {
     if (ens) {
@@ -194,7 +199,7 @@ function WalletMenu() {
     } else {
       setAccountName("");
     }
-  }, [account, ens, setAccountName]);
+  }, [account, ens, setAccountName, ensIsLoading]);
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);
