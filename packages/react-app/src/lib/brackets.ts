@@ -99,6 +99,32 @@ export const getDoubleEliminationConfig = (events: Event[]): EliminationConfig[]
   return brackets;
 }
 
+export const getGSLConfig = (): ExtraDataGroups => {
+  const groups = [
+    {
+      size: 2,
+      name: 'Opening Matches'
+    },
+    {
+      size: 1,
+      name: 'Winner\'s Match'
+    },
+    {
+      size: 1,
+      name: 'Loser\'s Match'
+    },
+    {
+      size: 1,
+      name: 'Tiebreaker\'s Match'
+    },
+  ];
+
+  return {
+    groups,
+    rounds: 1
+  }
+}
+
 export const parseEliminationConfig = (events: Event[], config: ExtraDataGroups): ParsedEliminationConfig[] => {
   const sizeCount = config.groups.map((group) => Number(group.size)).reduce((partialSum, a) => partialSum + a, 0)
 
@@ -119,7 +145,9 @@ export const parseEliminationConfig = (events: Event[], config: ExtraDataGroups)
   })
 }
 
-function buildMatch(event: Event, nextMatchId: string | null, nextLoserMatchId?: string): Match {
+function buildMatch(event: Event, nextMatchId: string | null = null, nextLoserMatchId?: string): Match {
+  const hasTwoOutcomes = event.outcomes.length === 2;
+
   return {
     id: event.id,
     nextMatchId: nextMatchId as unknown as number,
@@ -129,18 +157,18 @@ function buildMatch(event: Event, nextMatchId: string | null, nextLoserMatchId?:
     state: 'SCHEDULED',
     participants: [
       {
-        id: event.outcomes[0],
+        id: hasTwoOutcomes ? `${event.id}-1`: event.outcomes[0],
         resultText: '',
         isWinner: false,
         status: 'PLAYED',
-        name: event.outcomes[0],
+        name: hasTwoOutcomes ? '' : event.outcomes[0],
       },
       {
-        id: event.outcomes[1],
+        id: hasTwoOutcomes ? `${event.id}-2`: event.outcomes[1],
         resultText: '',
         isWinner: false,
         status: 'PLAYED',
-        name: event.outcomes[1],
+        name: hasTwoOutcomes ? '' : event.outcomes[1],
       },
     ],
   }
@@ -186,6 +214,21 @@ export const getDoubleEliminationMatches = (events: Event[]): DoubleElimLeaderbo
 
   return matches;
 }
+
+export const getGSLMatches = (events: Event[]): DoubleElimLeaderboardProps['matches'] => {
+  const matches: DoubleElimLeaderboardProps['matches'] = {upper: [], lower: []};
+
+  matches.upper.push(buildMatch(events[0], events[2].id, events[3].id));
+  matches.upper.push(buildMatch(events[1], events[2].id, events[3].id));
+
+  matches.upper.push(buildMatch(events[2], events[4].id));
+
+  matches.lower.push(buildMatch(events[3], events[4].id));
+  matches.lower.push(buildMatch(events[4]));
+
+  return matches;
+}
+
 
 export const getSingleEliminationMatches = (events: Event[]): Match[] => {
   const bracketConfig = parseEliminationConfig(events, getEliminationConfig(events.length, ['Final', 'Semifinals', 'Quarterfinals'], '', true))

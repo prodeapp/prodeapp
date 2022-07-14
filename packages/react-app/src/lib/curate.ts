@@ -7,11 +7,13 @@ import validate from "../components/Curate/schema";
 export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
 export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
 export const FORMAT_GROUPS = 'groups';
+export const FORMAT_GSL = 'gsl';
 
 export const TournamentFormats: Record<string, string> = {
   [FORMAT_SINGLE_ELIMINATION]: 'Single Elimination',
   [FORMAT_DOUBLE_ELIMINATION]: 'Double Elimination',
   [FORMAT_GROUPS]: 'Groups',
+  [FORMAT_GSL]: 'GSL',
 }
 
 interface CurateListFields {

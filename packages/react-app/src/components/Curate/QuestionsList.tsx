@@ -2,12 +2,17 @@ import * as React from 'react';
 import {Event} from "../../graphql/subgraph";
 import {UseFieldArrayReturn, useFormContext, useWatch} from "react-hook-form";
 import {DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd";
-import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_SINGLE_ELIMINATION} from "../../lib/curate";
+import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_GSL, FORMAT_SINGLE_ELIMINATION} from "../../lib/curate";
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
 import {useMemo} from "react";
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/macro';
-import {getDoubleEliminationConfig, getEliminationConfig, parseEliminationConfig} from "../../lib/brackets";
+import {
+  getDoubleEliminationConfig,
+  getEliminationConfig,
+  getGSLConfig,
+  parseEliminationConfig
+} from "../../lib/brackets";
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
@@ -33,7 +38,11 @@ function GroupsPreview({events, config}: {events: Event[], config: ExtraDataGrou
   }
 }
 
-function EliminationPreview({events, type}: {events: Event[], type: 'single'|'double'}) {
+function EliminationPreview({events, type}: {events: Event[], type: 'single'|'double'|'gsl'}) {
+
+  if (type === 'gsl') {
+    return <GroupsPreview events={events} config={getGSLConfig()} />
+  }
 
   if (type === 'single') {
     return <GroupsPreview
@@ -121,6 +130,10 @@ export default function QuestionsList({useFieldArrayReturn, events}: Props) {
     {format === FORMAT_DOUBLE_ELIMINATION && <div style={{width: '50%'}}>
       <h3 style={{marginBottom: '30px'}}>Double-Elimination preview</h3>
       <EliminationPreview events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} type="double"/>
+    </div>}
+    {format === FORMAT_GSL && <div style={{width: '50%'}}>
+      <h3 style={{marginBottom: '30px'}}>GSL preview</h3>
+      <EliminationPreview events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} type="gsl"/>
     </div>}
   </div>
 }

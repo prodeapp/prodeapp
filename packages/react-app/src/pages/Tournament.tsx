@@ -2,16 +2,52 @@ import React, {useEffect, useRef, useState} from "react";
 import {useParams} from "react-router-dom";
 import {useEvents} from "../hooks/useEvents";
 import { SingleEliminationBracket, DoubleEliminationBracket, Match, SVGViewer } from '@g-loot/react-tournament-brackets';
-import {getSingleEliminationMatches, getDoubleEliminationMatches} from "../lib/brackets";
+import {getSingleEliminationMatches, getDoubleEliminationMatches, getGSLMatches} from "../lib/brackets";
 import {Event} from "../graphql/subgraph";
-import {FORMAT_SINGLE_ELIMINATION, FORMAT_DOUBLE_ELIMINATION} from "../lib/curate";
+import {FORMAT_SINGLE_ELIMINATION, FORMAT_DOUBLE_ELIMINATION, FORMAT_GSL} from "../lib/curate";
+import Alert from "@mui/material/Alert";
 
-function RenderBrackets({events, width, height, type}: {events: Event[], width: number, height: number, type: typeof FORMAT_SINGLE_ELIMINATION | typeof FORMAT_DOUBLE_ELIMINATION}) {
+type Props = {
+  events: Event[]
+  width: number
+  height: number
+  type: typeof FORMAT_SINGLE_ELIMINATION | typeof FORMAT_DOUBLE_ELIMINATION | typeof FORMAT_GSL
+}
 
-  if (type === FORMAT_SINGLE_ELIMINATION) {
-    const matches = getSingleEliminationMatches(events);
+function RenderBrackets({events, width, height, type}: Props) {
 
-    return <SingleEliminationBracket
+  try {
+    if (type === FORMAT_GSL) {
+      const matches = getGSLMatches(events);
+
+      return <DoubleEliminationBracket
+        matches={matches}
+        matchComponent={Match}
+        svgWrapper={({ children, ...props }) => (
+          <SVGViewer width={width} height={height} {...props}>
+            {children}
+          </SVGViewer>
+        )}
+      />
+    }
+
+    if (type === FORMAT_SINGLE_ELIMINATION) {
+      const matches = getSingleEliminationMatches(events);
+
+      return <SingleEliminationBracket
+        matches={matches}
+        matchComponent={Match}
+        svgWrapper={({ children, ...props }) => (
+          <SVGViewer width={width} height={height} {...props}>
+            {children}
+          </SVGViewer>
+        )}
+      />
+    }
+
+    const matches = getDoubleEliminationMatches(events);
+
+    return <DoubleEliminationBracket
       matches={matches}
       matchComponent={Match}
       svgWrapper={({ children, ...props }) => (
@@ -20,19 +56,10 @@ function RenderBrackets({events, width, height, type}: {events: Event[], width: 
         </SVGViewer>
       )}
     />
+  } catch (e: any) {
+    return <Alert severity="error">{e?.message || 'Unexpected error'}</Alert>
   }
 
-  const matches = getDoubleEliminationMatches(events);
-
-  return <DoubleEliminationBracket
-    matches={matches}
-    matchComponent={Match}
-    svgWrapper={({ children, ...props }) => (
-      <SVGViewer width={width} height={height} {...props}>
-        {children}
-      </SVGViewer>
-    )}
-  />
 }
 
 function Tournament() {
