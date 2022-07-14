@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import {useFieldArray, useForm, useFormContext, useWatch, FormProvider} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
 import {FormControl, MenuItem, Select} from "@mui/material";
-import {FORMAT_GROUPS, getEncodedParams, TournamentFormats} from "../lib/curate";
+import {FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS} from "../lib/curate";
 import {getQuestionsHash} from "../lib/reality";
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -15,7 +15,7 @@ import Alert from "@mui/material/Alert";
 import {useEvents} from "../hooks/useEvents";
 import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
-import QuestionsList from "../components/Curate/QuestionsList";
+import EventsPreview from "../components/Curate/EventsPreview";
 import {CurateSubmitFormValues} from "../components/Curate";
 import { Trans, t } from "@lingui/macro";
 
@@ -210,7 +210,7 @@ function CurateSubmit() {
                 id={`market-format`}
                 {...register(`format`, {required: t`This field is required.`})}
               >
-                {Object.keys(TournamentFormats).map((format, i) => <MenuItem value={format} key={i}>{TournamentFormats[format]}</MenuItem>)}
+                {Object.keys(TOURNAMENT_FORMATS).map((format, i) => <MenuItem value={format} key={i}>{TOURNAMENT_FORMATS[format]}</MenuItem>)}
               </Select>
               <FormError><ErrorMessage errors={errors} name={`format`} /></FormError>
             </FormControl>
@@ -221,9 +221,9 @@ function CurateSubmit() {
       {format === FORMAT_GROUPS && <GroupsForm />}
 
       <BoxWrapper>
-        {events && <BoxRow>
+        {events && format && <BoxRow>
           <div style={{width: '100%'}}>
-            <QuestionsList useFieldArrayReturn={questionsUseFieldArrayReturn} events={events}/>
+            <EventsPreview useFieldArrayReturn={questionsUseFieldArrayReturn} events={events}/>
           </div>
         </BoxRow>}
         <BoxRow>

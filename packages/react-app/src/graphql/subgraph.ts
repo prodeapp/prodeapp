@@ -2,6 +2,7 @@ import { BigNumberish } from "@ethersproject/bignumber";
 
 export interface Market {
   id: string
+  hash: string
   name: string
   category: string
   price: BigNumberish
@@ -24,6 +25,7 @@ export interface Market {
 export const MARKET_FIELDS = `
     fragment MarketFields on Market {
       id
+      hash
       name
       category
       price

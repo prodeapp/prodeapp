@@ -25,7 +25,7 @@ const CURATE_SCHEMA = {
       properties: {
         type: {
           type: "string",
-          enum: ["single-elimination", "double-elimination"],
+          enum: ["single-elimination", "double-elimination", "gsl"],
         },
       },
     },

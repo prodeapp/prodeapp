@@ -1,6 +1,7 @@
 import {FieldArray, FieldArrayPath, UnpackNestedValue, UseFieldArrayReturn} from "react-hook-form";
+import {TournamentFormats} from "../../lib/curate";
 
-export type ExtraDataGroups = {
+export type CurateSubmitFormExtraDataGroups = {
   groups: {
     size: number
     name: string
@@ -11,10 +12,10 @@ export type ExtraDataGroups = {
 export type CurateSubmitFormValues = {
   name: string
   description: string
-  format: string
+  format: '' | TournamentFormats
   startingTimestamp: string
   questions: {value: string}[]
-  extraDataGroups: ExtraDataGroups
+  extraDataGroups: CurateSubmitFormExtraDataGroups
 }
 
 export function modifyArrayField<TFieldValues, TFieldArrayName extends FieldArrayPath<TFieldValues>>(
