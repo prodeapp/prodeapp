@@ -4,7 +4,6 @@ import {UseFieldArrayReturn, useFormContext, useWatch} from "react-hook-form";
 import {DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd";
 import {FORMAT_DOUBLE_ELIMINATION, FORMAT_GROUPS, FORMAT_GSL, FORMAT_SINGLE_ELIMINATION} from "../../lib/curate";
 import {CurateSubmitFormValues, ExtraDataGroups} from "./index";
-import {useMemo} from "react";
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/macro';
 import {
@@ -13,6 +12,7 @@ import {
   getGSLConfig,
   parseEliminationConfig
 } from "../../lib/brackets";
+import {useIndexedEvents} from "../../hooks/useEvents";
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
@@ -64,11 +64,7 @@ function EliminationPreview({events, type}: {events: Event[], type: 'single'|'do
 export default function QuestionsList({useFieldArrayReturn, events}: Props) {
   const { control } = useFormContext<CurateSubmitFormValues>();
 
-  const indexedEvents: Record<string, Event> = useMemo(() => {
-    return events.reduce((obj, event) => {
-      return {...obj, [event.id]: event}
-    }, {})
-  }, [events]);
+  const indexedEvents = useIndexedEvents(events);
 
   const format = useWatch({control, name: 'format'});
   const extraDataGroups = useWatch({control, name: 'extraDataGroups'});

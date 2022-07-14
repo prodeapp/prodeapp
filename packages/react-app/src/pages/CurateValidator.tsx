@@ -4,19 +4,22 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {DecodedCurateListFields, getDecodedParams} from "../lib/curate";
+import {
+  DecodedCurateListFields,
+  fetchCurateItemsByHash,
+  getDecodedParams
+} from "../lib/curate";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {
   Market,
-  CurateItem,
   MARKET_FIELDS,
-  CURATE_ITEM_FIELDS,
 } from "../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
 import {fetchEvents, useEvents} from "../hooks/useEvents";
 import validate from "../components/Curate/schema";
 import { Trans, t } from "@lingui/macro";
+import {BracketsFromList} from "../components/Brackets/Brackets";
 
 type FormValues = {
   itemId: string
@@ -39,23 +42,6 @@ export const fetchMarketByHash = async (hash: string) => {
   return response.data.markets[0];
 };
 
-export const fetchCurateItemsByHash = async (hash: string) => {
-  const query = `
-    ${CURATE_ITEM_FIELDS}
-    query CurateItemsQuery($hash: String) {
-        curateItems(where: {hash: $hash}) {
-            ...CurateItemFields
-        }
-    }
-`;
-
-  const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(query, {hash});
-
-  if (!response) throw new Error("No response from TheGraph");
-
-  return response.data.curateItems;
-};
-
 interface ValidationResult {
   type: 'error' | 'success'
   message: string
@@ -70,6 +56,7 @@ function CurateValidator() {
   const [marketId, setMarketId] = useState('');
   const {data: events} = useEvents(marketId);
   const [results, setResults] = useState<ValidationResult[]>([]);
+  const [itemJson, setItemJson] = useState<DecodedCurateListFields['JASON'] | null>(null);
 
   const onSubmit = async (data: FormValues) => {
 
@@ -79,8 +66,11 @@ function CurateValidator() {
 
     let itemProps: DecodedCurateListFields;
 
+    setItemJson(null);
+
     try {
       itemProps = await getDecodedParams(data.itemId.toLowerCase());
+      setItemJson(itemProps.JASON);
     } catch (e) {
       setResults([{type: 'error', message: t`Item id not found`}]);
       return;
@@ -151,7 +141,8 @@ function CurateValidator() {
       </BoxWrapper>
 
       {results.map((result, i) => <Alert severity={result.type} key={i}>{result.message}</Alert>)}
-      {events && events.map((event, i) => <div key={i} style={{margin: '10px 0'}}>{event.title}</div>)}
+
+      {events && itemJson && <BracketsFromList events={events} itemJson={itemJson}/>}
     </form>
   );
 }

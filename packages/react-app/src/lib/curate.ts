@@ -3,6 +3,7 @@ import {gtcrDecode, gtcrEncode} from "@kleros/gtcr-encoder";
 import ipfsPublish from "./ipfs-publish";
 import {CurateSubmitFormValues} from "../components/Curate";
 import validate from "../components/Curate/schema";
+import {CURATE_ITEM_FIELDS, CurateItem} from "../graphql/subgraph";
 
 export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
 export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
@@ -129,3 +130,20 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
 
   return format;
 }
+
+export const fetchCurateItemsByHash = async (hash: string) => {
+  const query = `
+    ${CURATE_ITEM_FIELDS}
+    query CurateItemsQuery($hash: String) {
+        curateItems(where: {hash: $hash}) {
+            ...CurateItemFields
+        }
+    }
+`;
+
+  const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(query, {hash});
+
+  if (!response) throw new Error("No response from TheGraph");
+
+  return response.data.curateItems;
+};
