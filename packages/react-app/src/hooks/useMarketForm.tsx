@@ -90,11 +90,11 @@ export default function useMarketForm() {
       }
     })
 
-    const minBond = parseUnits('0.5', 18); // TODO
+    const minBond = parseUnits(process.env.REACT_APP_MIN_BOND || '0.5', 18);
 
     await send(
       step1State.market,
-      '', // TODO
+      'PRODE',
       step2State.manager,
       Math.round(step2State.managementFee * DIVISOR / 100),
       closingTime,

@@ -310,7 +310,7 @@ function MarketsCreate() {
       prizeWeights: [{value: 50}, {value: 30}, {value: 20}],
       prizeDivisor: 0,
       manager: '',
-      managementFee: 1.5
+      managementFee: 3
     }
   });
 
