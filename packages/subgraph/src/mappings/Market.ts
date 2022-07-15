@@ -24,7 +24,8 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.price = marketContract.price();
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
-    let manager = getOrCreateManager(managerAddress);
+    let creator = managerContract.creator();
+    let manager = getOrCreateManager(creator);
     market.manager = manager.id;
     market.numOfEvents = BigInt.fromI32(evt.params._questionIDs.length);
     let event = Event.load(evt.params._questionIDs[0].toHexString())
