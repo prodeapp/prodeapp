@@ -11,29 +11,19 @@ import {Market__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
+import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
 import {useEvents} from "../../hooks/useEvents";
-import {useMarket} from "../../hooks/useMarket";
 import {queryClient} from "../../lib/react-query";
 import {futurizeQuestion} from "../../lib/templates";
 import { Trans, t } from "@lingui/macro";
+import {getReferralKey} from "../../lib/helpers";
 
 export type QuestionsFormValues = {
-  outcomes: {value: number|''}[],
-  provider: string
+  outcomes: {value: number|''}[]
 }
 
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-
-const DEVS = "0x9b59eeEA37618ed5227c3Fb2420F68fe5cD1151A";
-const UBI_BURNER_ADDRESS = "0x43E9062F3D4B87C49b96ada5De230B1Ce69485c3";
-const SPLITTER_DONATION_ADDRESS = "0x9378C3F269F5A3f87956FF8DBF2d83E361a7166c";
-const providers = [
-  { text: t`support dev team`, address: DEVS },
-  { text: t`support UBI`, address: UBI_BURNER_ADDRESS },
-  { text: t`support UBI & dev team`, address: SPLITTER_DONATION_ADDRESS },
-  { text: t`reward pool winners`, address: AddressZero }
-];
 
 type QuestionsFormProps = {
   marketId: string
@@ -47,8 +37,8 @@ type QuestionsFormProps = {
 export default function QuestionsForm({marketId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(marketId);
-  const { isLoading: isLoadingMarket, data: market } = useMarket(marketId);
   const [success, setSuccess] = useState(false);
+  const [referral, setReferral] = useState(AddressZero);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -59,6 +49,10 @@ export default function QuestionsForm({marketId, price, control, register, error
     remove();
     events && events.forEach(() => append({value: ''}))
   }, [events, append, remove]);
+
+  useEffect(() => {
+    setReferral(window.localStorage.getItem(getReferralKey(marketId)) || '');
+  }, [marketId]);
 
   const { state, send } = useContractFunction(
     new Contract(marketId, Market__factory.createInterface()),
@@ -77,7 +71,7 @@ export default function QuestionsForm({marketId, price, control, register, error
     window.scrollTo(0, 0)
   }, []);
 
-  if (isLoading || isLoadingMarket) {
+  if (isLoading ) {
     return <div><Trans>Loading...</Trans></div>
   }
 
@@ -103,7 +97,7 @@ export default function QuestionsForm({marketId, price, control, register, error
     });
 
     await send(
-      data.provider,
+      isAddress(referral) ? referral : AddressZero,
       results,
       {
         value: price
@@ -140,21 +134,6 @@ export default function QuestionsForm({marketId, price, control, register, error
             </div>
           </BoxRow>
         })}
-        <BoxRow>
-          <div style={{width: '60%'}}><Trans>Use {Number(market?.managementFee) / 100}% of this pool to: </Trans></div>
-          <div style={{width: '40%'}}>
-            <FormControl fullWidth>
-              <Select
-                defaultValue={DEVS}
-                id={`provider-select`}
-                {...register(`provider`, {required: t`This field is required.`})}
-              >
-                {providers.map((prov, i) => <MenuItem value={prov.address} key={i}>{prov.text}</MenuItem>)}
-              </Select>
-              <FormError><ErrorMessage errors={errors} name={`provider`} /></FormError>
-            </FormControl>
-          </div>
-        </BoxRow>
       </BoxWrapper>
     </form>
   );

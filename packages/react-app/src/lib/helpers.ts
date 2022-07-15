@@ -79,3 +79,11 @@ export const MARKET_CATEGORIES: {id: string, text: string}[] = [
 export function getCategoryText(id: string): string {
   return MARKET_CATEGORIES.filter(c => c.id === id)[0].text;
 }
+
+export function getMarketUrl(marketId: string) {
+  return `${window.location.protocol}//${window.location.hostname}/#/markets/${marketId}`
+}
+
+export function getReferralKey(marketId: string) {
+  return `referral_${marketId}`
+}

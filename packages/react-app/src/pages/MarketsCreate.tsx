@@ -24,7 +24,7 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
-import {getCategoryText, MARKET_CATEGORIES} from "../lib/helpers";
+import {getCategoryText, getMarketUrl, MARKET_CATEGORIES} from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
 
 export const formatAnswers = (answers: string[]) => {
@@ -257,7 +257,7 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
 }
 
 function SuccessStep({marketName, marketId}: {marketName: string, marketId: string}) {
-  const message = t`I have created a new market on @prode_eth: ${marketName} ${window.location.protocol}//${window.location.hostname}/#/markets/${marketId}`
+  const message = t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`
 
   const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
 
