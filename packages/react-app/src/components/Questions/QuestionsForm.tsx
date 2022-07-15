@@ -15,7 +15,6 @@ import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
-import {futurizeQuestion} from "../../lib/templates";
 import { Trans, t } from "@lingui/macro";
 import {getReferralKey} from "../../lib/helpers";
 
@@ -118,7 +117,7 @@ export default function QuestionsForm({marketId, price, control, register, error
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{futurizeQuestion(events[i].title)}</div>
+            <div style={{width: '60%'}}>{events[i].title}</div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
