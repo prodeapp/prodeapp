@@ -3,22 +3,22 @@ import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import QuestionsForm, {QuestionsFormValues} from "./QuestionsForm";
+import BetForm, {BetFormValues} from "./BetForm";
 import type {BigNumberish} from "ethers";
 import { Trans, t } from "@lingui/macro";
 
-type QuestionsDialogProps = DialogProps & {
+type BetDialogProps = DialogProps & {
   marketId: string
   price: BigNumberish
 }
 
-function QuestionsDialog({open, handleClose, marketId, price}: QuestionsDialogProps) {
-  const { register, control, formState: {errors}, handleSubmit } = useForm<QuestionsFormValues>({defaultValues: {
+function BetDialog({open, handleClose, marketId, price}: BetDialogProps) {
+  const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
     outcomes: [],
   }});
 
   const dialogActions = <DialogActions>
-    <Button autoFocus color="secondary" type="submit" form="questions-form">
+    <Button autoFocus color="secondary" type="submit" form="bet-form">
       <Trans>Place bets</Trans>
     </Button>
   </DialogActions>
@@ -30,9 +30,9 @@ function QuestionsDialog({open, handleClose, marketId, price}: QuestionsDialogPr
       title={t`Place your bets`}
       actions={dialogActions}
     >
-      <QuestionsForm {...{marketId: marketId, price, register, control, errors, handleSubmit}} />
+      <BetForm {...{marketId: marketId, price, register, control, errors, handleSubmit}} />
     </AppDialog>
   );
 }
 
-export default QuestionsDialog;
+export default BetDialog;

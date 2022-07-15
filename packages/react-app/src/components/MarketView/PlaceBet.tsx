@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BoxWrapper, BoxRow} from "../index";
 import Button from '@mui/material/Button';
-import QuestionsDialog from "../../components/Questions/QuestionsDialog";
+import BetDialog from "../Bet/BetDialog";
 import {formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
 import { Trans } from "@lingui/macro";
@@ -30,7 +30,7 @@ export default function PlaceBet({market}: {market: Market}) {
   };
 
   return <>
-    <QuestionsDialog
+    <BetDialog
       marketId={market.id}
       price={market.price}
       open={openModal}

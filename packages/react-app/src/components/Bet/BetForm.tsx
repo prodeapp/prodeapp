@@ -18,22 +18,22 @@ import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {getReferralKey} from "../../lib/helpers";
 
-export type QuestionsFormValues = {
+export type BetFormValues = {
   outcomes: {value: number|''}[]
 }
 
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
-type QuestionsFormProps = {
+type BetFormProps = {
   marketId: string
   price: BigNumberish
-  control: Control<QuestionsFormValues>
-  register: UseFormRegister<QuestionsFormValues>
-  errors: FieldErrors<QuestionsFormValues>
-  handleSubmit: UseFormHandleSubmit<QuestionsFormValues>
+  control: Control<BetFormValues>
+  register: UseFormRegister<BetFormValues>
+  errors: FieldErrors<BetFormValues>
+  handleSubmit: UseFormHandleSubmit<BetFormValues>
 }
 
-export default function QuestionsForm({marketId, price, control, register, errors, handleSubmit}: QuestionsFormProps) {
+export default function BetForm({marketId, price, control, register, errors, handleSubmit}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(marketId);
   const [success, setSuccess] = useState(false);
@@ -86,7 +86,7 @@ export default function QuestionsForm({marketId, price, control, register, error
     return <Alert severity="success"><Trans>Bet placed</Trans>!</Alert>
   }
 
-  const onSubmit = async (data: QuestionsFormValues) => {
+  const onSubmit = async (data: BetFormValues) => {
     const results = data.outcomes.map(outcome => {
       if (outcome.value === '') {
         throw Error(t`Invalid outcome`)
@@ -105,7 +105,7 @@ export default function QuestionsForm({marketId, price, control, register, error
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} id="questions-form">
+    <form onSubmit={handleSubmit(onSubmit)} id="bet-form">
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>

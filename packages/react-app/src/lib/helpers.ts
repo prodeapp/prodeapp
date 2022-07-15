@@ -6,7 +6,7 @@ import compareAsc from 'date-fns/compareAsc'
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
-import {INVALID_RESULT} from "../components/Questions/QuestionsForm";
+import {INVALID_RESULT} from "../components/Bet/BetForm";
 import {t} from "@lingui/macro";
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);

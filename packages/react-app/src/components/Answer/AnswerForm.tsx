@@ -12,7 +12,7 @@ import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
 import {Event} from "../../graphql/subgraph";
-import {INVALID_RESULT} from "../Questions/QuestionsForm";
+import {INVALID_RESULT} from "../Bet/BetForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
