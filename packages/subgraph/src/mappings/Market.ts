@@ -1,5 +1,6 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
+import { Manager } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
 
@@ -9,19 +10,21 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     log.info("handleInitialize: Initializing {} market", [evt.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
-    let managerAddress = Address.fromHexString(context.getString('manager'));
+    let managerAddress = Address.fromBytes(Address.fromHexString(context.getString('manager')));
+    let managerContract = Manager.bind(managerAddress);
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
-    market.managementFee = marketContract.managementReward();
+    market.managementFee = managerContract.creatorFee();
+    market.protocolFee = managerContract.protocolFee();
     market.closingTime = marketContract.closingTime();
     market.creationTime = evt.block.timestamp;
     market.submissionTimeout = marketContract.submissionTimeout();
     market.price = marketContract.price();
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
-    let manager = getOrCreateManager(Address.fromBytes(managerAddress));
+    let manager = getOrCreateManager(managerAddress);
     market.manager = manager.id;
     market.numOfEvents = BigInt.fromI32(evt.params._questionIDs.length);
     let event = Event.load(evt.params._questionIDs[0].toHexString())

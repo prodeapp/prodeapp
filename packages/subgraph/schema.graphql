@@ -20,7 +20,8 @@ type Market @entity {
   submissionTimeout: BigInt!
   price: BigInt!
   pool: BigInt!
-  managementFee: BigInt
+  managementFee: BigInt!
+  protocolFee: BigInt!
   manager: Manager!
   numOfEvents: BigInt!
   numOfEventsWithAnswer: BigInt!
