@@ -36,7 +36,7 @@ function Tournament() {
 
   return (
     <div>
-      {events && !itemJson && <Alert severity="error">This market is not verified.</Alert>}
+      {(!market || !market.curated) && <Alert severity="error">This market is not verified.</Alert>}
       {events && itemJson && <RenderTournament events={events} itemJson={itemJson}/>}
     </div>
   );
