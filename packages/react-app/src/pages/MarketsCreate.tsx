@@ -282,7 +282,7 @@ function SuccessStep({marketName, marketId}: {marketName: string, marketId: stri
       </Grid>
       <Grid item xs={6} md={6}>
         <BoxWrapper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: 2}}>
-          <div><Button component={RouterLink} to={`/markets/${marketId}`}><Trans>Go to the market</Trans></Button></div>
+          <div><Button component={RouterLink} to={`/markets/${marketId}?new=1`}><Trans>Go to the market</Trans></Button></div>
         </BoxWrapper>
       </Grid>
     </Grid>
