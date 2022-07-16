@@ -1,6 +1,6 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent } from '../types/templates/Market/Market';
-import { Manager } from '../types/templates/Market/Manager'
+import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
 
@@ -11,7 +11,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     let context = dataSource.context()
     let hash = context.getString('hash')
     let managerAddress = Address.fromBytes(Address.fromHexString(context.getString('manager')));
-    let managerContract = Manager.bind(managerAddress);
+    let managerContract = ManagerContract.bind(managerAddress);
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
@@ -143,11 +143,16 @@ export function handleAttribution(evt: AttributionEvent): void {
     let attributor = getOrCreatePlayer(evt.transaction.from);
     let id = evt.transaction.hash.toHex() + "-" + evt.logIndex.toString()
     let attribution = new Attribution(id)
-    log.debug("handleAttribution: Provider: {}", [provider.id])
     attribution.provider = provider.id;
     attribution.attributor = attributor.id;
-    attribution.amount = BigInt.fromI32(0);
-    log.debug("handleAttribution: Market {}", [evt.address.toHexString()])
     attribution.market = evt.address.toHexString();
+    let marketSC = MarketContract.bind(evt.address);
+    let manager = marketSC.marketInfo().value2;
+    let managerSC = ManagerContract.bind(manager);
+    let feeCreator = managerSC.creatorFee();
+    let feeProtocol = managerSC.protocolFee();
+    let attriibutionAmount = feeCreator.div(BigInt.fromI32(2)).plus(feeProtocol.div(BigInt.fromI32(3)));
+    attriibutionAmount = attriibutionAmount.times(marketSC.price()).div(BigInt.fromI32(10000));
+    attribution.amount = attriibutionAmount;
     attribution.save()
 }
