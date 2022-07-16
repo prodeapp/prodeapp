@@ -157,4 +157,5 @@ export function handleAttribution(evt: AttributionEvent): void {
     attribution.save()
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
+    provider.save();
 }
