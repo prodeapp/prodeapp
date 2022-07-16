@@ -120,3 +120,5 @@ templates:
           handler: handleBetReward
         - event: ManagementReward(address,uint256)
           handler: handleManagerReward
+        - event: Attribution(indexed address)
+          handler: handleAttribution

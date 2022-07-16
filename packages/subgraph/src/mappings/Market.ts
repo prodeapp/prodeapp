@@ -1,7 +1,7 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract } from '../types/templates/Market/Market';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent } from '../types/templates/Market/Market';
 import { Manager } from '../types/templates/Market/Manager'
-import { Bet, Funder, Event, Market } from '../types/schema';
+import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
@@ -135,4 +135,19 @@ export function handleManagerReward(evt: ManagementReward): void {
     let manager = getOrCreateManager(evt.params._manager);
     manager.managementRewards = manager.managementRewards.plus(evt.params._managementReward);
     manager.save()
+}
+
+export function handleAttribution(evt: AttributionEvent): void {
+    let providerAddress = evt.params._provider;
+    let provider = getOrCreatePlayer(providerAddress);
+    let attributor = getOrCreatePlayer(evt.transaction.from);
+    let id = evt.transaction.hash.toHex() + "-" + evt.logIndex.toString()
+    let attribution = new Attribution(id)
+    log.debug("handleAttribution: Provider: {}", [provider.id])
+    attribution.provider = provider.id;
+    attribution.attributor = attributor.id;
+    attribution.amount = BigInt.fromI32(0);
+    log.debug("handleAttribution: Market {}", [evt.address.toHexString()])
+    attribution.market = evt.address.toHexString();
+    attribution.save()
 }

@@ -32,6 +32,7 @@ type Market @entity {
   events: [Event!]! @derivedFrom(field: "market")
   bets: [Bet!]! @derivedFrom(field: "market")
   funders: [Funder!] @derivedFrom(field: "markets")
+  attributions: [Attribution!]! @derivedFrom(field: "market")
 }
 
 type MarketCuration @entity {
@@ -54,6 +55,18 @@ type CurateItem @entity {
   """the json file. empty if error"""
   json: String!
   timestamp: BigInt!
+}
+
+type Attribution @entity {
+  id: ID!
+  "Wallet that receives the attribution"
+  provider: Player!,
+  "Wallet that generate the attribution"
+  attributor: Player!,
+  "Amount to be paid to the provider"
+  amount: BigInt!
+  "Market where the attribution was generated"
+  market: Market!
 }
 
 type Event @entity {
@@ -87,6 +100,7 @@ type Player @entity {
   bets: [Bet!]! @derivedFrom(field: "player")
   numOfMarkets: BigInt!
   numOfBets: BigInt!
+  attributions: [Attribution!]! @derivedFrom(field: "provider")
 }
 
 type Manager @entity {
