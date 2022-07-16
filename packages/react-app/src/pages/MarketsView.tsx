@@ -13,11 +13,12 @@ import PlaceBet from "../components/MarketView/PlaceBet";
 import {shortenAddress, useEthers} from "@usedapp/core";
 import MarketStatus from "../components/MarketView/MarketStatus";
 import { Trans } from "@lingui/macro";
+import BetForm from "../components/Bet/BetForm";
 
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
-  const [section, setSection] = useState<'bets'|'results'>('bets');
+  const [section, setSection] = useState<'bet'|'bets'|'results'>('bets');
   const [searchParams] = useSearchParams();
   const {account} = useEthers();
 
@@ -66,7 +67,7 @@ function MarketsView() {
               </Box>}
             </BoxWrapper>
 
-            <PlaceBet market={market} />
+            <PlaceBet market={market} onClick={() => setSection('bet')}/>
           </Box>
         </Grid>
         <Grid item xs={12} md={8}>
@@ -111,6 +112,8 @@ function MarketsView() {
           {section === 'results' && <Results marketId={market.id} />}
 
           {section === 'bets' && <Bets marketId={market.id} />}
+
+          {section === 'bet' && <BetForm marketId={market.id} price={market.price} />}
         </Grid>
       </Grid>
     </>

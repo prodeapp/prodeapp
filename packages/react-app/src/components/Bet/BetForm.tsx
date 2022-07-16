@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FormError, BoxWrapper, BoxRow} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
-import {Control, useFieldArray} from "react-hook-form";
-import {UseFormHandleSubmit, UseFormRegister} from "react-hook-form/dist/types/form";
-import {FieldErrors} from "react-hook-form/dist/types/errors";
+import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
 import {useCall, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -30,10 +28,6 @@ export const INVALID_RESULT = "0xfffffffffffffffffffffffffffffffffffffffffffffff
 type BetFormProps = {
   marketId: string
   price: BigNumberish
-  control: Control<BetFormValues>
-  register: UseFormRegister<BetFormValues>
-  errors: FieldErrors<BetFormValues>
-  handleSubmit: UseFormHandleSubmit<BetFormValues>
 }
 
 function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
@@ -64,12 +58,17 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
   </div>
 }
 
-export default function BetForm({marketId, price, control, register, errors, handleSubmit}: BetFormProps) {
+export default function BetForm({marketId, price}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(marketId);
   const [success, setSuccess] = useState(false);
   const [tokenId, setTokenId] = useState<BigNumber|false>(false);
   const [referral, setReferral] = useState(AddressZero);
+
+  const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
+      outcomes: [],
+    }});
+
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -125,7 +124,7 @@ export default function BetForm({marketId, price, control, register, errors, han
   }
 
   if (error) {
-    return <Alert severity="error"><Trans>Error loading questions</Trans>.</Alert>
+    return <Alert severity="error"><Trans>Error loading events</Trans>.</Alert>
   }
 
   const onSubmit = async (data: BetFormValues) => {
@@ -147,11 +146,11 @@ export default function BetForm({marketId, price, control, register, errors, han
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} id="bet-form">
+    <form onSubmit={handleSubmit(onSubmit)}>
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <div style={{width: '80%'}}><Trans>Question</Trans></div>
+          <div style={{width: '80%'}}><Trans>Event</Trans></div>
           <div style={{width: '20%'}}><Trans>Outcome</Trans></div>
         </BoxRow>
         {fields.map((field, i) => {
@@ -164,7 +163,7 @@ export default function BetForm({marketId, price, control, register, errors, han
               <FormControl fullWidth>
                 <Select
                   defaultValue=""
-                  id={`question-${i}-outcome-select`}
+                  id={`event-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
@@ -175,6 +174,9 @@ export default function BetForm({marketId, price, control, register, errors, han
             </div>
           </BoxRow>
         })}
+        <BoxRow>
+          <Button type="submit" color="secondary"><Trans>Place Bet</Trans></Button>
+        </BoxRow>
       </BoxWrapper>
     </form>
   );
