@@ -155,4 +155,6 @@ export function handleAttribution(evt: AttributionEvent): void {
     attriibutionAmount = attriibutionAmount.times(marketSC.price()).div(BigInt.fromI32(10000));
     attribution.amount = attriibutionAmount;
     attribution.save()
+
+    provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
 }

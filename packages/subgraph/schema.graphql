@@ -101,6 +101,7 @@ type Player @entity {
   numOfMarkets: BigInt!
   numOfBets: BigInt!
   attributions: [Attribution!]! @derivedFrom(field: "provider")
+  totalAttributions: BigInt!
 }
 
 type Manager @entity {
