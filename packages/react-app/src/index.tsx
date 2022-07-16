@@ -21,6 +21,7 @@ import Profile from "./pages/Profile";
 import CurateValidator from "./pages/CurateValidator";
 import CurateSubmit from "./pages/CurateSubmit";
 import { I18nProvider } from "./lib/I18nProvider";
+import TokenView from "./pages/TokenView";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -47,6 +48,7 @@ ReactDOM.render(
                     <Route path=":id">
                       <Route index element={<MarketsView />} />
                       <Route path="tournament" element={<Tournament />} />
+                      <Route path=":tokenId" element={<TokenView />} />
                     </Route>
                     <Route path="new" element={<MarketsCreate />} />
                   </Route>

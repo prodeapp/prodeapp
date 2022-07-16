@@ -3,7 +3,7 @@ import {FormError, BoxWrapper, BoxRow} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {useCall, useContractFunction, useEthers} from "@usedapp/core";
+import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {Market__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
@@ -18,6 +18,8 @@ import {getReferralKey} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import {BigNumber} from "@ethersproject/bignumber";
+import {useBetToken} from "../../hooks/useBetToken";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export type BetFormValues = {
   outcomes: {value: number|''}[]
@@ -31,18 +33,9 @@ type BetFormProps = {
 }
 
 function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
-  const { value: tokenUri } = useCall({ contract: new Contract(marketId, Market__factory.createInterface()), method: 'tokenURI', args: [tokenId] }) || {}
+  const image = useBetToken(marketId, tokenId);
 
-  const [image, setImage] = useState('');
-
-  useEffect(() => {
-    if (tokenUri !== undefined) {
-      const data = JSON.parse(atob(tokenUri[0].split(',')[1]));
-      setImage(data.image);
-    }
-  }, [tokenUri]);
-
-  if (!tokenUri) {
+  if (!image) {
     return null
   }
 
@@ -143,6 +136,10 @@ export default function BetForm({marketId, price}: BetFormProps) {
         value: price
       }
     )
+  }
+
+  if (state.status === 'Mining') {
+    return <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>
   }
 
   return (
