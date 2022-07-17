@@ -50,11 +50,15 @@ msgstr "Agregar un premio"
 msgid "Address to send management fees to."
 msgstr "Billetera donde se enviarán los fees del creador"
 
-#: src/components/MarketView/Results.tsx:57
+#: src/components/MarketView/Results.tsx:76
+msgid "Answer"
+msgstr "Respuesta"
+
+#: src/components/MarketView/Results.tsx:47
 msgid "Answer closes in {answerCountdown}"
 msgstr "Respuesta se acepta en {answerCountdown}"
 
-#: src/components/MarketView/Results.tsx:67
+#: src/components/MarketView/Results.tsx:93
 msgid "Answer result"
 msgstr "Aportar resultado"
 
@@ -76,22 +80,22 @@ msgstr "Precio de apuesta (xDAI)"
 
 #: src/components/MarketView/PlaceBet.tsx:30
 msgid "Bet Price:"
-msgstr "Precio de Apuesta"
+msgstr "Precio de Apuesta:"
 
-#: src/components/Questions/QuestionsForm.tsx:93
-#~ msgid "Bet placed"
-#~ msgstr "Apuesta realizada"
+#: src/pages/TokenView.tsx:22
+msgid "Bet not found"
+msgstr "Apuesta no encontrada"
 
-#: src/components/Bet/BetForm.tsx:116
+#: src/components/Bet/BetForm.tsx:109
 msgid "Bet placed!"
-msgstr "Apuesta generada!"
+msgstr "¡Apuesta realizada!"
 
 #: src/pages/Home.tsx:118
 msgid "Bet price"
 msgstr "Precio de Apuesta"
 
 #: src/pages/MarketsView.tsx:107
-#: src/pages/Profile.tsx:52
+#: src/pages/Profile.tsx:54
 msgid "Bets"
 msgstr "Apuestas"
 
@@ -158,7 +162,7 @@ msgstr "Connecte su billetera para contestar"
 msgid "Connect your wallet to create a market."
 msgstr "Conectar la billetera para crear un mercado"
 
-#: src/components/Bet/BetForm.tsx:123
+#: src/components/Bet/BetForm.tsx:116
 msgid "Connect your wallet to place a bet."
 msgstr "Conecte su billetera para realizar la apuesta"
 
@@ -166,13 +170,13 @@ msgstr "Conecte su billetera para realizar la apuesta"
 msgid "Connect your wallet to verify a market."
 msgstr "Conecte su billetera para verificar el mercado."
 
-#: src/pages/Profile.tsx:27
+#: src/pages/Profile.tsx:28
 msgid "Connect your wallet to view your profile."
 msgstr "Conecte su billetera para visualizar su perfil."
 
 #: src/pages/MarketsView.tsx:66
 msgid "Copy referral link"
-msgstr "Copiar link para referir"
+msgstr "Copiar link de referidos"
 
 #: src/components/AppMenuBar.tsx:105
 #: src/pages/MarketsCreate.tsx:253
@@ -188,14 +192,6 @@ msgstr "Descripción"
 msgid "Details"
 msgstr "Detalles"
 
-#: src/components/Curate/QuestionsList.tsx:85
-#~ msgid "Double elimination tournaments must have a quantity of teams power of 2"
-#~ msgstr "Torneos de doble eliminacion tienen que tener una cantidad de equipos en potencia de 2"
-
-#: src/components/Curate/QuestionsList.tsx:204
-#~ msgid "Double-Elimination preview"
-#~ msgstr "Vista previa de Doble Eliminación"
-
 #: src/components/Curate/EventsPreview.tsx:42
 msgid "Drag and drop each question to the correct position"
 msgstr "Arrastre cada pregunto a la posición correcta"
@@ -208,15 +204,12 @@ msgstr "Ganancia"
 msgid "Edit"
 msgstr "Editar"
 
-#: src/components/Bet/BetForm.tsx:127
+#: src/components/Bet/BetForm.tsx:120
 msgid "Error loading events"
-msgstr "Error cargando eventos"
+msgstr "Error cargando los eventos"
 
-#: src/components/Questions/QuestionsForm.tsx:89
-#~ msgid "Error loading questions"
-#~ msgstr "Error cargando las preguntas"
-
-#: src/components/Bet/BetForm.tsx:153
+#: src/components/Bet/BetForm.tsx:150
+#: src/components/MarketView/Results.tsx:75
 msgid "Event"
 msgstr "Evento"
 
@@ -241,18 +234,6 @@ msgstr "Fee debe ser mayor que 0."
 msgid "Fee must be lower than 100."
 msgstr "Fee debe ser menor que 100."
 
-#: src/components/Curate/QuestionsList.tsx:78
-#~ msgid "Final"
-#~ msgstr "Final"
-
-#: src/components/Curate/QuestionsList.tsx:102
-#~ msgid "Final #1"
-#~ msgstr "Final #1"
-
-#: src/components/MarketView/Results.tsx:48
-msgid "Finalized"
-msgstr "Finalizado"
-
 #: src/components/MarketView/MarketStatus.tsx:20
 msgid "Finished"
 msgstr "Finalizado"
@@ -260,6 +241,10 @@ msgstr "Finalizado"
 #: src/pages/CurateSubmit.tsx:205
 msgid "Format"
 msgstr "Formato"
+
+#: src/pages/TokenView.tsx:35
+msgid "Go to market"
+msgstr "Ir al mercado"
 
 #: src/pages/MarketsCreate.tsx:205
 #: src/pages/MarketsCreate.tsx:254
@@ -291,12 +276,12 @@ msgstr "Market hash inválido"
 msgid "Invalid number."
 msgstr "Número inválido."
 
-#: src/components/Bet/BetForm.tsx:133
+#: src/components/Bet/BetForm.tsx:126
 msgid "Invalid outcome"
 msgstr "Salida inválida"
 
 #: src/components/Answer/AnswerForm.tsx:116
-#: src/components/Bet/BetForm.tsx:170
+#: src/components/Bet/BetForm.tsx:167
 #: src/lib/helpers.ts:51
 msgid "Invalid result"
 msgstr "Respuesta inválida"
@@ -309,31 +294,16 @@ msgstr "Item Id"
 msgid "Item id not found"
 msgstr "Item id no encontrado"
 
-#: src/components/Bet/BetForm.tsx:111
+#: src/components/Bet/BetForm.tsx:104
 #: src/pages/CurateSubmit.tsx:144
 #: src/pages/MarketsView.tsx:34
+#: src/pages/TokenView.tsx:18
 msgid "Loading..."
 msgstr "Cargando..."
 
 #: src/components/AppMenuBar.tsx:224
 msgid "Logout"
 msgstr "Desconectar"
-
-#: src/components/Curate/QuestionsList.tsx:114
-#~ msgid "Losers Final #1"
-#~ msgstr "Perdedores de Final #1"
-
-#: src/components/Curate/QuestionsList.tsx:114
-#~ msgid "Losers Quarterfinals #1"
-#~ msgstr "Perdedores de Cuartos de Final #1"
-
-#: src/components/Curate/QuestionsList.tsx:114
-#~ msgid "Losers Round of % #1"
-#~ msgstr "Perdedores de Ronda % #1"
-
-#: src/components/Curate/QuestionsList.tsx:114
-#~ msgid "Losers Semifinals #1"
-#~ msgstr "Perdedores de Semifinal #1"
 
 #: src/pages/MarketsCreate.tsx:248
 #: src/pages/MarketsView.tsx:94
@@ -412,11 +382,11 @@ msgid "Only verified markets"
 msgstr "Solo mercados verificados"
 
 #: src/components/Answer/AnswerForm.tsx:75
-#: src/components/MarketView/Results.tsx:46
+#: src/components/MarketView/Results.tsx:30
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Disponible para responder en {openingTimeLeft}"
 
-#: src/components/Bet/BetForm.tsx:154
+#: src/components/Bet/BetForm.tsx:151
 msgid "Outcome"
 msgstr "Resultado"
 
@@ -424,30 +394,22 @@ msgstr "Resultado"
 msgid "Participants"
 msgstr "Participantes"
 
-#: src/components/MarketView/Results.tsx:52
-#: src/components/MarketView/Results.tsx:56
+#: src/components/MarketView/Results.tsx:32
+#: src/components/MarketView/Results.tsx:43
 #: src/pages/Home.tsx:40
 #: src/pages/Home.tsx:97
 msgid "Pending"
 msgstr "Pendiente"
 
-#: src/components/MarketView/Results.tsx:54
+#: src/components/MarketView/Results.tsx:37
 msgid "Pending arbitration"
 msgstr "Pendiente de arbitraje"
 
-#: src/components/Bet/BetForm.tsx:178
+#: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:31
 #: src/pages/Home.tsx:112
 msgid "Place Bet"
 msgstr "Apostar"
-
-#: src/components/Questions/QuestionsDialog.tsx:22
-#~ msgid "Place bets"
-#~ msgstr "Realizar Apuestas"
-
-#: src/components/Questions/QuestionsDialog.tsx:30
-#~ msgid "Place your bets"
-#~ msgstr "Ingrese sus apuestas"
 
 #: src/components/MarketView/Bets.tsx:48
 msgid "Player"
@@ -498,19 +460,15 @@ msgstr "Perfil"
 msgid "Publish"
 msgstr "Publicar"
 
-#: src/components/Curate/QuestionsList.tsx:78
-#~ msgid "Quarterfinals"
-#~ msgstr "Cuartos de final"
-
 #: src/components/MarketCreate/EventBuilder.tsx:54
 msgid "Question"
 msgstr "Pregunta"
 
-#: src/pages/Profile.tsx:53
+#: src/pages/Profile.tsx:55
 msgid "Referrals"
 msgstr "Referidos"
 
-#: src/pages/Profile.tsx:46
+#: src/pages/Profile.tsx:48
 msgid "Referrals Earnings: {0}"
 msgstr "Ganancias por Referidos: {0}"
 
@@ -527,7 +485,6 @@ msgid "Remove group"
 msgstr "Remover grupo"
 
 #: src/components/Answer/AnswerForm.tsx:89
-#: src/components/MarketView/Results.tsx:33
 msgid "Result"
 msgstr "Resultado"
 
@@ -544,10 +501,6 @@ msgstr "Revisar la información del mercado"
 msgid "Reward"
 msgstr "Recompensa"
 
-#: src/components/Curate/QuestionsList.tsx:48
-#~ msgid "Round of %"
-#~ msgstr "Ronda de %"
-
 #: src/components/AppMenuBar.tsx:180
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan con WalletConnect para conectar"
@@ -556,21 +509,13 @@ msgstr "Scan con WalletConnect para conectar"
 msgid "Select date"
 msgstr "Seleccione la fecha"
 
-#: src/components/Curate/QuestionsList.tsx:78
-#~ msgid "Semifinals"
-#~ msgstr "Semifinales"
-
 #: src/components/TemplateDialog.tsx:101
 msgid "Set question"
 msgstr "Definir pregunta"
 
-#: src/components/Curate/QuestionsList.tsx:200
-#~ msgid "Single-Elimination preview"
-#~ msgstr "Vista previa de Eliminación Simple"
-
 #: src/components/ProfileView/Referrals.tsx:22
 msgid "Start referring into markets and earn part of the fees that your referred pays."
-msgstr "Comience a referir amigos a mercados y gane parte de las comisiones que genere su referido."
+msgstr "Comience a referir en los mercados de apuestas y gane parte de los fees generador por su referido."
 
 #: src/pages/CurateSubmit.tsx:196
 msgid "Starting timestamp"
@@ -579,10 +524,6 @@ msgstr "Fecha de inicio"
 #: src/pages/CurateValidator.tsx:116
 msgid "Starting timestamp is earlier than the betting deadline"
 msgstr "La fecha de comienzo es anterior a fecha límite de apuestas"
-
-#: src/components/MarketView/Results.tsx:34
-msgid "Status"
-msgstr "Estado"
 
 #: src/pages/MarketsView.tsx:59
 msgid "Status: <0/>"
@@ -604,19 +545,11 @@ msgstr "El creador recibirá este porcentaje del pozo de premios. Además, será
 msgid "The market was successfully created and is ready to take bets."
 msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
 
-#: src/components/Curate/QuestionsList.tsx:26
-#~ msgid "The sum of group sizes must be equal to the amount of events"
-#~ msgstr "La suma del tamaño de cada grupo debe ser igual a la cantidad de eventos"
-
 #: src/pages/MarketsCreate.tsx:151
 msgid "The sum of prize weights must be 100."
 msgstr "La suma de los premios debe ser igual a 100."
 
-#: src/components/Curate/QuestionsList.tsx:64
-#~ msgid "Third place"
-#~ msgstr "Tercer puesto"
-
-#: src/components/Bet/BetForm.tsx:167
+#: src/components/Bet/BetForm.tsx:164
 #: src/pages/MarketsCreate.tsx:100
 msgid "This field is required"
 msgstr "Este campo es requerido"
@@ -662,11 +595,11 @@ msgstr "Para subir un resultado debes dejar un depósito de {0} que será devuel
 msgid "Token ID"
 msgstr "Token ID"
 
-#: src/pages/Profile.tsx:36
+#: src/pages/Profile.tsx:38
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
 
-#: src/pages/Profile.tsx:41
+#: src/pages/Profile.tsx:43
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
@@ -677,10 +610,6 @@ msgstr "Error inesperado"
 #: src/components/BetDetails.tsx:33
 msgid "Unknown"
 msgstr "Desconocido"
-
-#: src/components/Questions/QuestionsForm.tsx:144
-#~ msgid "Use {0}% of this pool to:"
-#~ msgstr "Usar el {0}% del pozo para:"
 
 #: src/pages/CurateValidator.tsx:83
 msgid "Valid JSON"
@@ -732,22 +661,6 @@ msgstr "Esperando resultado"
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "Qué % del pozo ganará el jugador en la posición #X."
 
-#: src/components/Curate/QuestionsList.tsx:96
-#~ msgid "Winners Final"
-#~ msgstr "Ganadores de la Final"
-
-#: src/components/Curate/QuestionsList.tsx:96
-#~ msgid "Winners Quarterfinals"
-#~ msgstr "Ganadores de Cuartos de Final"
-
-#: src/components/Curate/QuestionsList.tsx:96
-#~ msgid "Winners Round of %"
-#~ msgstr "Ganadores de la ronda %"
-
-#: src/components/Curate/QuestionsList.tsx:96
-#~ msgid "Winners Semifinals"
-#~ msgstr "Ganadores de Semifinales"
-
 #: src/components/BetDetails.tsx:18
 msgid "Your Bet"
 msgstr "Su apuesta"
@@ -755,43 +668,3 @@ msgstr "Su apuesta"
 #: src/components/Answer/AnswerForm.tsx:106
 msgid "Your answer"
 msgstr "Su respuesta"
-
-#: src/components/AppMenuBar.tsx:209
-#~ msgid "message.connect_wallet"
-#~ msgstr "Conectar billetera"
-
-#: src/components/AppMenuBar.tsx:167
-#~ msgid "message.connect_with_your_metamask_wallet"
-#~ msgstr "Conectar con Metamask"
-
-#: src/components/AppMenuBar.tsx:102
-#~ msgid "message.create_market"
-#~ msgstr "Crear Mercado"
-
-#: src/components/AppMenuBar.tsx:215
-#~ msgid "message.logout"
-#~ msgstr "Desconectar"
-
-#: src/components/AppMenuBar.tsx:214
-#~ msgid "message.profile"
-#~ msgstr "Perfil"
-
-#: src/components/AppMenuBar.tsx:171
-#~ msgid "message.scan_with_walletconnect_to_connect"
-#~ msgstr "Scan con WalletConnect para conectar"
-
-#: src/components/Questions/QuestionsForm.tsx:35
-#~ msgid "reward pool winners"
-#~ msgstr "Ganadores de premios"
-
-#: src/components/Questions/QuestionsForm.tsx:33
-#~ msgid "support UBI"
-#~ msgstr "Ayudar a UBI"
-
-#: src/components/Questions/QuestionsForm.tsx:34
-#~ msgid "support UBI & dev team"
-#~ msgstr "Ayudar UBI y Equipo de desarrollo"
-
-#: src/components/Questions/QuestionsForm.tsx:32
-#~ msgid "support dev team"
-#~ msgstr "Ayudar al equipo de desarrollo"
