@@ -6,7 +6,7 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
     id: id,
     nonce: 0,
     market: {
-      id: 1,
+      id: '1',
     },
     title: title,
     answer: null,

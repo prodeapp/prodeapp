@@ -1,6 +1,6 @@
 import validate from "../schema";
 
-const buildQuestions = (length) => [...Array(length).keys()].map(k => `question ${k+1} ID`);
+const buildQuestions = (length: number) => [...Array(length).keys()].map(k => `question ${k+1} ID`);
 
 const SINGLE_ELIMINATION_1 = {
   "description": "Age of Empires II tournament hosted in 2022 by the German player JorDan_AoE. Playoffs predictions.",
