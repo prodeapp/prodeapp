@@ -24,7 +24,7 @@ export default function Profile() {
   }, [id, account]);
 
   if (!account || walletError) {
-    return <Alert severity="error">walletError?.message || <Trans>Connect your wallet to view your profile.</Trans></Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
   }
 
   if (error) {
