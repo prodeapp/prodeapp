@@ -67,6 +67,8 @@ type Attribution @entity {
   amount: BigInt!
   "Market where the attribution was generated"
   market: Market!
+  "timestamp of the attribution"
+  timestamp: BigInt!
 }
 
 type Event @entity {

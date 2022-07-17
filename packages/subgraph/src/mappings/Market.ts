@@ -154,6 +154,7 @@ export function handleAttribution(evt: AttributionEvent): void {
     let attriibutionAmount = feeCreator.div(BigInt.fromI32(2)).plus(feeProtocol.div(BigInt.fromI32(3)));
     attriibutionAmount = attriibutionAmount.times(marketSC.price()).div(BigInt.fromI32(10000));
     attribution.amount = attriibutionAmount;
+    attribution.timestamp = evt.block.timestamp;
     attribution.save()
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
