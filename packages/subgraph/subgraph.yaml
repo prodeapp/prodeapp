@@ -9,8 +9,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0xf0254936564F85CB139c889976aC17DEC44afeB3"
-      startBlock: 22982499
+      address: "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b"
+      startBlock: 23172705
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -38,7 +38,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 22267329
+      startBlock: 23172705
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -64,8 +64,8 @@ dataSources:
     network: xdai
     source:
       abi: GeneralizedTCR
-      address: "0xc96514B3ad962Ae37c2d2c0AeD627306b0418Bf7"
-      startBlock: 22267329
+      address: "0x86E72802D9AbBF7505a889721fD4D6947B02320E"
+      startBlock: 23172705
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -120,3 +120,5 @@ templates:
           handler: handleBetReward
         - event: ManagementReward(address,uint256)
           handler: handleManagerReward
+        - event: Attribution(indexed address)
+          handler: handleAttribution

@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/MarketView/MarketStatus.tsx:13
+#: src/components/MarketView/MarketStatus.tsx:14
 msgid "Accepting bets"
 msgstr "Accepting bets"
 
@@ -95,6 +95,7 @@ msgid "Bet price"
 msgstr "Bet price"
 
 #: src/pages/MarketsView.tsx:107
+#: src/pages/Profile.tsx:54
 msgid "Bets"
 msgstr "Bets"
 
@@ -107,7 +108,7 @@ msgstr "Bets will not be accepted passed this time. It should be before the begi
 msgid "Betting Deadline (UTC)"
 msgstr "Betting Deadline (UTC)"
 
-#: src/components/MarketView/MarketStatus.tsx:17
+#: src/components/MarketView/MarketStatus.tsx:18
 msgid "Building ranking"
 msgstr "Building ranking"
 
@@ -169,7 +170,7 @@ msgstr "Connect your wallet to place a bet."
 msgid "Connect your wallet to verify a market."
 msgstr "Connect your wallet to verify a market."
 
-#: src/pages/Profile.tsx:27
+#: src/pages/Profile.tsx:28
 msgid "Connect your wallet to view your profile."
 msgstr "Connect your wallet to view your profile."
 
@@ -186,14 +187,18 @@ msgstr "Create Market"
 msgid "Description"
 msgstr "Description"
 
-#: src/components/MarketView/Bets.tsx:40
-#: src/components/MarketView/Bets.tsx:57
+#: src/components/MarketView/Bets.tsx:41
+#: src/components/MarketView/Bets.tsx:58
 msgid "Details"
 msgstr "Details"
 
 #: src/components/Curate/EventsPreview.tsx:42
 msgid "Drag and drop each question to the correct position"
 msgstr "Drag and drop each question to the correct position"
+
+#: src/components/ProfileView/Referrals.tsx:30
+msgid "Earn"
+msgstr "Earn"
 
 #: src/pages/MarketsCreate.tsx:217
 msgid "Edit"
@@ -229,7 +234,7 @@ msgstr "Fee must be greater than 0."
 msgid "Fee must be lower than 100."
 msgstr "Fee must be lower than 100."
 
-#: src/components/MarketView/MarketStatus.tsx:19
+#: src/components/MarketView/MarketStatus.tsx:20
 msgid "Finished"
 msgstr "Finished"
 
@@ -315,8 +320,9 @@ msgstr "Management Fee (%)"
 msgid "Manager"
 msgstr "Manager"
 
+#: src/components/ProfileView/Bets.tsx:29
+#: src/components/ProfileView/Referrals.tsx:29
 #: src/pages/MarketsCreate.tsx:348
-#: src/pages/Profile.tsx:56
 msgid "Market"
 msgstr "Market"
 
@@ -354,8 +360,8 @@ msgstr "Market sent to Kleros Curate"
 msgid "Next step"
 msgstr "Next step"
 
-#: src/components/MarketView/Bets.tsx:51
-#: src/pages/Profile.tsx:39
+#: src/components/MarketView/Bets.tsx:52
+#: src/components/ProfileView/Bets.tsx:21
 msgid "No bets found."
 msgstr "No bets found."
 
@@ -405,12 +411,12 @@ msgstr "Pending arbitration"
 msgid "Place Bet"
 msgstr "Place Bet"
 
-#: src/components/MarketView/Bets.tsx:47
+#: src/components/MarketView/Bets.tsx:48
 msgid "Player"
 msgstr "Player"
 
-#: src/components/MarketView/Bets.tsx:48
-#: src/pages/Profile.tsx:57
+#: src/components/MarketView/Bets.tsx:49
+#: src/components/ProfileView/Bets.tsx:30
 msgid "Points"
 msgstr "Points"
 
@@ -458,6 +464,18 @@ msgstr "Publish"
 msgid "Question"
 msgstr "Question"
 
+#: src/pages/Profile.tsx:55
+msgid "Referrals"
+msgstr "Referrals"
+
+#: src/pages/Profile.tsx:48
+msgid "Referrals Earnings: {0}"
+msgstr "Referrals Earnings: {0}"
+
+#: src/components/ProfileView/Referrals.tsx:28
+msgid "Referred"
+msgstr "Referred"
+
 #: src/components/MarketCreate/EventBuilder.tsx:65
 msgid "Remove event"
 msgstr "Remove event"
@@ -479,7 +497,7 @@ msgid "Review the market data"
 msgstr "Review the market data"
 
 #: src/components/Answer/AnswerForm.tsx:97
-#: src/pages/Profile.tsx:58
+#: src/components/ProfileView/Bets.tsx:31
 msgid "Reward"
 msgstr "Reward"
 
@@ -494,6 +512,10 @@ msgstr "Select date"
 #: src/components/TemplateDialog.tsx:101
 msgid "Set question"
 msgstr "Set question"
+
+#: src/components/ProfileView/Referrals.tsx:22
+msgid "Start referring into markets and earn part of the fees that your referred pays."
+msgstr "Start referring into markets and earn part of the fees that your referred pays."
 
 #: src/pages/CurateSubmit.tsx:196
 msgid "Starting timestamp"
@@ -569,15 +591,15 @@ msgstr "This market was just created, please wait a few seconds for it to be ind
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 
-#: src/pages/Profile.tsx:55
+#: src/components/ProfileView/Bets.tsx:28
 msgid "Token ID"
 msgstr "Token ID"
 
-#: src/pages/Profile.tsx:46
+#: src/pages/Profile.tsx:38
 msgid "Total Bet: {0}"
 msgstr "Total Bet: {0}"
 
-#: src/pages/Profile.tsx:49
+#: src/pages/Profile.tsx:43
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
@@ -627,7 +649,7 @@ msgstr "Verify market"
 msgid "Verify your market"
 msgstr "Verify your market"
 
-#: src/components/MarketView/MarketStatus.tsx:15
+#: src/components/MarketView/MarketStatus.tsx:16
 msgid "Waiting for results"
 msgstr "Waiting for results"
 

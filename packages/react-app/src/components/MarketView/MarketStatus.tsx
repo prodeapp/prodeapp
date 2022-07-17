@@ -1,4 +1,5 @@
 import { Trans } from "@lingui/macro";
+import { Skeleton } from "@mui/material";
 import React from "react";
 import {useMarketStatus} from "../../hooks/useMarketStatus";
 
@@ -6,7 +7,7 @@ function MarketStatus({marketId}: {marketId: string}) {
   const { data: marketStatus} = useMarketStatus(String(marketId));
 
   if (marketStatus === '') {
-    return null;
+    return <Skeleton />;
   }
 
   if (marketStatus === 'ACCEPTING_BETS') {

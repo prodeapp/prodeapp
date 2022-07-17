@@ -13,6 +13,7 @@ export function getOrCreatePlayer(address: Address): Player {
         player.pricesReceived = BigInt.fromI32(0)
         player.numOfMarkets = BigInt.fromI32(0)
         player.numOfBets = BigInt.fromI32(0)
+        player.totalAttributions = BigInt.fromI32(0)
         player.save()
     }
     return player
