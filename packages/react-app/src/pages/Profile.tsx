@@ -17,7 +17,7 @@ export default function Profile() {
   const [playerId, setPlayerId] = useState('');
   const [section, setSection] = useState<'bets' | 'referrals'>('bets');
   const { data: player } = usePlayer(String(account));
-  
+
 
   useEffect(() => {
     setPlayerId(id || account || '')
@@ -26,18 +26,25 @@ export default function Profile() {
   if (!account || walletError) {
     return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
   }
- 
+
   return (
     <Container>
-      {player && <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'center' }}>
+      {player && <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
+
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'><Trans>Total Bet: {formatAmount(player.amountBet)}</Trans></Typography>
+          <BoxWrapper sx={{ padding: 2 }}>  
+            <Typography variant='h5'><Trans>Total Bet: {formatAmount(player.amountBet)}</Trans></Typography>
+          </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'><Trans>Total Rewards: {formatAmount(player.pricesReceived)}</Trans></Typography>
+          <BoxWrapper sx={{ padding: 2 }}>
+            <Typography variant='h5'><Trans>Total Rewards: {formatAmount(player.pricesReceived)}</Trans></Typography>
+          </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Typography variant='h5'><Trans>Referrals Earnings: {formatAmount(player.totalAttributions)}</Trans></Typography>
+          <BoxWrapper sx={{ padding: 2 }}>
+            <Typography variant='h5'><Trans>Referrals Earnings: {formatAmount(player.totalAttributions)}</Trans></Typography>
+          </BoxWrapper>
         </Grid>
       </Grid>}
       <BoxWrapper>
@@ -50,7 +57,7 @@ export default function Profile() {
       {section === 'bets' && <Bets playerId={playerId} />}
 
       {section === 'referrals' && <Referrals provider={playerId} />}
-      
+
     </Container>
   )
 }

@@ -25,7 +25,7 @@ export default function Referrals({ provider }: { provider?: string }) {
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
             <Grid item sm={12} md={12}>
                 <BoxRow>
-                    <div style={{ width: '40%' }}><Trans>Refered</Trans></div>
+                    <div style={{ width: '40%' }}><Trans>Referred</Trans></div>
                     <div style={{ width: '40%' }}><Trans>Market</Trans></div>
                     <div style={{ width: '20%' }}><Trans>Earn</Trans></div>
                 </BoxRow>
