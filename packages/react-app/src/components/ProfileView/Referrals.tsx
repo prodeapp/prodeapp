@@ -15,11 +15,11 @@ export default function Referrals({ provider }: { provider?: string }) {
     }
 
     if (isLoading) {
-        return <Skeleton animation="wave" height={150}/>
+        return <Skeleton animation="wave" height={150} />
     }
 
     if (!referrals || referrals.length === 0) {
-        return <Alert severity="error"><Trans>No referrals found.</Trans></Alert>
+        return <Alert severity="info"><Trans>Start referring into markets and earn part of the fees that your referred pays.</Trans></Alert>
     }
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
@@ -40,5 +40,5 @@ export default function Referrals({ provider }: { provider?: string }) {
                 })}
             </Grid>
         </Grid>
-    )
+    )    
 }
