@@ -13,7 +13,7 @@ const query = `
 `;
 
 interface Props {
-  provider?: string
+  provider: string
 }
 
 export const useAttributions = ({provider}: Props) => {

@@ -7,7 +7,7 @@ import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";
 import { useAttributions } from "../../hooks/useAttributions";
 
-export default function Referrals({ provider }: { provider?: string }) {
+export default function Referrals({ provider }: { provider: string }) {
     const { data: referrals, error, isLoading } = useAttributions({ provider });
 
     if (error) {

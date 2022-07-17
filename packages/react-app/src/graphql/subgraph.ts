@@ -117,6 +117,7 @@ export const ATTRIBUTION_FIELDS = `
     market{id, name}
     amount
     attributor{id}
+    timestamp
   }
 `;
 
