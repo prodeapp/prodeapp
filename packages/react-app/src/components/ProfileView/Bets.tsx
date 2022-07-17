@@ -36,7 +36,7 @@ export function Bets({playerId}: {playerId?: string}) {
                         <Accordion id={bet.id} key={bet.id}>
                             <AccordionSummary expandIcon={<ExpandMoreOutlined />} sx={{ alignContent: 'center' }}>
                                 <div style={{ width: '20%' }}>{bet.tokenID}</div>
-                                <div style={{ width: '40%' }}><a href={'/#/market/' + bet.market.id}>{bet.market.name}</a></div>
+                                <div style={{ width: '40%' }}><a href={'/#/markets/' + bet.market.id}>{bet.market.name}</a></div>
                                 <div style={{ width: '20%' }}>{bet.points}</div>
                                 <div style={{ width: '20%' }}>{formatAmount(bet.reward)}</div>
                             </AccordionSummary>
