@@ -84,13 +84,39 @@ export interface Player {
   id: string
   amountBet: BigNumberish
   pricesReceived: BigNumberish
+  totalAttributions: BigNumberish
 }
+
 
 export const PLAYER_FIELDS = `
   fragment PlayerFields on Player {
     id
     amountBet
     pricesReceived
+    totalAttributions
+  }
+`;
+
+export interface Attribution {
+  id: string
+  market: {
+    id: string,
+    name: string
+  }
+  amount: BigNumberish
+  attributor: {
+    id: string
+  }
+  timestamp: BigNumberish
+}
+
+
+export const ATTRIBUTION_FIELDS = `
+  fragment AttributionFields on Attribution {
+    id
+    market{id, name}
+    amount
+    attributor{id}
   }
 `;
 
