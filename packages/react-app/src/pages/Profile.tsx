@@ -16,7 +16,7 @@ export default function Profile() {
   const { account, error: walletError } = useEthers();
   const [playerId, setPlayerId] = useState('');
   const [section, setSection] = useState<'bets' | 'referrals'>('bets');
-  const { data: player } = usePlayer(String(account));
+  const { data: player } = usePlayer(String(playerId));
 
 
   useEffect(() => {
