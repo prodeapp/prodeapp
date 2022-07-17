@@ -10,6 +10,7 @@ import BetDetails from "../BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
+import { Skeleton } from "@mui/material";
 
 export default function Bets({marketId, playerId}: {marketId?: string, playerId?: string}) {
   const { isLoading, error, data: ranking } = useRanking({marketId: marketId, playerId});
@@ -26,7 +27,7 @@ export default function Bets({marketId, playerId}: {marketId?: string, playerId?
   };
 
   if (isLoading) {
-    return null
+    return <Skeleton animation="wave" height={150}/>
   }
 
   if (error) {
