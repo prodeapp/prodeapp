@@ -1,4 +1,4 @@
-import { Typography, Container, Grid, Button } from '@mui/material';
+import { Typography, Container, Grid, Button, Skeleton } from '@mui/material';
 import { BoxRow, BoxWrapper } from '../components';
 import { formatAmount } from '../lib/helpers';
 import { useEthers } from "@usedapp/core";
@@ -23,30 +23,32 @@ export default function Profile() {
     setPlayerId(id || account || '')
   }, [id, account]);
 
-  if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
+  if (!id) {
+    if (!account || walletError) {
+      return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
+    }
   }
 
   return (
     <Container>
-      {player && <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
+      <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
 
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>  
-            <Typography variant='h5'><Trans>Total Bet: {formatAmount(player.amountBet)}</Trans></Typography>
+            <Typography variant='h5'><Trans>Total Bet: {player? formatAmount(player?.amountBet) : <Skeleton />}</Trans></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Rewards: {formatAmount(player.pricesReceived)}</Trans></Typography>
+            <Typography variant='h5'><Trans>Total Rewards: {player? formatAmount(player?.pricesReceived): <Skeleton />}</Trans></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Referrals Earnings: {formatAmount(player.totalAttributions)}</Trans></Typography>
+            <Typography variant='h5'><Trans>Referrals Earnings: {player? formatAmount(player?.totalAttributions): <Skeleton />}</Trans></Typography>
           </BoxWrapper>
         </Grid>
-      </Grid>}
+      </Grid>
       <BoxWrapper>
         <BoxRow style={{ justifyContent: 'center' }}>
           <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
