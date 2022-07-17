@@ -36,7 +36,7 @@ export default function AppMenuBar() {
             variant="h6"
             noWrap
             component={RouterLink}
-            to="/"
+            to="/#"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
             prode.eth
@@ -91,7 +91,7 @@ export default function AppMenuBar() {
             variant="h6"
             noWrap
             component={RouterLink}
-            to="/"
+            to="/#"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             prode.eth
