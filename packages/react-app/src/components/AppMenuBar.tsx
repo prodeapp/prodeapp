@@ -189,7 +189,7 @@ function WalletMenu() {
   const [openWalletModal, setOpenWalletModal] = useState(false);
 
   const { account, deactivate } = useEthers();
-  const {ens, isLoading: ensIsLoading} = useLookupAddress(account);
+  const {ens  } = useLookupAddress(account);
 
   useEffect(() => {
     if (ens) {
@@ -199,7 +199,7 @@ function WalletMenu() {
     } else {
       setAccountName("");
     }
-  }, [account, ens, setAccountName, ensIsLoading]);
+  }, [account, ens, setAccountName]);
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);
