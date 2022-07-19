@@ -15,7 +15,7 @@ export const useBets = (playerId: string) => {
   return useQuery<Bet[], Error>(
     ["useBets", playerId],
     async () => {
-      const response = await apolloProdeQuery<{ bets: Bet[] }>(query, {playerId});
+      const response = await apolloProdeQuery<{ bets: Bet[] }>(query, {playerId: playerId.toLowerCase()});
 
       if (!response) throw new Error("No response from TheGraph");
 

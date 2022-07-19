@@ -167,9 +167,12 @@ msgid "Connect your wallet to answer"
 msgstr "Connect your wallet to answer"
 
 #: src/pages/MarketsCreate.tsx:342
-#: src/pages/MarketsFund.tsx:47
 msgid "Connect your wallet to create a market."
 msgstr "Connect your wallet to create a market."
+
+#: src/pages/MarketsFund.tsx:47
+msgid "Connect your wallet to fund a market."
+msgstr "Connect your wallet to fund a market."
 
 #: src/components/Bet/BetForm.tsx:116
 msgid "Connect your wallet to place a bet."

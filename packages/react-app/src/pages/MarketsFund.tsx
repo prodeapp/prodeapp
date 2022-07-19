@@ -44,7 +44,7 @@ function MarketsFund() {
   }
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
+    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to fund a market.</Trans>}</Alert>
   }
 
   return <>
