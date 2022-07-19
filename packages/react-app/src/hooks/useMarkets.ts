@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {Market, MARKET_FIELDS} from "../graphql/subgraph";
 import {buildQuery, QueryVariables} from "../lib/SubgraphQueryBuilder";
+import {getSubcategories} from "../lib/helpers";
 
 const query = `
     ${MARKET_FIELDS}
@@ -28,7 +29,7 @@ export const useMarkets = ({curated, status, category, minEvents}: Props = {}) =
       const variables: QueryVariables = {curated};
 
       if (category) {
-        variables['category'] = category;
+        variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)];
       }
 
       if (minEvents) {

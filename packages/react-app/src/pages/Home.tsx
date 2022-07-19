@@ -51,7 +51,14 @@ function Home() {
               onChange={(e) => setCategory(e.target.value)}
               style={{width: '200px'}}>
               <MenuItem value="All"><Trans>All</Trans></MenuItem>
-              {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}><Trans id={category.text} /></MenuItem>)}
+              {MARKET_CATEGORIES.map(category => {
+                return [
+                  <MenuItem value={category.id} key={category.id}><Trans id={category.text} /></MenuItem>,
+                  (category.children && category.children.map(subcategory => {
+                    return <MenuItem value={subcategory.id} key={subcategory.id}>-- <Trans id={subcategory.text} /></MenuItem>
+                  })) || []
+                ]
+              })}
             </TextField>
           </Box>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>

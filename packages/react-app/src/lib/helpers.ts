@@ -73,14 +73,32 @@ export function isFinalized(event: Event) {
   );
 }
 
-export const MARKET_CATEGORIES: {id: string, text: string}[] = [
-  {id: "sports", text: t`Sports`},
-  {id: "football", text: t`Football`},
-  {id: "basketball", text: t`Basketball`},
-  {id: "tenis", text: t`Tennis`},
-  {id: "esports", text: t`eSports`},
+type MarketCategory = {id: string, text: string, children?: MarketCategory[]}
+
+export const MARKET_CATEGORIES: MarketCategory[] = [
+  {
+    id: "sports",
+    text: t`Sports`,
+    children: [
+      {id: "football", text: t`Football`},
+      {id: "basketball", text: t`Basketball`},
+      {id: "tenis", text: t`Tennis`},
+      {id: "esports", text: t`eSports`},
+    ]
+  },
   {id: "misc", text: t`Miscellaneous`},
 ]
+
+export function getSubcategories(category: string): MarketCategory[] {
+  for(let cat of MARKET_CATEGORIES){
+    if (cat.id === category) {
+      return cat.children || [];
+    }
+  }
+
+  return [];
+}
+
 
 export function getCategoryText(id: string): string {
   return MARKET_CATEGORIES.filter(c => c.id === id)[0].text;

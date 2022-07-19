@@ -4,12 +4,25 @@ function filterObject<T>(obj: Record<string, T>, callback: (v: T, k: string) => 
   )
 }
 
-export type QueryVariables = Record<string, string | boolean | undefined>;
+type QueryValue = string | string[] | boolean | undefined;
+export type QueryVariables = Record<string, QueryValue>;
+
+const getType = (v: QueryValue): String => {
+  if (typeof v === 'string') {
+    return 'String'
+  }
+
+  if (Array.isArray(v)) {
+    return '[String]'
+  }
+
+  return 'Boolean';
+}
 
 export function buildQuery(query: string, variables: QueryVariables) {
   variables = filterObject(variables, val => val !== undefined);
 
-  const params = Object.entries(variables).map(([k, v]) => `$${k}: ${typeof v === 'string' ? 'String' : 'Boolean'}`).join(', ')
+  const params = Object.entries(variables).map(([k, v]) => `$${k}: ${getType(v)}`).join(', ')
   const where = Object.entries(variables).map(([k, v]) => `${k}: $${k}`).join(', ')
 
   return query
