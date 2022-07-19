@@ -13,6 +13,7 @@ import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import { Trans } from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
+import HomeSlider from "../components/HomeSlider";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
@@ -32,6 +33,7 @@ function Home() {
 
   return (
     <>
+      <HomeSlider />
       <BoxWrapper style={{padding:'15px'}}>
         <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
