@@ -41,12 +41,12 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
   return <div style={{textAlign: 'center', margin: '10px 0'}}>
     <div>
-      <p>Your betting position is represented by the following NFT.</p>
-      <p>You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.</p>
+      <p><Trans>Your betting position is represented by the following NFT.</Trans></p>
+      <p><Trans>You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.</Trans></p>
     </div>
     <img src={image} style={{margin: '20px 0'}} alt="Bet NFT" />
     <div>
-      <Button component={Link} href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener">Trade NFT in Eporio</Button>
+      <Button component={Link} href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
     </div>
   </div>
 }

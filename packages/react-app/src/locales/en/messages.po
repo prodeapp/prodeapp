@@ -221,11 +221,12 @@ msgid "Error loading events"
 msgstr "Error loading events"
 
 #: src/components/Bet/BetForm.tsx:150
+#: src/components/BetDetails.tsx:18
 #: src/components/MarketView/Results.tsx:78
 msgid "Event"
 msgstr "Event"
 
-#: src/components/BetDetails.tsx:19
+#: src/components/BetDetails.tsx:20
 msgid "Event Result"
 msgstr "Event Result"
 
@@ -266,6 +267,7 @@ msgstr "Fund amount (xDAI)"
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
 
+#: src/components/ProfileView/Bets.tsx:43
 #: src/pages/TokenView.tsx:35
 msgid "Go to market"
 msgstr "Go to market"
@@ -345,7 +347,6 @@ msgstr "Management Fee (%)"
 msgid "Manager"
 msgstr "Manager"
 
-#: src/components/ProfileView/Bets.tsx:29
 #: src/components/ProfileView/Referrals.tsx:29
 #: src/pages/MarketsCreate.tsx:348
 msgid "Market"
@@ -398,7 +399,7 @@ msgid "Next step"
 msgstr "Next step"
 
 #: src/components/MarketView/Bets.tsx:53
-#: src/components/ProfileView/Bets.tsx:21
+#: src/components/ProfileView/Bets.tsx:24
 msgid "No bets found."
 msgstr "No bets found."
 
@@ -453,11 +454,11 @@ msgid "Player"
 msgstr "Player"
 
 #: src/components/MarketView/Bets.tsx:50
-#: src/components/ProfileView/Bets.tsx:30
+#: src/components/ProfileView/Bets.tsx:36
 msgid "Points"
 msgstr "Points"
 
-#: src/components/BetDetails.tsx:20
+#: src/components/BetDetails.tsx:21
 msgid "Points Earned"
 msgstr "Points Earned"
 
@@ -534,7 +535,7 @@ msgid "Review the market data"
 msgstr "Review the market data"
 
 #: src/components/Answer/AnswerForm.tsx:99
-#: src/components/ProfileView/Bets.tsx:31
+#: src/components/ProfileView/Bets.tsx:37
 msgid "Reward"
 msgstr "Reward"
 
@@ -639,8 +640,8 @@ msgid "To submit the answer you need to deposit a bond of {0} that will be retur
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 
 #: src/components/ProfileView/Bets.tsx:28
-msgid "Token ID"
-msgstr "Token ID"
+#~ msgid "Token ID"
+#~ msgstr "Token ID"
 
 #: src/pages/Profile.tsx:38
 msgid "Total Bet: {0}"
@@ -650,11 +651,16 @@ msgstr "Total Bet: {0}"
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
+#: src/components/Bet/BetForm.tsx:49
+#: src/components/ProfileView/Bets.tsx:44
+msgid "Trade NFT in Eporio"
+msgstr "Trade NFT in Eporio"
+
 #: src/pages/CurateSubmit.tsx:167
 msgid "Unexpected error"
 msgstr "Unexpected error"
 
-#: src/components/BetDetails.tsx:33
+#: src/components/BetDetails.tsx:34
 msgid "Unknown"
 msgstr "Unknown"
 
@@ -700,7 +706,7 @@ msgstr "Verify your market"
 msgid "Waiting for results"
 msgstr "Waiting for results"
 
-#: src/components/BetDetails.tsx:35
+#: src/components/BetDetails.tsx:36
 msgid "Waiting result"
 msgstr "Waiting result"
 
@@ -712,13 +718,21 @@ msgstr "What % of the pool will win the player ranked at position #X."
 msgid "You"
 msgstr "You"
 
-#: src/components/BetDetails.tsx:18
+#: src/components/Bet/BetForm.tsx:45
+msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
+msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
+
+#: src/components/BetDetails.tsx:19
 msgid "Your Bet"
 msgstr "Your Bet"
 
 #: src/components/Answer/AnswerForm.tsx:108
 msgid "Your answer"
 msgstr "Your answer"
+
+#: src/components/Bet/BetForm.tsx:44
+msgid "Your betting position is represented by the following NFT."
+msgstr "Your betting position is represented by the following NFT."
 
 #: src/lib/helpers.ts:81
 msgid "eSports"

@@ -15,8 +15,9 @@ function getBetResult(eventResult: string, playerBet: string) {
 export default function BetDetails({bet}: {bet: Bet}) {
   return <BoxWrapper>
     <BoxRow>
-      <div style={{ width: '40%'}}><Trans>Your Bet</Trans></div>
-      <div style={{ width: '40%'}}><Trans>Event Result</Trans></div>
+      <div style={{ width: '40%'}}><Trans>Event</Trans></div>
+      <div style={{ width: '20%'}}><Trans>Your Bet</Trans></div>
+      <div style={{ width: '20%'}}><Trans>Event Result</Trans></div>
       <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
     </BoxRow>
     {bet.market.events.map((event, i) => {
@@ -27,10 +28,10 @@ export default function BetDetails({bet}: {bet: Bet}) {
       const backgroundColor = betResult === 0 ? undefined : (betResult === 1 ? 'rgba(0, 128, 0, 0.15)' : 'rgba(255, 0, 0, 0.15)')
 
       return <BoxRow key={i} style={{flexDirection: 'column', backgroundColor}}>
-        <div style={{ width: '100%', wordBreak: 'break-word' }}>{event.title}</div>
         <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
-          <div style={{ width: '40%', wordBreak: 'break-word' }}>{playerBet}</div>
-          <div style={{ width: '40%', wordBreak: 'break-word' }}>{eventResult || t`Unknown`}</div>
+          <div style={{ width: '40%', wordBreak: 'break-word', paddingRight: '20px' }}>{event.title}</div>
+          <div style={{ width: '20%', wordBreak: 'break-word' }}>{playerBet}</div>
+          <div style={{ width: '20%', wordBreak: 'break-word' }}>{eventResult || t`Unknown`}</div>
           <div style={{ width: '20%' }}>
             {betResult === 0 && <span><Trans>Waiting result</Trans></span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}
