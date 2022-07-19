@@ -17,6 +17,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
+import {useI18nContext} from "../../lib/I18nContext";
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -33,6 +34,7 @@ type AnswerFormProps = {
 export default function AnswerForm({event, register, errors, handleSubmit}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
+  const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
     new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
@@ -69,7 +71,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   }
 
   const finalized = isFinalized(event);
-  const openingTimeLeft = getTimeLeft(event.openingTs);
+  const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
 
   if (openingTimeLeft !== false) {
     return <div><Trans>Open to answers in {openingTimeLeft}</Trans></div>

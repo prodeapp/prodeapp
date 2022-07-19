@@ -3,17 +3,25 @@ import format from 'date-fns/format'
 import { intervalToDuration } from 'date-fns'
 import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
+import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
 import {INVALID_RESULT} from "../components/Bet/BetForm";
 import {t} from "@lingui/macro";
+import {I18nContextProps} from "./types";
+
+const dateLocales = {
+  es,
+  en: enGB
+}
+
 export function formatDate(timestamp: number) {
   const date = fromUnixTime(timestamp);
   return format(date, 'MMMM d yyyy, HH:mm')
 }
 
-export function getTimeLeft(endDate: Date|string|number, withSeconds = false): string | false {
+export function getTimeLeft(endDate: Date|string|number, withSeconds = false, locale: I18nContextProps['locale']): string | false {
   const startDate = new Date()
 
   if (typeof endDate === 'number' || typeof endDate === 'string') {
@@ -34,7 +42,7 @@ export function getTimeLeft(endDate: Date|string|number, withSeconds = false): s
     format.push('minutes');
   }
 
-  return formatDuration(duration, {format});
+  return formatDuration(duration, {format, locale: dateLocales[locale]});
 }
 
 export function formatAmount(amount: BigNumberish) {

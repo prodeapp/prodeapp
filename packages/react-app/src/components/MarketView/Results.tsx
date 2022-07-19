@@ -10,12 +10,15 @@ import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
+import {useI18nContext} from "../../lib/I18nContext";
 
 function CircleItem({color}: {color: string}) {
   return <div style={{height: '14px', width: '14px', borderRadius: '50%', backgroundColor: color, marginRight: '10px'}}></div>
 }
 
 function AnswerColumn(event: Event, finalized: boolean) {
+  const { locale } = useI18nContext();
+
   const answerText = getAnswerText(event.answer, event.outcomes || []);
 
   const style = {display: 'flex', alignItems: 'center'};
@@ -23,7 +26,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
     return <div style={style}><CircleItem color="green"/> {answerText}</div>
   }
 
-  const openingTimeLeft = getTimeLeft(event.openingTs);
+  const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
 
   if (openingTimeLeft !== false) {
     return <div style={style}>
@@ -37,7 +40,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
     return <div style={style}><CircleItem color="yellow"/><Trans>Pending arbitration</Trans></div>
   }
 
-  const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0);
+  const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale);
 
   if (!answerCountdown) {
     return <div style={style}><CircleItem color="yellow"/><Trans>Pending</Trans></div>;

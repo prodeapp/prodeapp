@@ -4,9 +4,11 @@ import Button from '@mui/material/Button';
 import {formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
 import { Trans } from "@lingui/macro";
+import {useI18nContext} from "../../lib/I18nContext";
 
 export default function PlaceBet({market, onClick}: {market: Market, onClick: () => void}) {
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
+  const { locale } = useI18nContext();
 
   useEffect(() => {
     if (!market) {
@@ -14,10 +16,10 @@ export default function PlaceBet({market, onClick}: {market: Market, onClick: ()
     }
 
     const interval = setInterval(() => {
-      setTimeLeft(getTimeLeft(market.closingTime, true))
+      setTimeLeft(getTimeLeft(market.closingTime, true, locale))
     }, 1000);
     return () => clearInterval(interval);
-  }, [market]);
+  }, [market, locale]);
 
   if (timeLeft === false) {
     return null;

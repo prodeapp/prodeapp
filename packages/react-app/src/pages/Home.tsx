@@ -13,6 +13,7 @@ import Alert from "@mui/material/Alert";
 import {BigNumber} from "@ethersproject/bignumber";
 import TextField from "@mui/material/TextField";
 import { Trans } from '@lingui/macro'
+import {useI18nContext} from "../lib/I18nContext";
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
@@ -80,6 +81,7 @@ type MarketsTableProps = {
 }
 
 function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
+  const { locale } = useI18nContext();
 
   if (!markets || markets.length === 0) {
     return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
@@ -87,7 +89,7 @@ function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
 
   return <Grid container spacing={2}>
     {markets.map((market, i) => {
-      const timeLeft = getTimeLeft(market.closingTime);
+      const timeLeft = getTimeLeft(market.closingTime, false, locale);
 
       let status = <Trans>Closed</Trans>;
 
