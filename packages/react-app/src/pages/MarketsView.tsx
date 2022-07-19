@@ -5,22 +5,22 @@ import {BoxWrapper, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import {formatAmount, getMarketUrl, getReferralKey} from "../lib/helpers";
+import {formatAmount, getReferralKey} from "../lib/helpers";
 import {DIVISOR} from "../hooks/useMarketForm";
 import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";
-import {shortenAddress, useEthers} from "@usedapp/core";
+import {shortenAddress} from "@usedapp/core";
 import MarketStatus from "../components/MarketView/MarketStatus";
 import { Trans } from "@lingui/macro";
 import BetForm from "../components/Bet/BetForm";
+import ReferralLink from "../components/MarketView/ReferralLink";
 
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
   const [section, setSection] = useState<'bet'|'bets'|'results'>('bets');
   const [searchParams] = useSearchParams();
-  const {account} = useEthers();
 
   useEffect(() => {
     const referralId = searchParams.get('referralId');
@@ -40,14 +40,6 @@ function MarketsView() {
             : <div><Trans>Market not found</Trans></div>
   }
 
-  const copyReferralLink = async () => {
-    try {
-      await navigator.clipboard.writeText(`${getMarketUrl(String(id))}?referralId=${account || ''}`);
-    } catch (err) {
-      alert('Unable to copy');
-    }
-  }
-
   return (
     <>
       <Grid container spacing={2}>
@@ -62,9 +54,9 @@ function MarketsView() {
                 {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}><Trans>Verify Market</Trans></Button>}
                 {market.curated && <div><Trans>Verified</Trans> ✅</div>}
               </Box>
-              {account && navigator.clipboard && <Box sx={{mt: 4}}>
-                <Button onClick={copyReferralLink}><Trans>Copy referral link</Trans></Button>
-              </Box>}
+              <Box sx={{mt: 4}}>
+                <ReferralLink marketId={market.id}/>
+              </Box>
             </BoxWrapper>
 
             <PlaceBet market={market} onClick={() => setSection('bet')}/>

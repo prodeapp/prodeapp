@@ -102,7 +102,7 @@ msgstr "¡Apuesta realizada!"
 msgid "Bet price"
 msgstr "Precio de Apuesta"
 
-#: src/pages/MarketsView.tsx:107
+#: src/pages/MarketsView.tsx:99
 #: src/pages/Profile.tsx:54
 msgid "Bets"
 msgstr "Apuestas"
@@ -162,6 +162,10 @@ msgstr "Conectar Billetera"
 msgid "Connect with your MetaMask Wallet"
 msgstr "Conectar con billetera Metamask"
 
+#: src/components/MarketView/ReferralLink.tsx:27
+msgid "Connect your wallet"
+msgstr "Conecte su billetera"
+
 #: src/components/Answer/AnswerForm.tsx:55
 msgid "Connect your wallet to answer"
 msgstr "Connecte su billetera para contestar"
@@ -186,7 +190,7 @@ msgstr "Conecte su billetera para verificar el mercado."
 msgid "Connect your wallet to view your profile."
 msgstr "Conecte su billetera para visualizar su perfil."
 
-#: src/pages/MarketsView.tsx:66
+#: src/components/MarketView/ReferralLink.tsx:37
 msgid "Copy referral link"
 msgstr "Copiar link de referidos"
 
@@ -267,7 +271,7 @@ msgstr "Cantidad a financiar (xDAI)"
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"
 
-#: src/components/ProfileView/Bets.tsx:43
+#: src/components/ProfileView/Bets.tsx:42
 #: src/pages/TokenView.tsx:35
 msgid "Go to market"
 msgstr "Ir al mercado"
@@ -333,7 +337,7 @@ msgid "Logout"
 msgstr "Desconectar"
 
 #: src/pages/MarketsCreate.tsx:248
-#: src/pages/MarketsView.tsx:94
+#: src/pages/MarketsView.tsx:86
 msgid "Management Fee"
 msgstr "Fee para Creador"
 
@@ -343,7 +347,7 @@ msgstr "Fee del creador (%)"
 
 #: src/pages/MarketsCreate.tsx:173
 #: src/pages/MarketsCreate.tsx:246
-#: src/pages/MarketsView.tsx:98
+#: src/pages/MarketsView.tsx:90
 msgid "Manager"
 msgstr "Creador"
 
@@ -399,7 +403,7 @@ msgid "Next step"
 msgstr "Siguiente paso"
 
 #: src/components/MarketView/Bets.tsx:53
-#: src/components/ProfileView/Bets.tsx:24
+#: src/components/ProfileView/Bets.tsx:23
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
 
@@ -454,7 +458,7 @@ msgid "Player"
 msgstr "Apostador"
 
 #: src/components/MarketView/Bets.tsx:50
-#: src/components/ProfileView/Bets.tsx:36
+#: src/components/ProfileView/Bets.tsx:35
 msgid "Points"
 msgstr "Puntos"
 
@@ -462,7 +466,7 @@ msgstr "Puntos"
 msgid "Points Earned"
 msgstr "Puntos ganados"
 
-#: src/pages/MarketsView.tsx:78
+#: src/pages/MarketsView.tsx:70
 msgid "Pool"
 msgstr "Pozo"
 
@@ -478,7 +482,7 @@ msgstr "Precios"
 msgid "Price must be greater than 0.01"
 msgstr "Precio debe ser mayor a 0.01"
 
-#: src/pages/MarketsView.tsx:82
+#: src/pages/MarketsView.tsx:74
 msgid "Prize Distribution"
 msgstr "Distribución de premios"
 
@@ -501,6 +505,10 @@ msgstr "Publicar"
 #: src/components/MarketCreate/EventBuilder.tsx:54
 msgid "Question"
 msgstr "Pregunta"
+
+#: src/components/MarketView/ReferralLink.tsx:37
+msgid "Referral link copied!"
+msgstr "¡Link de referidos copiado!"
 
 #: src/pages/Profile.tsx:55
 msgid "Referrals"
@@ -526,7 +534,7 @@ msgstr "Remover grupo"
 msgid "Result"
 msgstr "Resultado"
 
-#: src/pages/MarketsView.tsx:108
+#: src/pages/MarketsView.tsx:100
 msgid "Results"
 msgstr "Resultados"
 
@@ -535,7 +543,7 @@ msgid "Review the market data"
 msgstr "Revisar la información del mercado"
 
 #: src/components/Answer/AnswerForm.tsx:99
-#: src/components/ProfileView/Bets.tsx:37
+#: src/components/ProfileView/Bets.tsx:36
 msgid "Reward"
 msgstr "Recompensa"
 
@@ -567,7 +575,7 @@ msgstr "Fecha de inicio"
 msgid "Starting timestamp is earlier than the betting deadline"
 msgstr "La fecha de comienzo es anterior a fecha límite de apuestas"
 
-#: src/pages/MarketsView.tsx:59
+#: src/pages/MarketsView.tsx:51
 msgid "Status: <0/>"
 msgstr "Estado: <0/>"
 
@@ -652,7 +660,7 @@ msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
 #: src/components/Bet/BetForm.tsx:49
-#: src/components/ProfileView/Bets.tsx:44
+#: src/components/ProfileView/Bets.tsx:43
 msgid "Trade NFT in Eporio"
 msgstr "Negociar NFT en Eporio"
 
@@ -686,11 +694,11 @@ msgid "Value must be greater than 0."
 msgstr "El valor debe ser mayor que 0."
 
 #: src/pages/Home.tsx:134
-#: src/pages/MarketsView.tsx:63
+#: src/pages/MarketsView.tsx:55
 msgid "Verified"
 msgstr "Verificado"
 
-#: src/pages/MarketsView.tsx:62
+#: src/pages/MarketsView.tsx:54
 msgid "Verify Market"
 msgstr "Verificar Mercado"
 

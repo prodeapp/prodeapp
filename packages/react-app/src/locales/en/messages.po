@@ -102,7 +102,7 @@ msgstr "Bet placed!"
 msgid "Bet price"
 msgstr "Bet price"
 
-#: src/pages/MarketsView.tsx:107
+#: src/pages/MarketsView.tsx:99
 #: src/pages/Profile.tsx:54
 msgid "Bets"
 msgstr "Bets"
@@ -162,6 +162,10 @@ msgstr "Connect Wallet"
 msgid "Connect with your MetaMask Wallet"
 msgstr "Connect with your MetaMask Wallet"
 
+#: src/components/MarketView/ReferralLink.tsx:27
+msgid "Connect your wallet"
+msgstr "Connect your wallet"
+
 #: src/components/Answer/AnswerForm.tsx:55
 msgid "Connect your wallet to answer"
 msgstr "Connect your wallet to answer"
@@ -186,7 +190,7 @@ msgstr "Connect your wallet to verify a market."
 msgid "Connect your wallet to view your profile."
 msgstr "Connect your wallet to view your profile."
 
-#: src/pages/MarketsView.tsx:66
+#: src/components/MarketView/ReferralLink.tsx:37
 msgid "Copy referral link"
 msgstr "Copy referral link"
 
@@ -267,7 +271,7 @@ msgstr "Fund amount (xDAI)"
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
 
-#: src/components/ProfileView/Bets.tsx:43
+#: src/components/ProfileView/Bets.tsx:42
 #: src/pages/TokenView.tsx:35
 msgid "Go to market"
 msgstr "Go to market"
@@ -333,7 +337,7 @@ msgid "Logout"
 msgstr "Logout"
 
 #: src/pages/MarketsCreate.tsx:248
-#: src/pages/MarketsView.tsx:94
+#: src/pages/MarketsView.tsx:86
 msgid "Management Fee"
 msgstr "Management Fee"
 
@@ -343,7 +347,7 @@ msgstr "Management Fee (%)"
 
 #: src/pages/MarketsCreate.tsx:173
 #: src/pages/MarketsCreate.tsx:246
-#: src/pages/MarketsView.tsx:98
+#: src/pages/MarketsView.tsx:90
 msgid "Manager"
 msgstr "Manager"
 
@@ -399,7 +403,7 @@ msgid "Next step"
 msgstr "Next step"
 
 #: src/components/MarketView/Bets.tsx:53
-#: src/components/ProfileView/Bets.tsx:24
+#: src/components/ProfileView/Bets.tsx:23
 msgid "No bets found."
 msgstr "No bets found."
 
@@ -454,7 +458,7 @@ msgid "Player"
 msgstr "Player"
 
 #: src/components/MarketView/Bets.tsx:50
-#: src/components/ProfileView/Bets.tsx:36
+#: src/components/ProfileView/Bets.tsx:35
 msgid "Points"
 msgstr "Points"
 
@@ -462,7 +466,7 @@ msgstr "Points"
 msgid "Points Earned"
 msgstr "Points Earned"
 
-#: src/pages/MarketsView.tsx:78
+#: src/pages/MarketsView.tsx:70
 msgid "Pool"
 msgstr "Pool"
 
@@ -478,7 +482,7 @@ msgstr "Price"
 msgid "Price must be greater than 0.01"
 msgstr "Price must be greater than 0.01"
 
-#: src/pages/MarketsView.tsx:82
+#: src/pages/MarketsView.tsx:74
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
 
@@ -501,6 +505,10 @@ msgstr "Publish"
 #: src/components/MarketCreate/EventBuilder.tsx:54
 msgid "Question"
 msgstr "Question"
+
+#: src/components/MarketView/ReferralLink.tsx:37
+msgid "Referral link copied!"
+msgstr "Referral link copied!"
 
 #: src/pages/Profile.tsx:55
 msgid "Referrals"
@@ -526,7 +534,7 @@ msgstr "Remove group"
 msgid "Result"
 msgstr "Result"
 
-#: src/pages/MarketsView.tsx:108
+#: src/pages/MarketsView.tsx:100
 msgid "Results"
 msgstr "Results"
 
@@ -535,7 +543,7 @@ msgid "Review the market data"
 msgstr "Review the market data"
 
 #: src/components/Answer/AnswerForm.tsx:99
-#: src/components/ProfileView/Bets.tsx:37
+#: src/components/ProfileView/Bets.tsx:36
 msgid "Reward"
 msgstr "Reward"
 
@@ -567,7 +575,7 @@ msgstr "Starting timestamp"
 msgid "Starting timestamp is earlier than the betting deadline"
 msgstr "Starting timestamp is earlier than the betting deadline"
 
-#: src/pages/MarketsView.tsx:59
+#: src/pages/MarketsView.tsx:51
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
 
@@ -652,7 +660,7 @@ msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
 #: src/components/Bet/BetForm.tsx:49
-#: src/components/ProfileView/Bets.tsx:44
+#: src/components/ProfileView/Bets.tsx:43
 msgid "Trade NFT in Eporio"
 msgstr "Trade NFT in Eporio"
 
@@ -686,11 +694,11 @@ msgid "Value must be greater than 0."
 msgstr "Value must be greater than 0."
 
 #: src/pages/Home.tsx:134
-#: src/pages/MarketsView.tsx:63
+#: src/pages/MarketsView.tsx:55
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/MarketsView.tsx:62
+#: src/pages/MarketsView.tsx:54
 msgid "Verify Market"
 msgstr "Verify Market"
 
