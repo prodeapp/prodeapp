@@ -17,8 +17,8 @@ msgstr ""
 msgid "Accepting bets"
 msgstr "Accepting bets"
 
-#: src/pages/Home.tsx:40
-#: src/pages/Home.tsx:97
+#: src/pages/Home.tsx:39
+#: src/pages/Home.tsx:96
 msgid "Active"
 msgstr "Active"
 
@@ -50,6 +50,10 @@ msgstr "Add prize weight"
 msgid "Address to send management fees to."
 msgstr "Address to send management fees to."
 
+#: src/pages/Home.tsx:50
+msgid "All"
+msgstr "All"
+
 #: src/components/MarketView/Results.tsx:79
 msgid "Answer"
 msgstr "Answer"
@@ -69,6 +73,10 @@ msgstr "Answer sent"
 #: src/components/MarketCreate/EventBuilder.tsx:61
 msgid "Answers"
 msgstr "Answers"
+
+#: src/lib/helpers.ts:79
+msgid "Basketball"
+msgstr "Basketball"
 
 #: src/pages/MarketsCreate.tsx:244
 msgid "Bet Price"
@@ -90,7 +98,7 @@ msgstr "Bet not found"
 msgid "Bet placed!"
 msgstr "Bet placed!"
 
-#: src/pages/Home.tsx:120
+#: src/pages/Home.tsx:119
 msgid "Bet price"
 msgstr "Bet price"
 
@@ -117,7 +125,7 @@ msgstr "Building ranking"
 msgid "Category"
 msgstr "Category"
 
-#: src/pages/Home.tsx:45
+#: src/pages/Home.tsx:44
 msgid "Category:"
 msgstr "Category:"
 
@@ -137,8 +145,8 @@ msgstr "Choose question format"
 msgid "Choose template"
 msgstr "Choose template"
 
-#: src/pages/Home.tsx:42
-#: src/pages/Home.tsx:94
+#: src/pages/Home.tsx:41
+#: src/pages/Home.tsx:93
 msgid "Closed"
 msgstr "Closed"
 
@@ -159,7 +167,7 @@ msgid "Connect your wallet to answer"
 msgstr "Connect your wallet to answer"
 
 #: src/pages/MarketsCreate.tsx:342
-#: src/pages/MarketsFund.tsx:46
+#: src/pages/MarketsFund.tsx:47
 msgid "Connect your wallet to create a market."
 msgstr "Connect your wallet to create a market."
 
@@ -239,15 +247,19 @@ msgstr "Fee must be lower than 100."
 msgid "Finished"
 msgstr "Finished"
 
+#: src/lib/helpers.ts:78
+msgid "Football"
+msgstr "Football"
+
 #: src/pages/CurateSubmit.tsx:205
 msgid "Format"
 msgstr "Format"
 
-#: src/pages/MarketsFund.tsx:56
+#: src/pages/MarketsFund.tsx:57
 msgid "Fund amount (xDAI)"
 msgstr "Fund amount (xDAI)"
 
-#: src/pages/MarketsFund.tsx:62
+#: src/pages/MarketsFund.tsx:63
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
 
@@ -282,7 +294,7 @@ msgstr "Invalid market hash"
 
 #: src/pages/CurateSubmit.tsx:81
 #: src/pages/MarketsCreate.tsx:166
-#: src/pages/MarketsFund.tsx:61
+#: src/pages/MarketsFund.tsx:62
 msgid "Invalid number."
 msgstr "Invalid number."
 
@@ -341,7 +353,7 @@ msgstr "Market"
 msgid "Market Name"
 msgstr "Market Name"
 
-#: src/pages/MarketsFund.tsx:51
+#: src/pages/MarketsFund.tsx:52
 msgid "Market funded successfully!"
 msgstr "Market funded successfully!"
 
@@ -369,9 +381,13 @@ msgstr "Market not found."
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
 
-#: src/pages/MarketsFund.tsx:68
+#: src/pages/MarketsFund.tsx:69
 msgid "Message"
 msgstr "Message"
+
+#: src/lib/helpers.ts:82
+msgid "Miscellaneous"
+msgstr "Miscellaneous"
 
 #: src/pages/MarketsCreate.tsx:140
 #: src/pages/MarketsCreate.tsx:204
@@ -383,7 +399,7 @@ msgstr "Next step"
 msgid "No bets found."
 msgstr "No bets found."
 
-#: src/pages/Home.tsx:87
+#: src/pages/Home.tsx:86
 msgid "No markets found."
 msgstr "No markets found."
 
@@ -395,7 +411,7 @@ msgstr "Not answered yet"
 msgid "Number of questions"
 msgstr "Number of questions"
 
-#: src/pages/Home.tsx:63
+#: src/pages/Home.tsx:62
 msgid "Only verified markets"
 msgstr "Only verified markets"
 
@@ -408,14 +424,14 @@ msgstr "Open to answers in {openingTimeLeft}"
 msgid "Outcome"
 msgstr "Outcome"
 
-#: src/pages/Home.tsx:130
+#: src/pages/Home.tsx:129
 msgid "Participants"
 msgstr "Participants"
 
 #: src/components/MarketView/Results.tsx:35
 #: src/components/MarketView/Results.tsx:46
-#: src/pages/Home.tsx:41
-#: src/pages/Home.tsx:99
+#: src/pages/Home.tsx:40
+#: src/pages/Home.tsx:98
 msgid "Pending"
 msgstr "Pending"
 
@@ -425,7 +441,7 @@ msgstr "Pending arbitration"
 
 #: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:33
-#: src/pages/Home.tsx:114
+#: src/pages/Home.tsx:113
 msgid "Place Bet"
 msgstr "Place Bet"
 
@@ -446,7 +462,7 @@ msgstr "Points Earned"
 msgid "Pool"
 msgstr "Pool"
 
-#: src/pages/Home.tsx:125
+#: src/pages/Home.tsx:124
 msgid "Pool prize"
 msgstr "Pool prize"
 
@@ -531,6 +547,10 @@ msgstr "Select date"
 msgid "Set question"
 msgstr "Set question"
 
+#: src/lib/helpers.ts:77
+msgid "Sports"
+msgstr "Sports"
+
 #: src/components/ProfileView/Referrals.tsx:22
 msgid "Start referring into markets and earn part of the fees that your referred pays."
 msgstr "Start referring into markets and earn part of the fees that your referred pays."
@@ -548,13 +568,17 @@ msgid "Status: <0/>"
 msgstr "Status: <0/>"
 
 #: src/pages/CurateSubmit.tsx:231
-#: src/pages/MarketsFund.tsx:79
+#: src/pages/MarketsFund.tsx:80
 msgid "Submit"
 msgstr "Submit"
 
 #: src/components/Answer/AnswerDialog.tsx:21
 msgid "Submit answer"
 msgstr "Submit answer"
+
+#: src/lib/helpers.ts:80
+msgid "Tennis"
+msgstr "Tennis"
 
 #: src/pages/MarketsCreate.tsx:193
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
@@ -591,7 +615,7 @@ msgstr "This field is required"
 #: src/pages/MarketsCreate.tsx:164
 #: src/pages/MarketsCreate.tsx:176
 #: src/pages/MarketsCreate.tsx:187
-#: src/pages/MarketsFund.tsx:59
+#: src/pages/MarketsFund.tsx:60
 msgid "This field is required."
 msgstr "This field is required."
 
@@ -652,7 +676,7 @@ msgstr "Validate"
 msgid "Value must be greater than 0."
 msgstr "Value must be greater than 0."
 
-#: src/pages/Home.tsx:135
+#: src/pages/Home.tsx:134
 #: src/pages/MarketsView.tsx:63
 msgid "Verified"
 msgstr "Verified"
@@ -692,3 +716,7 @@ msgstr "Your Bet"
 #: src/components/Answer/AnswerForm.tsx:108
 msgid "Your answer"
 msgstr "Your answer"
+
+#: src/lib/helpers.ts:81
+msgid "eSports"
+msgstr "eSports"

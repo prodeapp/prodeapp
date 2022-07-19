@@ -74,14 +74,12 @@ export function isFinalized(event: Event) {
 }
 
 export const MARKET_CATEGORIES: {id: string, text: string}[] = [
-  {id: "arts", text: "Arts"},
-  {id: "business-finance", text: "Business & Finance"},
-  {id: "cryptocurrency", text: "Cryptocurrency"},
-  {id: "news-politics", text: "News & Politics"},
-  {id: "science-tech", text: "Science & Tech"},
-  {id: "sports", text: "Sports"},
-  {id: "weather", text: "Weather"},
-  {id: "misc", text: "Miscellaneous"},
+  {id: "sports", text: t`Sports`},
+  {id: "football", text: t`Football`},
+  {id: "basketball", text: t`Basketball`},
+  {id: "tenis", text: t`Tennis`},
+  {id: "esports", text: t`eSports`},
+  {id: "misc", text: t`Miscellaneous`},
 ]
 
 export function getCategoryText(id: string): string {
