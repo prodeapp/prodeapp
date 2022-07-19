@@ -10,7 +10,6 @@ import {formatAmount, getTimeLeft, MARKET_CATEGORIES} from "../lib/helpers";
 import {FormControlLabel, FormGroup, MenuItem, Switch, Typography} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
-import {BigNumber} from "@ethersproject/bignumber";
 import TextField from "@mui/material/TextField";
 import { Trans } from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
@@ -128,7 +127,7 @@ function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
 
               <Box sx={{ mb: 3 }}>
                 <div style={{fontWeight: 'normal'}}><Trans>Participants</Trans></div>
-                <div>{BigNumber.from(market.pool).div(market.price).toString()}</div>
+                <div>{market.numOfBets}</div>
               </Box>
 
               <Box>

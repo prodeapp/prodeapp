@@ -159,6 +159,7 @@ msgid "Connect your wallet to answer"
 msgstr "Connecte su billetera para contestar"
 
 #: src/pages/MarketsCreate.tsx:342
+#: src/pages/MarketsFund.tsx:46
 msgid "Connect your wallet to create a market."
 msgstr "Conectar la billetera para crear un mercado"
 
@@ -242,6 +243,14 @@ msgstr "Finalizado"
 msgid "Format"
 msgstr "Formato"
 
+#: src/pages/MarketsFund.tsx:56
+msgid "Fund amount (xDAI)"
+msgstr "Cantidad a financiar (xDAI)"
+
+#: src/pages/MarketsFund.tsx:62
+msgid "Fund amount must be greater than 0.01"
+msgstr "La cantidad a financiar debe ser mayor a 0.01"
+
 #: src/pages/TokenView.tsx:35
 msgid "Go to market"
 msgstr "Ir al mercado"
@@ -273,6 +282,7 @@ msgstr "Market hash inválido"
 
 #: src/pages/CurateSubmit.tsx:81
 #: src/pages/MarketsCreate.tsx:166
+#: src/pages/MarketsFund.tsx:61
 msgid "Invalid number."
 msgstr "Número inválido."
 
@@ -331,6 +341,10 @@ msgstr "Mercado"
 msgid "Market Name"
 msgstr "Nombre del Mercado"
 
+#: src/pages/MarketsFund.tsx:51
+msgid "Market funded successfully!"
+msgstr "¡Mercado financiado con éxito!"
+
 #: src/pages/CurateValidator.tsx:92
 msgid "Market hash found"
 msgstr "Market hash encontrado"
@@ -354,6 +368,10 @@ msgstr "Mercado no encontado."
 #: src/pages/CurateSubmit.tsx:172
 msgid "Market sent to Kleros Curate"
 msgstr "Mercado enviado a Kleros Curate"
+
+#: src/pages/MarketsFund.tsx:68
+msgid "Message"
+msgstr "Mensaje"
 
 #: src/pages/MarketsCreate.tsx:140
 #: src/pages/MarketsCreate.tsx:204
@@ -530,12 +548,13 @@ msgid "Status: <0/>"
 msgstr "Estado: <0/>"
 
 #: src/pages/CurateSubmit.tsx:231
+#: src/pages/MarketsFund.tsx:79
 msgid "Submit"
-msgstr "Subir"
+msgstr "Enviar"
 
 #: src/components/Answer/AnswerDialog.tsx:21
 msgid "Submit answer"
-msgstr "Subir resultado"
+msgstr "Enviar resultado"
 
 #: src/pages/MarketsCreate.tsx:193
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
@@ -572,6 +591,7 @@ msgstr "Este campo es requerido"
 #: src/pages/MarketsCreate.tsx:164
 #: src/pages/MarketsCreate.tsx:176
 #: src/pages/MarketsCreate.tsx:187
+#: src/pages/MarketsFund.tsx:59
 msgid "This field is required."
 msgstr "Este campo es requerido."
 
@@ -589,7 +609,7 @@ msgstr "Este mercado fue creado recientemente, por favor espere unos segundos ha
 
 #: src/components/Answer/AnswerForm.tsx:125
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
-msgstr "Para subir un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
+msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
 
 #: src/components/ProfileView/Bets.tsx:28
 msgid "Token ID"

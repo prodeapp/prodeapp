@@ -6,6 +6,7 @@ export interface Market {
   name: string
   category: string
   price: BigNumberish
+  numOfBets: string
   creationTime: string
   closingTime: string
   resultSubmissionPeriodStart: string
@@ -29,6 +30,7 @@ export const MARKET_FIELDS = `
       name
       category
       price
+      numOfBets
       creationTime
       closingTime
       resultSubmissionPeriodStart

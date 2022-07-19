@@ -22,6 +22,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.creationTime = evt.block.timestamp;
     market.submissionTimeout = marketContract.submissionTimeout();
     market.price = marketContract.price();
+    market.numOfBets = BigInt.fromI32(0);
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
     let creator = managerContract.creator();
@@ -56,6 +57,7 @@ export function handlePrizesRegistered(evt: Prizes): void {
 export function handlePlaceBet(evt: PlaceBet): void {
     let market = Market.load(evt.address.toHexString())!
     market.pool = market.pool.plus(market.price)
+    market.numOfBets = market.numOfBets.plus(BigInt.fromI32(1));
     market.save()
 
     let player = getOrCreatePlayer(evt.params._player)
