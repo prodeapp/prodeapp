@@ -117,6 +117,9 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
         <BoxRow>
           <BoxLabelCell><Trans>Events</Trans></BoxLabelCell>
         </BoxRow>
+        <BoxRow>
+          <Alert severity="info" sx={{width: '100%'}}><Trans>A market must have at least three events.</Trans></Alert>
+        </BoxRow>
         {eventsFields.length > 0 &&
         <BoxRow style={{flexDirection: 'column'}}>
           {eventsFields.map((questionField, i) => {
@@ -136,7 +139,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
         </BoxRow>
       </BoxWrapper>
 
-      {isValid && eventsFields.length > 0 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
+      {isValid && eventsFields.length >= 3 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
         <Button type="submit"><Trans>Next step</Trans></Button>
       </div>}
     </form>

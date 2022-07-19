@@ -18,16 +18,21 @@ interface Props {
   curated?: boolean
   status?: MarketStatus
   category?: string
+  minEvents?: number
 }
 
-export const useMarkets = ({curated, status, category}: Props = {}) => {
+export const useMarkets = ({curated, status, category, minEvents}: Props = {}) => {
   return useQuery<Market[], Error>(
-    ["useMarkets", curated, status, category],
+    ["useMarkets", curated, status, category, minEvents],
     async () => {
       const variables: QueryVariables = {curated};
 
-      if (category !== '') {
+      if (category) {
         variables['category'] = category;
+      }
+
+      if (minEvents) {
+        variables['numOfEvents_gte'] = String(minEvents);
       }
 
       if (status !== undefined) {

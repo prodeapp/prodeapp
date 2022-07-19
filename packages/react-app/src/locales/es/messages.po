@@ -13,12 +13,16 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/pages/MarketsCreate.tsx:121
+msgid "A market must have at least three events."
+msgstr "Un mercado debe tener al menos tres eventos."
+
 #: src/components/MarketView/MarketStatus.tsx:14
 msgid "Accepting bets"
 msgstr "Aceptando Apuestas"
 
-#: src/pages/Home.tsx:39
-#: src/pages/Home.tsx:96
+#: src/pages/Home.tsx:42
+#: src/pages/Home.tsx:99
 msgid "Active"
 msgstr "Activo"
 
@@ -34,7 +38,7 @@ msgstr "Agrega por lo menos un premio"
 msgid "Add at least two answers"
 msgstr "Agrega por lo menos dos respuestas"
 
-#: src/pages/MarketsCreate.tsx:135
+#: src/pages/MarketsCreate.tsx:138
 msgid "Add event"
 msgstr "Agregar evento"
 
@@ -46,11 +50,11 @@ msgstr "Agregar grupo"
 msgid "Add prize weight"
 msgstr "Agregar un premio"
 
-#: src/pages/MarketsCreate.tsx:179
+#: src/pages/MarketsCreate.tsx:182
 msgid "Address to send management fees to."
 msgstr "Billetera donde se enviarán los fees del creador"
 
-#: src/pages/Home.tsx:50
+#: src/pages/Home.tsx:53
 msgid "All"
 msgstr "Todos"
 
@@ -78,11 +82,11 @@ msgstr "Respuestas"
 msgid "Basketball"
 msgstr "Básquetbol"
 
-#: src/pages/MarketsCreate.tsx:244
+#: src/pages/MarketsCreate.tsx:247
 msgid "Bet Price"
 msgstr "Precio de apuesta"
 
-#: src/pages/MarketsCreate.tsx:161
+#: src/pages/MarketsCreate.tsx:164
 msgid "Bet Price (xDAI)"
 msgstr "Precio de apuesta (xDAI)"
 
@@ -98,7 +102,7 @@ msgstr "Apuesta no encontrada"
 msgid "Bet placed!"
 msgstr "¡Apuesta realizada!"
 
-#: src/pages/Home.tsx:119
+#: src/pages/Home.tsx:122
 msgid "Bet price"
 msgstr "Precio de Apuesta"
 
@@ -112,7 +116,7 @@ msgid "Bets will not be accepted passed this time. It should be before the begin
 msgstr "No se aceptarán apuestas pasado este tiempo. Debe ser antes del comienzo del primer evento."
 
 #: src/pages/MarketsCreate.tsx:94
-#: src/pages/MarketsCreate.tsx:242
+#: src/pages/MarketsCreate.tsx:245
 msgid "Betting Deadline (UTC)"
 msgstr "Fecha límite de apuesta (UTC)"
 
@@ -121,11 +125,11 @@ msgid "Building ranking"
 msgstr "Construyendo Ranking"
 
 #: src/pages/MarketsCreate.tsx:79
-#: src/pages/MarketsCreate.tsx:237
+#: src/pages/MarketsCreate.tsx:240
 msgid "Category"
 msgstr "Categoría"
 
-#: src/pages/Home.tsx:44
+#: src/pages/Home.tsx:47
 msgid "Category:"
 msgstr "Categoría"
 
@@ -145,12 +149,12 @@ msgstr "Elegir el formato de pregunta"
 msgid "Choose template"
 msgstr "Elija una plantilla"
 
-#: src/pages/Home.tsx:41
-#: src/pages/Home.tsx:93
+#: src/pages/Home.tsx:44
+#: src/pages/Home.tsx:96
 msgid "Closed"
 msgstr "Cerrado"
 
-#: src/pages/MarketsCreate.tsx:267
+#: src/pages/MarketsCreate.tsx:270
 msgid "Congratulations!"
 msgstr "Felicitacions!"
 
@@ -170,7 +174,7 @@ msgstr "Conecte su billetera"
 msgid "Connect your wallet to answer"
 msgstr "Connecte su billetera para contestar"
 
-#: src/pages/MarketsCreate.tsx:342
+#: src/pages/MarketsCreate.tsx:345
 msgid "Connect your wallet to create a market."
 msgstr "Conecte su billetera para crear un mercado"
 
@@ -195,7 +199,7 @@ msgid "Copy referral link"
 msgstr "Copiar link de referidos"
 
 #: src/components/AppMenuBar.tsx:105
-#: src/pages/MarketsCreate.tsx:253
+#: src/pages/MarketsCreate.tsx:256
 msgid "Create Market"
 msgstr "Crear Mercado"
 
@@ -216,7 +220,7 @@ msgstr "Arrastre cada pregunto a la posición correcta"
 msgid "Earn"
 msgstr "Ganancia"
 
-#: src/pages/MarketsCreate.tsx:217
+#: src/pages/MarketsCreate.tsx:220
 msgid "Edit"
 msgstr "Editar"
 
@@ -239,15 +243,15 @@ msgid "Event result is pending arbitration."
 msgstr "Resultado del evento está en disputa."
 
 #: src/pages/MarketsCreate.tsx:118
-#: src/pages/MarketsCreate.tsx:239
+#: src/pages/MarketsCreate.tsx:242
 msgid "Events"
 msgstr "Eventos"
 
-#: src/pages/MarketsCreate.tsx:190
+#: src/pages/MarketsCreate.tsx:193
 msgid "Fee must be greater than 0."
 msgstr "Fee debe ser mayor que 0."
 
-#: src/pages/MarketsCreate.tsx:191
+#: src/pages/MarketsCreate.tsx:194
 msgid "Fee must be lower than 100."
 msgstr "Fee debe ser menor que 100."
 
@@ -276,12 +280,12 @@ msgstr "La cantidad a financiar debe ser mayor a 0.01"
 msgid "Go to market"
 msgstr "Ir al mercado"
 
-#: src/pages/MarketsCreate.tsx:205
-#: src/pages/MarketsCreate.tsx:254
+#: src/pages/MarketsCreate.tsx:208
+#: src/pages/MarketsCreate.tsx:257
 msgid "Go to step"
 msgstr "Ir al paso"
 
-#: src/pages/MarketsCreate.tsx:285
+#: src/pages/MarketsCreate.tsx:288
 msgid "Go to the market"
 msgstr "Ir al mercado"
 
@@ -289,7 +293,7 @@ msgstr "Ir al mercado"
 msgid "Groups"
 msgstr "Grupos"
 
-#: src/pages/MarketsCreate.tsx:260
+#: src/pages/MarketsCreate.tsx:263
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "He creado un nuevo mercado en @prode_eth: {marketName} {0}"
 
@@ -302,7 +306,7 @@ msgid "Invalid market hash"
 msgstr "Market hash inválido"
 
 #: src/pages/CurateSubmit.tsx:81
-#: src/pages/MarketsCreate.tsx:166
+#: src/pages/MarketsCreate.tsx:169
 #: src/pages/MarketsFund.tsx:62
 msgid "Invalid number."
 msgstr "Número inválido."
@@ -336,28 +340,28 @@ msgstr "Cargando..."
 msgid "Logout"
 msgstr "Desconectar"
 
-#: src/pages/MarketsCreate.tsx:248
+#: src/pages/MarketsCreate.tsx:251
 #: src/pages/MarketsView.tsx:86
 msgid "Management Fee"
 msgstr "Fee para Creador"
 
-#: src/pages/MarketsCreate.tsx:184
+#: src/pages/MarketsCreate.tsx:187
 msgid "Management Fee (%)"
 msgstr "Fee del creador (%)"
 
-#: src/pages/MarketsCreate.tsx:173
-#: src/pages/MarketsCreate.tsx:246
+#: src/pages/MarketsCreate.tsx:176
+#: src/pages/MarketsCreate.tsx:249
 #: src/pages/MarketsView.tsx:90
 msgid "Manager"
 msgstr "Creador"
 
 #: src/components/ProfileView/Referrals.tsx:29
-#: src/pages/MarketsCreate.tsx:348
+#: src/pages/MarketsCreate.tsx:351
 msgid "Market"
 msgstr "Mercado"
 
 #: src/pages/MarketsCreate.tsx:70
-#: src/pages/MarketsCreate.tsx:235
+#: src/pages/MarketsCreate.tsx:238
 msgid "Market Name"
 msgstr "Nombre del Mercado"
 
@@ -397,8 +401,8 @@ msgstr "Mensaje"
 msgid "Miscellaneous"
 msgstr "Misceláneas"
 
-#: src/pages/MarketsCreate.tsx:140
-#: src/pages/MarketsCreate.tsx:204
+#: src/pages/MarketsCreate.tsx:143
+#: src/pages/MarketsCreate.tsx:207
 msgid "Next step"
 msgstr "Siguiente paso"
 
@@ -407,7 +411,7 @@ msgstr "Siguiente paso"
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
 
-#: src/pages/Home.tsx:86
+#: src/pages/Home.tsx:89
 msgid "No markets found."
 msgstr "No se encontraron mercados"
 
@@ -419,7 +423,7 @@ msgstr "Sin respuesta todavía"
 msgid "Number of questions"
 msgstr "Número de preguntas"
 
-#: src/pages/Home.tsx:62
+#: src/pages/Home.tsx:65
 msgid "Only verified markets"
 msgstr "Solo mercados verificados"
 
@@ -432,14 +436,14 @@ msgstr "Disponible para responder en {openingTimeLeft}"
 msgid "Outcome"
 msgstr "Resultado"
 
-#: src/pages/Home.tsx:129
+#: src/pages/Home.tsx:132
 msgid "Participants"
 msgstr "Participantes"
 
 #: src/components/MarketView/Results.tsx:35
 #: src/components/MarketView/Results.tsx:46
-#: src/pages/Home.tsx:40
-#: src/pages/Home.tsx:98
+#: src/pages/Home.tsx:43
+#: src/pages/Home.tsx:101
 msgid "Pending"
 msgstr "Pendiente"
 
@@ -449,7 +453,7 @@ msgstr "Pendiente de arbitraje"
 
 #: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:33
-#: src/pages/Home.tsx:113
+#: src/pages/Home.tsx:116
 msgid "Place Bet"
 msgstr "Apostar"
 
@@ -470,15 +474,15 @@ msgstr "Puntos ganados"
 msgid "Pool"
 msgstr "Pozo"
 
-#: src/pages/Home.tsx:124
+#: src/pages/Home.tsx:127
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
-#: src/pages/MarketsCreate.tsx:349
+#: src/pages/MarketsCreate.tsx:352
 msgid "Price"
 msgstr "Precios"
 
-#: src/pages/MarketsCreate.tsx:167
+#: src/pages/MarketsCreate.tsx:170
 msgid "Price must be greater than 0.01"
 msgstr "Precio debe ser mayor a 0.01"
 
@@ -486,11 +490,11 @@ msgstr "Precio debe ser mayor a 0.01"
 msgid "Prize Distribution"
 msgstr "Distribución de premios"
 
-#: src/pages/MarketsCreate.tsx:198
+#: src/pages/MarketsCreate.tsx:201
 msgid "Prize Distribution (%)"
 msgstr "Distribución de premios (%)"
 
-#: src/pages/MarketsCreate.tsx:250
+#: src/pages/MarketsCreate.tsx:253
 msgid "Prizes"
 msgstr "Premios"
 
@@ -498,7 +502,7 @@ msgstr "Premios"
 msgid "Profile"
 msgstr "Perfil"
 
-#: src/pages/MarketsCreate.tsx:350
+#: src/pages/MarketsCreate.tsx:353
 msgid "Publish"
 msgstr "Publicar"
 
@@ -538,7 +542,7 @@ msgstr "Resultado"
 msgid "Results"
 msgstr "Resultados"
 
-#: src/pages/MarketsCreate.tsx:233
+#: src/pages/MarketsCreate.tsx:236
 msgid "Review the market data"
 msgstr "Revisar la información del mercado"
 
@@ -592,15 +596,15 @@ msgstr "Enviar resultado"
 msgid "Tennis"
 msgstr "Tenis"
 
-#: src/pages/MarketsCreate.tsx:193
+#: src/pages/MarketsCreate.tsx:196
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
 msgstr "El creador recibirá este porcentaje del pozo de premios. Además, será recompensado cuando apuestas sean comercializadas en mercados secundarios."
 
-#: src/pages/MarketsCreate.tsx:268
+#: src/pages/MarketsCreate.tsx:271
 msgid "The market was successfully created and is ready to take bets."
 msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
 
-#: src/pages/MarketsCreate.tsx:151
+#: src/pages/MarketsCreate.tsx:154
 msgid "The sum of prize weights must be 100."
 msgstr "La suma de los premios debe ser igual a 100."
 
@@ -624,9 +628,9 @@ msgstr "Este campo es requerido"
 #: src/pages/CurateValidator.tsx:132
 #: src/pages/MarketsCreate.tsx:73
 #: src/pages/MarketsCreate.tsx:85
-#: src/pages/MarketsCreate.tsx:164
-#: src/pages/MarketsCreate.tsx:176
-#: src/pages/MarketsCreate.tsx:187
+#: src/pages/MarketsCreate.tsx:167
+#: src/pages/MarketsCreate.tsx:179
+#: src/pages/MarketsCreate.tsx:190
 #: src/pages/MarketsFund.tsx:60
 msgid "This field is required."
 msgstr "Este campo es requerido."
@@ -693,7 +697,7 @@ msgstr "Validar"
 msgid "Value must be greater than 0."
 msgstr "El valor debe ser mayor que 0."
 
-#: src/pages/Home.tsx:134
+#: src/pages/Home.tsx:137
 #: src/pages/MarketsView.tsx:55
 msgid "Verified"
 msgstr "Verificado"
@@ -702,11 +706,11 @@ msgstr "Verificado"
 msgid "Verify Market"
 msgstr "Verificar Mercado"
 
-#: src/pages/MarketsCreate.tsx:280
+#: src/pages/MarketsCreate.tsx:283
 msgid "Verify market"
 msgstr "Verificar mercado"
 
-#: src/pages/MarketsCreate.tsx:278
+#: src/pages/MarketsCreate.tsx:281
 msgid "Verify your market"
 msgstr "Verifique su mercado"
 

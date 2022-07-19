@@ -24,7 +24,8 @@ function Home() {
   const { isLoading, error, data: markets } = useMarkets({
     curated: verifiedStatus ? verifiedStatus : undefined,
     status,
-    category: category === 'All'? '' : category
+    category: category === 'All'? '' : category,
+    minEvents: 3
   });
 
   const changeStatus = (newStatus: MarketStatus) => {
