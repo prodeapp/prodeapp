@@ -4,10 +4,10 @@ import { BoxRow } from ".."
 import { formatAmount } from "../../lib/helpers"
 import BetDetails from "../BetDetails"
 import { Trans } from '@lingui/macro';
-import { useRanking } from "../../hooks/useRanking"
+import {useBets} from "../../hooks/useBets";
 
-export function Bets({playerId}: {playerId?: string}) {
-    const { data: bets, error, isLoading } = useRanking({ playerId });
+export function Bets({playerId}: {playerId: string}) {
+    const { data: bets, error, isLoading } = useBets(playerId);
     
     if (error) {
         return <Alert severity="error">{error}</Alert>

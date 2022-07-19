@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
-import {shortenAddress} from "@usedapp/core";
+import {shortenAddress, useEthers} from "@usedapp/core";
 import {BoxWrapper, BoxRow} from "../../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -12,8 +12,9 @@ import {Link} from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { Skeleton } from "@mui/material";
 
-export default function Bets({marketId, playerId}: {marketId?: string, playerId?: string}) {
-  const { isLoading, error, data: ranking } = useRanking({marketId: marketId, playerId});
+export default function Bets({marketId}: {marketId: string}) {
+  const {account} = useEthers();
+  const { isLoading, error, data: ranking } = useRanking(marketId, account);
   const [openModal, setOpenModal] = useState(false);
   const [bet, setBet] = useState<Bet | undefined>();
 
@@ -53,7 +54,7 @@ export default function Bets({marketId, playerId}: {marketId?: string, playerId?
       {ranking && ranking.length > 0 && ranking.map((rank, i) => {
         return <BoxRow key={i}>
           <div style={{width: '10%'}}>{i+1}</div>
-          <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{shortenAddress(rank.player.id)}</Link></div>
+          <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>{rank.points.toString()}</Box>
           <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}><Trans>Details</Trans></Button></div>
         </BoxRow>

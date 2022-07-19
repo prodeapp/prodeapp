@@ -12,23 +12,25 @@ const query = `
     }
 `;
 
-interface Props {
-  marketId?: string
-  playerId?: string
-}
-
-export const useRanking = ({marketId, playerId}: Props) => {
+export const useRanking = (marketId: string, account?: string) => {
   return useQuery<Bet[], Error>(
-    ["useRanking", marketId, playerId],
+    ["useRanking", marketId, account],
     async () => {
-      const variables = {market: marketId?.toLowerCase(), player: playerId?.toLowerCase()};
+      const variables = {market: marketId.toLowerCase()};
 
       const response = await apolloProdeQuery<{ bets: Bet[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");
 
-      return response.data.bets;
+      if (!account) {
+        return response.data.bets;
+      }
+
+      return [
+        ...response.data.bets.filter(bet => bet.player.id.toLowerCase() === account.toLowerCase()),
+        ...response.data.bets.filter(bet => bet.player.id.toLowerCase() !== account.toLowerCase())
+      ];
     },
-    {enabled: !!marketId || !!playerId}
+    {enabled: !!marketId}
   );
 };
