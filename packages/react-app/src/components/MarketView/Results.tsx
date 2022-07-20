@@ -1,11 +1,8 @@
 import React, {useState} from "react";
 import {BoxWrapper, BoxRow} from "../../components"
-import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
+import {getAnswerText, getTimeLeft, isFinalized, parseTitle} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
@@ -22,6 +19,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
   const answerText = getAnswerText(event.answer, event.outcomes || []);
 
   const style = {display: 'flex', alignItems: 'center'};
+
   if (finalized) {
     return <div style={style}><CircleItem color="green"/> {answerText}</div>
   }
@@ -29,10 +27,9 @@ function AnswerColumn(event: Event, finalized: boolean) {
   const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
 
   if (openingTimeLeft !== false) {
-    return <div style={style}>
-      <Tooltip title={t`Open to answers in ${openingTimeLeft}`}><IconButton><AccessTimeIcon/></IconButton></Tooltip>
-      <CircleItem color="red"/>
-      <Trans>Pending</Trans>
+    return <div>
+      <div style={style}><CircleItem color="red"/> <Trans>Pending</Trans></div>
+      <div style={{fontSize: '13px', marginTop: '5px'}}>{t`Open to answers in ${openingTimeLeft}`}</div>
     </div>
   }
 
@@ -46,10 +43,9 @@ function AnswerColumn(event: Event, finalized: boolean) {
     return <div style={style}><CircleItem color="yellow"/><Trans>Pending</Trans></div>;
   }
 
-  return <div style={style}>
-    <Tooltip title={t`Answer closes in ${answerCountdown}`}><IconButton><AccessTimeIcon/></IconButton></Tooltip>
-    <CircleItem color="yellow"/>
-    {answerText}
+  return <div>
+    <div style={style}><CircleItem color="yellow"/> {answerText}</div>
+    <div style={{fontSize: '13px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
   </div>
 }
 
@@ -85,7 +81,7 @@ export default function Results({marketId}: {marketId: string}) {
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
           <div style={{display: 'flex', marginTop: 20, width: '100%', fontWeight: 'normal'}}>
-            <div style={{width: '40%'}}>{event.title}</div>
+            <div style={{width: '40%'}}>{parseTitle(event.title)}</div>
             <div style={{width: '30%'}}>
               {AnswerColumn(event, finalized)}
             </div>

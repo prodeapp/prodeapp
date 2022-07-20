@@ -6,7 +6,7 @@ import {useMemo} from "react";
 const query = `
     ${EVENT_FIELDS}
     query EventsQuery ($marketId: String!){
-      events(where:{market: $marketId}, orderBy: nonce, orderDirection: asc) {
+      events(where:{market: $marketId}, orderBy: openingTs, orderDirection: asc) {
         ...EventFields
       }
     }
