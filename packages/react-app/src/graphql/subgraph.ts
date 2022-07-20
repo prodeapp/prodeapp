@@ -13,7 +13,8 @@ export interface Market {
   submissionTimeout: string
   managementFee: string
   manager: {
-    id: string
+    id: string,
+    managementRewards: BigNumberish
   }
   pool: BigNumberish
   prizes: string[]
@@ -36,7 +37,7 @@ export const MARKET_FIELDS = `
       resultSubmissionPeriodStart
       submissionTimeout
       managementFee
-      manager{id}
+      manager{id, managementRewards}
       pool
       prizes
       curated
