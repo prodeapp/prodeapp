@@ -4,11 +4,11 @@ import { Trans } from "@lingui/macro";
 import { Grid, Skeleton } from "@mui/material";
 import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";
-import { useMarketsFromCreator } from "../../hooks/useMarketsFromCreator";
+import { useMarkets } from "../../hooks/useMarkets";
 import { shortenAddress } from "@usedapp/core";
 
 export function Markets({ creatorId }: { creatorId: string }) {
-    const { data: markets, error, isLoading } = useMarketsFromCreator(creatorId);
+    const { data: markets, error, isLoading } = useMarkets({creatorId: creatorId});
 
     if (error) {
         return <Alert severity="error">{error}</Alert>
@@ -22,7 +22,6 @@ export function Markets({ creatorId }: { creatorId: string }) {
         return <Alert severity="info"><Trans>Create a market and earn fees on each bet.</Trans></Alert>
     }
 
-    console.log(markets)
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
             <Grid item sm={12} md={12}>
