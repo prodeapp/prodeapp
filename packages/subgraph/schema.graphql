@@ -24,6 +24,7 @@ type Market @entity {
   managementFee: BigInt!
   protocolFee: BigInt!
   manager: Manager!
+  creator: String!
   numOfEvents: BigInt!
   numOfEventsWithAnswer: BigInt!
   hasPendingAnswers: Boolean!
@@ -109,7 +110,7 @@ type Player @entity {
 
 type Manager @entity {
   id: ID!
-  markets: [Market!]
+  markets: [Market!]!
   managementRewards: BigInt!
 }
 

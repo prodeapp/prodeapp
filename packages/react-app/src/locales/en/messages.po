@@ -22,7 +22,7 @@ msgid "Accepting bets"
 msgstr "Accepting bets"
 
 #: src/pages/Home.tsx:42
-#: src/pages/Home.tsx:99
+#: src/pages/Home.tsx:106
 msgid "Active"
 msgstr "Active"
 
@@ -58,15 +58,15 @@ msgstr "Address to send management fees to."
 msgid "All"
 msgstr "All"
 
-#: src/components/MarketView/Results.tsx:79
+#: src/components/MarketView/Results.tsx:75
 msgid "Answer"
 msgstr "Answer"
 
-#: src/components/MarketView/Results.tsx:50
+#: src/components/MarketView/Results.tsx:48
 msgid "Answer closes in {answerCountdown}"
 msgstr "Answer closes in {answerCountdown}"
 
-#: src/components/MarketView/Results.tsx:96
+#: src/components/MarketView/Results.tsx:92
 msgid "Answer result"
 msgstr "Answer result"
 
@@ -78,7 +78,7 @@ msgstr "Answer sent"
 msgid "Answers"
 msgstr "Answers"
 
-#: src/lib/helpers.ts:79
+#: src/lib/helpers.ts:91
 msgid "Basketball"
 msgstr "Basketball"
 
@@ -102,12 +102,12 @@ msgstr "Bet not found"
 msgid "Bet placed!"
 msgstr "Bet placed!"
 
-#: src/pages/Home.tsx:122
+#: src/pages/Home.tsx:129
 msgid "Bet price"
 msgstr "Bet price"
 
-#: src/pages/MarketsView.tsx:99
-#: src/pages/Profile.tsx:54
+#: src/pages/MarketsView.tsx:100
+#: src/pages/Profile.tsx:55
 msgid "Bets"
 msgstr "Bets"
 
@@ -150,7 +150,7 @@ msgid "Choose template"
 msgstr "Choose template"
 
 #: src/pages/Home.tsx:44
-#: src/pages/Home.tsx:96
+#: src/pages/Home.tsx:103
 msgid "Closed"
 msgstr "Closed"
 
@@ -190,7 +190,7 @@ msgstr "Connect your wallet to place a bet."
 msgid "Connect your wallet to verify a market."
 msgstr "Connect your wallet to verify a market."
 
-#: src/pages/Profile.tsx:28
+#: src/pages/Profile.tsx:29
 msgid "Connect your wallet to view your profile."
 msgstr "Connect your wallet to view your profile."
 
@@ -202,6 +202,10 @@ msgstr "Copy referral link"
 #: src/pages/MarketsCreate.tsx:256
 msgid "Create Market"
 msgstr "Create Market"
+
+#: src/components/ProfileView/Markets.tsx:22
+msgid "Create a market and earn fees on each bet."
+msgstr "Create a market and earn fees on each bet."
 
 #: src/pages/CurateSubmit.tsx:189
 msgid "Description"
@@ -230,7 +234,7 @@ msgstr "Error loading events"
 
 #: src/components/Bet/BetForm.tsx:150
 #: src/components/BetDetails.tsx:18
-#: src/components/MarketView/Results.tsx:78
+#: src/components/MarketView/Results.tsx:74
 msgid "Event"
 msgstr "Event"
 
@@ -259,7 +263,7 @@ msgstr "Fee must be lower than 100."
 msgid "Finished"
 msgstr "Finished"
 
-#: src/lib/helpers.ts:78
+#: src/lib/helpers.ts:90
 msgid "Football"
 msgstr "Football"
 
@@ -297,6 +301,10 @@ msgstr "Groups"
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "I have created a new market on @prode_eth: {marketName} {0}"
 
+#: src/components/MarketView/Stats.tsx:24
+msgid "Invalid"
+msgstr "Invalid"
+
 #: src/pages/CurateValidator.tsx:83
 msgid "Invalid JSON"
 msgstr "Invalid JSON"
@@ -317,7 +325,7 @@ msgstr "Invalid outcome"
 
 #: src/components/Answer/AnswerForm.tsx:118
 #: src/components/Bet/BetForm.tsx:167
-#: src/lib/helpers.ts:59
+#: src/lib/helpers.ts:60
 msgid "Invalid result"
 msgstr "Invalid result"
 
@@ -331,7 +339,7 @@ msgstr "Item id not found"
 
 #: src/components/Bet/BetForm.tsx:104
 #: src/pages/CurateSubmit.tsx:144
-#: src/pages/MarketsView.tsx:34
+#: src/pages/MarketsView.tsx:35
 #: src/pages/TokenView.tsx:18
 msgid "Loading..."
 msgstr "Loading..."
@@ -341,7 +349,7 @@ msgid "Logout"
 msgstr "Logout"
 
 #: src/pages/MarketsCreate.tsx:251
-#: src/pages/MarketsView.tsx:86
+#: src/pages/MarketsView.tsx:87
 msgid "Management Fee"
 msgstr "Management Fee"
 
@@ -349,12 +357,17 @@ msgstr "Management Fee"
 msgid "Management Fee (%)"
 msgstr "Management Fee (%)"
 
+#: src/components/ProfileView/Markets.tsx:32
+msgid "Management Rewards Earned"
+msgstr "Management Rewards Earned"
+
 #: src/pages/MarketsCreate.tsx:176
 #: src/pages/MarketsCreate.tsx:249
-#: src/pages/MarketsView.tsx:90
+#: src/pages/MarketsView.tsx:91
 msgid "Manager"
 msgstr "Manager"
 
+#: src/components/ProfileView/Markets.tsx:29
 #: src/components/ProfileView/Referrals.tsx:29
 #: src/pages/MarketsCreate.tsx:351
 msgid "Market"
@@ -381,7 +394,7 @@ msgstr "Market hash not found"
 msgid "Market name"
 msgstr "Market name"
 
-#: src/pages/MarketsView.tsx:40
+#: src/pages/MarketsView.tsx:41
 msgid "Market not found"
 msgstr "Market not found"
 
@@ -393,11 +406,15 @@ msgstr "Market not found."
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
 
+#: src/pages/Profile.tsx:57
+msgid "Markets"
+msgstr "Markets"
+
 #: src/pages/MarketsFund.tsx:69
 msgid "Message"
 msgstr "Message"
 
-#: src/lib/helpers.ts:82
+#: src/lib/helpers.ts:96
 msgid "Miscellaneous"
 msgstr "Miscellaneous"
 
@@ -407,15 +424,16 @@ msgid "Next step"
 msgstr "Next step"
 
 #: src/components/MarketView/Bets.tsx:53
+#: src/components/MarketView/Stats.tsx:83
 #: src/components/ProfileView/Bets.tsx:23
 msgid "No bets found."
 msgstr "No bets found."
 
-#: src/pages/Home.tsx:89
+#: src/pages/Home.tsx:96
 msgid "No markets found."
 msgstr "No markets found."
 
-#: src/lib/helpers.ts:53
+#: src/lib/helpers.ts:54
 msgid "Not answered yet"
 msgstr "Not answered yet"
 
@@ -423,12 +441,12 @@ msgstr "Not answered yet"
 msgid "Number of questions"
 msgstr "Number of questions"
 
-#: src/pages/Home.tsx:65
+#: src/pages/Home.tsx:72
 msgid "Only verified markets"
 msgstr "Only verified markets"
 
 #: src/components/Answer/AnswerForm.tsx:77
-#: src/components/MarketView/Results.tsx:33
+#: src/components/MarketView/Results.tsx:32
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Open to answers in {openingTimeLeft}"
 
@@ -436,24 +454,24 @@ msgstr "Open to answers in {openingTimeLeft}"
 msgid "Outcome"
 msgstr "Outcome"
 
-#: src/pages/Home.tsx:132
+#: src/pages/Home.tsx:139
 msgid "Participants"
 msgstr "Participants"
 
-#: src/components/MarketView/Results.tsx:35
-#: src/components/MarketView/Results.tsx:46
+#: src/components/MarketView/Results.tsx:31
+#: src/components/MarketView/Results.tsx:43
 #: src/pages/Home.tsx:43
-#: src/pages/Home.tsx:101
+#: src/pages/Home.tsx:108
 msgid "Pending"
 msgstr "Pending"
 
-#: src/components/MarketView/Results.tsx:40
+#: src/components/MarketView/Results.tsx:37
 msgid "Pending arbitration"
 msgstr "Pending arbitration"
 
 #: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:33
-#: src/pages/Home.tsx:116
+#: src/pages/Home.tsx:123
 msgid "Place Bet"
 msgstr "Place Bet"
 
@@ -470,11 +488,12 @@ msgstr "Points"
 msgid "Points Earned"
 msgstr "Points Earned"
 
-#: src/pages/MarketsView.tsx:70
+#: src/components/ProfileView/Markets.tsx:30
+#: src/pages/MarketsView.tsx:71
 msgid "Pool"
 msgstr "Pool"
 
-#: src/pages/Home.tsx:127
+#: src/pages/Home.tsx:134
 msgid "Pool prize"
 msgstr "Pool prize"
 
@@ -486,7 +505,7 @@ msgstr "Price"
 msgid "Price must be greater than 0.01"
 msgstr "Price must be greater than 0.01"
 
-#: src/pages/MarketsView.tsx:74
+#: src/pages/MarketsView.tsx:75
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
 
@@ -514,11 +533,11 @@ msgstr "Question"
 msgid "Referral link copied!"
 msgstr "Referral link copied!"
 
-#: src/pages/Profile.tsx:55
+#: src/pages/Profile.tsx:56
 msgid "Referrals"
 msgstr "Referrals"
 
-#: src/pages/Profile.tsx:48
+#: src/pages/Profile.tsx:49
 msgid "Referrals Earnings: {0}"
 msgstr "Referrals Earnings: {0}"
 
@@ -538,7 +557,7 @@ msgstr "Remove group"
 msgid "Result"
 msgstr "Result"
 
-#: src/pages/MarketsView.tsx:100
+#: src/pages/MarketsView.tsx:101
 msgid "Results"
 msgstr "Results"
 
@@ -550,6 +569,10 @@ msgstr "Review the market data"
 #: src/components/ProfileView/Bets.tsx:36
 msgid "Reward"
 msgstr "Reward"
+
+#: src/components/ProfileView/Markets.tsx:31
+msgid "Rewards receiver"
+msgstr "Rewards receiver"
 
 #: src/components/AppMenuBar.tsx:180
 msgid "Scan with WalletConnect to connect"
@@ -563,7 +586,7 @@ msgstr "Select date"
 msgid "Set question"
 msgstr "Set question"
 
-#: src/lib/helpers.ts:77
+#: src/lib/helpers.ts:88
 msgid "Sports"
 msgstr "Sports"
 
@@ -579,7 +602,11 @@ msgstr "Starting timestamp"
 msgid "Starting timestamp is earlier than the betting deadline"
 msgstr "Starting timestamp is earlier than the betting deadline"
 
-#: src/pages/MarketsView.tsx:51
+#: src/pages/MarketsView.tsx:102
+msgid "Statistics"
+msgstr "Statistics"
+
+#: src/pages/MarketsView.tsx:52
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
 
@@ -592,7 +619,7 @@ msgstr "Submit"
 msgid "Submit answer"
 msgstr "Submit answer"
 
-#: src/lib/helpers.ts:80
+#: src/lib/helpers.ts:92
 msgid "Tennis"
 msgstr "Tennis"
 
@@ -643,7 +670,7 @@ msgstr "This is the first submission for this market"
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
-#: src/pages/MarketsView.tsx:39
+#: src/pages/MarketsView.tsx:40
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
 
@@ -655,11 +682,11 @@ msgstr "To submit the answer you need to deposit a bond of {0} that will be retu
 #~ msgid "Token ID"
 #~ msgstr "Token ID"
 
-#: src/pages/Profile.tsx:38
+#: src/pages/Profile.tsx:39
 msgid "Total Bet: {0}"
 msgstr "Total Bet: {0}"
 
-#: src/pages/Profile.tsx:43
+#: src/pages/Profile.tsx:44
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
@@ -697,12 +724,12 @@ msgstr "Validate"
 msgid "Value must be greater than 0."
 msgstr "Value must be greater than 0."
 
-#: src/pages/Home.tsx:137
-#: src/pages/MarketsView.tsx:55
+#: src/pages/Home.tsx:144
+#: src/pages/MarketsView.tsx:56
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/MarketsView.tsx:54
+#: src/pages/MarketsView.tsx:55
 msgid "Verify Market"
 msgstr "Verify Market"
 
@@ -746,6 +773,6 @@ msgstr "Your answer"
 msgid "Your betting position is represented by the following NFT."
 msgstr "Your betting position is represented by the following NFT."
 
-#: src/lib/helpers.ts:81
+#: src/lib/helpers.ts:93
 msgid "eSports"
 msgstr "eSports"

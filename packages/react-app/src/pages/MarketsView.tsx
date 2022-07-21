@@ -15,11 +15,12 @@ import MarketStatus from "../components/MarketView/MarketStatus";
 import { Trans } from "@lingui/macro";
 import BetForm from "../components/Bet/BetForm";
 import ReferralLink from "../components/MarketView/ReferralLink";
+import { Stats } from "../components/MarketView/Stats";
 
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
-  const [section, setSection] = useState<'bet'|'bets'|'results'>('bets');
+  const [section, setSection] = useState<'bet'|'bets'|'results'|'stats'>('bets');
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -98,6 +99,7 @@ function MarketsView() {
             <BoxRow style={{justifyContent: 'center'}}>
               <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
               <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}><Trans>Results</Trans></Button></div>
+              <div><Button onClick={() => setSection('stats')} color={section === 'stats' ? 'secondary' : 'primary'}><Trans>Statistics</Trans></Button></div>
             </BoxRow>
           </BoxWrapper>
 
@@ -106,6 +108,8 @@ function MarketsView() {
           {section === 'bets' && <Bets marketId={market.id} />}
 
           {section === 'bet' && <BetForm marketId={market.id} price={market.price} />}
+
+          {section === 'stats' && <Stats marketId={market.id} />}
         </Grid>
       </Grid>
     </>

@@ -20,11 +20,12 @@ interface Props {
   status?: MarketStatus
   category?: string
   minEvents?: number
+  creatorId?: string
 }
 
-export const useMarkets = ({curated, status, category, minEvents}: Props = {}) => {
+export const useMarkets = ({curated, status, category, minEvents, creatorId}: Props = {}) => {
   return useQuery<Market[], Error>(
-    ["useMarkets", curated, status, category, minEvents],
+    ["useMarkets", curated, status, category, minEvents, creatorId],
     async () => {
       const variables: QueryVariables = {curated};
 
@@ -45,6 +46,10 @@ export const useMarkets = ({curated, status, category, minEvents}: Props = {}) =
         } else if (status === 'closed') {
           variables['hasPendingAnswers'] = false
         }
+      }
+
+      if (creatorId) {
+        variables['creator'] = creatorId.toLowerCase();
       }
 
       const response = await apolloProdeQuery<{ markets: Market[] }>(buildQuery(query, variables), variables);

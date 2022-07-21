@@ -9,13 +9,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Trans } from '@lingui/macro';
 import { Bets } from '../components/ProfileView/Bets';
-import Referrals from '../components/ProfileView/Referrals';
+import { Referrals } from '../components/ProfileView/Referrals';
+import { Markets } from '../components/ProfileView/Markets';
 
 export default function Profile() {
   const { id } = useParams();
   const { account, error: walletError } = useEthers();
   const [playerId, setPlayerId] = useState('');
-  const [section, setSection] = useState<'bets' | 'referrals'>('bets');
+  const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets');
   const { data: player } = usePlayer(String(playerId));
 
 
@@ -53,12 +54,15 @@ export default function Profile() {
         <BoxRow style={{ justifyContent: 'center' }}>
           <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
           <div><Button onClick={() => setSection('referrals')} color={section === 'referrals' ? 'secondary' : 'primary'}><Trans>Referrals</Trans></Button></div>
+          <div><Button onClick={() => setSection('markets')} color={section === 'markets' ? 'secondary' : 'primary'}><Trans>Markets</Trans></Button></div>
         </BoxRow>
       </BoxWrapper>
 
       {section === 'bets' && <Bets playerId={playerId} />}
 
       {section === 'referrals' && <Referrals provider={playerId} />}
+
+      {section === 'markets' && <Markets creatorId={playerId} />}
 
     </Container>
   )
