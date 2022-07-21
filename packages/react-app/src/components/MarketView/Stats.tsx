@@ -28,13 +28,10 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     bets.forEach((bet) => {bet.results.forEach((result, i)=> {
         if (parseInt(result)>256){
             const nResults = stats[i].length - 1;
-            console.log("Invalid result")
             stats[i][nResults].amountBets = stats[i][nResults].amountBets + 1    
         } else {
             stats[i][parseInt(result)].amountBets = stats[i][parseInt(result)].amountBets + 1
         }
-
-
     })})
 
     // Normalize data
@@ -65,7 +62,7 @@ export function Stats({ marketId }: { marketId: string }) {
     const [stats, setStats] = useState<Stat[][]>([]);
 
     useEffect(() => {
-        if (ranking){
+        if (ranking && ranking.length > 0){
             setStats(bets2Stats(ranking));
         }
     }, [ranking])
