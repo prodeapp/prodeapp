@@ -21,7 +21,6 @@ msgstr "A market must have at least three events."
 msgid "Accepting bets"
 msgstr "Accepting bets"
 
-#: src/pages/Home.tsx:42
 #: src/pages/Home.tsx:106
 msgid "Active"
 msgstr "Active"
@@ -114,6 +113,10 @@ msgstr "Bets"
 #: src/pages/MarketsCreate.tsx:113
 msgid "Bets will not be accepted passed this time. It should be before the beginning of the first event."
 msgstr "Bets will not be accepted passed this time. It should be before the beginning of the first event."
+
+#: src/pages/Home.tsx:42
+msgid "Betting"
+msgstr "Betting"
 
 #: src/pages/MarketsCreate.tsx:94
 #: src/pages/MarketsCreate.tsx:245
@@ -424,7 +427,7 @@ msgid "Next step"
 msgstr "Next step"
 
 #: src/components/MarketView/Bets.tsx:53
-#: src/components/MarketView/Stats.tsx:83
+#: src/components/MarketView/Stats.tsx:80
 #: src/components/ProfileView/Bets.tsx:23
 msgid "No bets found."
 msgstr "No bets found."
@@ -460,7 +463,6 @@ msgstr "Participants"
 
 #: src/components/MarketView/Results.tsx:31
 #: src/components/MarketView/Results.tsx:43
-#: src/pages/Home.tsx:43
 #: src/pages/Home.tsx:108
 msgid "Pending"
 msgstr "Pending"
@@ -478,6 +480,10 @@ msgstr "Place Bet"
 #: src/components/MarketView/Bets.tsx:49
 msgid "Player"
 msgstr "Player"
+
+#: src/pages/Home.tsx:43
+msgid "Playing"
+msgstr "Playing"
 
 #: src/components/MarketView/Bets.tsx:50
 #: src/components/ProfileView/Bets.tsx:35
@@ -677,10 +683,6 @@ msgstr "This market was just created, please wait a few seconds for it to be ind
 #: src/components/Answer/AnswerForm.tsx:125
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
-
-#: src/components/ProfileView/Bets.tsx:28
-#~ msgid "Token ID"
-#~ msgstr "Token ID"
 
 #: src/pages/Profile.tsx:39
 msgid "Total Bet: {0}"

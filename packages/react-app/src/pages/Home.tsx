@@ -39,8 +39,8 @@ function Home() {
         <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}>Status: </Typography></div>
-            <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}><Trans>Active</Trans></Button></div>
-            <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}><Trans>Pending</Trans></Button></div>
+            <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}><Trans>Betting</Trans></Button></div>
+            <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}><Trans>Playing</Trans></Button></div>
             <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}><Trans>Closed</Trans></Button></div>
           </Box>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
