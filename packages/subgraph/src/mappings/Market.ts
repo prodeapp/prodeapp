@@ -1,5 +1,5 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent } from '../types/templates/Market/Market';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
@@ -112,7 +112,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
     market.pool = market.pool.plus(evt.params._amount);
     market.save()
 
-    let funder = Funder.load(evt.params._funder.toString())
+    let funder = Funder.load(evt.params._funder.toHexString())
     if (funder == null) funder = new Funder(evt.params._funder.toString())
     funder.amount = funder.amount.plus(evt.params._amount)
     let msgs = funder.messages
@@ -126,7 +126,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
     markets.push(market.id)
     funder.markets = markets;
     funder.save()
-    log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toString()])
+    log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toHexString()])
 }
 
 
@@ -162,4 +162,17 @@ export function handleAttribution(evt: AttributionEvent): void {
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
     provider.save();
+}
+
+export function handleTransfer(evt: Transfer): void {
+    let betID = getBetID(evt.address, evt.params.tokenId)
+    let bet = Bet.load(betID)
+    if (bet === null) {
+        // most probably it's the minting
+        return;
+    }
+    let newOwner = getOrCreatePlayer(evt.params.to)
+    bet.player = newOwner.id
+    bet.save()
+    log.debug("handleTransfer: token ID {} transfered to {}", [betID, newOwner.id]);
 }
