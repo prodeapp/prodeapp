@@ -52,18 +52,17 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
     }
 
     // update answer counter in market
-    let market = Market.load(event.market);
-    if (market === null) {
-        log.error("handleNewAnswer: market {} not found.", [event.market]);
-        return
-    }
     if (!changeAnswer) {
+        let market = Market.load(event.market);
+        if (market === null) {
+            log.error("handleNewAnswer: market {} not found.", [event.market]);
+            return
+        }
         market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
+        log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
+        market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
+        market.save()
     }
-    log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
-    market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
-    market.save()
-
 }
 
 export function handleArbitrationRequest(evt: LogNotifyOfArbitrationRequest): void {
