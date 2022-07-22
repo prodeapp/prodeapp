@@ -47,12 +47,12 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 
 function statsRows(stats: Stat[][]) {
     return stats.map((event, i) => {
-            return <Box sx={{padding: '20px', borderBottom: '1px'}}>
-                <BoxRow key={i + '-0'}>
-                    {event.map((value) => { return <div>{value.outcome}</div> })}
+            return <Box key={i} sx={{padding: '20px', borderBottom: '1px'}}>
+                <BoxRow>
+                    {event.map((value, j) => <div key={j}>{value.outcome}</div>)}
                 </BoxRow>
-                <BoxRow key={i + '-1'}>
-                    {event.map((value) => { return <div>{value.percentage.toFixed(2) + ' %'}</div> })}
+                <BoxRow>
+                    {event.map((value, k) => <div key={k}>{value.percentage.toFixed(2) + ' %'}</div>)}
                 </BoxRow>
             </Box>
         })
