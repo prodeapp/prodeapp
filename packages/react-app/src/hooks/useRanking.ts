@@ -12,9 +12,9 @@ const query = `
     }
 `;
 
-export const useRanking = (marketId: string, account?: string) => {
+export const useRanking = (marketId: string) => {
   return useQuery<Bet[], Error>(
-    ["useRanking", marketId, account],
+    ["useRanking", marketId],
     async () => {
       const variables = {market: marketId.toLowerCase()};
 
@@ -22,14 +22,7 @@ export const useRanking = (marketId: string, account?: string) => {
 
       if (!response) throw new Error("No response from TheGraph");
 
-      if (!account) {
-        return response.data.bets;
-      }
-
-      return [
-        ...response.data.bets.filter(bet => bet.player.id.toLowerCase() === account.toLowerCase()),
-        ...response.data.bets.filter(bet => bet.player.id.toLowerCase() !== account.toLowerCase())
-      ];
+      return response.data.bets;
     },
     {enabled: !!marketId}
   );

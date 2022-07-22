@@ -14,7 +14,7 @@ import { Skeleton } from "@mui/material";
 
 export default function Bets({marketId}: {marketId: string}) {
   const {account} = useEthers();
-  const { isLoading, error, data: ranking } = useRanking(marketId, account);
+  const { isLoading, error, data: ranking } = useRanking(marketId);
   const [openModal, setOpenModal] = useState(false);
   const [bet, setBet] = useState<Bet | undefined>();
 
