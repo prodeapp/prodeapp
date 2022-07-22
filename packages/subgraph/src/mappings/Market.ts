@@ -165,12 +165,17 @@ export function handleAttribution(evt: AttributionEvent): void {
 }
 
 export function handleTransfer(evt: Transfer): void {
-    let betID = getBetID(evt.address, evt.params.tokenId)
-    let bet = Bet.load(betID)
-    if (bet === null) return;
-    let newOwner = getOrCreatePlayer(evt.params.to)
-    bet.player = newOwner.id
-    bet.save()
-    log.debug("handleTransfer: token ID {} transfered to {}", [betID, newOwner.id]);
-
+    if (evt.params.from !== new Address(0)) {
+        // it's not during the minting
+        let betID = getBetID(evt.address, evt.params.tokenId)
+        let bet = Bet.load(betID)
+        if (bet === null) {
+            log.error("handleTransfer: BetID not found {}", [betID])
+            return;
+        }
+        let newOwner = getOrCreatePlayer(evt.params.to)
+        bet.player = newOwner.id
+        bet.save()
+        log.debug("handleTransfer: token ID {} transfered to {}", [betID, newOwner.id]);
+    }
 }
