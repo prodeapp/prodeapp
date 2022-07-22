@@ -6,6 +6,7 @@ import { Bet } from "../../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import { Trans, t } from "@lingui/macro";
 import { Skeleton } from "@mui/material";
+import {transOutcome} from "../../lib/helpers";
 
 
 interface Stat {
@@ -19,7 +20,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // Initialize events stats
     let stats = bets[0].market.events.map((event) => {
         let stat = event.outcomes.map((outcome, index) => {
-            return {outcome: outcome, amountBets: 0, percentage:0, index:index}
+            return {outcome: transOutcome(outcome), amountBets: 0, percentage:0, index:index}
         })
         stat.push({outcome: t`Invalid`, amountBets: 0, percentage:0, index:257 })
         return stat

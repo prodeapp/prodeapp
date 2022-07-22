@@ -61,7 +61,12 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
   }
 
   const value = BigNumber.from(currentAnswer);
-  return outcomes[value.toNumber()] || noAnswerText;
+
+  return transOutcome(outcomes[value.toNumber()] || noAnswerText);
+}
+
+export function transOutcome(outcome: string) {
+  return outcome === 'Draw' ? t`Draw` : outcome;
 }
 
 export function parseTitle(title: string) {

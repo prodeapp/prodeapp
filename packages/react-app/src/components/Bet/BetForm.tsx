@@ -14,7 +14,7 @@ import type {BigNumberish} from "ethers";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
-import {getReferralKey, parseTitle} from "../../lib/helpers";
+import {getReferralKey, parseTitle, transOutcome} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import {BigNumber} from "@ethersproject/bignumber";
@@ -163,7 +163,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
                   id={`event-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
-                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
+                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
