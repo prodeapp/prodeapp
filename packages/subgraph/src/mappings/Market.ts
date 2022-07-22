@@ -112,7 +112,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
     market.pool = market.pool.plus(evt.params._amount);
     market.save()
 
-    let funder = Funder.load(evt.params._funder.toString())
+    let funder = Funder.load(evt.params._funder.toHexString())
     if (funder == null) funder = new Funder(evt.params._funder.toString())
     funder.amount = funder.amount.plus(evt.params._amount)
     let msgs = funder.messages
