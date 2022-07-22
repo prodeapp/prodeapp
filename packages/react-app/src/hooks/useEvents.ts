@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {Event, EVENT_FIELDS} from "../graphql/subgraph";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {useMemo} from "react";

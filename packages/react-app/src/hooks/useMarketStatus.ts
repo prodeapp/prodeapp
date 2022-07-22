@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import compareAsc from "date-fns/compareAsc";
 import fromUnixTime from "date-fns/fromUnixTime";
 import {useMarket} from "./useMarket";

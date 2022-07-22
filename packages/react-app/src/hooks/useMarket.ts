@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {Market, MARKET_FIELDS} from "../graphql/subgraph";
 

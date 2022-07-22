@@ -1,5 +1,5 @@
 import {ATTRIBUTION_FIELDS, Attribution} from "../graphql/subgraph";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {buildQuery} from "../lib/SubgraphQueryBuilder";
 
