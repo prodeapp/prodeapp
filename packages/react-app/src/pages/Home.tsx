@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import {Link as RouterLink, Link} from "react-router-dom";
 import {MarketStatus, useMarkets} from "../hooks/useMarkets";
 import { Market } from "../graphql/subgraph";
-import {formatAmount, getTimeLeft, MARKET_CATEGORIES} from "../lib/helpers";
+import {formatAmount, getFlattenedCategories, getTimeLeft} from "../lib/helpers";
 import {FormControlLabel, FormGroup, MenuItem, Switch, Typography} from "@mui/material";
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
@@ -51,14 +51,7 @@ function Home() {
               onChange={(e) => setCategory(e.target.value)}
               style={{width: '200px'}}>
               <MenuItem value="All"><Trans>All</Trans></MenuItem>
-              {MARKET_CATEGORIES.map(category => {
-                return [
-                  <MenuItem value={category.id} key={category.id}><Trans id={category.text} /></MenuItem>,
-                  (category.children && category.children.map(subcategory => {
-                    return <MenuItem value={subcategory.id} key={subcategory.id}>-- <Trans id={subcategory.text} /></MenuItem>
-                  })) || []
-                ]
-              })}
+              {getFlattenedCategories().map(cat => <MenuItem value={cat.id} key={cat.id}>{cat.isChild ? `-- ${cat.text}` : cat.text}</MenuItem>)}
             </TextField>
           </Box>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>

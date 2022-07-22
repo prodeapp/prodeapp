@@ -96,6 +96,21 @@ export const MARKET_CATEGORIES: MarketCategory[] = [
   {id: "misc", text: t`Miscellaneous`},
 ]
 
+type FlattenedCategory = {id: string, text: string, isChild: boolean};
+
+export function getFlattenedCategories(): FlattenedCategory[] {
+  const data: FlattenedCategory[] = [];
+  MARKET_CATEGORIES.forEach(category => {
+    data.push({id: category.id, text: category.text, isChild: false});
+
+    category.children && category.children.forEach(subcategory => {
+      data.push({id: subcategory.id, text: subcategory.text, isChild: true});
+    })
+  })
+
+  return data;
+}
+
 export function getSubcategories(category: string): MarketCategory[] {
   for(let cat of MARKET_CATEGORIES){
     if (cat.id === category) {
@@ -108,7 +123,7 @@ export function getSubcategories(category: string): MarketCategory[] {
 
 
 export function getCategoryText(id: string): string {
-  return MARKET_CATEGORIES.filter(c => c.id === id)[0].text;
+  return getFlattenedCategories().filter(c => c.id === id)[0].text;
 }
 
 export function getMarketUrl(marketId: string) {

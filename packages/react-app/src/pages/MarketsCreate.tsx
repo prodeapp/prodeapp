@@ -8,7 +8,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import {MenuItem} from "@mui/material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -24,8 +23,9 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
-import {getCategoryText, getMarketUrl, MARKET_CATEGORIES} from "../lib/helpers";
+import {getFlattenedCategories, getCategoryText, getMarketUrl} from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
+import {MenuItem} from "@mui/material";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -85,7 +85,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
                 required: t`This field is required.`
               })}
               style={{width: '100%'}}>
-              {MARKET_CATEGORIES.map((category, i) => <MenuItem value={category.id} key={i}>{category.text}</MenuItem>)}
+              {getFlattenedCategories().map(cat => <MenuItem value={cat.id} key={cat.id}>{cat.isChild ? `-- ${cat.text}` : cat.text}</MenuItem>)}
             </TextField>
             <FormError><ErrorMessage errors={errors} name="category" /></FormError>
           </div>
