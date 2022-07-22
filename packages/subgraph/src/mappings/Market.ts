@@ -1,5 +1,5 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
-import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent } from '../types/templates/Market/Market';
+import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
@@ -162,4 +162,15 @@ export function handleAttribution(evt: AttributionEvent): void {
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
     provider.save();
+}
+
+export function handleTransfer(evt: Transfer): void {
+    let betID = getBetID(evt.address, evt.params.tokenId)
+    let bet = Bet.load(betID)
+    if (bet === null) return;
+    let newOwner = getOrCreatePlayer(evt.params.to)
+    bet.player = newOwner.id
+    bet.save()
+    log.debug("handleTransfer: token ID {} transfered to {}", [betID, newOwner.id]);
+
 }

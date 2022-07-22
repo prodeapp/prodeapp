@@ -122,3 +122,5 @@ templates:
           handler: handleManagerReward
         - event: Attribution(indexed address)
           handler: handleAttribution
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
