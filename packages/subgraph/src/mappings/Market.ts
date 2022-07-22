@@ -126,7 +126,7 @@ export function handleFundingReceived(evt: FundingReceived): void {
     markets.push(market.id)
     funder.markets = markets;
     funder.save()
-    log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toString()])
+    log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toHexString()])
 }
 
 
