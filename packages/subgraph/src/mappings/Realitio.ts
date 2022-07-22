@@ -28,7 +28,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
     let tokenID = BigInt.fromI32(0);
     const questionNonce = event.nonce;
     let marketId = ByteArray.fromHexString(event.market);
-    log.debug("handleNewAnswer: summing points for market {}, questoinID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
+    log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
     let betID = getBetID(marketId, tokenID);
     let bet = Bet.load(betID);
     while (bet !== null) {
@@ -57,7 +57,9 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
         log.error("handleNewAnswer: market {} not found.", [event.market]);
         return
     }
-    market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
+    if (!changeAnswer) {
+        market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
+    }
     log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
     market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
     market.save()
