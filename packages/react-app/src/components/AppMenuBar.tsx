@@ -19,6 +19,8 @@ export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { locale, handleChangeLocale } = useI18nContext();
 
+  const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
+
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -74,6 +76,9 @@ export default function AppMenuBar() {
               <MenuItem>
                 <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}>Create Market</Button>
               </MenuItem>
+              <MenuItem>
+                <Button href={BRIDGE_URL} target="_blank" rel="noreferrer">Bridge</Button>
+              </MenuItem>
               <MenuItem sx={{display: {alignItems: 'center'}}}>
                 <Language />
                 <Select value={locale} onChange={(e) => {
@@ -103,6 +108,12 @@ export default function AppMenuBar() {
               component={RouterLink} to='/markets/new'
             >
               <Trans>Create Market</Trans>
+            </Button>
+            <Button
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              href={BRIDGE_URL} target="_blank" rel="noreferrer"
+            >
+              <Trans>Bridge</Trans>
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', alignItems: 'center'} }}>
