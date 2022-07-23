@@ -7,7 +7,7 @@ import {useIndexedEvents} from "../../hooks/useEvents";
 import Brackets from "./Brackets";
 import {Groups} from "./Groups";
 
-export function RenderTournament({events, itemJson}: {events: Event[], itemJson: DecodedCurateListFields['JASON']}) {
+export function RenderTournament({events, itemJson}: {events: Event[], itemJson: DecodedCurateListFields['Details']}) {
   const indexedEvents = useIndexedEvents(events);
 
   return <>{Object.keys(indexedEvents).length > 0 && itemJson && <div style={{marginTop: '20px'}}>

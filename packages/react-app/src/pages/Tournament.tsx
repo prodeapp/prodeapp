@@ -14,7 +14,7 @@ function Tournament() {
   const { id } = useParams();
   const { isLoading: isLoadingMarket, data: market } = useMarket(String(id))
   const { isLoading: isLoadingEvents, data: events } = useEvents(String(id));
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['JASON'] | null>(null);
+  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
 
   useEffect(() => {
     if (!market) {
@@ -25,7 +25,7 @@ function Tournament() {
 
       if (curateItems.length > 0) {
         const itemProps = await getDecodedParams(curateItems[0].id)
-        setItemJson(itemProps.JASON)
+        setItemJson(itemProps.Details)
       }
     })();
   }, [market])

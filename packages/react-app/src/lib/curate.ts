@@ -22,12 +22,12 @@ export type TournamentFormats = keyof typeof TOURNAMENT_FORMATS;
 interface CurateListFields {
   Title: string,
   Hash: string,
-  JASON: string,
-  Timestamp: string,
+  Details: string,
+  'Starting timestmap': string,
 }
 
-export interface DecodedCurateListFields extends Omit<CurateListFields, 'JASON'> {
-  JASON: Record<string, any>
+export interface DecodedCurateListFields extends Omit<CurateListFields, 'Details'> {
+  Details: Record<string, any>
 }
 
 export interface ExtraDataGroups {
@@ -55,7 +55,7 @@ const curateItemQuery = `
 `
 
 async function getRegistryColumns(): Promise<any[]> {
-  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: process.env.REACT_APP_CURATE_REGISTRY as string})
+  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: (process.env.REACT_APP_CURATE_REGISTRY as string).toLowerCase()})
 
   if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
     throw new Error('Missing registry meta evidence URI');
@@ -85,8 +85,8 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
   const values: CurateListFields = {
     Title: data.name,
     Hash: questionsHash,
-    Timestamp: data.startingTimestamp,
-    JASON: await ipfsPublish('market.json', JSON.stringify(json)),
+    'Starting timestmap': data.startingTimestamp,
+    Details: await ipfsPublish('market.json', JSON.stringify(json)),
   }
 
   return gtcrEncode({ columns: await getRegistryColumns(), values })
@@ -107,13 +107,13 @@ export async function getDecodedParams(itemId: string): Promise<DecodedCurateLis
     return {...obj, [column.label]: decodedItems[i]}
   }, {})
 
-  if (props.JASON) {
+  if (props.Details) {
     try {
-      const response = await fetch(`https://ipfs.kleros.io${props.JASON}`);
-      props.JASON = await response.json();
+      const response = await fetch(`https://ipfs.kleros.io${props.Details}`);
+      props.Details = await response.json();
     } catch (e) {
       console.log('JSON error')
-      props.JASON = {};
+      props.Details = {};
     }
   }
 
