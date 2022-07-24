@@ -60,7 +60,7 @@ function MarketsView() {
               </Box>
             </BoxWrapper>
 
-            <PlaceBet market={market} onClick={() => setSection('bet')}/>
+            {section !== 'bet' && <PlaceBet market={market} onClick={() => setSection('bet')}/>}
           </Box>
         </Grid>
         <Grid item xs={12} md={8}>
