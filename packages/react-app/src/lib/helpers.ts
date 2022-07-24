@@ -10,7 +10,6 @@ import {Event, Outcome} from "../graphql/subgraph";
 import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
-import {matchQuestion} from "./templates";
 
 const dateLocales = {
   es,
@@ -71,12 +70,6 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
 
 export function transOutcome(outcome: string) {
   return outcome === 'Draw' ? t`Draw` : outcome;
-}
-
-export function parseTitle(title: string) {
-  const params = matchQuestion(title);
-
-  return params === null || !params?.param1 || !params?.param2 ? title : `${params.param1} vs ${params?.param2}`
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490

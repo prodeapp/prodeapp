@@ -1,8 +1,9 @@
 import { BoxWrapper, BoxRow } from '../components';
 import { Bet } from '../graphql/subgraph';
-import {getAnswerText, parseTitle} from '../lib/helpers';
+import {getAnswerText} from '../lib/helpers';
 import {BigNumber} from "@ethersproject/bignumber";
 import { Trans, t } from '@lingui/macro';
+import {FormatLeague} from "./FormatTeams";
 
 function getBetResult(eventResult: string, playerBet: string) {
   if (eventResult === "") {
@@ -29,7 +30,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
 
       return <BoxRow key={i} style={{flexDirection: 'column', backgroundColor}}>
         <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
-          <div style={{ width: '40%', wordBreak: 'break-word', paddingRight: '20px' }}>{parseTitle(event.title)}</div>
+          <div style={{ width: '40%', wordBreak: 'break-word', paddingRight: '20px' }}><FormatLeague title={event.title} /></div>
           <div style={{ width: '20%', wordBreak: 'break-word' }}>{playerBet}</div>
           <div style={{ width: '20%', wordBreak: 'break-word' }}>{eventResult || t`Unknown`}</div>
           <div style={{ width: '20%' }}>
