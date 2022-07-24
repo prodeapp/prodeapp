@@ -20,12 +20,11 @@ import Button from "@mui/material/Button";
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
+import {INVALID_RESULT} from "../Answer/AnswerForm";
 
 export type BetFormValues = {
   outcomes: {value: number|''}[]
 }
-
-export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
 type BetFormProps = {
   marketId: string

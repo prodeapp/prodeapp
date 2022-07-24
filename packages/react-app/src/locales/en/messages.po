@@ -58,6 +58,9 @@ msgstr "Answer result"
 msgid "Answer sent"
 msgstr "Answer sent"
 
+msgid "Answered too soon"
+msgstr "Answered too soon"
+
 msgid "Answers"
 msgstr "Answers"
 
@@ -93,6 +96,9 @@ msgstr "Betting"
 
 msgid "Betting Deadline (UTC)"
 msgstr "Betting Deadline (UTC)"
+
+msgid "Bridge"
+msgstr "Bridge"
 
 msgid "Building ranking"
 msgstr "Building ranking"

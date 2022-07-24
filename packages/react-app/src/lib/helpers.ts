@@ -7,7 +7,7 @@ import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
-import {INVALID_RESULT} from "../components/Bet/BetForm";
+import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
 import {matchQuestion} from "./templates";
@@ -58,6 +58,10 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
 
   if (currentAnswer === INVALID_RESULT) {
     return t`Invalid result`;
+  }
+
+  if (currentAnswer === ANSWERED_TOO_SOON) {
+    return t`Answered too soon`;
   }
 
   const value = BigNumber.from(currentAnswer);

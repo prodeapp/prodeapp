@@ -58,6 +58,9 @@ msgstr "Aportar resultado"
 msgid "Answer sent"
 msgstr "Respuesta enviada"
 
+msgid "Answered too soon"
+msgstr "Contestada antes de tiempo"
+
 msgid "Answers"
 msgstr "Respuestas"
 
@@ -93,6 +96,9 @@ msgstr "Apostando"
 
 msgid "Betting Deadline (UTC)"
 msgstr "Fecha límite de apuesta (UTC)"
+
+msgid "Bridge"
+msgstr "Bridge"
 
 msgid "Building ranking"
 msgstr "Construyendo Ranking"
