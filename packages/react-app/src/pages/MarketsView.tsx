@@ -84,8 +84,8 @@ function MarketsView() {
                   </div>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}><Trans>Management Fee</Trans></div>
-                  <div>{Number(market.managementFee) * 100 / DIVISOR}%</div>
+                  <div style={{marginBottom: 10}}><Trans>Total Fee</Trans></div>
+                  <div>{(Number(market.managementFee) + Number(market.protocolFee)) * 100 / DIVISOR}%</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <div style={{marginBottom: 10}}><Trans>Manager</Trans></div>

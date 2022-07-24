@@ -41,7 +41,7 @@ msgid "Add prize weight"
 msgstr "Agregar un premio"
 
 msgid "Address to send management fees to."
-msgstr "Billetera donde se enviarán los fees del creador"
+msgstr "Billetera donde se enviará la comisión del creador"
 
 msgid "All"
 msgstr "Todos"
@@ -263,10 +263,7 @@ msgid "Logout"
 msgstr "Desconectar"
 
 msgid "Management Fee"
-msgstr "Fee para Creador"
-
-msgid "Management Fee (%)"
-msgstr "Fee del creador (%)"
+msgstr "Comisión del Creador"
 
 msgid "Management Rewards Earned"
 msgstr "Ganancias por Administración"
@@ -486,6 +483,9 @@ msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devue
 
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
+
+msgid "Total Fee"
+msgstr "Comisión Total"
 
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"

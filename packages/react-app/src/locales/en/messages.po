@@ -265,9 +265,6 @@ msgstr "Logout"
 msgid "Management Fee"
 msgstr "Management Fee"
 
-msgid "Management Fee (%)"
-msgstr "Management Fee (%)"
-
 msgid "Management Rewards Earned"
 msgstr "Management Rewards Earned"
 
@@ -486,6 +483,9 @@ msgstr "To submit the answer you need to deposit a bond of {0} that will be retu
 
 msgid "Total Bet: {0}"
 msgstr "Total Bet: {0}"
+
+msgid "Total Fee"
+msgstr "Total Fee"
 
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
