@@ -11,7 +11,7 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
-import {useEvents} from "../../hooks/useEvents";
+import {useEventsToBet} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {getReferralKey, parseTitle, transOutcome} from "../../lib/helpers";
@@ -53,7 +53,7 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
 export default function BetForm({marketId, price}: BetFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(marketId);
+  const { isLoading, error, data: events } = useEventsToBet(marketId);
   const [success, setSuccess] = useState(false);
   const [tokenId, setTokenId] = useState<BigNumber|false>(false);
   const [referral, setReferral] = useState(AddressZero);

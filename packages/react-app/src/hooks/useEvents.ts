@@ -5,15 +5,15 @@ import {useMemo} from "react";
 
 const query = `
     ${EVENT_FIELDS}
-    query EventsQuery ($marketId: String!){
-      events(where:{market: $marketId}, orderBy: openingTs, orderDirection: asc) {
+    query EventsQuery ($marketId: String!, $orderBy: String!, $orderDirection: String!){
+      events(where:{market: $marketId}, orderBy: $orderBy, orderDirection: $orderDirection) {
         ...EventFields
       }
     }
 `;
 
-export const fetchEvents = async (marketId: string) => {
-  const response = await apolloProdeQuery<{ events: Event[] }>(query, {marketId});
+export const fetchEvents = async (marketId: string, orderBy: string = 'openingTs', orderDirection: string = 'asc') => {
+  const response = await apolloProdeQuery<{ events: Event[] }>(query, {marketId, orderBy, orderDirection});
 
   if (!response) throw new Error("No response from TheGraph");
 
@@ -25,6 +25,22 @@ export const useEvents = (marketId: string) => {
     ["useEvents", marketId],
     async () => {
       return fetchEvents(marketId);
+    }
+  );
+};
+
+export const useEventsToBet = (marketId: string) => {
+  return useQuery<Event[], Error>(
+    ["useEventsToBet", marketId],
+    async () => {
+      /**
+       * ================================================================
+       * THIS HOOK IS USED TO BUILD THE DATA SENT TO Market.placeBet()
+       * AND IT IS REQUIRED TO HAVE orderBy = 'nonce' AND orderDirection = 'asc'
+       * OTHERWISE THE BETS WILL BE SENT IN INCORRECT ORDER
+       * ================================================================
+       */
+      return fetchEvents(marketId, 'nonce', 'asc');
     }
   );
 };
