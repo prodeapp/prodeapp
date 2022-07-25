@@ -169,6 +169,12 @@ msgstr "Description"
 msgid "Details"
 msgstr "Details"
 
+msgid "Doc"
+msgstr "Doc"
+
+msgid "Documentation"
+msgstr "Documentation"
+
 msgid "Drag and drop each question to the correct position"
 msgstr "Drag and drop each question to the correct position"
 

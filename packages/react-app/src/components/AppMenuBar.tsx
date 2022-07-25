@@ -20,6 +20,8 @@ export default function AppMenuBar() {
   const { locale, handleChangeLocale } = useI18nContext();
 
   const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
+  const DOC_URL_EN = 'https://prode-eth.gitbook.io/prode.eth-en';
+  const DOC_URL_ES = 'https://prode-eth.gitbook.io/prode.eth-es';
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -28,6 +30,8 @@ export default function AppMenuBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
+
+  console.log(locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN);
 
   return (
     <AppBar position="static">
@@ -74,10 +78,13 @@ export default function AppMenuBar() {
               }}
             >
               <MenuItem>
-                <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}>Create Market</Button>
+                <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}><Trans>Create Market</Trans></Button>
               </MenuItem>
               <MenuItem>
                 <Button href={BRIDGE_URL} target="_blank" rel="noreferrer">Bridge</Button>
+              </MenuItem>
+              <MenuItem>
+                <Button href={locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN} target="_blank" rel="noreferrer"><Trans>Doc</Trans></Button>
               </MenuItem>
               <MenuItem sx={{display: {alignItems: 'center'}}}>
                 <Language />
@@ -114,6 +121,11 @@ export default function AppMenuBar() {
               href={BRIDGE_URL} target="_blank" rel="noreferrer"
             >
               <Trans>Bridge</Trans>
+            </Button>
+            <Button
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              href={locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN} target="_blank" rel="noreferrer">
+              <Trans>Documentation</Trans>
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', alignItems: 'center'} }}>
