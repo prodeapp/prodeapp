@@ -1,19 +1,19 @@
 import { Trans } from "@lingui/macro";
 import { Button, Skeleton } from "@mui/material";
-import {Link as RouterLink} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useCurateItem } from "../../hooks/useCurateItem";
 
 
-function MarketCurateStatus({marketHash, marketId}: {marketHash: string, marketId: string}) {
-  const { data: marketCurate, error} = useCurateItem(marketHash);
+function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, marketId: string }) {
+  const { data: marketCurate, error } = useCurateItem(marketHash);
   console.log("MD", marketHash, marketCurate)
 
-  if (error ) return <></>;
+  if (error) return <></>;
 
   if (marketCurate === undefined || marketCurate.status === '') {
-    return <Skeleton animation="wave" height={'60px'}/>;
+    return <Skeleton animation="wave" height={'60px'} />;
   }
-  
+
   if (marketCurate.status === 'Absent' || marketCurate === undefined) {
     return <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
   } else if (marketCurate.status === 'Registered') {
@@ -21,9 +21,13 @@ function MarketCurateStatus({marketHash, marketId}: {marketHash: string, marketI
   } else {
     return (
     <><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
-    <div><Trans><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + marketCurate.id}>Market under review</a>. Check the submission and verify again if the current submission has a mistake.</Trans></div></>
-    )
+        <div>⚠️<Trans>Market under review</Trans>⚠️<br />
+          <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + marketCurate.id}>
+            <Trans>Check the submission in Curate before submitting again</Trans>
+          </a>
+        </div></>
+        )
   }
 }
 
-export default MarketCurateStatus;
+        export default MarketCurateStatus;
