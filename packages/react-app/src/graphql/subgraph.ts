@@ -219,6 +219,7 @@ export interface CurateItem {
   timestamp: BigNumberish
   json: string
   data: string
+  status: string
 }
 
 export const CURATE_ITEM_FIELDS = `
@@ -228,5 +229,6 @@ export const CURATE_ITEM_FIELDS = `
     data
     json
     timestamp
+    status
   }
 `;

@@ -1,22 +1,22 @@
 import { useQuery } from "react-query";
 import {apolloProdeQuery} from "../lib/apolloClient";
-import {CurateItem, CURATE_ITEM_FIELDS, Market} from "../graphql/subgraph";
+import {CurateItem, CURATE_ITEM_FIELDS} from "../graphql/subgraph";
 
 const query = `
     ${CURATE_ITEM_FIELDS}
-    query CurateQuery($hash: String) {
-        curate(hash: $hash) {
+    query CurateQuery($hash: String!) {
+        curateItems(where:{hash: $hash}) {
             ...CurateItemFields
         }
     }
 `;
 
-export const useCurateItem = (market?: Market) => {
+export const useCurateItem = (marketHash?: string) => {
   return useQuery<CurateItem, Error>(
-    ["useCurateItem", market],
+    ["useCurateItems", marketHash],
     async () => {
-      const hash = market.hash;
-      const response = await apolloProdeQuery<{ curateItem: CurateItem }>(query, {hash});
+
+      const response = await apolloProdeQuery<{ curateItem: CurateItem }>(query, {hash: marketHash?marketHash.toLowerCase():''});
 
       if (!response) throw new Error("No response from TheGraph");
 

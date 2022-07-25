@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useMarket} from "../hooks/useMarket";
-import {Link as RouterLink, useParams, useSearchParams} from "react-router-dom";
+import {useParams, useSearchParams} from "react-router-dom";
 import {BoxWrapper, BoxRow} from "../components"
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -16,6 +16,7 @@ import { Trans } from "@lingui/macro";
 import BetForm from "../components/Bet/BetForm";
 import ReferralLink from "../components/MarketView/ReferralLink";
 import { Stats } from "../components/MarketView/Stats";
+import MarketCurateStatus from "../components/MarketView/MarketCurateStatus";
 
 function MarketsView() {
   const { id } = useParams();
@@ -52,8 +53,7 @@ function MarketsView() {
                 <Trans>Status: <MarketStatus marketId={market.id} /></Trans>
               </div>
               <Box sx={{mt: 4}}>
-                {!market.curated && <Button component={RouterLink} to={`/curate/submit/${market.id}`}><Trans>Verify Market</Trans></Button>}
-                {market.curated && <div><Trans>Verified</Trans> ✅</div>}
+                <MarketCurateStatus marketId={market.id} />
               </Box>
               <Box sx={{mt: 4}}>
                 <ReferralLink marketId={market.id}/>
