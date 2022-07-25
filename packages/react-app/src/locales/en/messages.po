@@ -109,8 +109,8 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
-msgid "Check the submission in Curate before submitting again"
-msgstr "Check the submission in Curate before submitting again"
+#~ msgid "Check the submission in Curate before submitting again"
+#~ msgstr "Check the submission in Curate before submitting again"
 
 msgid "Choose Question"
 msgstr "Choose Question"
@@ -297,6 +297,9 @@ msgstr "Market not found"
 
 msgid "Market not found."
 msgstr "Market not found."
+
+msgid "Market not verified yet"
+msgstr "Market not verified yet"
 
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"

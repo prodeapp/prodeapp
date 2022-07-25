@@ -44,19 +44,18 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   }
 
   if (activeItem === null || activeItem.status === 'Absent') {
-    return (<div><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
-      <br />⚠️<Trans>Market not verified</Trans></div>
+    return (<div>⚠️<Trans>Market not verified yet</Trans>
+      <br /><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></div>
     )
   } else if (activeItem.status === 'Registered') {
     return <div><Trans>Verified</Trans> ✅</div>;
   } else {
     return (
-      <><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
-        <div>⚠️<Trans>Market under review</Trans>⚠️<br />
-          <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
-            <Trans>Check the submission in Curate before submitting again</Trans>
-          </a>
-        </div></>
+      <>
+        <div><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">⚠️<Trans>Market under review</Trans></a>
+        </div>
+        <br/>
+        <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></>
     )
   }
 }
