@@ -289,6 +289,9 @@ msgstr "Market hash found"
 msgid "Market hash not found"
 msgstr "Market hash not found"
 
+msgid "Market in verification process"
+msgstr "Market in verification process"
+
 msgid "Market name"
 msgstr "Market name"
 
@@ -304,8 +307,8 @@ msgstr "Market not verified yet"
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
 
-msgid "Market under review"
-msgstr "Market under review"
+#~ msgid "Market under review"
+#~ msgstr "Market under review"
 
 msgid "Markets"
 msgstr "Markets"

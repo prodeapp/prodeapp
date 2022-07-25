@@ -53,7 +53,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
     return (
       <>
         <div><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
-        <Trans>Market under review</Trans> 👀</a>
+        <Trans>Market in verification process</Trans> 👀</a>
         </div>
         <br />
         <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></>
