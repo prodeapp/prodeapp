@@ -21,7 +21,7 @@ function MarketCurateStatus({marketHash, marketId}: {marketHash: string, marketI
   } else {
     return (
     <><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
-    <div><Trans>Market under review. Check the submission and verify again if the current submission has a mistake.</Trans></div></>
+    <div><Trans><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + marketCurate.id}>Market under review</a>. Check the submission and verify again if the current submission has a mistake.</Trans></div></>
     )
   }
 }
