@@ -2,12 +2,12 @@ import { Trans } from "@lingui/macro";
 import { Button, Skeleton } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useCurateItems } from "../../hooks/useCurateItems";
-import {useEffect, useState} from "react";
-import {CurateItem} from "../../graphql/subgraph";
+import { useEffect, useState } from "react";
+import { CurateItem } from "../../graphql/subgraph";
 
 function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, marketId: string }) {
   const { data: curateItems, error, isLoading } = useCurateItems(marketHash);
-  const [activeItem, setActiveItem] = useState<CurateItem|null>(null);
+  const [activeItem, setActiveItem] = useState<CurateItem | null>(null);
 
   useEffect(() => {
 
@@ -52,9 +52,10 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   } else {
     return (
       <>
-        <div><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">⚠️<Trans>Market under review</Trans></a>
+        <div><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
+        <Trans>Market under review</Trans> 👀</a>
         </div>
-        <br/>
+        <br />
         <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></>
     )
   }
