@@ -52,10 +52,10 @@ function MarketsView() {
               <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
                 <Trans>Status: <MarketStatus marketId={market.id} /></Trans>
               </div>
-              <Box sx={{mt: 4}}>
+              <Box sx={{mt: 4, width: '100%'}}>
                 <MarketCurateStatus marketId={market.id} />
               </Box>
-              <Box sx={{mt: 4}}>
+              <Box sx={{mt: 4, width: '100%'}}>
                 <ReferralLink marketId={market.id}/>
               </Box>
             </BoxWrapper>

@@ -17,12 +17,12 @@ function MarketCurateStatus({marketId}: {marketId: string}) {
     }
   }, [marketData])
 
-  // console.log("MD", marketHash, marketData, marketCurate)
+  console.log("MD", marketHash, marketData, marketCurate)
 
   if (error || errorMarketData ) return <></>;
 
   if (marketCurate === undefined || marketCurate.status === '') {
-    return <Skeleton />;
+    return <Skeleton animation="wave" height={'60px'}/>;
   }
   
   if (marketCurate.status === 'Absent' || marketCurate === undefined) {
