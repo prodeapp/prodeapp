@@ -56,7 +56,7 @@ function CurateValidator() {
   const [marketId, setMarketId] = useState('');
   const {data: events} = useEvents(marketId);
   const [results, setResults] = useState<ValidationResult[]>([]);
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['JASON'] | null>(null);
+  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
 
   const onSubmit = async (data: FormValues) => {
 
@@ -71,13 +71,13 @@ function CurateValidator() {
 
     try {
       itemProps = await getDecodedParams(data.itemId.toLowerCase());
-      setItemJson(itemProps.JASON);
+      setItemJson(itemProps.Details);
     } catch (e) {
       setResults([{type: 'error', message: t`Item id not found`}]);
       return;
     }
 
-    const isValid = validate(itemProps.JASON);
+    const isValid = validate(itemProps.Details);
 
     _results.push(
       !isValid ? {type: 'error', message: t`Invalid JSON`} : {type: 'success', message: t`Valid JSON`}
@@ -111,7 +111,7 @@ function CurateValidator() {
 
       // validate timestamp
       _results.push(
-        Number(market.closingTime) <= Number(itemProps.Timestamp)
+        Number(market.closingTime) <= Number(itemProps['Starting timestmap'])
           ? {type: 'success', message: t`Valid starting timestamp`}
           : {type: 'error', message: t`Starting timestamp is earlier than the betting deadline`}
       );

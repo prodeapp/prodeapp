@@ -1,6 +1,6 @@
 import {Leaderboard, LEADERBOARD_FIELDS} from "../graphql/subgraph";
 import {apolloProdeQuery} from "../lib/apolloClient";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const query = `
     ${LEADERBOARD_FIELDS}

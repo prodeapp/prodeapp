@@ -5,5 +5,8 @@
       "path": "src/locales/{locale}/messages",
       "include": ["src"]
    }],
-   "format": "po"
+   "format": "po",
+   "formatOptions": {
+      "origins": false
+   }
 }

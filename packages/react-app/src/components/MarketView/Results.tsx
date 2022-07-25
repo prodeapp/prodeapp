@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {BoxWrapper, BoxRow} from "../../components"
-import {getAnswerText, getTimeLeft, isFinalized, parseTitle} from "../../lib/helpers";
+import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
 import AnswerDialog from "../Answer/AnswerDialog";
@@ -8,6 +8,7 @@ import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
+import {FormatLeague} from "../FormatTeams";
 
 function CircleItem({color}: {color: string}) {
   return <div style={{height: '14px', width: '14px', borderRadius: '50%', backgroundColor: color, marginRight: '10px'}}></div>
@@ -81,7 +82,7 @@ export default function Results({marketId}: {marketId: string}) {
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
           <div style={{display: 'flex', marginTop: 20, width: '100%', fontWeight: 'normal'}}>
-            <div style={{width: '40%'}}>{parseTitle(event.title)}</div>
+            <div style={{width: '40%', paddingRight: '10px'}}><FormatLeague title={event.title} /></div>
             <div style={{width: '30%'}}>
               {AnswerColumn(event, finalized)}
             </div>

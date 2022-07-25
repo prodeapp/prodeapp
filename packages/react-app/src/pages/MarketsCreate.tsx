@@ -184,7 +184,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell><Trans>Management Fee (%)</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans>Management Fee</Trans> (%)</BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('managementFee', {
               required: t`This field is required.`,

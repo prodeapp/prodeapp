@@ -6,6 +6,7 @@ import { Bet } from "../../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import { Trans, t } from "@lingui/macro";
 import { Skeleton } from "@mui/material";
+import {transOutcome} from "../../lib/helpers";
 
 
 interface Stat {
@@ -19,7 +20,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // Initialize events stats
     let stats = bets[0].market.events.map((event) => {
         let stat = event.outcomes.map((outcome, index) => {
-            return {outcome: outcome, amountBets: 0, percentage:0, index:index}
+            return {outcome: transOutcome(outcome), amountBets: 0, percentage:0, index:index}
         })
         stat.push({outcome: t`Invalid`, amountBets: 0, percentage:0, index:257 })
         return stat
@@ -46,12 +47,12 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 
 function statsRows(stats: Stat[][]) {
     return stats.map((event, i) => {
-            return <Box sx={{padding: '20px', borderBottom: '1px'}}>
-                <BoxRow key={i + '-0'}>
-                    {event.map((value) => { return <div>{value.outcome}</div> })}
+            return <Box key={i} sx={{padding: '20px', borderBottom: '1px'}}>
+                <BoxRow>
+                    {event.map((value, j) => <div key={j}>{value.outcome}</div>)}
                 </BoxRow>
-                <BoxRow key={i + '-1'}>
-                    {event.map((value) => { return <div>{value.percentage.toFixed(2) + ' %'}</div> })}
+                <BoxRow>
+                    {event.map((value, k) => <div key={k}>{value.percentage.toFixed(2) + ' %'}</div>)}
                 </BoxRow>
             </Box>
         })

@@ -11,21 +11,21 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
-import {useEvents} from "../../hooks/useEvents";
+import {useEventsToBet} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
-import {getReferralKey} from "../../lib/helpers";
+import {getReferralKey, transOutcome} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
+import {INVALID_RESULT} from "../Answer/AnswerForm";
+import {FormatLeague} from "../FormatTeams";
 
 export type BetFormValues = {
   outcomes: {value: number|''}[]
 }
-
-export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 
 type BetFormProps = {
   marketId: string
@@ -53,7 +53,7 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
 export default function BetForm({marketId, price}: BetFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(marketId);
+  const { isLoading, error, data: events } = useEventsToBet(marketId);
   const [success, setSuccess] = useState(false);
   const [tokenId, setTokenId] = useState<BigNumber|false>(false);
   const [referral, setReferral] = useState(AddressZero);
@@ -155,7 +155,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}>{events[i].title}</div>
+            <div style={{width: '60%'}}><FormatLeague title={events[i].title} /></div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select
@@ -163,7 +163,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
                   id={`event-${i}-outcome-select`}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
-                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
+                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>

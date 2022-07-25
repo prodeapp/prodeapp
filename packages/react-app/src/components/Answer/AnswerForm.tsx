@@ -12,12 +12,14 @@ import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
 import {Event} from "../../graphql/subgraph";
-import {INVALID_RESULT} from "../Bet/BetForm";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
+
+export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
 
 export type AnswerFormValues = {
   outcome: number|''
@@ -116,6 +118,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
                 >
                   {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
+                  {event.answer && <MenuItem value={ANSWERED_TOO_SOON}><Trans>Answered too soon</Trans></MenuItem>}
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcome`} /></FormError>
               </FormControl>

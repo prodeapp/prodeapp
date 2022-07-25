@@ -1,5 +1,5 @@
 import React from "react";
-import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryCache = new QueryCache({
   onError: (error, query) => {
@@ -15,7 +15,6 @@ export const queryClient = new QueryClient({
       refetchInterval: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      notifyOnChangeProps: "tracked",
     },
   },
 });
