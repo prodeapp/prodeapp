@@ -1,25 +1,14 @@
 import { Trans } from "@lingui/macro";
 import { Button, Skeleton } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import {Link as RouterLink} from "react-router-dom";
 import { useCurateItem } from "../../hooks/useCurateItem";
-import { useMarket } from "../../hooks/useMarket";
 
 
-function MarketCurateStatus({marketId}: {marketId: string}) {
-  const [marketHash, setMarketHash] = useState<string>('');
-  const { data: marketData, error: errorMarketData} = useMarket(marketId);
+function MarketCurateStatus({marketHash, marketId}: {marketHash: string, marketId: string}) {
   const { data: marketCurate, error} = useCurateItem(marketHash);
+  console.log("MD", marketHash, marketCurate)
 
-  useEffect(() => {
-    if (marketData) {
-      setMarketHash(marketData.hash);
-    }
-  }, [marketData])
-
-  console.log("MD", marketHash, marketData, marketCurate)
-
-  if (error || errorMarketData ) return <></>;
+  if (error ) return <></>;
 
   if (marketCurate === undefined || marketCurate.status === '') {
     return <Skeleton animation="wave" height={'60px'}/>;

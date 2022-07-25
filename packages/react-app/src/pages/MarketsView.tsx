@@ -53,7 +53,7 @@ function MarketsView() {
                 <Trans>Status: <MarketStatus marketId={market.id} /></Trans>
               </div>
               <Box sx={{mt: 4, width: '100%'}}>
-                <MarketCurateStatus marketId={market.id} />
+                <MarketCurateStatus marketHash={market.hash} marketId={market.id}/>
               </Box>
               <Box sx={{mt: 4, width: '100%'}}>
                 <ReferralLink marketId={market.id}/>
