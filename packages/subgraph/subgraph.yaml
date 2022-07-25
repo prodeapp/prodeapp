@@ -124,3 +124,5 @@ templates:
           handler: handleAttribution
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+        - event: RankingUpdated(indexed uint256,uint256,uint256)
+          handler: handleRankingUpdated

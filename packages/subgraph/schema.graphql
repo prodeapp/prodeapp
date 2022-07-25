@@ -126,6 +126,7 @@ type Bet @entity {
   count: BigInt!
   claim: Boolean!
   reward: BigInt!
+  ranking: BigInt
 }
 
 type Funder @entity {
