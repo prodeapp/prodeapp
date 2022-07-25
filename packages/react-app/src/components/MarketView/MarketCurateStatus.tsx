@@ -6,9 +6,8 @@ import { useCurateItem } from "../../hooks/useCurateItem";
 
 function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, marketId: string }) {
   const { data: marketCurate, error, isLoading } = useCurateItem(marketHash);
-  console.log("MD", marketHash, marketCurate)
 
-  if (error) return <></>;
+  if (error) return null;
 
   if (isLoading) {
     return <Skeleton animation="wave" height={'60px'} />;
@@ -22,7 +21,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
     return (
       <><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
         <div>⚠️<Trans>Market under review</Trans>⚠️<br />
-          <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + marketCurate.id}>
+          <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + marketCurate.id} target="_blank" rel="noreferrer">
             <Trans>Check the submission in Curate before submitting again</Trans>
           </a>
         </div></>
