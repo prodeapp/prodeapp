@@ -14,7 +14,9 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   }
 
   if (marketCurate === undefined || marketCurate.status === 'Absent') {
-    return <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
+    return (<div><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button>
+      <br />⚠️<Trans>Market not verified</Trans></div>
+    )
   } else if (marketCurate.status === 'Registered') {
     return <div><Trans>Verified</Trans> ✅</div>;
   } else {
