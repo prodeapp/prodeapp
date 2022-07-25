@@ -21,7 +21,7 @@ msgstr "A market must have at least three events."
 msgid "Accepting bets"
 msgstr "Accepting bets"
 
-#: src/pages/Home.tsx:106
+#: src/pages/Home.tsx:99
 msgid "Active"
 msgstr "Active"
 
@@ -101,7 +101,7 @@ msgstr "Bet not found"
 msgid "Bet placed!"
 msgstr "Bet placed!"
 
-#: src/pages/Home.tsx:129
+#: src/pages/Home.tsx:122
 msgid "Bet price"
 msgstr "Bet price"
 
@@ -136,6 +136,10 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
+#: src/components/MarketView/MarketCurateStatus.tsx:26
+msgid "Check the submission in Curate before submitting again"
+msgstr "Check the submission in Curate before submitting again"
+
 #: src/components/MarketCreate/EventBuilder.tsx:57
 msgid "Choose Question"
 msgstr "Choose Question"
@@ -153,7 +157,7 @@ msgid "Choose template"
 msgstr "Choose template"
 
 #: src/pages/Home.tsx:44
-#: src/pages/Home.tsx:103
+#: src/pages/Home.tsx:96
 msgid "Closed"
 msgstr "Closed"
 
@@ -342,7 +346,7 @@ msgstr "Item id not found"
 
 #: src/components/Bet/BetForm.tsx:104
 #: src/pages/CurateSubmit.tsx:144
-#: src/pages/MarketsView.tsx:35
+#: src/pages/MarketsView.tsx:36
 #: src/pages/TokenView.tsx:18
 msgid "Loading..."
 msgstr "Loading..."
@@ -397,7 +401,7 @@ msgstr "Market hash not found"
 msgid "Market name"
 msgstr "Market name"
 
-#: src/pages/MarketsView.tsx:41
+#: src/pages/MarketsView.tsx:42
 msgid "Market not found"
 msgstr "Market not found"
 
@@ -408,6 +412,10 @@ msgstr "Market not found."
 #: src/pages/CurateSubmit.tsx:172
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
+
+#: src/components/MarketView/MarketCurateStatus.tsx:24
+msgid "Market under review"
+msgstr "Market under review"
 
 #: src/pages/Profile.tsx:57
 msgid "Markets"
@@ -432,7 +440,7 @@ msgstr "Next step"
 msgid "No bets found."
 msgstr "No bets found."
 
-#: src/pages/Home.tsx:96
+#: src/pages/Home.tsx:89
 msgid "No markets found."
 msgstr "No markets found."
 
@@ -444,7 +452,7 @@ msgstr "Not answered yet"
 msgid "Number of questions"
 msgstr "Number of questions"
 
-#: src/pages/Home.tsx:72
+#: src/pages/Home.tsx:65
 msgid "Only verified markets"
 msgstr "Only verified markets"
 
@@ -457,13 +465,13 @@ msgstr "Open to answers in {openingTimeLeft}"
 msgid "Outcome"
 msgstr "Outcome"
 
-#: src/pages/Home.tsx:139
+#: src/pages/Home.tsx:132
 msgid "Participants"
 msgstr "Participants"
 
 #: src/components/MarketView/Results.tsx:31
 #: src/components/MarketView/Results.tsx:43
-#: src/pages/Home.tsx:108
+#: src/pages/Home.tsx:101
 msgid "Pending"
 msgstr "Pending"
 
@@ -473,7 +481,7 @@ msgstr "Pending arbitration"
 
 #: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:33
-#: src/pages/Home.tsx:123
+#: src/pages/Home.tsx:116
 msgid "Place Bet"
 msgstr "Place Bet"
 
@@ -499,7 +507,7 @@ msgstr "Points Earned"
 msgid "Pool"
 msgstr "Pool"
 
-#: src/pages/Home.tsx:134
+#: src/pages/Home.tsx:127
 msgid "Pool prize"
 msgstr "Pool prize"
 
@@ -612,7 +620,7 @@ msgstr "Starting timestamp is earlier than the betting deadline"
 msgid "Statistics"
 msgstr "Statistics"
 
-#: src/pages/MarketsView.tsx:52
+#: src/pages/MarketsView.tsx:53
 msgid "Status: <0/>"
 msgstr "Status: <0/>"
 
@@ -676,7 +684,7 @@ msgstr "This is the first submission for this market"
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
-#: src/pages/MarketsView.tsx:40
+#: src/pages/MarketsView.tsx:41
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "This market was just created, please wait a few seconds for it to be indexed."
 
@@ -726,12 +734,13 @@ msgstr "Validate"
 msgid "Value must be greater than 0."
 msgstr "Value must be greater than 0."
 
-#: src/pages/Home.tsx:144
-#: src/pages/MarketsView.tsx:56
+#: src/components/MarketView/MarketCurateStatus.tsx:20
+#: src/pages/Home.tsx:137
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/MarketsView.tsx:55
+#: src/components/MarketView/MarketCurateStatus.tsx:18
+#: src/components/MarketView/MarketCurateStatus.tsx:23
 msgid "Verify Market"
 msgstr "Verify Market"
 

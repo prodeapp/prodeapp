@@ -21,7 +21,7 @@ msgstr "Un mercado debe tener al menos tres eventos."
 msgid "Accepting bets"
 msgstr "Aceptando Apuestas"
 
-#: src/pages/Home.tsx:106
+#: src/pages/Home.tsx:99
 msgid "Active"
 msgstr "Activo"
 
@@ -101,7 +101,7 @@ msgstr "Apuesta no encontrada"
 msgid "Bet placed!"
 msgstr "¡Apuesta realizada!"
 
-#: src/pages/Home.tsx:129
+#: src/pages/Home.tsx:122
 msgid "Bet price"
 msgstr "Precio de Apuesta"
 
@@ -136,6 +136,10 @@ msgstr "Categoría"
 msgid "Category:"
 msgstr "Categoría"
 
+#: src/components/MarketView/MarketCurateStatus.tsx:26
+msgid "Check the submission in Curate before submitting again"
+msgstr "Revisa el mercado en Curate antes de enviarlo a verificación"
+
 #: src/components/MarketCreate/EventBuilder.tsx:57
 msgid "Choose Question"
 msgstr "Elegir pregunta"
@@ -153,7 +157,7 @@ msgid "Choose template"
 msgstr "Elija una plantilla"
 
 #: src/pages/Home.tsx:44
-#: src/pages/Home.tsx:103
+#: src/pages/Home.tsx:96
 msgid "Closed"
 msgstr "Cerrado"
 
@@ -342,7 +346,7 @@ msgstr "Item id no encontrado"
 
 #: src/components/Bet/BetForm.tsx:104
 #: src/pages/CurateSubmit.tsx:144
-#: src/pages/MarketsView.tsx:35
+#: src/pages/MarketsView.tsx:36
 #: src/pages/TokenView.tsx:18
 msgid "Loading..."
 msgstr "Cargando..."
@@ -397,7 +401,7 @@ msgstr "Market hash no encontrado"
 msgid "Market name"
 msgstr "Nombre del mercado"
 
-#: src/pages/MarketsView.tsx:41
+#: src/pages/MarketsView.tsx:42
 msgid "Market not found"
 msgstr "Mercado no encontrado"
 
@@ -408,6 +412,10 @@ msgstr "Mercado no encontado."
 #: src/pages/CurateSubmit.tsx:172
 msgid "Market sent to Kleros Curate"
 msgstr "Mercado enviado a Kleros Curate"
+
+#: src/components/MarketView/MarketCurateStatus.tsx:24
+msgid "Market under review"
+msgstr "Mercado bajo revisión"
 
 #: src/pages/Profile.tsx:57
 msgid "Markets"
@@ -432,7 +440,7 @@ msgstr "Siguiente paso"
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
 
-#: src/pages/Home.tsx:96
+#: src/pages/Home.tsx:89
 msgid "No markets found."
 msgstr "No se encontraron mercados"
 
@@ -444,7 +452,7 @@ msgstr "Sin respuesta todavía"
 msgid "Number of questions"
 msgstr "Número de preguntas"
 
-#: src/pages/Home.tsx:72
+#: src/pages/Home.tsx:65
 msgid "Only verified markets"
 msgstr "Solo mercados verificados"
 
@@ -457,13 +465,13 @@ msgstr "Disponible para responder en {openingTimeLeft}"
 msgid "Outcome"
 msgstr "Resultado"
 
-#: src/pages/Home.tsx:139
+#: src/pages/Home.tsx:132
 msgid "Participants"
 msgstr "Participantes"
 
 #: src/components/MarketView/Results.tsx:31
 #: src/components/MarketView/Results.tsx:43
-#: src/pages/Home.tsx:108
+#: src/pages/Home.tsx:101
 msgid "Pending"
 msgstr "Pendiente"
 
@@ -473,7 +481,7 @@ msgstr "Pendiente de arbitraje"
 
 #: src/components/Bet/BetForm.tsx:175
 #: src/components/MarketView/PlaceBet.tsx:33
-#: src/pages/Home.tsx:123
+#: src/pages/Home.tsx:116
 msgid "Place Bet"
 msgstr "Apostar"
 
@@ -499,7 +507,7 @@ msgstr "Puntos ganados"
 msgid "Pool"
 msgstr "Pozo"
 
-#: src/pages/Home.tsx:134
+#: src/pages/Home.tsx:127
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
@@ -612,7 +620,7 @@ msgstr "La fecha de comienzo es anterior a fecha límite de apuestas"
 msgid "Statistics"
 msgstr "Estadísticas"
 
-#: src/pages/MarketsView.tsx:52
+#: src/pages/MarketsView.tsx:53
 msgid "Status: <0/>"
 msgstr "Estado: <0/>"
 
@@ -676,7 +684,7 @@ msgstr "Esta es el primer envío de este mercado"
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "Este mercado tiene más de un envío a la lista"
 
-#: src/pages/MarketsView.tsx:40
+#: src/pages/MarketsView.tsx:41
 msgid "This market was just created, please wait a few seconds for it to be indexed."
 msgstr "Este mercado fue creado recientemente, por favor espere unos segundos hasta que sea indexado"
 
@@ -726,12 +734,13 @@ msgstr "Validar"
 msgid "Value must be greater than 0."
 msgstr "El valor debe ser mayor que 0."
 
-#: src/pages/Home.tsx:144
-#: src/pages/MarketsView.tsx:56
+#: src/components/MarketView/MarketCurateStatus.tsx:20
+#: src/pages/Home.tsx:137
 msgid "Verified"
 msgstr "Verificado"
 
-#: src/pages/MarketsView.tsx:55
+#: src/components/MarketView/MarketCurateStatus.tsx:18
+#: src/components/MarketView/MarketCurateStatus.tsx:23
 msgid "Verify Market"
 msgstr "Verificar Mercado"
 
