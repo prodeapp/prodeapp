@@ -25,7 +25,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
     }
 
     // check for pending items
-    const pendingItems = curateItems.filter(item => item.status === "RegistrationRequested");
+    const pendingItems = curateItems.filter(item => item.status === "RegistrationRequested" || item.status === "ClearingRequested");
 
     if (pendingItems.length > 0) {
       setActiveItem(pendingItems[0]);
