@@ -54,15 +54,18 @@ export type Outcome = string
 export interface Event {
   id: string
   nonce: BigNumberish
+  arbitrator: string
   market: {
     id: string
   }
+  category: string
   title: string
   answer: string | null
   outcomes: Outcome[]
   openingTs: string
   answerFinalizedTimestamp: string | null
   isPendingArbitration: boolean
+  timeout: string
   minBond: string
   lastBond: string
   bounty: string
@@ -72,13 +75,16 @@ export const EVENT_FIELDS = `
   fragment EventFields on Event {
     id
     nonce
+    arbitrator
     market{id}
+    category
     title
     answer
     outcomes
     openingTs
     answerFinalizedTimestamp
     isPendingArbitration
+    timeout
     minBond
     lastBond
     bounty
