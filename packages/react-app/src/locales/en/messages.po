@@ -376,6 +376,9 @@ msgstr "Prize Distribution"
 msgid "Prize Distribution (%)"
 msgstr "Prize Distribution (%)"
 
+msgid "Prize distribution:"
+msgstr "Prize distribution:"
+
 msgid "Prizes"
 msgstr "Prizes"
 
@@ -444,9 +447,6 @@ msgstr "Starting timestamp is earlier than the betting deadline"
 
 msgid "Statistics"
 msgstr "Statistics"
-
-msgid "Status: <0/>"
-msgstr "Status: <0/>"
 
 msgid "Submit"
 msgstr "Submit"

@@ -50,7 +50,7 @@ function MarketsView() {
             <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2}}>
               <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
               <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-                <Trans>Status: <MarketStatus marketId={market.id} /></Trans>
+                <MarketStatus marketId={market.id} />
               </div>
               <Box sx={{mt: 4, width: '100%'}}>
                 <MarketCurateStatus marketHash={market.hash} marketId={market.id}/>

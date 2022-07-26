@@ -376,6 +376,9 @@ msgstr "Distribución de premios"
 msgid "Prize Distribution (%)"
 msgstr "Distribución de premios (%)"
 
+msgid "Prize distribution:"
+msgstr "Distribución de premios:"
+
 msgid "Prizes"
 msgstr "Premios"
 
@@ -444,9 +447,6 @@ msgstr "La fecha de comienzo es anterior a fecha límite de apuestas"
 
 msgid "Statistics"
 msgstr "Estadísticas"
-
-msgid "Status: <0/>"
-msgstr "Estado: <0/>"
 
 msgid "Submit"
 msgstr "Enviar"
