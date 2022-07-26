@@ -109,6 +109,9 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
+#~ msgid "Check the submission in Curate before submitting again"
+#~ msgstr "Check the submission in Curate before submitting again"
+
 msgid "Choose Question"
 msgstr "Choose Question"
 
@@ -286,6 +289,9 @@ msgstr "Market hash found"
 msgid "Market hash not found"
 msgstr "Market hash not found"
 
+msgid "Market in verification process"
+msgstr "Market in verification process"
+
 msgid "Market name"
 msgstr "Market name"
 
@@ -295,8 +301,14 @@ msgstr "Market not found"
 msgid "Market not found."
 msgstr "Market not found."
 
+msgid "Market not verified yet"
+msgstr "Market not verified yet"
+
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
+
+#~ msgid "Market under review"
+#~ msgstr "Market under review"
 
 msgid "Markets"
 msgstr "Markets"

@@ -214,6 +214,8 @@ export const BET_FIELDS = `
   }
 `;
 
+export type CurationStatus = "Absent" | "Registered" | "RegistrationRequested" | "ClearingRequested" | "Error"
+
 export interface CurateItem {
   id: string
   hash: string
@@ -221,6 +223,7 @@ export interface CurateItem {
   timestamp: BigNumberish
   json: string
   data: string
+  status: CurationStatus
 }
 
 export const CURATE_ITEM_FIELDS = `
@@ -230,5 +233,6 @@ export const CURATE_ITEM_FIELDS = `
     data
     json
     timestamp
+    status
   }
 `;
