@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {encodeQuestionText, getQuestionId} from "../lib/reality";
+import {encodeQuestionText, getQuestionId, REALITY_TEMPLATE_ID} from "../lib/reality";
 import {parseUnits} from "@ethersproject/units";
 import {useCall, useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -84,7 +84,7 @@ export default function useMarketForm() {
     const questionsData = step1State.events.map(event => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
-        templateID: 2,
+        templateID: REALITY_TEMPLATE_ID,
         question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
         openingTS: openingTS,
       }

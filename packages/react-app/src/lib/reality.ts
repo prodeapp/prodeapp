@@ -3,6 +3,8 @@ import {MarketFactory} from "../typechain";
 import {keccak256} from "@ethersproject/solidity";
 import {BigNumber} from "@ethersproject/bignumber";
 
+export const REALITY_TEMPLATE_ID = 2;
+
 export function encodeQuestionText(
   qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
   txt: string,

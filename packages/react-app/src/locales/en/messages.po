@@ -391,6 +391,9 @@ msgstr "Publish"
 msgid "Question"
 msgstr "Question"
 
+msgid "Question reopened!"
+msgstr "Question reopened!"
+
 msgid "Referral link copied!"
 msgstr "Referral link copied!"
 
@@ -408,6 +411,9 @@ msgstr "Remove event"
 
 msgid "Remove group"
 msgstr "Remove group"
+
+msgid "Reopen question"
+msgstr "Reopen question"
 
 msgid "Result"
 msgstr "Result"

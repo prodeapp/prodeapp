@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {BoxWrapper, BoxRow} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
@@ -9,6 +9,11 @@ import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatLeague} from "../FormatTeams";
+import {ANSWERED_TOO_SOON} from "../Answer/AnswerForm";
+import {useContractFunction} from "@usedapp/core";
+import {Contract} from "@ethersproject/contracts";
+import {RealityETH_v3_0__factory} from "../../typechain";
+import {encodeQuestionText, REALITY_TEMPLATE_ID} from "../../lib/reality";
 
 function CircleItem({color}: {color: string}) {
   return <div style={{height: '14px', width: '14px', borderRadius: '50%', backgroundColor: color, marginRight: '10px'}}></div>
@@ -22,6 +27,10 @@ function AnswerColumn(event: Event, finalized: boolean) {
   const style = {display: 'flex', alignItems: 'center'};
 
   if (finalized) {
+    if (event.answer === ANSWERED_TOO_SOON) {
+      return <div style={style}><CircleItem color="yellow"/> {answerText}</div>
+    }
+
     return <div style={style}><CircleItem color="green"/> {answerText}</div>
   }
 
@@ -48,6 +57,55 @@ function AnswerColumn(event: Event, finalized: boolean) {
     <div style={style}><CircleItem color="yellow"/> {answerText}</div>
     <div style={{fontSize: '13px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
   </div>
+}
+
+function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
+  const { state, send } = useContractFunction(
+    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
+    'reopenQuestion'
+  );
+
+  useEffect(() => {
+    if (state.errorMessage) {
+      alert(state.errorMessage);
+    }
+  }, [state]);
+
+  if (finalized) {
+    if (event.answer === ANSWERED_TOO_SOON) {
+      const reopenQuestion = async () => {
+        await send(
+          REALITY_TEMPLATE_ID,
+          encodeQuestionText('single-select', event.title, event.outcomes, event.category, 'en_US'),
+          event.arbitrator,
+          event.timeout,
+          event.openingTs,
+          event.nonce,
+          event.minBond,
+          event.id
+        );
+      }
+
+      if (state.status === 'Success') {
+        // TODO: update event in cache to allow to answer instantly
+        return <div><Trans>Question reopened!</Trans></div>
+      }
+
+      return <Button
+        color="primary" size="small"
+        onClick={reopenQuestion}>
+        <Trans>Reopen question</Trans>
+      </Button>
+    }
+
+    return null;
+  }
+
+  return <Button
+    color="primary" size="small"
+    onClick={clickHandler}>
+    <Trans>Answer result</Trans>
+  </Button>
 }
 
 export default function Results({marketId}: {marketId: string}) {
@@ -81,17 +139,13 @@ export default function Results({marketId}: {marketId: string}) {
 
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
-          <div style={{display: 'flex', marginTop: 20, width: '100%', fontWeight: 'normal'}}>
+          <div style={{display: 'flex', alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
             <div style={{width: '40%', paddingRight: '10px'}}><FormatLeague title={event.title} /></div>
             <div style={{width: '30%'}}>
               {AnswerColumn(event, finalized)}
             </div>
             <div style={{width: '30%'}}>
-              {!finalized && <Button
-                color="primary" size="small"
-                onClick={() => {setCurrentEvent(event);setOpenModal(true);}}>
-                <Trans>Answer result</Trans>
-              </Button>}
+              {ActionColumn(event, finalized, () => {setCurrentEvent(event);setOpenModal(true);})}
             </div>
           </div>
         </div>
