@@ -109,9 +109,6 @@ msgstr "Categoría"
 msgid "Category:"
 msgstr "Categoría"
 
-#~ msgid "Check the submission in Curate before submitting again"
-#~ msgstr "Revisa el mercado en Curate antes de enviarlo a verificación"
-
 msgid "Choose Question"
 msgstr "Elegir pregunta"
 
@@ -189,9 +186,6 @@ msgstr "Error cargando los eventos"
 
 msgid "Event"
 msgstr "Evento"
-
-msgid "Event Result"
-msgstr "Resultado"
 
 msgid "Event result is pending arbitration."
 msgstr "Resultado del evento está en disputa."

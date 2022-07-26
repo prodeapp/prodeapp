@@ -109,9 +109,6 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
-#~ msgid "Check the submission in Curate before submitting again"
-#~ msgstr "Check the submission in Curate before submitting again"
-
 msgid "Choose Question"
 msgstr "Choose Question"
 
@@ -189,9 +186,6 @@ msgstr "Error loading events"
 
 msgid "Event"
 msgstr "Event"
-
-msgid "Event Result"
-msgstr "Event Result"
 
 msgid "Event result is pending arbitration."
 msgstr "Event result is pending arbitration."
@@ -306,9 +300,6 @@ msgstr "Market not verified yet"
 
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
-
-#~ msgid "Market under review"
-#~ msgstr "Market under review"
 
 msgid "Markets"
 msgstr "Markets"

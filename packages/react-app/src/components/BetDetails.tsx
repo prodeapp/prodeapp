@@ -4,6 +4,8 @@ import {getAnswerText} from '../lib/helpers';
 import {BigNumber} from "@ethersproject/bignumber";
 import { Trans, t } from '@lingui/macro';
 import {FormatLeague} from "./FormatTeams";
+import {usePhone} from "../hooks/useResponsive";
+import Box from '@mui/material/Box';
 
 function getBetResult(eventResult: string, playerBet: string) {
   if (eventResult === "") {
@@ -13,14 +15,37 @@ function getBetResult(eventResult: string, playerBet: string) {
   return playerBet === eventResult ? 1 : 2
 }
 
+const bigColumnSx = {
+  width: {xs: '100%', md: '40%'},
+  fontSize: {xs: '14px', md: '16px'},
+  marginBottom: {xs: '10px', md: '0'},
+  wordBreak: 'break-word',
+}
+
+const smallColumnsSx = {
+  width: {xs: '33%', md: '20%'},
+  fontSize: {xs: '13px', md: '16px'},
+  display: 'inline-block',
+  verticalAlign: 'top',
+  wordBreak: 'break-word',
+  textAlign: {xs: 'center', md: 'left'}
+}
+
+const mobileLabelSx = {
+  opacity: 0.7,
+  fontSize: '12px',
+}
+
 export default function BetDetails({bet}: {bet: Bet}) {
+  const isPhone = usePhone();
+
   return <BoxWrapper>
-    <BoxRow>
+    {!isPhone && <BoxRow>
       <div style={{ width: '40%'}}><Trans>Event</Trans></div>
       <div style={{ width: '20%'}}><Trans>Your Bet</Trans></div>
-      <div style={{ width: '20%'}}><Trans>Event Result</Trans></div>
+      <div style={{ width: '20%'}}><Trans>Result</Trans></div>
       <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
-    </BoxRow>
+    </BoxRow>}
     {bet.market.events.map((event, i) => {
       const eventNonce = BigNumber.from(event.nonce).toNumber();
       const playerBet = getAnswerText(bet.results[eventNonce], event.outcomes || []);
@@ -29,16 +54,23 @@ export default function BetDetails({bet}: {bet: Bet}) {
       const backgroundColor = betResult === 0 ? undefined : (betResult === 1 ? 'rgba(0, 128, 0, 0.15)' : 'rgba(255, 0, 0, 0.15)')
 
       return <BoxRow key={i} style={{flexDirection: 'column', backgroundColor}}>
-        <div style={{display: 'flex', width: '100%', marginTop: '15px', fontWeight: 'normal'}}>
-          <div style={{ width: '40%', wordBreak: 'break-word', paddingRight: '20px' }}><FormatLeague title={event.title} /></div>
-          <div style={{ width: '20%', wordBreak: 'break-word' }}>{playerBet}</div>
-          <div style={{ width: '20%', wordBreak: 'break-word' }}>{eventResult || t`Unknown`}</div>
-          <div style={{ width: '20%' }}>
+        <Box sx={{display: {md: 'flex'}, width: '100%', fontWeight: 'normal'}}>
+          <Box sx={bigColumnSx}><FormatLeague title={event.title} /></Box>
+          <Box sx={smallColumnsSx}>
+            {isPhone && <div style={mobileLabelSx}><Trans>Your Bet</Trans></div>}
+            {playerBet}
+          </Box>
+          <Box sx={smallColumnsSx}>
+            {isPhone && <div style={mobileLabelSx}><Trans>Result</Trans></div>}
+            {eventResult || t`Unknown`}
+          </Box>
+          <Box sx={smallColumnsSx}>
+            {isPhone && <div style={mobileLabelSx}><Trans>Points Earned</Trans></div>}
             {betResult === 0 && <span><Trans>Waiting result</Trans></span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}
             {betResult === 2 && <span style={{color: 'red'}}>0</span>}
-          </div>
-        </div>
+          </Box>
+        </Box>
       </BoxRow>;
     })}
   </BoxWrapper>
