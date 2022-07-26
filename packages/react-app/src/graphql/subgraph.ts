@@ -180,7 +180,7 @@ export interface Bet {
     name: string
     events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes'>[]
   }
-  tokenID: BigNumberish
+  tokenID: string
   points: BigNumberish
   results: string[]
   count: BigNumberish

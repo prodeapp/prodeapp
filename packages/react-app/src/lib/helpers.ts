@@ -135,3 +135,11 @@ export function getMarketUrl(marketId: string) {
 export function getReferralKey(marketId: string) {
   return `referral_${marketId}`
 }
+
+export type IndexedObjects<T> = Record<string, T>;
+
+export function indexObjectsByKey<T extends Record<string, any>>(objects: T[], key: string): IndexedObjects<T> {
+  return objects.reduce((objs, obj) => {
+    return {...objs, [obj[key]]: obj}
+  }, {})
+}

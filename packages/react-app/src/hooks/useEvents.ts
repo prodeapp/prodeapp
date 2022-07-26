@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {Event, EVENT_FIELDS} from "../graphql/subgraph";
 import {apolloProdeQuery} from "../lib/apolloClient";
 import {useMemo} from "react";
+import {indexObjectsByKey} from "../lib/helpers";
 
 const query = `
     ${EVENT_FIELDS}
@@ -45,14 +46,6 @@ export const useEventsToBet = (marketId: string) => {
   );
 };
 
-export type IndexedEvents = Record<string, Event>;
-
-export function getIndexedEvents(events: Event[]): IndexedEvents {
-  return events.reduce((obj, event) => {
-    return {...obj, [event.id]: event}
-  }, {})
-}
-
 export function useIndexedEvents(events?: Event[]) {
-  return useMemo(() => getIndexedEvents(events || []), [events])
+  return useMemo(() => indexObjectsByKey(events || [], 'id'), [events])
 }
