@@ -26,3 +26,6 @@ packages/subgraph/src/types/
 
 packages/react-app/.env
 packages/react-app/src/typechain
+
+packages/react-app/src/locales/_build/
+packages/react-app/src/locales/**/*.js
