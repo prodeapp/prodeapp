@@ -1,13 +1,31 @@
-import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
-import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest } from "../types/RealitioV3/Realitio";
-import { Bet, Event, Market } from "../types/schema";
-import { correctAnswerPoints } from "./utils/constants";
+import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
+import { Bet, Event, Market, ReopenedEvent } from "../types/schema";
+import { correctAnswerPoints, RealitioAddress } from "./utils/constants";
 import { getBetID } from "./utils/helpers";
 
 export function handleNewAnswer(evt: LogNewAnswer): void {
     let id = evt.params.question_id.toHexString();
     let event = Event.load(id);
-    if (event === null) return; // this is not a question from the Dapp
+    if (event === null) {
+        let reopenedEvent = ReopenedEvent.load(id);
+        if (reopenedEvent !== null){
+            log.debug("handleNewAnswer: Logging the answer for the reopened event {}", [reopenedEvent.id])
+            // This event was reopoened, let's look the original event.
+            // It's a while because could have been reopened several times.
+            let lastReOpenedEvent = reopenedEvent;
+            let oldestReOpenedEvent:ReopenedEvent|null = ReopenedEvent.load(lastReOpenedEvent.id);
+            while (oldestReOpenedEvent !== null) {
+                lastReOpenedEvent = oldestReOpenedEvent;
+                log.debug("handleNewAnswer: lastReOpenedEvent {}", [lastReOpenedEvent.id]);
+                oldestReOpenedEvent = ReopenedEvent.load(lastReOpenedEvent.id);
+            }
+            event = Event.load(lastReOpenedEvent.replacedEvent)!;
+            log.debug("handleNewAnswer: Logging the answer from the reopened event {} into event {}", [reopenedEvent.id, event.id])
+        } else {
+            return; // this is not a question from the Dapp
+        }
+    }
 
     const ts = evt.params.ts;
     event.answerFinalizedTimestamp = event.arbitrationOccurred ? ts : ts.plus(event.timeout);
@@ -95,4 +113,24 @@ export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
     }
     evnt.bounty = event.params.bounty;
     evnt.save()
+}
+
+export function handleReopenQuestion(event: LogReopenQuestion): void {
+    let oldQuestionID = event.params.reopened_question_id.toHexString();
+    let entity = new ReopenedEvent(event.params.question_id.toHexString());
+    entity.replacedEvent = oldQuestionID;
+    entity.save();
+
+    let oldEvent = Event.load(oldQuestionID)!;
+    oldEvent.answer = null;
+    oldEvent.answerFinalizedTimestamp = null;
+    oldEvent.isPendingArbitration = false;
+    oldEvent.save()
+
+    // It's not possible to bet for answer too soon, so there is no need
+    // to recalculate points. But the counter of number of answers has to be updated
+    let market = Market.load(oldEvent.market)!;
+    market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.minus(BigInt.fromI32(1));
+    market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
+    market.save();
 }

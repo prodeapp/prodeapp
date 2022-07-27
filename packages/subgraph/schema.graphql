@@ -154,3 +154,10 @@ type MetaEvidence @entity {
   "The URI of the meta evidence file."
   URI: String!
 }
+
+type ReopenedEvent @entity {
+  "The questionID of the new Event"
+  id: ID!
+  "The replaced Event"
+  replacedEvent: Event!
+}
