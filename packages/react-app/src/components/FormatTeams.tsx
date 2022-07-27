@@ -7,8 +7,16 @@ const teamSx = {
   alignItems: 'center'
 }
 
-export function FormatTeam({name, imageAlign = "left"}: {name: string, imageAlign?: "left"|"right"}) {
-  const image = getTeamImage(name);
+const getCountryFromLeague = (title: string) => {
+  if (title.includes("Premier League")) {
+    return "en";
+  }
+
+  return "ar";
+}
+
+export function FormatTeam({name, country, imageAlign = "left"}: {name: string, country: string, imageAlign?: "left"|"right"}) {
+  const image = getTeamImage(name, country);
   return <>
     {image && imageAlign === "left" && <img src={image} alt={name} width={15} height={15} style={{marginRight: '5px'}}/>}
     <div>{name}</div>
@@ -23,9 +31,11 @@ export function FormatLeague({title}: {title: string}) {
     return <>{title}</>
   }
 
+  const country = getCountryFromLeague(title);
+
   return <div style={{display: 'flex', alignItems: 'center'}}>
-    <div style={{...teamSx, justifyContent: 'end', textAlign: 'right'}}><FormatTeam name={params.param1} imageAlign="right" /></div>
+    <div style={{...teamSx, justifyContent: 'end', textAlign: 'right'}}><FormatTeam name={params.param1} country={country} imageAlign="right" /></div>
     <div style={{width: '30px', textAlign: 'center'}}>vs</div>
-    <div style={teamSx}><FormatTeam name={params.param2} /></div>
+    <div style={teamSx}><FormatTeam name={params.param2} country={country} /></div>
   </div>
 }

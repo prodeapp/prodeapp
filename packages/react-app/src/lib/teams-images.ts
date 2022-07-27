@@ -27,6 +27,27 @@ import TIGRE from '../assets/logos/ar/tigre.png'
 import UNION from '../assets/logos/ar/union.png'
 import VELEZ from '../assets/logos/ar/velez.png'
 
+import ARSENAL_FC from '../assets/logos/en/arsenal.png'
+import ASTON_VILLA from '../assets/logos/en/aston_villa.png'
+import BOURNEMOUTH from '../assets/logos/en/bournemouth.png'
+import BRENTFORD from '../assets/logos/en/brentford.png'
+import BRIGHTON from '../assets/logos/en/brighton.png'
+import CHELSEA from '../assets/logos/en/chelsea.png'
+import CRYSTAL_PALACE from '../assets/logos/en/crystal_palace.png'
+import EVERTON from '../assets/logos/en/everton.png'
+import FULHAM from '../assets/logos/en/fulham.png'
+import LEEDS from '../assets/logos/en/leeds.png'
+import LEICESTER from '../assets/logos/en/leicester.png'
+import LIVERPOOL from '../assets/logos/en/liverpool.png'
+import MANCHESTER_CITY from '../assets/logos/en/manchester_city.png'
+import MANCHESTER_UTD from '../assets/logos/en/manchester_united.png'
+import NEWCASTLE from '../assets/logos/en/newcastle.png'
+import NOTTINGHAM from '../assets/logos/en/nottingham.png'
+import SOUTHAMPTON from '../assets/logos/en/southampton.png'
+import TOTTENHAM from '../assets/logos/en/tottenham.png'
+import WEST_HAM from '../assets/logos/en/west_ham.png'
+import WOLVES from '../assets/logos/en/wolves.png'
+
 const images: Record<string, Record<string, string>> = {
   'ar': {
     'Aldosivi': ALDOSIVI,
@@ -57,9 +78,31 @@ const images: Record<string, Record<string, string>> = {
     'Union': UNION,
     'Velez Sarfield': VELEZ,
     'Sarmiento': SARMIENTO,
-  }
+  },
+  'en': {
+    'Arsenal': ARSENAL_FC,
+    'Aston Villa': ASTON_VILLA,
+    'Bournemouth': BOURNEMOUTH,
+    'Brentford': BRENTFORD,
+    'Brighton': BRIGHTON,
+    'Chelsea': CHELSEA,
+    'Crystal Palace': CRYSTAL_PALACE,
+    'Everton': EVERTON,
+    'Fulham': FULHAM,
+    'Leeds': LEEDS,
+    'Leicester': LEICESTER,
+    'Liverpool': LIVERPOOL,
+    'Manchester City': MANCHESTER_CITY,
+    'Manchester Utd': MANCHESTER_UTD,
+    'Newcastle': NEWCASTLE,
+    'Nottingham': NOTTINGHAM,
+    'Southampton': SOUTHAMPTON,
+    'Tottenham': TOTTENHAM,
+    'West Ham': WEST_HAM,
+    'Wolves': WOLVES,
+  },
 }
 
-export function getTeamImage(teamName: string): string {
-  return images.ar[teamName] || '';
+export function getTeamImage(teamName: string, country: string): string {
+  return images[country][teamName] || '';
 }
