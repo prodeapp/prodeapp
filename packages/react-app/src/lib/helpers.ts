@@ -143,3 +143,12 @@ export function indexObjectsByKey<T extends Record<string, any>>(objects: T[], k
     return {...objs, [obj[key]]: obj}
   }, {})
 }
+
+const documentationUrls = {
+  en: 'https://prode-eth.gitbook.io/prode.eth-en',
+  es: 'https://prode-eth.gitbook.io/prode.eth-es',
+}
+
+export function getDocsUrl(locale: I18nContextProps['locale']) {
+  return documentationUrls[locale];
+}

@@ -14,6 +14,7 @@ import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
 import { Language } from "@mui/icons-material";
+import {getDocsUrl} from "../lib/helpers";
 
 export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -74,10 +75,13 @@ export default function AppMenuBar() {
               }}
             >
               <MenuItem>
-                <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}>Create Market</Button>
+                <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}><Trans>Create Market</Trans></Button>
               </MenuItem>
               <MenuItem>
                 <Button href={BRIDGE_URL} target="_blank" rel="noreferrer">Bridge</Button>
+              </MenuItem>
+              <MenuItem>
+                <Button href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Doc</Trans></Button>
               </MenuItem>
               <MenuItem sx={{display: {alignItems: 'center'}}}>
                 <Language />
@@ -114,6 +118,11 @@ export default function AppMenuBar() {
               href={BRIDGE_URL} target="_blank" rel="noreferrer"
             >
               <Trans>Bridge</Trans>
+            </Button>
+            <Button
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
+              <Trans>Documentation</Trans>
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', alignItems: 'center'} }}>
