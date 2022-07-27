@@ -95,8 +95,8 @@ type Event @entity {
   bounty: BigInt!
   contentHash: Bytes!
   historyHash: Bytes!
-  "Event that replaces this event. null if wasn't reopened"
-  reopensEvent: Event
+  "List of questionIDs that this event it's reopening."
+  reopenedEvents: [String!]!
 }
 
 type Player @entity {

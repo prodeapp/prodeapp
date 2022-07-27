@@ -7,7 +7,7 @@ import {indexObjectsByKey} from "../lib/helpers";
 const query = `
     ${EVENT_FIELDS}
     query EventsQuery ($marketId: String!, $orderBy: String!, $orderDirection: String!){
-      events(where:{market: $marketId, reopensEvent: null}, orderBy: $orderBy, orderDirection: $orderDirection) {
+      events(where:{market: $marketId}, orderBy: $orderBy, orderDirection: $orderDirection) {
         ...EventFields
       }
     }

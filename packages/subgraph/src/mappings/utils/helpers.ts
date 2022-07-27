@@ -83,7 +83,7 @@ export function duplicateEvent(baseEvent: Event, newEventID: string): Event {
     entity.contentHash = baseEvent.contentHash;
     entity.historyHash = baseEvent.historyHash;
     entity.answer = null;
-    entity.reopensEvent = null;
+    entity.reopenedEvents = baseEvent.reopenedEvents;
     entity.save();
     return entity;
 }

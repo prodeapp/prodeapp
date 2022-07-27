@@ -1,4 +1,4 @@
-import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { BigInt, ByteArray, Bytes, log, store } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
 import { Bet, Event, Market } from "../types/schema";
 import { correctAnswerPoints } from "./utils/constants";
@@ -102,10 +102,14 @@ export function handleReopenQuestion(event: LogReopenQuestion): void {
     let oldEvent = Event.load(oldQuestionID)!;
     const newQuestionID = event.params.question_id.toHexString();
     const entity = duplicateEvent(oldEvent, newQuestionID);
+    let reopEvnts = entity.reopenedEvents;
+    reopEvnts.push(oldEvent.id);
+    entity.reopenedEvents = reopEvnts;
+    entity.save();
     
-    // Link the event that replace the old question.
-    oldEvent.reopensEvent = entity.id;
-    oldEvent.save()
+    // Delete old event.
+    log.debug("handleReopenQuestion: Deleting event {} after creating event {}", [oldEvent.id, entity.id]);
+    store.remove("Event", oldEvent.id);
 
     // It's not possible to bet for answer too soon, so there is no need
     // to recalculate points. But the counter of number of answers has to be updated
