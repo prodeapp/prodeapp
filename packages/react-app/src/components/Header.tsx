@@ -16,7 +16,7 @@ import { Trans } from "@lingui/macro";
 import { Language } from "@mui/icons-material";
 import {getDocsUrl} from "../lib/helpers";
 
-export default function AppMenuBar() {
+export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { locale, handleChangeLocale } = useI18nContext();
 
@@ -238,9 +238,10 @@ function WalletMenu() {
       {!account && <Button onClick={handleOpenWalletModal}><Trans>Connect Wallet</Trans></Button>}
 
       {account && <>
-        <Blockies seed={account} size={7} scale={4} />
-        <Button variant="text">{accountName}</Button>
-        <Button component={RouterLink} to={"/profile"}><Trans>Profile</Trans></Button>
+        <Button variant="text" component={RouterLink} to={"/profile"}>
+          <Blockies seed={account} size={7} scale={4} />
+          <Box ml={1}>{accountName}</Box>
+        </Button>
         <Button onClick={deactivate}><Trans>Logout</Trans></Button>
       </>}
     </Box>

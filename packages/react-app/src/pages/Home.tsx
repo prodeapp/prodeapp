@@ -14,6 +14,25 @@ import TextField from "@mui/material/TextField";
 import { Trans } from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
 import HomeSlider from "../components/HomeSlider";
+import {styled} from "@mui/material/styles";
+
+const FiltersWrapper = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+
+  [theme.breakpoints.down('md')]: {
+    flexDirection: 'column',
+  },
+
+  // eslint-disable-next-line
+  ['& > div']: {
+    [theme.breakpoints.down('md')]: {
+      marginBottom: theme.spacing(2),
+    }
+  },
+}));
+
 
 function Home() {
   const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
@@ -35,15 +54,18 @@ function Home() {
   return (
     <>
       <HomeSlider />
+
       <BoxWrapper style={{padding:'15px'}}>
-        <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
-          <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <FiltersWrapper>
+          <Box sx={{ display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'center', alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}>Status: </Typography></div>
-            <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}><Trans>Betting</Trans></Button></div>
-            <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}><Trans>Playing</Trans></Button></div>
-            <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}><Trans>Closed</Trans></Button></div>
+            <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+              <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'secondary' : 'primary'}><Trans>Betting</Trans></Button></div>
+              <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'secondary' : 'primary'}><Trans>Playing</Trans></Button></div>
+              <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'secondary' : 'primary'}><Trans>Closed</Trans></Button></div>
+            </Box>
           </Box>
-          <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <Box sx={{ display:'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'center', alignItems: 'center'}}>
             <div><Typography style={{paddingRight:'10px'}}><Trans>Category: </Trans></Typography></div>
             <TextField
               select
@@ -65,7 +87,7 @@ function Home() {
                 label={<Trans>Only verified markets</Trans>}/>
             </FormGroup>
           </Box>
-        </Box>
+        </FiltersWrapper>
       </BoxWrapper>
 
       {isLoading && <CircularProgress />}

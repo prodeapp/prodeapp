@@ -3,6 +3,7 @@ import {BoxWrapper, BoxRow} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
@@ -14,6 +15,23 @@ import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
 import {encodeQuestionText, REALITY_TEMPLATE_ID} from "../../lib/reality";
+import {usePhone} from "../../hooks/useResponsive";
+
+const bigColumnSx = {
+  width: {xs: '100%', md: '40%'},
+  fontSize: {xs: '14px', md: '16px'},
+  marginBottom: {xs: '10px', md: '0'},
+  wordBreak: 'break-word',
+}
+
+const smallColumnsSx = {
+  width: {xs: '50%', md: '30%'},
+  fontSize: {xs: '13px', md: '16px'},
+  display: 'inline-block',
+  verticalAlign: 'top',
+  wordBreak: 'break-word',
+  textAlign: {xs: 'center', md: 'left'}
+}
 
 function CircleItem({color}: {color: string}) {
   return <div style={{height: '14px', width: '14px', borderRadius: '50%', backgroundColor: color, marginRight: '10px'}}></div>
@@ -112,6 +130,7 @@ export default function Results({marketId}: {marketId: string}) {
   const { data: events } = useEvents(marketId);
   const [currentEvent, setCurrentEvent] = useState<Event|undefined>();
   const [openModal, setOpenModal] = useState(false);
+  const isPhone = usePhone();
 
   const handleClose = () => {
     setOpenModal(false);
@@ -129,25 +148,25 @@ export default function Results({marketId}: {marketId: string}) {
       event={currentEvent}
     />}
   <BoxWrapper>
-    <BoxRow>
+    {!isPhone && <BoxRow>
       <div style={{width: '40%'}}><Trans>Event</Trans></div>
       <div style={{width: '30%'}}><Trans>Answer</Trans></div>
       <div style={{width: '30%'}}></div>
-    </BoxRow>
+    </BoxRow>}
     {events && events.map((event, i) => {
       const finalized = isFinalized(event);
 
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
-          <div style={{display: 'flex', alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
-            <div style={{width: '40%', paddingRight: '10px'}}><FormatLeague title={event.title} /></div>
-            <div style={{width: '30%'}}>
+          <Box sx={{display: {md: 'flex'}, alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
+            <Box sx={bigColumnSx}><FormatLeague title={event.title} /></Box>
+            <Box sx={smallColumnsSx}>
               {AnswerColumn(event, finalized)}
-            </div>
-            <div style={{width: '30%'}}>
+            </Box>
+            <Box sx={smallColumnsSx}>
               {ActionColumn(event, finalized, () => {setCurrentEvent(event);setOpenModal(true);})}
-            </div>
-          </div>
+            </Box>
+          </Box>
         </div>
       </BoxRow>
     })}

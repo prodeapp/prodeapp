@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
-import BetDetails from "../BetDetails";
+import BetDetails from "../Bet/BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
 import { Trans, t } from "@lingui/macro";

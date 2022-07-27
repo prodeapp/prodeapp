@@ -5,7 +5,7 @@ import { Trans } from "@lingui/macro";
 import {useBetToken} from "../hooks/useBetToken";
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBet} from "../hooks/useBet";
-import BetDetails from "../components/BetDetails";
+import BetDetails from "../components/Bet/BetDetails";
 import {Button} from "@mui/material";
 
 function TokenView() {
