@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event} from "../../types/schema";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();
@@ -60,4 +60,30 @@ export function getCurrentRanking(market: ByteArray): Bet[] {
     }
     // sort by points, if equal points, the first in bet get the higher ranking
     return bets.sort((a, b) => (a.points > b.points) ? 1 : (a.points === b.points) ? ((a.tokenID > b.tokenID) ? 1 : -1) : -1)
+}
+
+
+export function duplicateEvent(baseEvent: Event, newEventID: string): Event {
+    let entity = new Event(newEventID);
+    entity.nonce = baseEvent.nonce;
+    entity.arbitrator = baseEvent.arbitrator;
+    entity.market = baseEvent.market;
+    entity.category = baseEvent.category;
+    entity.title = baseEvent.title;
+    entity.lang = baseEvent.lang;
+    entity.outcomes = baseEvent.outcomes;
+    entity.arbitrationOccurred = false;
+    entity.isPendingArbitration = false;
+    entity.openingTs = baseEvent.openingTs;
+    entity.finalizeTs =  baseEvent.finalizeTs;
+    entity.timeout = baseEvent.timeout;
+    entity.minBond = baseEvent.minBond;
+    entity.lastBond = BigInt.fromI32(0);
+    entity.bounty = baseEvent.bounty;
+    entity.contentHash = baseEvent.contentHash;
+    entity.historyHash = baseEvent.historyHash;
+    entity.answer = null;
+    entity.reopenedEvents = baseEvent.reopenedEvents;
+    entity.save();
+    return entity;
 }

@@ -31,6 +31,7 @@ export function handleCreateMarket(call: CreateMarketCall): void {
     let event = new Event(questionID.value.toHexString());
     event.market = marketAddress.toHexString();
     event.nonce = BigInt.fromI32(nonce);
+    event.arbitrator = realitioSC.getArbitrator(questionID.value);
     event.openingTs = realitioSC.getOpeningTS(questionID.value);
     event.timeout = realitioSC.getTimeout(questionID.value);
     event.minBond = realitioSC.getMinBond(questionID.value);
