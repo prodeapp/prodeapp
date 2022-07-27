@@ -1,31 +1,13 @@
-import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
-import { Bet, Event, Market, ReopenedEvent } from "../types/schema";
-import { correctAnswerPoints, RealitioAddress } from "./utils/constants";
-import { getBetID } from "./utils/helpers";
+import { Bet, Event, Market } from "../types/schema";
+import { correctAnswerPoints } from "./utils/constants";
+import { getBetID, duplicateEvent } from "./utils/helpers";
 
 export function handleNewAnswer(evt: LogNewAnswer): void {
     let id = evt.params.question_id.toHexString();
     let event = Event.load(id);
-    if (event === null) {
-        let reopenedEvent = ReopenedEvent.load(id);
-        if (reopenedEvent !== null){
-            log.debug("handleNewAnswer: Logging the answer for the reopened event {}", [reopenedEvent.id])
-            // This event was reopoened, let's look the original event.
-            // It's a while because could have been reopened several times.
-            let lastReOpenedEvent = reopenedEvent;
-            let oldestReOpenedEvent:ReopenedEvent|null = ReopenedEvent.load(lastReOpenedEvent.id);
-            while (oldestReOpenedEvent !== null) {
-                lastReOpenedEvent = oldestReOpenedEvent;
-                log.debug("handleNewAnswer: lastReOpenedEvent {}", [lastReOpenedEvent.id]);
-                oldestReOpenedEvent = ReopenedEvent.load(lastReOpenedEvent.id);
-            }
-            event = Event.load(lastReOpenedEvent.replacedEvent)!;
-            log.debug("handleNewAnswer: Logging the answer from the reopened event {} into event {}", [reopenedEvent.id, event.id])
-        } else {
-            return; // this is not a question from the Dapp
-        }
-    }
+    if (event === null) return; // this is not a question from the Dapp
 
     const ts = evt.params.ts;
     event.answerFinalizedTimestamp = event.arbitrationOccurred ? ts : ts.plus(event.timeout);
@@ -116,15 +98,13 @@ export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
 }
 
 export function handleReopenQuestion(event: LogReopenQuestion): void {
-    let oldQuestionID = event.params.reopened_question_id.toHexString();
-    let entity = new ReopenedEvent(event.params.question_id.toHexString());
-    entity.replacedEvent = oldQuestionID;
-    entity.save();
-
+    const oldQuestionID = event.params.reopened_question_id.toHexString();
     let oldEvent = Event.load(oldQuestionID)!;
-    oldEvent.answer = null;
-    oldEvent.answerFinalizedTimestamp = null;
-    oldEvent.isPendingArbitration = false;
+    const newQuestionID = event.params.question_id.toHexString();
+    const entity = duplicateEvent(oldEvent, newQuestionID);
+    
+    // Link the event that replace the old question.
+    oldEvent.reopensEvent = entity.id;
     oldEvent.save()
 
     // It's not possible to bet for answer too soon, so there is no need
