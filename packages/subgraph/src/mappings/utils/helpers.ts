@@ -78,7 +78,7 @@ export function duplicateEvent(baseEvent: Event, newEventID: string): Event {
     entity.finalizeTs =  baseEvent.finalizeTs;
     entity.timeout = baseEvent.timeout;
     entity.minBond = baseEvent.minBond;
-    entity.lastBond = baseEvent.lastBond
+    entity.lastBond = BigInt.fromI32(0);
     entity.bounty = baseEvent.bounty;
     entity.contentHash = baseEvent.contentHash;
     entity.historyHash = baseEvent.historyHash;
