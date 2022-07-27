@@ -15,6 +15,7 @@ import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
 import { Language } from "@mui/icons-material";
 import {getDocsUrl} from "../lib/helpers";
+import useWindowFocus from "../hooks/useWindowFocus";
 
 export default function Header() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -150,6 +151,7 @@ function WalletDialog({open, handleClose}: DialogProps) {
   const { account, activate, activateBrowserWallet, error, switchNetwork } = useEthers();
   const { readOnlyUrls } = useConfig();
   const [walletError, setWalletError] = useState<Error | undefined>();
+  const hasWindowFocus = useWindowFocus();
 
   async function activateWalletConnect() {
     try {
@@ -174,13 +176,15 @@ function WalletDialog({open, handleClose}: DialogProps) {
   useEffect(() => {
     if (error && error.message !== walletError?.message) {
       if (error.message.includes('Unsupported chain id')) {
-        // Ask to change the network in the wallet.
-        switchNetwork(100)
+        if (hasWindowFocus) {
+          // Ask to change the network in the wallet.
+          switchNetwork(100)
+        }
       } else {
         setWalletError(error)
       }
     }
-  }, [error, walletError, switchNetwork])
+  }, [error, walletError, switchNetwork, hasWindowFocus])
 
   return (
     <AppDialog
