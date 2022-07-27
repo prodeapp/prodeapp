@@ -14,14 +14,13 @@ import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
 import { Language } from "@mui/icons-material";
+import {getDocsUrl} from "../lib/helpers";
 
 export default function AppMenuBar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { locale, handleChangeLocale } = useI18nContext();
 
   const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
-  const DOC_URL_EN = 'https://prode-eth.gitbook.io/prode.eth-en';
-  const DOC_URL_ES = 'https://prode-eth.gitbook.io/prode.eth-es';
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -30,8 +29,6 @@ export default function AppMenuBar() {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  console.log(locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN);
 
   return (
     <AppBar position="static">
@@ -84,7 +81,7 @@ export default function AppMenuBar() {
                 <Button href={BRIDGE_URL} target="_blank" rel="noreferrer">Bridge</Button>
               </MenuItem>
               <MenuItem>
-                <Button href={locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN} target="_blank" rel="noreferrer"><Trans>Doc</Trans></Button>
+                <Button href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Doc</Trans></Button>
               </MenuItem>
               <MenuItem sx={{display: {alignItems: 'center'}}}>
                 <Language />
@@ -124,7 +121,7 @@ export default function AppMenuBar() {
             </Button>
             <Button
               sx={{ my: 2, color: 'white', display: 'block' }}
-              href={locale===LocaleEnum.Spanish?DOC_URL_ES:DOC_URL_EN} target="_blank" rel="noreferrer">
+              href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
               <Trans>Documentation</Trans>
             </Button>
           </Box>

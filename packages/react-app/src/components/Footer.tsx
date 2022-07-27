@@ -2,6 +2,9 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import {Box, Container} from "@mui/material";
 import {Link} from "react-router-dom";
+import {getDocsUrl} from "../lib/helpers";
+import {useI18nContext} from "../lib/I18nContext";
+import {Trans} from "@lingui/macro";
 
 const FooterNav = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -39,6 +42,8 @@ const Root = styled(Box)(({ theme }) => ({
 }));
 
 export default function Footer() {
+  const { locale } = useI18nContext();
+
   return (
     <FooterWrapper>
       <Container maxWidth="lg">
@@ -46,6 +51,7 @@ export default function Footer() {
           <div style={{fontWeight: 500}}><Link to="/">prode.eth</Link></div>
           <FooterNav>
             <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
+            <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
           </FooterNav>
         </Root>
       </Container>
