@@ -78,6 +78,8 @@ function AnswerColumn(event: Event, finalized: boolean) {
 }
 
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
+  const { locale } = useI18nContext();
+
   const { state, send } = useContractFunction(
     new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
     'reopenQuestion'
@@ -119,10 +121,16 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
     return null;
   }
 
+  const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
+
+  if (openingTimeLeft !== false) {
+    return null;
+  }
+
   return <Button
     color="primary" size="small"
     onClick={clickHandler}>
-    <Trans>Answer result</Trans>
+    {event.answer === null ? <Trans>Answer result</Trans> : <Trans>Change result</Trans>}
   </Button>
 }
 
@@ -150,7 +158,7 @@ export default function Results({marketId}: {marketId: string}) {
   <BoxWrapper>
     {!isPhone && <BoxRow>
       <div style={{width: '40%'}}><Trans>Event</Trans></div>
-      <div style={{width: '30%'}}><Trans>Answer</Trans></div>
+      <div style={{width: '30%'}}><Trans>Result</Trans></div>
       <div style={{width: '30%'}}></div>
     </BoxRow>}
     {events && events.map((event, i) => {

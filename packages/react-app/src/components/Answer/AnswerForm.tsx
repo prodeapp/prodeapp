@@ -36,6 +36,7 @@ type AnswerFormProps = {
 export default function AnswerForm({event, register, errors, handleSubmit}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
+  const [outcomes, setOutcomes] = useState<{value: string, text: string}[]>([]);
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
@@ -47,6 +48,24 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
     const minBond = BigNumber.from(event.minBond);
     const lastBond = BigNumber.from(event.lastBond);
     setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
+
+    // outcomes
+    let _outcomes: {value: string, text: string}[] = [];
+
+    _outcomes = event.outcomes
+        // first map and then filter to keep the index of each outcome as value
+        .map((outcome, i) => ({value: String(i), text: outcome}))
+        .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+
+    if(event.answer !== INVALID_RESULT) {
+      _outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
+    }
+
+    if (event.answer && event.answer !== ANSWERED_TOO_SOON) {
+      _outcomes.push({value: ANSWERED_TOO_SOON, text: 'Answered too soon'});
+    }
+
+    setOutcomes(_outcomes);
   }, [event]);
 
   useEffect(() => {
@@ -90,7 +109,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
       <BoxWrapper>
         <BoxRow>
           <div style={{width: '40%'}}>
-          <Trans>Result</Trans>
+          <Trans>Current result</Trans>
           </div>
           <div style={{width: '60%'}}>
             {getAnswerText(event.answer, event.outcomes || [])}
@@ -107,7 +126,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
         {!finalized && <>
           <BoxRow>
             <div style={{width: '40%'}}>
-            <Trans>Your answer</Trans>
+            <Trans>New result</Trans>
             </div>
             <div style={{width: '60%'}}>
               <FormControl fullWidth>
@@ -116,9 +135,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
                   id={`question-outcome-select`}
                   {...register(`outcome`, {required: t`This field is required.`})}
                 >
-                  {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{outcome}</MenuItem>)}
-                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
-                  {event.answer && <MenuItem value={ANSWERED_TOO_SOON}><Trans>Answered too soon</Trans></MenuItem>}
+                  {outcomes.map((outcome, i) => <MenuItem value={outcome.value} key={i}><Trans id={outcome.text} /></MenuItem>)}
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcome`} /></FormError>
               </FormControl>

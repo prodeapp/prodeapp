@@ -46,9 +46,6 @@ msgstr "Billetera donde se enviará la comisión del creador"
 msgid "All"
 msgstr "Todos"
 
-msgid "Answer"
-msgstr "Respuesta"
-
 msgid "Answer closes in {answerCountdown}"
 msgstr "Respuesta se acepta en {answerCountdown}"
 
@@ -109,6 +106,9 @@ msgstr "Categoría"
 msgid "Category:"
 msgstr "Categoría"
 
+msgid "Change result"
+msgstr "Cambiar resultado"
+
 msgid "Choose Question"
 msgstr "Elegir pregunta"
 
@@ -162,6 +162,9 @@ msgstr "Crear Mercado"
 
 msgid "Create a market and earn fees on each bet."
 msgstr "Cree un mercado y gane comisiones de cada apuesta"
+
+msgid "Current result"
+msgstr "Resultado actual"
 
 msgid "Description"
 msgstr "Descripción"
@@ -316,6 +319,9 @@ msgstr "Mensaje"
 msgid "Miscellaneous"
 msgstr "Misceláneas"
 
+msgid "New result"
+msgstr "Nuevo resultado"
+
 msgid "Next step"
 msgstr "Siguiente paso"
 
@@ -387,9 +393,6 @@ msgstr "Distribución de premios:"
 
 msgid "Prizes"
 msgstr "Premios"
-
-msgid "Profile"
-msgstr "Perfil"
 
 msgid "Publish"
 msgstr "Publicar"
@@ -558,9 +561,6 @@ msgstr "Puede transferirlo o venderlo en un marketplace, pero recuerde que el du
 
 msgid "Your Bet"
 msgstr "Su apuesta"
-
-msgid "Your answer"
-msgstr "Su respuesta"
 
 msgid "Your betting position is represented by the following NFT."
 msgstr "Su apuesta está representada por el siguiente NFT."

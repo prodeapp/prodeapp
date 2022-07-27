@@ -46,9 +46,6 @@ msgstr "Address to send management fees to."
 msgid "All"
 msgstr "All"
 
-msgid "Answer"
-msgstr "Answer"
-
 msgid "Answer closes in {answerCountdown}"
 msgstr "Answer closes in {answerCountdown}"
 
@@ -109,6 +106,9 @@ msgstr "Category"
 msgid "Category:"
 msgstr "Category:"
 
+msgid "Change result"
+msgstr "Change result"
+
 msgid "Choose Question"
 msgstr "Choose Question"
 
@@ -162,6 +162,9 @@ msgstr "Create Market"
 
 msgid "Create a market and earn fees on each bet."
 msgstr "Create a market and earn fees on each bet."
+
+msgid "Current result"
+msgstr "Current result"
 
 msgid "Description"
 msgstr "Description"
@@ -316,6 +319,9 @@ msgstr "Message"
 msgid "Miscellaneous"
 msgstr "Miscellaneous"
 
+msgid "New result"
+msgstr "New result"
+
 msgid "Next step"
 msgstr "Next step"
 
@@ -387,9 +393,6 @@ msgstr "Prize distribution:"
 
 msgid "Prizes"
 msgstr "Prizes"
-
-msgid "Profile"
-msgstr "Profile"
 
 msgid "Publish"
 msgstr "Publish"
@@ -558,9 +561,6 @@ msgstr "You can transfer or sell it in a marketplace, but remember that the owne
 
 msgid "Your Bet"
 msgstr "Your Bet"
-
-msgid "Your answer"
-msgstr "Your answer"
 
 msgid "Your betting position is represented by the following NFT."
 msgstr "Your betting position is represented by the following NFT."
