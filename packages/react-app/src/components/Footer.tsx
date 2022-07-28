@@ -31,12 +31,12 @@ const FooterNav = styled('div')(({ theme }) => ({
   },
 }));
 
-const FooterWrapper = styled('footer')(({ theme }) => ({
+const FooterWrapper = styled('div')(({ theme }) => ({
   background: theme.palette.background.default,
-  marginTop: theme.spacing(3),
 }));
 
 const Root = styled(Box)(({ theme }) => ({
+  marginTop: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
     justifyContent: 'center',
   },
@@ -46,17 +46,19 @@ export default function Footer() {
   const { locale } = useI18nContext();
 
   return (
-    <FooterWrapper>
-      <Container maxWidth="lg">
-        <Root py={3} display="flex" flexWrap="wrap" alignItems="center">
-          <div style={{fontWeight: 500}}><Link to="/">prode.eth</Link></div>
-          <FooterNav>
-            <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
-            <div><a href="http://github.com/prodeapp" target="_blank" rel="noreferrer">Github</a></div>
-            <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
-          </FooterNav>
-        </Root>
-      </Container>
-    </FooterWrapper>
+    <footer>
+      <FooterWrapper>
+        <Container maxWidth="lg">
+          <Root py={3} display="flex" flexWrap="wrap" alignItems="center">
+            <div style={{fontWeight: 500}}><Link to="/">prode.eth</Link></div>
+            <FooterNav>
+              <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
+              <div><a href="http://github.com/prodeapp" target="_blank" rel="noreferrer">Github</a></div>
+              <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
+            </FooterNav>
+          </Root>
+        </Container>
+      </FooterWrapper>
+    </footer>
   );
 }
