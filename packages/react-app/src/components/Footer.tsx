@@ -47,7 +47,7 @@ export default function Footer() {
   return (
     <FooterWrapper>
       <Container maxWidth="lg">
-        <Root py={3} mt={3} display="flex" flexWrap="wrap" alignItems="center">
+        <Root py={3} display="flex" flexWrap="wrap" alignItems="center">
           <div style={{fontWeight: 500}}><Link to="/">prode.eth</Link></div>
           <FooterNav>
             <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>

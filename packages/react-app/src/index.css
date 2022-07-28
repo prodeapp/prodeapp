@@ -17,6 +17,19 @@ a{
   text-decoration: none;
 }
 
+html, body, #root {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;
+}
+
 .identicon {
   border-radius: 50%;
 }
