@@ -3,7 +3,7 @@ import { Bet } from '../../graphql/subgraph';
 import {getAnswerText} from '../../lib/helpers';
 import {BigNumber} from "@ethersproject/bignumber";
 import { Trans, t } from '@lingui/macro';
-import {FormatLeague} from "../FormatTeams";
+import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {usePhone} from "../../hooks/useResponsive";
 import Box from '@mui/material/Box';
 
@@ -55,14 +55,14 @@ export default function BetDetails({bet}: {bet: Bet}) {
 
       return <BoxRow key={i} style={{flexDirection: 'column', backgroundColor}}>
         <Box sx={{display: {md: 'flex'}, width: '100%', fontWeight: 'normal'}}>
-          <Box sx={bigColumnSx}><FormatLeague title={event.title} /></Box>
+          <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
           <Box sx={smallColumnsSx}>
             {isPhone && <div style={mobileLabelSx}><Trans>Your Bet</Trans></div>}
-            {playerBet}
+            <FormatOutcome name={playerBet} title={event.title} />
           </Box>
           <Box sx={smallColumnsSx}>
             {isPhone && <div style={mobileLabelSx}><Trans>Result</Trans></div>}
-            {eventResult || t`Unknown`}
+            <FormatOutcome name={eventResult || t`Unknown`} title={event.title} />
           </Box>
           <Box sx={smallColumnsSx}>
             {isPhone && <div style={mobileLabelSx}><Trans>Points Earned</Trans></div>}

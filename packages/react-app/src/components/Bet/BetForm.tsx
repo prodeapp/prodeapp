@@ -21,7 +21,7 @@ import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
 import {INVALID_RESULT} from "../Answer/AnswerForm";
-import {FormatLeague} from "../FormatTeams";
+import {FormatEvent} from "../FormatEvent";
 
 export type BetFormValues = {
   outcomes: {value: number|''}[]
@@ -155,7 +155,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
             return null;
           }
           return <BoxRow style={{display: 'flex'}} key={field.id}>
-            <div style={{width: '60%'}}><FormatLeague title={events[i].title} /></div>
+            <div style={{width: '60%'}}><FormatEvent title={events[i].title} /></div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
                 <Select

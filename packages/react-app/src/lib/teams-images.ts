@@ -48,6 +48,28 @@ import TOTTENHAM from '../assets/logos/en/tottenham.png'
 import WEST_HAM from '../assets/logos/en/west_ham.png'
 import WOLVES from '../assets/logos/en/wolves.png'
 
+import VERSTAPPEN from '../assets/logos/f1/max-verstappen.png'
+import PEREZ from '../assets/logos/f1/sergio-perez.png'
+import LECLERC from '../assets/logos/f1/charles-leclerc.png'
+import SAINZ from '../assets/logos/f1/carlos-sainz.png'
+import RUSSEL from '../assets/logos/f1/george-russell.png'
+import HAMILTON from '../assets/logos/f1/lewis-hamilton.png'
+import OCON from '../assets/logos/f1/esteban-ocon.png'
+import ALONSO from '../assets/logos/f1/fernando-alonso.png'
+import NORRIS from '../assets/logos/f1/lando-norris.png'
+import RICCIARDO from '../assets/logos/f1/daniel-ricciardo.png'
+import ZHOU from '../assets/logos/f1/guanyu-zhou.png'
+import BOTTAS from '../assets/logos/f1/valtteri-bottas.png'
+import MAGNUSSEN from '../assets/logos/f1/kevin-magnussen.png'
+import SCHUMACHER from '../assets/logos/f1/mick-schumacher.png'
+import GASLY from '../assets/logos/f1/pierre-gasly.png'
+import TSUNODA from '../assets/logos/f1/yuki-tsunoda.png'
+import VETTEL from '../assets/logos/f1/sebastian-vettel.png'
+import STROLL from '../assets/logos/f1/lance-stroll.png'
+import ALBON from '../assets/logos/f1/alexander-albon.png'
+import LATIFI from '../assets/logos/f1/nicholas-latifi.png'
+//import HULKENBERG from '../assets/logos/f1/nico-hulkenberg.png'
+
 const images: Record<string, Record<string, string>> = {
   'ar': {
     'Aldosivi': ALDOSIVI,
@@ -110,6 +132,29 @@ const images: Record<string, Record<string, string>> = {
     'Tottenham': TOTTENHAM,
     'West Ham': WEST_HAM,
     'Wolves': WOLVES,
+  },
+  'f1': {
+    'Max Verstappen': VERSTAPPEN,
+    'Sergio Perez': PEREZ,
+    'Charles Leclerc': LECLERC,
+    'Carlos Sainz': SAINZ,
+    'George Russel': RUSSEL,
+    'Lewis Hamilton': HAMILTON,
+    'Esteban Ocon': OCON,
+    'Fernando Alonso': ALONSO,
+    'Lando Norris': NORRIS,
+    'Daniel Ricciardo': RICCIARDO,
+    'Zhou Guanyu': ZHOU,
+    'Valtteri Bottas': BOTTAS,
+    'Kevin Magnussen': MAGNUSSEN,
+    'Mick Schumacher': SCHUMACHER,
+    'Pier Gasly': GASLY,
+    'Yuki Tsunoda': TSUNODA,
+    'Sebastian Vettel': VETTEL,
+    'Lance Stroll': STROLL,
+    'Alexander Albon': ALBON,
+    'Nicholas Latifi': LATIFI,
+    //'Nico Hulkenberg': HULKENBERG,
   },
 }
 

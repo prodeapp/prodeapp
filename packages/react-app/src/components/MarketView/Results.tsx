@@ -9,7 +9,7 @@ import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
-import {FormatLeague} from "../FormatTeams";
+import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {ANSWERED_TOO_SOON} from "../Answer/AnswerForm";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -49,7 +49,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
       return <div style={style}><CircleItem color="yellow"/> {answerText}</div>
     }
 
-    return <div style={style}><CircleItem color="green"/> {answerText}</div>
+    return <div style={style}><CircleItem color="green"/> <FormatOutcome name={answerText} title={event.title} /></div>
   }
 
   const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
@@ -167,7 +167,7 @@ export default function Results({marketId}: {marketId: string}) {
       return <BoxRow key={i}>
         <div style={{width: '100%'}}>
           <Box sx={{display: {md: 'flex'}, alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
-            <Box sx={bigColumnSx}><FormatLeague title={event.title} /></Box>
+            <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
             <Box sx={smallColumnsSx}>
               {AnswerColumn(event, finalized)}
             </Box>
