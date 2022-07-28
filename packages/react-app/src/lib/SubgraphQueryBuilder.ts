@@ -22,8 +22,15 @@ const getType = (v: QueryValue): String => {
 export function buildQuery(query: string, variables: QueryVariables) {
   variables = filterObject(variables, val => val !== undefined);
 
-  const params = Object.entries(variables).map(([k, v]) => `$${k}: ${getType(v)}`).join(', ')
-  const where = Object.entries(variables).map(([k, v]) => `${k}: $${k}`).join(', ')
+  const params = Object.entries(variables)
+                  .map(([k, v]) => `$${k}: ${getType(v)}`)
+                  .join(', ')
+
+  const where = Object.entries(variables)
+                  // this fields are used only for params
+                  .filter(v => !['orderBy', 'orderDirection'].includes(v[0]))
+                  .map(([k, v]) => `${k}: $${k}`)
+                  .join(', ')
 
   return query
     .replace('#where#', where)

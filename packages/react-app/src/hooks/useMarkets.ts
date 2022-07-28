@@ -7,7 +7,7 @@ import {getSubcategories} from "../lib/helpers";
 const query = `
     ${MARKET_FIELDS}
     query MarketsQuery(#params#) {
-      markets(where: {#where#}, first: 50, orderBy: closingTime, orderDirection: desc) {
+      markets(where: {#where#}, first: 50, orderBy: closingTime, orderDirection: $orderDirection) {
         ...MarketFields
       }
     }
@@ -27,7 +27,7 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Pr
   return useQuery<Market[], Error>(
     ["useMarkets", curated, status, category, minEvents, creatorId],
     async () => {
-      const variables: QueryVariables = {curated};
+      const variables: QueryVariables = {curated, orderDirection: 'desc'};
 
       if (category) {
         variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)];
@@ -40,6 +40,7 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Pr
       if (status !== undefined) {
         if (status === 'active') {
           variables['closingTime_gt'] = String(Math.round(Date.now() / 1000))
+          variables['orderDirection'] = 'asc'
         } else if (status === 'pending') {
           variables['hasPendingAnswers'] = true
           variables['closingTime_lt'] = String(Math.round(Date.now() / 1000))
@@ -51,7 +52,7 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Pr
       if (creatorId) {
         variables['creator'] = creatorId.toLowerCase();
       }
-
+console.log(buildQuery(query, variables))
       const response = await apolloProdeQuery<{ markets: Market[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");
