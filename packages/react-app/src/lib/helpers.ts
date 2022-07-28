@@ -152,3 +152,19 @@ const documentationUrls = {
 export function getDocsUrl(locale: I18nContextProps['locale']) {
   return documentationUrls[locale];
 }
+
+export function showWalletError(error: any) {
+  if (error?.message) {
+    if (error?.message.startsWith('{')) {
+      try {
+        const _error = JSON.parse(error?.message);
+
+        return _error?.message;
+      } catch (e: any) {
+
+      }
+    } else {
+      return error?.message;
+    }
+  }
+}

@@ -13,7 +13,7 @@ import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
 import {Event} from "../../graphql/subgraph";
 import FormHelperText from "@mui/material/FormHelperText";
-import {formatAmount, getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
+import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
@@ -73,7 +73,7 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   }, []);
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to answer</Trans>}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to answer</Trans>}</Alert>
   }
 
   if (state.status === 'Success') {

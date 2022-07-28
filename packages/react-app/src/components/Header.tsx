@@ -14,7 +14,7 @@ import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
 import { Language } from "@mui/icons-material";
-import {getDocsUrl} from "../lib/helpers";
+import {getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 
 export default function Header() {
@@ -192,7 +192,7 @@ function WalletDialog({open, handleClose}: DialogProps) {
       handleClose={handleClose}
     >
 
-      {walletError && <Alert severity="error">{walletError.message}</Alert>}
+      {walletError && <Alert severity="error">{showWalletError(walletError)}</Alert>}
 
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>

@@ -1,6 +1,6 @@
 import { Typography, Container, Grid, Button, Skeleton } from '@mui/material';
 import { BoxRow, BoxWrapper } from '../components';
-import { formatAmount } from '../lib/helpers';
+import {formatAmount, showWalletError} from '../lib/helpers';
 import { useEthers } from "@usedapp/core";
 import { usePlayer } from "../hooks/usePlayer";
 import Alert from "@mui/material/Alert";
@@ -26,7 +26,7 @@ export default function Profile() {
 
   if (!id) {
     if (!account || walletError) {
-      return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
+      return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
     }
   }
 

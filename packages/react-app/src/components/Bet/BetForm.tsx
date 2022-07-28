@@ -14,7 +14,7 @@ import type {BigNumberish} from "ethers";
 import {useEventsToBet} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
-import {getReferralKey, transOutcome} from "../../lib/helpers";
+import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import {BigNumber} from "@ethersproject/bignumber";
@@ -113,7 +113,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
   }
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to place a bet.</Trans>}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to place a bet.</Trans>}</Alert>
   }
 
   if (error) {

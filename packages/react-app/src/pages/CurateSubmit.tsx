@@ -18,6 +18,7 @@ import {useMarket} from "../hooks/useMarket";
 import EventsPreview from "../components/Curate/EventsPreview";
 import {CurateSubmitFormValues} from "../components/Curate";
 import { Trans, t } from "@lingui/macro";
+import {showWalletError} from "../lib/helpers";
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -137,7 +138,7 @@ function CurateSubmit() {
   }, [market, setValue])
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || t`Connect your wallet to verify a market.`}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
   }
 
   if (isLoading) {

@@ -11,6 +11,7 @@ import { Trans, t } from "@lingui/macro";
 import {Contract} from "@ethersproject/contracts";
 import {Market__factory} from "../typechain";
 import {parseUnits} from "@ethersproject/units";
+import {showWalletError} from "../lib/helpers";
 
 export type FundMarketFormData = {
   value: string
@@ -44,7 +45,7 @@ function MarketsFund() {
   }
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to fund a market.</Trans>}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to fund a market.</Trans>}</Alert>
   }
 
   return <>

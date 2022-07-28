@@ -23,7 +23,7 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
-import {getFlattenedCategories, getCategoryText, getMarketUrl} from "../lib/helpers";
+import {getFlattenedCategories, getCategoryText, getMarketUrl, showWalletError} from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
 import {MenuItem} from "@mui/material";
 
@@ -342,7 +342,7 @@ function MarketsCreate() {
   }, [account]);
 
   if (!account || walletError) {
-    return <Alert severity="error">{walletError?.message || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
   }
 
   return <>

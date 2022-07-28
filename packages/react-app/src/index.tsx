@@ -27,12 +27,13 @@ import MarketsFund from "./pages/MarketsFund";
 const config = {
   readOnlyChainId: xDai.chainId,
   readOnlyUrls: {
-    [xDai.chainId]: "https://rpc.ankr.com/gnosis",
+    [xDai.chainId]: "https://rpc.gnosischain.com",
   },
   networks: [xDai, Localhost],
   multicallAddresses: {
     [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
   },
+  noMetamaskDeactivate: true,
 }
 
 ReactDOM.render(
