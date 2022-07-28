@@ -33,6 +33,7 @@ const FooterNav = styled('div')(({ theme }) => ({
 
 const FooterWrapper = styled('footer')(({ theme }) => ({
   background: theme.palette.background.default,
+  marginTop: theme.spacing(3),
 }));
 
 const Root = styled(Box)(({ theme }) => ({
@@ -51,6 +52,7 @@ export default function Footer() {
           <div style={{fontWeight: 500}}><Link to="/">prode.eth</Link></div>
           <FooterNav>
             <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
+            <div><a href="http://github.com/prodeapp" target="_blank" rel="noreferrer">Github</a></div>
             <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
           </FooterNav>
         </Root>

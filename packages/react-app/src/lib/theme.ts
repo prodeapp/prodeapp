@@ -6,6 +6,9 @@ const darkTheme = createTheme({
     primary: {
       main: '#FFF',
     },
+    secondary: {
+      main: '#4267B3',
+    }
   },
   components: {
     MuiInput: {
@@ -33,6 +36,14 @@ const darkTheme = createTheme({
           '.MuiOutlinedInput-root .MuiAutocomplete-input': {
             padding: '8.5px 14px',
           }
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          borderRadius: 0,
+          height: '28px',
         },
       },
     },
@@ -64,7 +75,7 @@ const darkTheme = createTheme({
           boxShadow: 'none',
         },
         contained: {
-          borderRadius: '6px',
+          borderRadius: 0,
           '&:hover': {
             opacity: 0.75,
           },
@@ -78,11 +89,7 @@ const darkTheme = createTheme({
           },
         },
         containedSecondary: {
-          background: '#6C69E9',
           color: '#FFF',
-          '&:hover': {
-            background: '#6C69E9',
-          }
         }
       },
     },

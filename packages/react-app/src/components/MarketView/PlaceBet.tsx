@@ -30,7 +30,7 @@ export default function PlaceBet({market, onClick}: {market: Market, onClick: ()
       <BoxRow>
         <div style={{textAlign: 'center', margin: '0 auto'}}>
           <div><Trans>Bet Price:</Trans> {formatAmount(market.price)}</div>
-          <Button style={{flexGrow: 0, margin: '15px 0'}} color="secondary" variant="outlined" size="large" onClick={onClick}><Trans>Place Bet</Trans></Button>
+          <Button style={{flexGrow: 0, margin: '15px 0'}} color="secondary" size="large" onClick={onClick}><Trans>Place Bet</Trans></Button>
           <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
         </div>
       </BoxRow>

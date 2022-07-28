@@ -3,6 +3,7 @@ import { BoxWrapper } from "../components";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Chip from '@mui/material/Chip';
 import {Link as RouterLink, Link} from "react-router-dom";
 import {MarketStatus, useMarkets} from "../hooks/useMarkets";
 import { Market } from "../graphql/subgraph";
@@ -11,7 +12,7 @@ import {FormControlLabel, FormGroup, MenuItem, Switch, Typography} from "@mui/ma
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
-import { Trans } from '@lingui/macro'
+import {t, Trans} from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
 import HomeSlider from "../components/HomeSlider";
 import {styled} from "@mui/material/styles";
@@ -111,57 +112,54 @@ function MarketsTable({ markets, activeStatus }: MarketsTableProps) {
     return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
   }
 
-  return <Grid container spacing={2}>
+  return <Grid container spacing={0}>
     {markets.map((market, i) => {
       const timeLeft = getTimeLeft(market.closingTime, false, locale);
 
-      let status = <Trans>Closed</Trans>;
+      let status = <Chip label={t`Closed`} color="error" />;
 
       if (timeLeft !== false) {
-        status = <Trans>Active</Trans>;
+        status = <Chip label={t`Active`} color="success" />;
       } else if (market.hasPendingAnswers) {
-        status = <Trans>Pending</Trans>;
+        status = <Chip label={t`Pending`} color="warning" />;
       }
 
-      return <Grid item xs={12} sm={6} md={4} key={i}>
-        <BoxWrapper style={{height: '100%', padding: '15px', boxSizing: 'border-box', marginBottom: 0}}>
-
-          <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
-            <Box sx={{width: {md: '47%'}}}>
-              <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
-                <div>
-                  <div style={{fontWeight: 'normal', marginBottom: '5px'}}>{status}</div>
-                  <Link to={`/markets/${market.id.toString()}`} style={{ display: 'flex', fontSize: '24px' }}>{market.name}</Link>
-                </div>
-                {timeLeft && <div>
-                  <div style={{textAlign: 'center', marginBottom: 10}}>{timeLeft}</div>
-                  <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth><Trans>Place Bet</Trans></Button>
-                </div>}
+      return <Grid item xs={12} sm={6} key={i}>
+        <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between', border: '1px solid #272727'}}>
+          <Box sx={{p: 2}}>
+            <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+              <div>
+                <div style={{fontWeight: 'normal', marginBottom: '5px'}}>{status}</div>
+                <Link to={`/markets/${market.id.toString()}`} style={{ display: 'flex', fontSize: '24px', marginTop: '20px' }}>{market.name}</Link>
               </div>
+              {timeLeft && <div>
+                <div style={{textAlign: 'center', marginBottom: 10}}>{timeLeft}</div>
+                <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'secondary'} fullWidth><Trans>Place Bet</Trans></Button>
+              </div>}
+            </div>
+          </Box>
+          <Box sx={{minWidth: {md: '245px'}, borderLeft: '1px solid #272727'}}>
+            <Box sx={{ p: 2, borderBottom: '1px solid #272727' }}>
+              <div style={{fontWeight: 'normal'}}><Trans>Bet price</Trans></div>
+              <div>{formatAmount(market.price)}</div>
             </Box>
-            <Box sx={{width: {md: '47%'}}}>
-              <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}><Trans>Bet price</Trans></div>
-                <div>{formatAmount(market.price)}</div>
-              </Box>
 
-              <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}><Trans>Pool prize</Trans></div>
-                <div>{formatAmount(market.pool)}</div>
-              </Box>
+            <Box sx={{ p: 2, borderBottom: '1px solid #272727' }}>
+              <div style={{fontWeight: 'normal'}}><Trans>Pool prize</Trans></div>
+              <div>{formatAmount(market.pool)}</div>
+            </Box>
 
-              <Box sx={{ mb: 3 }}>
-                <div style={{fontWeight: 'normal'}}><Trans>Participants</Trans></div>
-                <div>{market.numOfBets}</div>
-              </Box>
+            <Box sx={{ p: 2, borderBottom: '1px solid #272727' }}>
+              <div style={{fontWeight: 'normal'}}><Trans>Participants</Trans></div>
+              <div>{market.numOfBets}</div>
+            </Box>
 
-              <Box>
-                <div style={{fontWeight: 'normal'}}><Trans>Verified</Trans></div>
-                <div>{market.curated ? '✅' : '🚫'}</div>
-              </Box>
+            <Box sx={{p: 2}}>
+              <div style={{fontWeight: 'normal'}}><Trans>Verified</Trans></div>
+              <div>{market.curated ? '✅' : '🚫'}</div>
             </Box>
           </Box>
-        </BoxWrapper>
+        </Box>
       </Grid>
     })}
   </Grid>
