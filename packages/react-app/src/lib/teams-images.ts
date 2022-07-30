@@ -69,6 +69,23 @@ import STROLL from '../assets/logos/f1/lance-stroll.png'
 import ALBON from '../assets/logos/f1/alexander-albon.png'
 import LATIFI from '../assets/logos/f1/nicholas-latifi.png'
 //import HULKENBERG from '../assets/logos/f1/nico-hulkenberg.png'
+import FERRARI from '../assets/logos/f1/ferrari-logo.png'
+import REDBULL from '../assets/logos/f1/red-bull-logo.png'
+import MERCEDES from '../assets/logos/f1/mercedes-logo.png'
+import ALPHATAURI from '../assets/logos/f1/alphatauri-logo.png'
+import MCLAREN from '../assets/logos/f1/mclaren-logo.png'
+import ALFAROMEO from '../assets/logos/f1/alfa-romeo-logo.png'
+import HASS from '../assets/logos/f1/hass-logo.png'
+import ALPINE from '../assets/logos/f1/alpine-logo.png'
+import ASTONMARTIN from '../assets/logos/f1/aston-martin-logo.png'
+import WILLIAMS from '../assets/logos/f1/williams-logo.png'
+import RENAULT from '../assets/logos/f1/renault-logo.png'  // engine
+import REDSOFT from '../assets/logos/f1/tire-red-soft.png'
+import YELLOWMEDIUM from '../assets/logos/f1/tire-yellow-medium.png'
+import WHITEHARD from '../assets/logos/f1/tire-white-hard.png'
+import GREENINTERMEDIATE from '../assets/logos/f1/tire-green-intermediate.png'
+import BLUEFULLWET from '../assets/logos/f1/tire-blue-full-wet.png'
+
 
 const images: Record<string, Record<string, string>> = {
   'ar': {
@@ -155,6 +172,25 @@ const images: Record<string, Record<string, string>> = {
     'Alexander Albon': ALBON,
     'Nicholas Latifi': LATIFI,
     //'Nico Hulkenberg': HULKENBERG,
+    'Ferrari': FERRARI,
+    'McLaren': MCLAREN,
+    'Red Bull Racing': REDBULL,
+    'Red Bull': REDBULL, // engine
+    'Williams': WILLIAMS,
+    'Alfa Romeo': ALFAROMEO,
+    'AlphaTauri': ALPHATAURI,
+    'Mercedes': MERCEDES,
+    'Mercedes Benz': MERCEDES,  // engine
+    'Renault': RENAULT,
+    'Aston Martin': ASTONMARTIN,
+    'Alpine': ALPINE,
+    'Hass F1 Team': HASS,
+    'Soft Slick Tire': REDSOFT,
+    'Medium Slick Tire': YELLOWMEDIUM,
+    'Hard Slick Tire': WHITEHARD,
+    'Intermediate Tire': GREENINTERMEDIATE,
+    'Full Wet Tire': BLUEFULLWET
+
   },
 }
 
