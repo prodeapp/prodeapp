@@ -172,7 +172,7 @@ export default function BetForm({marketId, price}: BetFormProps) {
           </BoxRow>
         })}
         <BoxRow>
-          <Button type="submit" color="secondary"><Trans>Place Bet</Trans></Button>
+          <Button type="submit" color="primary"><Trans>Place Bet</Trans></Button>
         </BoxRow>
       </BoxWrapper>
     </form>

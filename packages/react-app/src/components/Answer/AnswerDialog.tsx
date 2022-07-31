@@ -17,7 +17,7 @@ function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
   }});
 
   const dialogActions = <DialogActions>
-    <Button autoFocus color="secondary" type="submit" form="answer-form">
+    <Button autoFocus color="primary" type="submit" form="answer-form">
     <Trans>Submit answer</Trans>
     </Button>
   </DialogActions>

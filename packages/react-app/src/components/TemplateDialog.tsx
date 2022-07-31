@@ -97,7 +97,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
   }
 
   const dialogActions = <DialogActions>
-    <Button autoFocus onClick={clickSubmit} color="secondary">
+    <Button autoFocus onClick={clickSubmit} color="primary">
       <Trans>Set question</Trans>
     </Button>
   </DialogActions>

@@ -1,16 +1,116 @@
 import {createTheme} from "@mui/material";
+import ComfortaLightWoff from "../assets/fonts/comfortaa-light-webfont.woff";
+import ComfortaRegularWoff from "../assets/fonts/comfortaa-regular-webfont.woff";
+import ComfortaBoldWoff from "../assets/fonts/comfortaa-bold-webfont.woff";
+import ComfortaLightWoff2 from "../assets/fonts/comfortaa-light-webfont.woff2";
+import ComfortaRegularWoff2 from "../assets/fonts/comfortaa-regular-webfont.woff2";
+import ComfortaBoldWoff2 from "../assets/fonts/comfortaa-bold-webfont.woff2";
+
+const fonts = `@font-face {
+    font-family: 'comfortaa';
+    src: url('${ComfortaLightWoff2}') format('woff2'),
+         url('${ComfortaLightWoff}') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'comfortaa';
+    src: url('${ComfortaRegularWoff2}') format('woff2'),
+         url('${ComfortaRegularWoff}') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'comforta';
+    src: url('${ComfortaBoldWoff2}') format('woff2'),
+         url('${ComfortaBoldWoff}') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}`
+
+const palette = {
+  primary: {
+    light: '#4B75CC',
+    main: '#4267B3',
+    dark: '#385899',
+    contrastText: '#FFF',
+  },
+  secondary: {
+    light: '#FBF4E3',
+    main: '#F1EAD8',
+    dark: '#D9D2C2',
+    contrastText: '#303030',
+  },
+  black: {
+    light: '#969696',
+    main: '#636363',
+    dark: '#303030',
+    contrastText: '#FFF',
+  },
+}
+
+let theme = createTheme();
 
 const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#FFF',
+  palette,
+  typography: {
+    h1: {
+      fontFamily: 'comfortaa',
     },
-    secondary: {
-      main: '#4267B3',
-    }
+    h2: {
+      fontFamily: 'comfortaa',
+    },
+    h3: {
+      fontFamily: 'comfortaa',
+    },
+    h4: {
+      fontFamily: 'comfortaa',
+    },
+    h5: {
+      fontFamily: 'comfortaa',
+    },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+            ${fonts}
+            body {
+              font-family: 'Mulish', sans-serif;
+              background-color: ${palette.secondary.light};
+              color: ${palette.black.dark};
+            }
+            h1 a, h2 a, h3 a, h4 a, h5 a {
+              color: ${palette.black.dark};
+            `,
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          background: palette.secondary.light,
+        },
+      },
+      defaultProps: {
+        color: 'transparent',
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          justifyContent: 'space-between',
+          [theme.breakpoints.up('sm')]: {
+            minHeight: '92px',
+          },
+        },
+      },
+    },
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: 'xl',
+      },
+    },
     MuiInput: {
       defaultProps: {
         disableUnderline: true,
@@ -19,7 +119,7 @@ const darkTheme = createTheme({
     MuiOutlinedInput:{
       styleOverrides: {
         notchedOutline: {
-          borderColor: '#e2e8f0',
+          borderColor: palette.black.dark,
           borderRadius: '6px',
         },
         input: {
@@ -53,7 +153,7 @@ const darkTheme = createTheme({
           backgroundColor: '#000',
         },
         paper: {
-          backgroundColor: '#15171A',
+          backgroundColor: palette.secondary.main,
           backgroundImage: 'none',
         },
       },
@@ -73,24 +173,15 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           boxShadow: 'none',
+          textTransform: 'none',
         },
         contained: {
           borderRadius: 0,
-          '&:hover': {
-            opacity: 0.75,
-          },
         },
-        containedPrimary: {
-          background: '#121212',
-          color: '#FFF',
-          border: '1px solid #272727',
-          '&:hover': {
-            background: '#15171A',
-          },
+        sizeLarge: {
+          paddingTop: '10.5px',
+          paddingBottom: '10.5px',
         },
-        containedSecondary: {
-          color: '#FFF',
-        }
       },
     },
   },

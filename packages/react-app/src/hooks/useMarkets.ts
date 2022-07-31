@@ -15,7 +15,7 @@ const query = `
 
 export type MarketStatus = 'active'|'pending'|'closed'
 
-interface Props {
+export interface UseMarketsProps {
   curated?: boolean
   status?: MarketStatus
   category?: string
@@ -23,7 +23,7 @@ interface Props {
   creatorId?: string
 }
 
-export const useMarkets = ({curated, status, category, minEvents, creatorId}: Props = {}) => {
+export const useMarkets = ({curated, status, category, minEvents, creatorId}: UseMarketsProps = {}) => {
   return useQuery<Market[], Error>(
     ["useMarkets", curated, status, category, minEvents, creatorId],
     async () => {
