@@ -35,6 +35,7 @@ type Market @entity {
   bets: [Bet!]! @derivedFrom(field: "market")
   funders: [Funder!] @derivedFrom(field: "markets")
   attributions: [Attribution!]! @derivedFrom(field: "market")
+  marketFactory: MarketFactory!
 }
 
 type MarketCuration @entity {
@@ -155,4 +156,22 @@ type MetaEvidence @entity {
   id: ID!
   "The URI of the meta evidence file."
   URI: String!
+}
+
+type MarketFactory @entity {
+  "address of the factory SC"
+  id: ID!
+  "counter of markets"
+  numOfMarkets: BigInt!
+  "counter of bets"
+  numOfBets: BigInt!
+  "counter of players"
+  numOfPlayers: BigInt!
+  "counter of money betted"
+  totalVolumeBets: BigInt!
+  "amount of prizes claimed"
+  prizedClaimed: BigInt!
+  "total amount funded as sponsoring"
+  totalVolumeFunding: BigInt!
+  markets: [Market!]! @derivedFrom(field: "marketFactory")
 }
