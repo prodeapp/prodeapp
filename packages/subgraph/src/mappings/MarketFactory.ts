@@ -5,6 +5,7 @@ import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Event } from '../types/schema';
 import { Realitio } from '../types/RealitioV3/Realitio';
 import { RealitioAddress } from './utils/constants';
+import { getOrCreateMarketFactory } from './utils/helpers';
 
 export function handleNewMarket(evt: NewMarket): void {
   // Start indexing the market; `event.params.market` is the
@@ -12,8 +13,12 @@ export function handleNewMarket(evt: NewMarket): void {
   let context = new DataSourceContext()
   context.setString('hash', evt.params.hash.toHexString())
   context.setString('manager', evt.params.manager.toHexString())
+  context.setString('factory', evt.address.toHexString())
   Market.createWithContext(evt.params.market, context);
   log.info("handleNewMarket: {}", [evt.params.market.toHexString()])
+  let mf = getOrCreateMarketFactory(evt.address.toHexString());
+  mf.numOfMarkets = mf.numOfMarkets.plus(BigInt.fromI32(1));
+  mf.save();
 }
 
 export function handleCreateMarket(call: CreateMarketCall): void {

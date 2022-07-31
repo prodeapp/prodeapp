@@ -2,7 +2,7 @@ import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer, RankingUpdated } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration} from './utils/helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
@@ -10,12 +10,14 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     log.info("handleInitialize: Initializing {} market", [evt.address.toHexString()])
     let context = dataSource.context()
     let hash = context.getString('hash')
+    let mf = context.getString('factory')
     let managerAddress = Address.fromBytes(Address.fromHexString(context.getString('manager')));
     let managerContract = ManagerContract.bind(managerAddress);
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
+    market.marketFactory = mf;
     market.managementFee = managerContract.creatorFee();
     market.protocolFee = managerContract.protocolFee();
     market.closingTime = marketContract.closingTime();
@@ -61,7 +63,7 @@ export function handlePlaceBet(evt: PlaceBet): void {
     market.numOfBets = market.numOfBets.plus(BigInt.fromI32(1));
     market.save()
 
-    let player = getOrCreatePlayer(evt.params._player)
+    let player = getOrCreatePlayer(evt.params._player, market.marketFactory);
     
     if (!player.markets.includes(market.id)) {
         let tmp_markets = player.markets;
@@ -91,6 +93,11 @@ export function handlePlaceBet(evt: PlaceBet): void {
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))
     bet.save()
+
+    let mf = getOrCreateMarketFactory(market.marketFactory);
+    mf.numOfBets = mf.numOfBets.plus(BigInt.fromI32(1));
+    mf.totalVolumeBets = mf.totalVolumeBets.plus(evt.transaction.value);
+    mf.save()
 }
 
 export function handleBetReward(evt: BetReward): void {
@@ -102,9 +109,16 @@ export function handleBetReward(evt: BetReward): void {
     bet.save()
     log.debug("handleBetReward: {} reward claimed from token {}", [evt.params._reward.toString(), evt.params._tokenID.toString()])
 
-    let player = getOrCreatePlayer(Address.fromString(bet.player));
+    
+    let market = Market.load(evt.address.toHexString())!;
+
+    let player = getOrCreatePlayer(Address.fromString(bet.player), market.marketFactory);
     player.pricesReceived = player.pricesReceived.plus(evt.params._reward)
     player.save()
+    
+    let mf = getOrCreateMarketFactory(market.marketFactory);
+    mf.prizedClaimed = mf.prizedClaimed.plus(evt.params._reward);
+    mf.save()
 }
 
 export function handleFundingReceived(evt: FundingReceived): void {
@@ -127,6 +141,10 @@ export function handleFundingReceived(evt: FundingReceived): void {
     funder.markets = markets;
     funder.save()
     log.info("handleFundingReceived: {} funds received from {}", [evt.params._amount.toString(), evt.params._funder.toHexString()])
+
+    let mf = getOrCreateMarketFactory(market.marketFactory);
+    mf.totalVolumeFunding = mf.totalVolumeFunding.plus(evt.params._amount);
+    mf.save()
 }
 
 
@@ -141,14 +159,16 @@ export function handleManagerReward(evt: ManagementReward): void {
 }
 
 export function handleAttribution(evt: AttributionEvent): void {
+    
+    let market = Market.load(evt.address.toHexString())!;
     let providerAddress = evt.params._provider;
-    let provider = getOrCreatePlayer(providerAddress);
-    let attributor = getOrCreatePlayer(evt.transaction.from);
+    let provider = getOrCreatePlayer(providerAddress, market.marketFactory);
+    let attributor = getOrCreatePlayer(evt.transaction.from, market.marketFactory);
     let id = evt.transaction.hash.toHex() + "-" + evt.logIndex.toString()
     let attribution = new Attribution(id)
     attribution.provider = provider.id;
     attribution.attributor = attributor.id;
-    attribution.market = evt.address.toHexString();
+    attribution.market = market.id;
     let marketSC = MarketContract.bind(evt.address);
     let manager = marketSC.marketInfo().value2;
     let managerSC = ManagerContract.bind(manager);
@@ -171,7 +191,8 @@ export function handleTransfer(evt: Transfer): void {
         // most probably it's the minting
         return;
     }
-    let newOwner = getOrCreatePlayer(evt.params.to)
+    let market = Market.load(evt.address.toHexString())!
+    let newOwner = getOrCreatePlayer(evt.params.to, market.marketFactory)
     bet.player = newOwner.id
     bet.save()
     log.debug("handleTransfer: token ID {} transfered to {}", [betID, newOwner.id]);

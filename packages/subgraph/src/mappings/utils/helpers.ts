@@ -1,11 +1,11 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration, Event} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory} from "../../types/schema";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();
 }
 
-export function getOrCreatePlayer(address: Address): Player {
+export function getOrCreatePlayer(address: Address, marketFactory: string): Player {
     let player = Player.load(address.toHexString())
     if (player === null) {
         player = new Player(address.toHexString())
@@ -15,6 +15,10 @@ export function getOrCreatePlayer(address: Address): Player {
         player.numOfBets = BigInt.fromI32(0)
         player.totalAttributions = BigInt.fromI32(0)
         player.save()
+
+        let mf = getOrCreateMarketFactory(marketFactory);
+        mf.numOfPlayers = mf.numOfPlayers.plus(BigInt.fromI32(1));
+        mf.save()
     }
     return player
 }
@@ -87,3 +91,19 @@ export function duplicateEvent(baseEvent: Event, newEventID: string): Event {
     entity.save();
     return entity;
 }
+
+
+export function getOrCreateMarketFactory(id: string): MarketFactory {
+    let mf = MarketFactory.load(id);
+    if (mf === null){
+      mf = new MarketFactory(id);
+      mf.numOfMarkets = BigInt.fromI32(0);
+      mf.numOfBets = BigInt.fromI32(0);
+      mf.numOfPlayers = BigInt.fromI32(0);
+      mf.prizedClaimed = BigInt.fromI32(0);
+      mf.totalVolumeBets = BigInt.fromI32(0);
+      mf.totalVolumeFunding = BigInt.fromI32(0);
+      mf.save()
+    }
+    return mf
+  }
