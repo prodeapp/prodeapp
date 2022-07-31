@@ -36,7 +36,7 @@ type AnswerFormProps = {
 export default function AnswerForm({event, register, errors, handleSubmit}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
-  const [outcomes, setOutcomes] = useState<{value: string, text: string}[]>([]);
+  const [outcomes, setOutcomes] = useState<{value: string|number, text: string}[]>([]);
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
@@ -50,11 +50,11 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
     setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
 
     // outcomes
-    let _outcomes: {value: string, text: string}[] = [];
+    let _outcomes: {value: string|number, text: string}[] = [];
 
     _outcomes = event.outcomes
         // first map and then filter to keep the index of each outcome as value
-        .map((outcome, i) => ({value: String(i), text: outcome}))
+        .map((outcome, i) => ({value: i, text: outcome}))
         .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
 
     if(event.answer !== INVALID_RESULT) {
