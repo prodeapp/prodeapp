@@ -15,7 +15,7 @@ const query = `
 
 export type MarketStatus = 'active'|'pending'|'closed'
 
-interface Props {
+export interface UseMarketsProps {
   curated?: boolean
   status?: MarketStatus
   category?: string
@@ -23,7 +23,7 @@ interface Props {
   creatorId?: string
 }
 
-export const useMarkets = ({curated, status, category, minEvents, creatorId}: Props = {}) => {
+export const useMarkets = ({curated, status, category, minEvents, creatorId}: UseMarketsProps = {}) => {
   return useQuery<Market[], Error>(
     ["useMarkets", curated, status, category, minEvents, creatorId],
     async () => {
@@ -52,7 +52,7 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Pr
       if (creatorId) {
         variables['creator'] = creatorId.toLowerCase();
       }
-console.log(buildQuery(query, variables))
+
       const response = await apolloProdeQuery<{ markets: Market[] }>(buildQuery(query, variables), variables);
 
       if (!response) throw new Error("No response from TheGraph");

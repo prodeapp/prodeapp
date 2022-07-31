@@ -36,7 +36,6 @@ const FooterWrapper = styled('div')(({ theme }) => ({
 }));
 
 const Root = styled(Box)(({ theme }) => ({
-  marginTop: theme.spacing(3),
   [theme.breakpoints.down('md')]: {
     justifyContent: 'center',
   },

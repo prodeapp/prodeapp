@@ -15,6 +15,7 @@ import MarketsView from "./pages/MarketsView";
 import Tournament from "./pages/Tournament";
 import { ReactQueryProvider } from "./lib/react-query";
 import { ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./lib/theme"
 import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
@@ -41,6 +42,7 @@ ReactDOM.render(
     <DAppProvider config={config}>
       <ReactQueryProvider>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <I18nProvider>
             <HashRouter>
               <Routes>

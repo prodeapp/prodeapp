@@ -16,3 +16,12 @@ export enum LocaleEnum {
   English = 'en',
   Spanish = 'es'
 }
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    black: Palette['primary'];
+  }
+  interface PaletteOptions {
+    black: PaletteOptions['primary'];
+  }
+}

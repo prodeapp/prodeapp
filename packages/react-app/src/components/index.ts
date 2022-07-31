@@ -24,9 +24,6 @@ export const Image = styled.img`
 `;
 
 export const BoxWrapper = styled(Box)`
-  background: #121212;
-  border-radius: 10px;
-  border: 1px solid #272727;
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 20px;
@@ -40,10 +37,6 @@ export const BoxRow = styled.div`
 
   & + & {
     border-top: 1px solid #272727;
-  }
-
-  &:hover {
-    background: #272727;
   }
 `
 

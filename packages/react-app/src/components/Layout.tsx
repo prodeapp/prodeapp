@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <Container sx={{marginTop:"30px"}}>
+      <Container>
         <Outlet />
       </Container>
       <Footer />
