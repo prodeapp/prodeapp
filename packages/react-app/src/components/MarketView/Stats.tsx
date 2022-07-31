@@ -23,9 +23,9 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // Initialize events stats
     let stats = bets[0].market.events.map((event) => {
         let stat = event.outcomes.map((outcome, index) => {
-            return { outcome: transOutcome(outcome), amountBets: 0, percentage: 0, index: index, title: event.title }
+            return { outcome: transOutcome(outcome), amountBets: 0, percentage: 0, index: index, title: event.title, openingTs: event.openingTs}
         })
-        stat.push({ outcome: t`Invalid`, amountBets: 0, percentage: 0, index: 257, title: event.title })
+        stat.push({ outcome: t`Invalid`, amountBets: 0, percentage: 0, index: 257, title: event.title, openingTs: event.openingTs })
         return stat
     })
     // Add stats
@@ -48,7 +48,10 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         })
     })
 
-    // sort stats in each event
+    // sort events by openingTs
+    stats.sort((a, b) => (a[0].openingTs > b[0].openingTs) ? 1 : ((b[0].openingTs > a[0].openingTs) ? -1 : 0))
+
+    // sort stats in each event by amount of bets
     stats.map((evntstat) => { return evntstat.sort((a, b) => (a.amountBets > b.amountBets) ? -1 : ((b.amountBets > a.amountBets) ? 1 : 0)) })
 
     // filter zero values
