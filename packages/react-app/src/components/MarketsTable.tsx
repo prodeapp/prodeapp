@@ -10,21 +10,34 @@ import Alert from "@mui/material/Alert";
 import {t, Trans} from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
 import {styled} from "@mui/material/styles";
+import {usePhone} from "../hooks/useResponsive";
 
 type MarketsTableProps = {
   markets?: Market[]
 }
 
 const MarketsGrid = styled(Grid)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
+    borderTop: `1px solid ${theme.palette.black.dark}`,
+  },
   '.MuiGrid-item': {
     border: `1px solid ${theme.palette.black.dark}`,
 
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: '20px',
+    },
+
     [theme.breakpoints.up('sm')]: {
-      '&+.MuiGrid-item:nth-child(even)': {
+      borderTop: 'none',
+
+      '&:nth-child(even)': {
         borderLeft: 'none',
       },
-      '&+.MuiGrid-item:nth-child(n+3)': {
+      '&:nth-child(n+3)': {
         borderTop: 'none',
+      },
+      '&:nth-last-child(-n+2)': {
+        borderBottom: 'none',
       },
     },
   },
@@ -39,12 +52,13 @@ const MarketDetails = styled(Box)(({ theme }) => ({
 
     '&:not(:last-child)': {
       borderBottom: `1px solid ${theme.palette.black.dark}`,
-    }
+    },
   },
 }));
 
 function MarketsTable({ markets }: MarketsTableProps) {
   const { locale } = useI18nContext();
+  const isPhone = usePhone();
 
   if (!markets || markets.length === 0) {
     return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
@@ -78,28 +92,30 @@ function MarketsTable({ markets }: MarketsTableProps) {
           </Box>
           <MarketDetails sx={{minWidth: {md: '245px'}}}>
             <div>
-              <div style={{fontWeight: 'normal'}}><Trans>Bet price</Trans></div>
-              <div>{formatAmount(market.price)}</div>
+              <div><Trans>Bet price</Trans></div>
+              <div style={{fontWeight: 'bold'}}>{formatAmount(market.price)}</div>
             </div>
 
             <div>
-              <div style={{fontWeight: 'normal'}}><Trans>Pool prize</Trans></div>
-              <div>{formatAmount(market.pool)}</div>
+              <div><Trans>Pool prize</Trans></div>
+              <div style={{fontWeight: 'bold'}}>{formatAmount(market.pool)}</div>
             </div>
 
             <div>
-              <div style={{fontWeight: 'normal'}}><Trans>Participants</Trans></div>
-              <div>{market.numOfBets}</div>
+              <div><Trans>Participants</Trans></div>
+              <div style={{fontWeight: 'bold'}}>{market.numOfBets}</div>
             </div>
 
             <div>
-              <div style={{fontWeight: 'normal'}}><Trans>Verified</Trans></div>
-              <div>{market.curated ? '✅' : '🚫'}</div>
+              <div><Trans>Verified</Trans></div>
+              <div style={{fontWeight: 'bold'}}>{market.curated ? '✅' : '🚫'}</div>
             </div>
           </MarketDetails>
         </Box>
       </Grid>
     })}
+
+    {!isPhone && markets.length % 2 !== 0 && <div></div>}
   </MarketsGrid>
 }
 

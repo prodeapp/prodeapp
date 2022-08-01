@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import {ReactComponent as Logo} from "../assets/logo.svg";
 import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
+import {Radio} from "./Radio";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -110,7 +111,7 @@ function DropdownMenu({text, children}: {text: string, children: React.ReactNode
       },
     },
     'svg': {
-      fill: theme.palette.secondary.main,
+      fill: theme.palette.primary.main,
     },
     '&:hover > div': {
       display: 'block',
@@ -175,7 +176,7 @@ export default function Header() {
               </a>
               <DropdownMenu text={languages[locale]}>
                 {Object.keys(languages).map(lang => {
-                  return <span className={locale === lang ? 'active' : ''} onClick={() => handleChangeLocale(lang as LocaleEnum)}>{languages[lang]}</span>
+                  return <Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>{languages[lang]}</Radio>
                 })}
               </DropdownMenu>
             </MenuBar>

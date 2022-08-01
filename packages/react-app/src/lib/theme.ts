@@ -49,6 +49,24 @@ const palette = {
     dark: '#303030',
     contrastText: '#FFF',
   },
+  error: {
+    light: '#FF8788',
+    main: '#F73A3B',
+    dark: '#DE3435',
+    contrastText: '#FFF',
+  },
+  success: {
+    light: '#10C473',
+    main: '#0EAB64',
+    dark: '#0C9155',
+    contrastText: '#FFF',
+  },
+  warning: {
+    light: '#FADA34',
+    main: '#FAD202',
+    dark: '#E0BC02',
+    contrastText: '#FFF',
+  },
 }
 
 let theme = createTheme();
@@ -56,6 +74,7 @@ let theme = createTheme();
 const darkTheme = createTheme({
   palette,
   typography: {
+    fontFamily: `'Mulish',sans-serif`,
     h1: {
       fontFamily: 'comfortaa',
     },
@@ -71,6 +90,15 @@ const darkTheme = createTheme({
     h5: {
       fontFamily: 'comfortaa',
     },
+    p1: {
+      fontSize: '19.2px',
+    },
+    p2: {
+      fontSize: '16px',
+    },
+    p3: {
+      fontSize: '13.33px',
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -83,6 +111,10 @@ const darkTheme = createTheme({
             }
             h1 a, h2 a, h3 a, h4 a, h5 a {
               color: ${palette.black.dark};
+            }
+            a {
+              color: ${palette.black.dark};
+            }
             `,
     },
     MuiAppBar: {
