@@ -36,6 +36,8 @@ type Market @entity {
   funders: [Funder!] @derivedFrom(field: "markets")
   attributions: [Attribution!]! @derivedFrom(field: "market")
   marketFactory: MarketFactory!
+  "Amount of the prize that was funded by sponsor"
+  sponsoredAmount: BigInt!
 }
 
 type MarketCuration @entity {

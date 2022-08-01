@@ -27,6 +27,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.numOfBets = BigInt.fromI32(0);
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
     market.hasPendingAnswers = true;
+    market.sponsoredAmount = BigInt.fromI32(0);
     let creator = managerContract.creator();
     let manager = getOrCreateManager(creator);
     market.manager = manager.id;
@@ -124,6 +125,7 @@ export function handleBetReward(evt: BetReward): void {
 export function handleFundingReceived(evt: FundingReceived): void {
     let market = Market.load(evt.address.toHexString())!;
     market.pool = market.pool.plus(evt.params._amount);
+    market.sponsoredAmount = market.sponsoredAmount.plus(evt.params._amount);
     market.save()
 
     let funder = Funder.load(evt.params._funder.toHexString())
