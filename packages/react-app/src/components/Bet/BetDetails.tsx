@@ -38,7 +38,8 @@ const mobileLabelSx = {
 
 export default function BetDetails({bet}: {bet: Bet}) {
   const isPhone = usePhone();
-
+  let events = [...bet.market.events];
+  events.sort((a, b) => (a.openingTs > b.openingTs) ? 1 : ((b.openingTs > a.openingTs) ? -1 : 0))
   return <BoxWrapper>
     {!isPhone && <BoxRow>
       <div style={{ width: '40%'}}><Trans>Event</Trans></div>
@@ -46,7 +47,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
       <div style={{ width: '20%'}}><Trans>Result</Trans></div>
       <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
     </BoxRow>}
-    {bet.market.events.map((event, i) => {
+    {events.map((event, i) => {
       const eventNonce = BigNumber.from(event.nonce).toNumber();
       const playerBet = getAnswerText(bet.results[eventNonce], event.outcomes || []);
       const eventResult = getAnswerText(event.answer, event.outcomes || [], '');

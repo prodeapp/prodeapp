@@ -184,7 +184,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes'>[]
+    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' |'openingTs'>[]
   }
   tokenID: string
   points: BigNumberish
@@ -209,6 +209,7 @@ export const BET_FIELDS = `
         nonce
         title
         outcomes
+        openingTs
       }
     }
     tokenID
