@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/macro";
-import { Button, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useCurateItems } from "../../hooks/useCurateItems";
 import { useEffect, useState } from "react";
@@ -44,20 +44,23 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   }
 
   if (activeItem === null || activeItem.status === 'Absent') {
-    return (<div>⚠️<Trans>Market not verified yet</Trans>
-      <br /><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></div>
-    )
+    return <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div><Trans>Not verified yet</Trans> ⚠</div>
+        <div><RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans></RouterLink></div>
+      </div>
   } else if (activeItem.status === 'Registered') {
-    return <div><Trans>Verified</Trans> ✅</div>;
+    return <div><Trans>Verified</Trans> ✅</div>
   } else {
-    return (
-      <>
-        <div><a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
-        <Trans>Market in verification process</Trans> 👀</a>
-        </div>
-        <br />
-        <Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify Market</Trans></Button></>
-    )
+    return <div style={{display: 'flex', justifyContent: 'space-between'}}>
+      <div>
+        <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
+          <Trans>In process</Trans> 👀
+        </a>
+      </div>
+      <div>
+        <RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans></RouterLink>
+      </div>
+    </div>
   }
 }
 

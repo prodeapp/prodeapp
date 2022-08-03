@@ -1,6 +1,5 @@
 import {t, Trans} from "@lingui/macro";
 import React, {useState} from "react";
-import Button from "@mui/material/Button";
 import {getMarketUrl} from "../../lib/helpers";
 import {useEthers} from "@usedapp/core";
 
@@ -33,9 +32,9 @@ function ReferralLink({marketId}: {marketId: string}) {
     setTimeout(() => setTextCopied(false), 3000);
   }
 
-  return <Button onClick={clickHandler}>
+  return <span className="js-link" onClick={clickHandler}>
     {!textCopied ? <Trans>Copy referral link</Trans> : <Trans>Referral link copied!</Trans>}
-  </Button>
+  </span>
 }
 
 export default ReferralLink;

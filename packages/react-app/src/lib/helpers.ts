@@ -168,3 +168,7 @@ export function showWalletError(error: any) {
     }
   }
 }
+
+export function getTwitterShareUrl(message: string): string {
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+}

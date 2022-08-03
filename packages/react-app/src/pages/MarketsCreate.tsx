@@ -23,7 +23,13 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
-import {getFlattenedCategories, getCategoryText, getMarketUrl, showWalletError} from "../lib/helpers";
+import {
+  getFlattenedCategories,
+  getCategoryText,
+  getMarketUrl,
+  showWalletError,
+  getTwitterShareUrl
+} from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
 import {MenuItem} from "@mui/material";
 import {styled} from "@mui/material/styles";
@@ -267,9 +273,7 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
 }
 
 function SuccessStep({marketName, marketId}: {marketName: string, marketId: string}) {
-  const message = t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`
-
-  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
+  const shareUrl = getTwitterShareUrl(t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`)
 
   return <div>
     <BoxWrapper sx={{display: 'flex', justifyContent: 'space-between', padding: 2}}>

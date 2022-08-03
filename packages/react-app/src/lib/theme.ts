@@ -77,18 +77,42 @@ const darkTheme = createTheme({
     fontFamily: `'Mulish',sans-serif`,
     h1: {
       fontFamily: 'comfortaa',
+      fontSize: '57.33px',
     },
+    /*h1s: {
+      fontFamily: 'comfortaa',
+      fontSize: '47.78px',
+    },*/
     h2: {
       fontFamily: 'comfortaa',
+      fontSize: '47.78px',
     },
+    /*h2s: {
+      fontFamily: 'comfortaa',
+      fontSize: '39.81px',
+    },*/
     h3: {
       fontFamily: 'comfortaa',
+      fontSize: '39.81px',
     },
+    /*h3s: {
+      fontFamily: 'comfortaa',
+      fontSize: '33.18px',
+    },*/
     h4: {
       fontFamily: 'comfortaa',
+      fontSize: '33.18px',
+    },
+    h4s: {
+      fontFamily: 'comfortaa',
+      fontSize: '27.65px',
     },
     h5: {
       fontFamily: 'comfortaa',
+    },
+    h6s: {
+      fontFamily: 'comfortaa',
+      fontSize: '19.2px',
     },
     p1: {
       fontSize: '19.2px',
@@ -97,7 +121,7 @@ const darkTheme = createTheme({
       fontSize: '16px',
     },
     p3: {
-      fontSize: '13.33px',
+      fontSize: '14px',
     },
   },
   components: {
@@ -113,7 +137,11 @@ const darkTheme = createTheme({
               color: ${palette.black.dark};
             }
             a {
-              color: ${palette.black.dark};
+              color: ${palette.primary.main};
+            }
+            span.js-link {
+              cursor: pointer;
+              color: ${palette.primary.main};
             }
             `,
     },

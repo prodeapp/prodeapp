@@ -11,6 +11,7 @@ import {t, Trans} from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
 import {styled} from "@mui/material/styles";
 import {usePhone} from "../hooks/useResponsive";
+import {Typography} from "@mui/material";
 
 type MarketsTableProps = {
   markets?: Market[]
@@ -84,8 +85,9 @@ function MarketsTable({ markets }: MarketsTableProps) {
                 <div style={{fontWeight: 'normal', marginBottom: '5px'}}>{status}</div>
                 <h2 style={{fontSize: '27.65px', marginTop: '20px'}}><Link to={`/markets/${market.id.toString()}`}>{market.name}</Link></h2>
               </div>
-              {timeLeft && <div>
-                <div style={{textAlign: 'center', marginBottom: 10, fontWeight: 700}}>{timeLeft}</div>
+              {timeLeft && <div style={{textAlign: 'center'}}>
+                <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>
+                <div style={{marginBottom: 10, fontWeight: 700}}>{timeLeft}</div>
                 <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'primary'} fullWidth size="large"><Trans>Place Bet</Trans></Button>
               </div>}
             </div>

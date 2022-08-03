@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <Container>
+      <Container sx={{flexGrow: 1}}>
         <Outlet />
       </Container>
       <Footer />

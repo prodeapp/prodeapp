@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {BoxWrapper, BoxRow} from "../index";
 import Button from '@mui/material/Button';
 import {formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
 import { Trans } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
+import { ReactComponent as CurrencyIcon } from "../../assets/icons/currency.svg";
+import {Typography} from "@mui/material";
 
 export default function PlaceBet({market, onClick}: {market: Market, onClick: () => void}) {
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
@@ -25,15 +26,17 @@ export default function PlaceBet({market, onClick}: {market: Market, onClick: ()
     return null;
   }
 
-  return <>
-    <BoxWrapper style={{padding: 20}}>
-      <BoxRow>
-        <div style={{textAlign: 'center', margin: '0 auto'}}>
-          <div><Trans>Bet Price:</Trans> {formatAmount(market.price)}</div>
-          <Button style={{flexGrow: 0, margin: '15px 0'}} color="primary" size="large" onClick={onClick}><Trans>Place Bet</Trans></Button>
-          <div style={{fontWeight: 'medium'}}>{timeLeft}</div>
-        </div>
-      </BoxRow>
-    </BoxWrapper>
-  </>
+  return <div style={{textAlign: 'center', margin: '0 auto'}}>
+
+    <div style={{marginTop: '50px', marginBottom: '100px'}}>
+      <CurrencyIcon />
+      <Typography variant="p3" component="div"><Trans>Bet Price:</Trans></Typography>
+      <div style={{fontWeight: 'bold'}}>{formatAmount(market.price)}</div>
+    </div>
+
+
+    <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>
+    <div style={{fontWeight: 'bold', marginBottom: '15px'}}>{timeLeft}</div>
+    <Button color="primary" size="large" fullWidth onClick={onClick}><Trans>Place Bet</Trans></Button>
+  </div>
 }

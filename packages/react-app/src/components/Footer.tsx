@@ -14,6 +14,9 @@ const FooterNav = styled('div')(({ theme }) => ({
       marginLeft: theme.spacing(5),
     },
   },
+  'a': {
+    color: theme.palette.black.dark,
+  },
 }));
 
 const FooterWrapper = styled('footer')(({ theme }) => ({
