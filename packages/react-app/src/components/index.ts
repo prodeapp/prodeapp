@@ -1,14 +1,14 @@
-import styled from "styled-components";
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
-export const FormError = styled.div`
+export const FormError = styled('div')`
   color: red;
   margin-top: 5px;
   font-weight: normal;
   font-size: 14px;
 `
 
-export const Header = styled.header`
+export const Header = styled('header')`
   align-items: center;
   color: white;
   display: flex;
@@ -17,7 +17,7 @@ export const Header = styled.header`
   min-height: 70px;
 `;
 
-export const Image = styled.img`
+export const Image = styled('img')`
   height: 40vmin;
   margin-bottom: 16px;
   pointer-events: none;
@@ -29,7 +29,7 @@ export const BoxWrapper = styled(Box)`
   margin-bottom: 20px;
 `
 
-export const BoxRow = styled.div`
+export const BoxRow = styled('div')`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,7 +40,29 @@ export const BoxRow = styled.div`
   }
 `
 
-export const BoxLabelCell = styled.div`
+const TableRow = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  padding: '0 16px',
+}))
+
+export const TableHeader = styled(TableRow)(({ theme }) => ({
+  background: theme.palette.secondary.dark,
+  borderTop: `1px solid ${theme.palette.black.dark}`,
+  borderBottom: `1px solid ${theme.palette.black.dark}`,
+  fontWeight: 600,
+  fontSize: '14px',
+  minHeight: '40px',
+}))
+
+export const TableBody = styled(TableRow)(({ theme }) => ({
+  fontSize: '16px',
+  minHeight: '44px',
+  borderBottom: `1px solid ${theme.palette.black.dark}`,
+}))
+
+export const BoxLabelCell = styled('div')`
   margin-right: 10px;
   min-width: 30%;
 `
@@ -49,13 +71,13 @@ export const BoxTitleCell = styled(BoxLabelCell)`
   font-size: 20px;
 `
 
-export const AnswerFieldWrapper = styled.div`
+export const AnswerFieldWrapper = styled('div')`
   & + & {
     margin-top: 10px;
   }
 `
 
-export const AnswerField = styled.div`
+export const AnswerField = styled('div')`
   display: inline-flex;
   align-items: center;
 `

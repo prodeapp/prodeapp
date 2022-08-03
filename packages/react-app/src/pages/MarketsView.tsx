@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useMarket} from "../hooks/useMarket";
 import {useParams, useSearchParams} from "react-router-dom";
-import {BoxWrapper, BoxRow} from "../components"
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import {getMarketUrl, getReferralKey, getTwitterShareUrl} from "../lib/helpers";
 import Bets from "../components/MarketView/Bets";
@@ -16,16 +14,27 @@ import { Stats } from "../components/MarketView/Stats";
 import MarketCurateStatus from "../components/MarketView/MarketCurateStatus";
 import {styled, useTheme} from "@mui/material/styles";
 import MarketInfo from "../components/MarketView/MarketInfo";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
   padding: '40px 25px',
 }));
 
+function a11yProps(index: number) {
+  return {
+    id: `market-tab-${index}`,
+    'aria-controls': `market-tabpanel-${index}`,
+  };
+}
+
+type MarketSections = 'bet'|'bets'|'results'|'stats';
+
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
-  const [section, setSection] = useState<'bet'|'bets'|'results'|'stats'>('bets');
+  const [section, setSection] = useState<MarketSections>('bets');
   const [searchParams] = useSearchParams();
   const theme = useTheme();
 
@@ -48,6 +57,10 @@ function MarketsView() {
   }
 
   const shareUrl = getTwitterShareUrl(t`Check this market on @prode_eth: ${market.name} ${getMarketUrl(market.id)}`)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: MarketSections) => {
+    setSection(newValue);
+  };
 
   return (
     <>
@@ -76,13 +89,11 @@ function MarketsView() {
         <Grid item xs={12} md={8}>
           <MarketInfo market={market} />
 
-          <BoxWrapper>
-            <BoxRow style={{justifyContent: 'center'}}>
-              <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
-              <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}><Trans>Results</Trans></Button></div>
-              <div><Button onClick={() => setSection('stats')} color={section === 'stats' ? 'secondary' : 'primary'}><Trans>Statistics</Trans></Button></div>
-            </BoxRow>
-          </BoxWrapper>
+          <Tabs value={section} onChange={handleChange} aria-label="Market sections">
+            <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
+            <Tab label={t`Results`} value="results" {...a11yProps(1)} />
+            <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />
+          </Tabs>
 
           {section === 'results' && <Results marketId={market.id} />}
 

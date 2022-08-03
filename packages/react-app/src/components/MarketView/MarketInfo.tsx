@@ -38,7 +38,7 @@ function MarketInfo({market}: {market: Market}) {
       <Typography variant="p3" component="div"><Trans>Prize Distribution</Trans></Typography>
       <div>
         {market.prizes.map((value, index) => {
-          return <div style={{display: 'flex', alignItems: 'center'}}>
+          return <div style={{display: 'flex', alignItems: 'center'}} key={index}>
             <MedalIcon style={{margin: '0 10px 10px 0', fill: medalColors[index] || medalColors[2]}} />
             <Typography variant="h6s" component="h6" key={index}>{Number(value) * 100 / DIVISOR}%</Typography>
           </div>;

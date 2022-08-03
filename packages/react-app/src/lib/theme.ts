@@ -199,6 +199,30 @@ const darkTheme = createTheme({
         },
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          minHeight: '44px',
+        },
+        indicator: {
+          height: '4px',
+          background: palette.black.dark,
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: '44px',
+          textTransform: 'none',
+          color: '#B0B0B0',
+          '&.Mui-selected': {
+            color: palette.black.dark,
+            fontWeight: 700,
+          }
+        },
+      },
+    },
     MuiChip: {
       styleOverrides: {
         root: {

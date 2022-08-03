@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {BoxWrapper, BoxRow} from "../../components"
+import {TableHeader, TableBody} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
@@ -155,16 +155,16 @@ export default function Results({marketId}: {marketId: string}) {
       handleClose={handleClose}
       event={currentEvent}
     />}
-  <BoxWrapper>
-    {!isPhone && <BoxRow>
+  <div>
+    {!isPhone && <TableHeader>
       <div style={{width: '40%'}}><Trans>Event</Trans></div>
       <div style={{width: '30%'}}><Trans>Result</Trans></div>
       <div style={{width: '30%'}}></div>
-    </BoxRow>}
+    </TableHeader>}
     {events && events.map((event, i) => {
       const finalized = isFinalized(event);
 
-      return <BoxRow key={i}>
+      return <TableBody key={i}>
         <div style={{width: '100%'}}>
           <Box sx={{display: {md: 'flex'}, alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
             <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
@@ -176,8 +176,8 @@ export default function Results({marketId}: {marketId: string}) {
             </Box>
           </Box>
         </div>
-      </BoxRow>
+      </TableBody>
     })}
-  </BoxWrapper>
+  </div>
   </>
 }

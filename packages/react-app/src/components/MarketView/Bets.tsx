@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
 import {shortenAddress, useEthers} from "@usedapp/core";
-import {BoxWrapper, BoxRow} from "../../components"
-import Button from '@mui/material/Button';
+import {TableHeader, TableBody} from "../../components"
 import Box from '@mui/material/Box';
 import AppDialog from "../Dialog";
 import {Bet} from "../../graphql/subgraph";
@@ -12,6 +11,7 @@ import {Link} from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { Skeleton } from "@mui/material";
 import {useIndexedMarketWinners} from "../../hooks/useMarketWinners";
+import {ReactComponent as EyeIcon} from "../../assets/icons/eye.svg";
 
 export default function Bets({marketId}: {marketId: string}) {
   const {account} = useEthers();
@@ -45,22 +45,22 @@ export default function Bets({marketId}: {marketId: string}) {
     >
       <BetDetails bet={bet} />
     </AppDialog>}
-    <BoxWrapper>
-      <BoxRow>
+    <div>
+      <TableHeader>
         <div style={{width: '10%'}}>#</div>
         <div style={{width: '40%'}}><Trans>Player</Trans></div>
         <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}><Trans>Points</Trans></Box>
-        <div style={{width: '120px'}}></div>
-      </BoxRow>
+        <div style={{width: '180px'}}><Trans>Details</Trans></div>
+      </TableHeader>
       {ranking && ranking.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
       {ranking && ranking.length > 0 && ranking.map((rank, i) => {
-        return <BoxRow key={i}>
+        return <TableBody key={i}>
           <div style={{width: '10%'}}>{i+1} {marketWinners[rank.tokenID] && <span>👑</span>}</div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
-          <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}}}>{rank.points.toString()}</Box>
-          <div style={{width: '120px'}}><Button onClick={() => handleOpen(rank)}><Trans>Details</Trans></Button></div>
-        </BoxRow>
+          <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
+          <div style={{width: '180px'}}><span className="js-link" onClick={() => handleOpen(rank)}><EyeIcon /> <Trans>See more details</Trans></span></div>
+        </TableBody>
       })}
-    </BoxWrapper>
+    </div>
   </>
 }
