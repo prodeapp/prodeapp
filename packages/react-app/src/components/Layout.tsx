@@ -7,7 +7,7 @@ function Layout() {
   return (
     <>
       <Header />
-      <Container sx={{marginTop:"30px"}}>
+      <Container sx={{flexGrow: 1}}>
         <Outlet />
       </Container>
       <Footer />

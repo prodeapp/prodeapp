@@ -19,9 +19,6 @@ msgstr "Un mercado debe tener al menos tres eventos."
 msgid "Accepting bets"
 msgstr "Aceptando Apuestas"
 
-msgid "Active"
-msgstr "Activo"
-
 msgid "Add answer"
 msgstr "Agregar respuesta"
 
@@ -97,17 +94,14 @@ msgstr "Fecha límite de apuesta (UTC)"
 msgid "Bridge"
 msgstr "Bridge"
 
-msgid "Building ranking"
-msgstr "Construyendo Ranking"
-
 msgid "Category"
-msgstr "Categoría"
-
-msgid "Category:"
 msgstr "Categoría"
 
 msgid "Change result"
 msgstr "Cambiar resultado"
+
+msgid "Check this market on @prode_eth: {0} {1}"
+msgstr "Mirá este mercado en @prode_eth: {0} {1}"
 
 msgid "Choose Question"
 msgstr "Elegir pregunta"
@@ -172,9 +166,6 @@ msgstr "Descripción"
 msgid "Details"
 msgstr "Detalles"
 
-msgid "Doc"
-msgstr "Doc"
-
 msgid "Documentation"
 msgstr "Documentación"
 
@@ -238,6 +229,9 @@ msgstr "Grupos"
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "He creado un nuevo mercado en @prode_eth: {marketName} {0}"
 
+msgid "In process"
+msgstr "En proceso"
+
 msgid "Invalid"
 msgstr "Inválido"
 
@@ -265,9 +259,6 @@ msgstr "Item id no encontrado"
 msgid "Loading..."
 msgstr "Cargando..."
 
-msgid "Logout"
-msgstr "Desconectar"
-
 msgid "Management Fee"
 msgstr "Comisión del Creador"
 
@@ -292,9 +283,6 @@ msgstr "Market hash encontrado"
 msgid "Market hash not found"
 msgstr "Market hash no encontrado"
 
-msgid "Market in verification process"
-msgstr "Mercado en proceso de verificación"
-
 msgid "Market name"
 msgstr "Nombre del mercado"
 
@@ -303,9 +291,6 @@ msgstr "Mercado no encontrado"
 
 msgid "Market not found."
 msgstr "Mercado no encontado."
-
-msgid "Market not verified yet"
-msgstr "Mercado todavía no verificado"
 
 msgid "Market sent to Kleros Curate"
 msgstr "Mercado enviado a Kleros Curate"
@@ -333,6 +318,9 @@ msgstr "No se encontraron mercados"
 
 msgid "Not answered yet"
 msgstr "Sin respuesta todavía"
+
+msgid "Not verified yet"
+msgstr "Aún no verificado"
 
 msgid "Number of questions"
 msgstr "Número de preguntas"
@@ -442,6 +430,9 @@ msgstr "Receptor de recompensas"
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan con WalletConnect para conectar"
 
+msgid "See details"
+msgstr "Ver detalles"
+
 msgid "Select date"
 msgstr "Seleccione la fecha"
 
@@ -463,6 +454,9 @@ msgstr "La fecha de comienzo es anterior a fecha límite de apuestas"
 msgid "Statistics"
 msgstr "Estadísticas"
 
+msgid "Status"
+msgstr "Estado"
+
 msgid "Submit"
 msgstr "Enviar"
 
@@ -480,6 +474,9 @@ msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
 
 msgid "The sum of prize weights must be 100."
 msgstr "La suma de los premios debe ser igual a 100."
+
+msgid "There's not much time left, hurry!"
+msgstr "¡Apúrate, queda poco tiempo!"
 
 msgid "This field is required"
 msgstr "Este campo es requerido"
@@ -535,8 +532,8 @@ msgstr "El valor debe ser mayor que 0."
 msgid "Verified"
 msgstr "Verificado"
 
-msgid "Verify Market"
-msgstr "Verificar Mercado"
+msgid "Verify"
+msgstr "Verificar"
 
 msgid "Verify market"
 msgstr "Verificar mercado"

@@ -1,8 +1,8 @@
 import {t, Trans} from "@lingui/macro";
 import React, {useState} from "react";
-import Button from "@mui/material/Button";
 import {getMarketUrl} from "../../lib/helpers";
 import {useEthers} from "@usedapp/core";
+import {ReactComponent as LinkIcon} from "../../assets/icons/link.svg";
 
 const copyReferralLink = async (marketId: string, account: string) => {
   try {
@@ -33,9 +33,13 @@ function ReferralLink({marketId}: {marketId: string}) {
     setTimeout(() => setTextCopied(false), 3000);
   }
 
-  return <Button onClick={clickHandler}>
-    {!textCopied ? <Trans>Copy referral link</Trans> : <Trans>Referral link copied!</Trans>}
-  </Button>
+  if (textCopied) {
+    return <Trans>Referral link copied!</Trans>
+  }
+
+  return <span className="js-link" onClick={clickHandler}>
+    <LinkIcon /> <Trans>Copy referral link</Trans>
+  </span>
 }
 
 export default ReferralLink;

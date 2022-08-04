@@ -23,9 +23,16 @@ import Alert from "@mui/material/Alert";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
-import {getFlattenedCategories, getCategoryText, getMarketUrl, showWalletError} from "../lib/helpers";
+import {
+  getFlattenedCategories,
+  getCategoryText,
+  getMarketUrl,
+  showWalletError,
+  getTwitterShareUrl
+} from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
 import {MenuItem} from "@mui/material";
+import {styled} from "@mui/material/styles";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -135,7 +142,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
         </BoxRow>
         }
         <BoxRow>
-          <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addEvent}>+ <Trans>Add event</Trans></Button></div>
+          <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addEvent} color="primary">+ <Trans>Add event</Trans></Button></div>
         </BoxRow>
       </BoxWrapper>
 
@@ -211,12 +218,18 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
   </FormProvider>
 }
 
+const PreviewTextWrapper = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+  border: `1px solid ${theme.palette.black.dark}`,
+  padding: '15px',
+}));
+
 function PreviewText({title, value, setActiveStep, step}: {title: string, value: string|number, setActiveStep: (step: number) => void, step: number}) {
   return <div style={{display: 'flex', justifyItems: 'space-between', marginBottom: '20px'}}>
-    <div style={{flexGrow: 1, border: '1px solid #ccc', padding: '15px'}}>
+    <PreviewTextWrapper>
       <div style={{opacity: '0.85'}}>{title}</div>
       <div dangerouslySetInnerHTML={{__html: String(value)}}></div>
-    </div>
+    </PreviewTextWrapper>
     <div style={{display: 'flex'}}><Button variant="text" onClick={()=> setActiveStep(step)}><Trans>Edit</Trans></Button></div>
   </div>
 }
@@ -253,16 +266,14 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
     <PreviewText title={t`Prizes`} value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
 
     <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-      <div><Button onClick={onSubmit}><Trans>Create Market</Trans></Button></div>
+      <div><Button onClick={onSubmit} color="primary"><Trans>Create Market</Trans></Button></div>
       <div><Button variant="text" onClick={()=> setActiveStep(1)}><Trans>Go to step</Trans> 2</Button></div>
     </div>
   </div>
 }
 
 function SuccessStep({marketName, marketId}: {marketName: string, marketId: string}) {
-  const message = t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`
-
-  const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`
+  const shareUrl = getTwitterShareUrl(t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`)
 
   return <div>
     <BoxWrapper sx={{display: 'flex', justifyContent: 'space-between', padding: 2}}>
@@ -345,7 +356,7 @@ function MarketsCreate() {
     return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
   }
 
-  return <>
+  return <div style={{marginTop: 40}}>
     {activeStep < 3 && <div style={{marginBottom: 20}}>
       <Stepper activeStep={activeStep} alternativeLabel>
         <Step><StepLabel><Trans>Market</Trans></StepLabel></Step>
@@ -363,7 +374,7 @@ function MarketsCreate() {
     {activeStep === 2 && <PreviewStep onSubmit={onSubmit} setActiveStep={setActiveStep} step1State={step1State} step2State={step2State} />}
 
     {activeStep === 3 && <SuccessStep marketName={step1State.market} marketId={marketId} />}
-  </>
+  </div>
 }
 
 export default MarketsCreate;

@@ -16,3 +16,38 @@ export enum LocaleEnum {
   English = 'en',
   Spanish = 'es'
 }
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    black: Palette['primary'];
+  }
+  interface PaletteOptions {
+    black: PaletteOptions['primary'];
+  }
+  interface TypographyVariants {
+    p1: React.CSSProperties;
+    p2: React.CSSProperties;
+    p3: React.CSSProperties;
+    h4s: React.CSSProperties;
+    h6s: React.CSSProperties;
+  }
+
+  // allow configuration using `createTheme`
+  interface TypographyVariantsOptions {
+    p1?: React.CSSProperties;
+    p2?: React.CSSProperties;
+    p3?: React.CSSProperties;
+    h4s?: React.CSSProperties;
+    h6s?: React.CSSProperties;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    p1: true;
+    p2: true;
+    p3: true;
+    h4s: true;
+    h6s: true;
+  }
+}

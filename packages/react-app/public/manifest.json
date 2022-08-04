@@ -1,6 +1,6 @@
 {
-  "short_name": "Eth App",
-  "name": "Create Eth App Sample",
+  "short_name": "Prode",
+  "name": "Prode - Decentralized betting platform",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#4267B3",
   "background_color": "#ffffff"
 }

@@ -1,28 +1,45 @@
 import React, {useEffect, useState} from "react";
 import {useMarket} from "../hooks/useMarket";
 import {useParams, useSearchParams} from "react-router-dom";
-import {BoxWrapper, BoxRow} from "../components"
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import {formatAmount, getReferralKey} from "../lib/helpers";
-import {DIVISOR} from "../hooks/useMarketForm";
+import {getMarketUrl, getReferralKey, getTwitterShareUrl} from "../lib/helpers";
 import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";
-import {shortenAddress} from "@usedapp/core";
 import MarketStatus from "../components/MarketView/MarketStatus";
-import { Trans } from "@lingui/macro";
+import {t, Trans} from "@lingui/macro";
 import BetForm from "../components/Bet/BetForm";
 import ReferralLink from "../components/MarketView/ReferralLink";
 import { Stats } from "../components/MarketView/Stats";
 import MarketCurateStatus from "../components/MarketView/MarketCurateStatus";
+import {styled, useTheme} from "@mui/material/styles";
+import MarketInfo from "../components/MarketView/MarketInfo";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import {ReactComponent as TwitterIcon} from "../assets/icons/twitter.svg";
+import Button from "@mui/material/Button";
+import {ReactComponent as ArrowRightIcon} from "../assets/icons/arrow-right.svg";
+
+const GridLeftColumn = styled(Grid)(({ theme }) => ({
+  background: theme.palette.secondary.main,
+  padding: '40px 25px',
+}));
+
+function a11yProps(index: number) {
+  return {
+    id: `market-tab-${index}`,
+    'aria-controls': `market-tabpanel-${index}`,
+  };
+}
+
+type MarketSections = 'bet'|'bets'|'results'|'stats';
 
 function MarketsView() {
   const { id } = useParams();
   const { isLoading, data: market } = useMarket(String(id));
-  const [section, setSection] = useState<'bet'|'bets'|'results'|'stats'>('bets');
+  const [section, setSection] = useState<MarketSections>('bets');
   const [searchParams] = useSearchParams();
+  const theme = useTheme();
 
   useEffect(() => {
     const referralId = searchParams.get('referralId');
@@ -42,74 +59,59 @@ function MarketsView() {
             : <div><Trans>Market not found</Trans></div>
   }
 
+  const shareUrl = getTwitterShareUrl(t`Check this market on @prode_eth: ${market.name} ${getMarketUrl(market.id)}`)
+
+  const handleChange = (event: React.SyntheticEvent, newValue: MarketSections) => {
+    setSection(newValue);
+  };
+
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <Box sx={{textAlign: 'center'}}>
-            <BoxWrapper sx={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 2}}>
-              <div style={{fontSize: '25px', width: '100%'}}>{market.name}</div>
-              <div style={{fontSize: '18px', width: '100%', marginTop: 15}}>
-                <MarketStatus marketId={market.id} />
-              </div>
-              <Box sx={{mt: 4, width: '100%'}}>
+      <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
+        <GridLeftColumn item xs={12} md={4}>
+          <div>
+            <MarketStatus marketId={market.id} />
+            <h2 style={{fontSize: '27.65px', marginTop: '10px'}}>{market.name}</h2>
+
+            <Grid container spacing={0} style={{borderBottom: `1px solid ${theme.palette.black.dark}`, fontSize: '14px', paddingBottom: '20px'}}>
+              <Grid item xs={6} md={6} sx={{pr: 3}} style={{borderRight: `1px solid ${theme.palette.black.dark}`}}>
+                <div style={{fontWeight: 600, marginBottom: 5}}>Market verification:</div>
                 <MarketCurateStatus marketHash={market.hash} marketId={market.id}/>
-              </Box>
-              <Box sx={{mt: 4, width: '100%'}}>
-                <ReferralLink marketId={market.id}/>
-              </Box>
-            </BoxWrapper>
+              </Grid>
+              <Grid item xs={6} md={6} sx={{pl: 3}}>
+                <div style={{marginBottom: 5}}><a href={shareUrl} target="_blank" rel="noreferrer"><TwitterIcon /> Share on Twitter</a></div>
+                <div>
+                  <ReferralLink marketId={market.id}/>
+                </div>
+              </Grid>
+            </Grid>
 
             {section !== 'bet' && <PlaceBet market={market} onClick={() => setSection('bet')}/>}
-          </Box>
-        </Grid>
+          </div>
+        </GridLeftColumn>
         <Grid item xs={12} md={8}>
-          <Box sx={{marginBottom: '20px'}}>
-            <BoxWrapper sx={{padding: 2}}>
-              <Grid container spacing={2}>
-                <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}><Trans>Pool</Trans></div>
-                  <div>{formatAmount(market.pool)}</div>
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}><Trans>Prize Distribution</Trans></div>
-                  <div>
-                    {market.prizes.map((value, index) => {
-                      const prizeMedal =
-                        index === 0 ? `🥇` :
-                          index === 1 ? `🥈` :
-                            index === 2 ? `🥉` : `#${index+1}`;
-                      return <div key={index}>{prizeMedal}: {Number(value) * 100 / DIVISOR}%</div>;
-                    })}
-                  </div>
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}><Trans>Total Fee</Trans></div>
-                  <div>{(Number(market.managementFee) + Number(market.protocolFee)) * 100 / DIVISOR}%</div>
-                </Grid>
-                <Grid item xs={6} md={3}>
-                  <div style={{marginBottom: 10}}><Trans>Manager</Trans></div>
-                  <div><a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">{shortenAddress(market.manager.id)}</a></div>
-                </Grid>
-              </Grid>
-            </BoxWrapper>
-          </Box>
+          {section !== 'bet' && <>
+            <MarketInfo market={market} />
 
-          <BoxWrapper>
-            <BoxRow style={{justifyContent: 'center'}}>
-              <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
-              <div><Button onClick={() => setSection('results')} color={section === 'results' ? 'secondary' : 'primary'}><Trans>Results</Trans></Button></div>
-              <div><Button onClick={() => setSection('stats')} color={section === 'stats' ? 'secondary' : 'primary'}><Trans>Statistics</Trans></Button></div>
-            </BoxRow>
-          </BoxWrapper>
+            <Tabs value={section} onChange={handleChange} aria-label="Market sections" sx={{marginLeft: '20px'}}>
+              <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
+              <Tab label={t`Results`} value="results" {...a11yProps(1)} />
+              <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />
+            </Tabs>
 
-          {section === 'results' && <Results marketId={market.id} />}
+            {section === 'results' && <Results marketId={market.id} />}
 
-          {section === 'bets' && <Bets marketId={market.id} />}
+            {section === 'bets' && <Bets marketId={market.id} />}
 
-          {section === 'bet' && <BetForm marketId={market.id} price={market.price} />}
+            {section === 'stats' && <Stats marketId={market.id} />}
+          </>}
 
-          {section === 'stats' && <Stats marketId={market.id} />}
+          {section === 'bet' && <>
+            <Button variant="text" onClick={() => setSection('bets')} style={{marginTop: 20}}>
+              <ArrowRightIcon style={{marginRight: 10, transform: 'rotate(180deg)'}}/> Return to the market
+            </Button>
+            <BetForm marketId={market.id} price={market.price} />
+          </>}
         </Grid>
       </Grid>
     </>

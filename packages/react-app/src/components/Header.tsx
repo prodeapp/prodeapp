@@ -1,6 +1,6 @@
 import { shortenAddress, useConfig, useEthers, useLookupAddress } from "@usedapp/core";
-import React, { useEffect, useState, MouseEvent } from "react";
-import { Toolbar, Menu, Container, Button, MenuItem, Box, AppBar, IconButton, Link, Select } from '@mui/material'
+import React, { useEffect, useState } from "react";
+import { Toolbar, Container, Button, Box, AppBar, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import Alert from "@mui/material/Alert";
 import { Link as RouterLink } from "react-router-dom";
@@ -13,127 +13,173 @@ import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
-import { Language } from "@mui/icons-material";
 import {getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
+import {styled} from "@mui/material/styles";
+import { useLocation } from "react-router-dom";
+import {ReactComponent as Logo} from "../assets/logo.svg";
+import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
+import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
+import {Radio} from "./Radio";
+
+const MenuBar = styled(Box)(({ theme }) => ({
+  flexGrow: 1,
+  alignItems: 'center',
+  display: 'none',
+  marginLeft: '50px',
+
+  'a': {
+    fontSize: '19.2px',
+    color: theme.palette.black.dark,
+    fontWeight: 700,
+    alignItems: 'center',
+    display: 'flex',
+    padding: '0 23px',
+    '&:hover': {
+      background: theme.palette.secondary.main,
+    }
+  },
+
+  // mobile view
+  [theme.breakpoints.down('md')]: {
+    '&.mobile-open': {
+      display: 'block',
+      position: 'fixed',
+      background: theme.palette.secondary.main,
+      zIndex: 10,
+      left: 0,
+      width: '100%',
+      marginLeft: 0,
+      color: 'black',
+      top: '56px',
+
+      '&>a': {
+        flexDirection: 'column',
+        padding: '10px 0',
+      },
+    },
+  },
+
+  // desktop view
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+    '&>a': {
+      height: '100%',
+      '&+a': {
+        marginLeft: '50px',
+      },
+    },
+  },
+}));
+
+function DropdownMenu({text, children}: {text: string, children: React.ReactNode}) {
+  const DropdownLink = styled('a')(({ theme }) => ({
+    position: 'relative',
+    cursor: 'pointer',
+    '> div': {
+      display: 'none',
+      position: 'absolute',
+      background: theme.palette.secondary.main,
+      top: '100%',
+      zIndex: 1,
+      left: 0,
+      minWidth: '100%',
+      'span': {
+        display: 'block',
+        padding: '10px 23px 10px 50px',
+        fontSize: '16px',
+        cursor: 'pointer',
+        position: 'relative',
+        '&:before': {
+          content: '""',
+          width: '16px',
+          height: '16px',
+          display: 'block',
+          border: `1px solid ${theme.palette.primary.main}`,
+          borderRadius: '50%',
+          position: 'absolute',
+          left: '23px',
+          top: '14px',
+        },
+        '&.active': {
+          color: theme.palette.primary.main,
+          fontWeight: 700,
+          '&:before': {
+            background: theme.palette.primary.main,
+          },
+        },
+      },
+    },
+    'svg': {
+      fill: theme.palette.primary.main,
+    },
+    '&:hover > div': {
+      display: 'block',
+    },
+    '&:hover svg': {
+      fill: theme.palette.black.dark,
+      transform: 'rotate(180deg)',
+    },
+  }));
+
+  return <DropdownLink className="dropdown-menu">
+    <span>{text} <DropdownArrow style={{marginLeft: '6px'}}/></span>
+    <div>{children}</div>
+  </DropdownLink>
+}
+
+const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
+const languages: Record<string, string> = {[LocaleEnum.English]: 'English', [LocaleEnum.Spanish]: 'Español'};
 
 export default function Header() {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const { locale, handleChangeLocale } = useI18nContext();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
-  const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
+  const handleToggleNavMenu = () => {
+    setMobileOpen(!mobileOpen);
+  }
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location]);
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Link
-            underline="none"
-            variant="h6"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            prode.eth
-          </Link>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+        <Toolbar disableGutters sx={{alignItems: 'stretch'}}>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={handleToggleNavMenu}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              <MenuItem>
-                <Button component={RouterLink} to='/markets/new' onClick={handleCloseNavMenu}><Trans>Create Market</Trans></Button>
-              </MenuItem>
-              <MenuItem>
-                <Button href={BRIDGE_URL} target="_blank" rel="noreferrer">Bridge</Button>
-              </MenuItem>
-              <MenuItem>
-                <Button href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Doc</Trans></Button>
-              </MenuItem>
-              <MenuItem sx={{display: {alignItems: 'center'}}}>
-                <Language />
-                <Select value={locale} onChange={(e) => {
-                  handleChangeLocale(e.target.value as LocaleEnum);
-                  localStorage.setItem("locale", e.target.value as LocaleEnum)
-                }}>
-                  <MenuItem value={LocaleEnum.English}>English</MenuItem>
-                  <MenuItem value={LocaleEnum.Spanish}>Español</MenuItem>
-                </Select>
-              </MenuItem>
-            </Menu>
           </Box>
-          <Link
-            underline="none"
-            variant="h6"
-            noWrap
-            component={RouterLink}
-            to="/"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-          >
-            prode.eth
-          </Link>
-          <Box sx={{ flexGrow: 1,display: { xs: 'none', md: 'flex'} }}>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              component={RouterLink} to='/markets/new'
-            >
-              <Trans>Create Market</Trans>
-            </Button>
-            <Button
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              href={BRIDGE_URL} target="_blank" rel="noreferrer"
-            >
-              <Trans>Bridge</Trans>
-            </Button>
-            <Button
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
-              <Trans>Documentation</Trans>
-            </Button>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', alignItems: 'center'} }}>
-            <Language />
-            <Select defaultValue={locale} onChange={(e) => {
-              handleChangeLocale(e.target.value as LocaleEnum)
-            }}>
-              <MenuItem value={LocaleEnum.English}>English</MenuItem>
-              <MenuItem value={LocaleEnum.Spanish}>Español</MenuItem>
-            </Select>
+          <Box sx={{display: 'flex'}}>
+            <RouterLink to="/" style={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+              <Logo />
+            </RouterLink>
+            <MenuBar className={mobileOpen ? 'mobile-open' : ''}>
+              <RouterLink to='/markets/new'>
+                <Trans>Create Market</Trans>
+              </RouterLink>
+              <a href={BRIDGE_URL} target="_blank" rel="noreferrer">
+                <Trans>Bridge</Trans>
+              </a>
+              <a href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
+                <Trans>Documentation</Trans>
+              </a>
+              <DropdownMenu text={languages[locale]}>
+                {Object.keys(languages).map(lang => {
+                  return <Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>{languages[lang]}</Radio>
+                })}
+              </DropdownMenu>
+            </MenuBar>
           </Box>
           <WalletMenu />
         </Toolbar>
@@ -238,15 +284,15 @@ function WalletMenu() {
       open={openWalletModal}
       handleClose={handleCloseWalletModal}
     />
-    <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
-      {!account && <Button onClick={handleOpenWalletModal}><Trans>Connect Wallet</Trans></Button>}
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      {!account && <Button onClick={handleOpenWalletModal} color="primary"><Trans>Connect Wallet</Trans></Button>}
 
       {account && <>
-        <Button variant="text" component={RouterLink} to={"/profile"}>
+        <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>
           <Blockies seed={account} size={7} scale={4} />
-          <Box ml={1}>{accountName}</Box>
-        </Button>
-        <Button onClick={deactivate}><Trans>Logout</Trans></Button>
+          <Box ml={1} sx={{display: {xs: 'none', md: 'block'}}}>{accountName}</Box>
+        </RouterLink>
+        <LogoutIcon onClick={deactivate} style={{cursor: 'pointer'}} />
       </>}
     </Box>
   </>

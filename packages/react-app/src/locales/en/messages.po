@@ -19,9 +19,6 @@ msgstr "A market must have at least three events."
 msgid "Accepting bets"
 msgstr "Accepting bets"
 
-msgid "Active"
-msgstr "Active"
-
 msgid "Add answer"
 msgstr "Add answer"
 
@@ -97,17 +94,14 @@ msgstr "Betting Deadline (UTC)"
 msgid "Bridge"
 msgstr "Bridge"
 
-msgid "Building ranking"
-msgstr "Building ranking"
-
 msgid "Category"
 msgstr "Category"
 
-msgid "Category:"
-msgstr "Category:"
-
 msgid "Change result"
 msgstr "Change result"
+
+msgid "Check this market on @prode_eth: {0} {1}"
+msgstr "Check this market on @prode_eth: {0} {1}"
 
 msgid "Choose Question"
 msgstr "Choose Question"
@@ -172,9 +166,6 @@ msgstr "Description"
 msgid "Details"
 msgstr "Details"
 
-msgid "Doc"
-msgstr "Doc"
-
 msgid "Documentation"
 msgstr "Documentation"
 
@@ -238,6 +229,9 @@ msgstr "Groups"
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "I have created a new market on @prode_eth: {marketName} {0}"
 
+msgid "In process"
+msgstr "In process"
+
 msgid "Invalid"
 msgstr "Invalid"
 
@@ -265,9 +259,6 @@ msgstr "Item id not found"
 msgid "Loading..."
 msgstr "Loading..."
 
-msgid "Logout"
-msgstr "Logout"
-
 msgid "Management Fee"
 msgstr "Management Fee"
 
@@ -292,9 +283,6 @@ msgstr "Market hash found"
 msgid "Market hash not found"
 msgstr "Market hash not found"
 
-msgid "Market in verification process"
-msgstr "Market in verification process"
-
 msgid "Market name"
 msgstr "Market name"
 
@@ -303,9 +291,6 @@ msgstr "Market not found"
 
 msgid "Market not found."
 msgstr "Market not found."
-
-msgid "Market not verified yet"
-msgstr "Market not verified yet"
 
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
@@ -333,6 +318,9 @@ msgstr "No markets found."
 
 msgid "Not answered yet"
 msgstr "Not answered yet"
+
+msgid "Not verified yet"
+msgstr "Not verified yet"
 
 msgid "Number of questions"
 msgstr "Number of questions"
@@ -442,6 +430,9 @@ msgstr "Rewards receiver"
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan with WalletConnect to connect"
 
+msgid "See details"
+msgstr "See details"
+
 msgid "Select date"
 msgstr "Select date"
 
@@ -463,6 +454,9 @@ msgstr "Starting timestamp is earlier than the betting deadline"
 msgid "Statistics"
 msgstr "Statistics"
 
+msgid "Status"
+msgstr "Status"
+
 msgid "Submit"
 msgstr "Submit"
 
@@ -480,6 +474,9 @@ msgstr "The market was successfully created and is ready to take bets."
 
 msgid "The sum of prize weights must be 100."
 msgstr "The sum of prize weights must be 100."
+
+msgid "There's not much time left, hurry!"
+msgstr "There's not much time left, hurry!"
 
 msgid "This field is required"
 msgstr "This field is required"
@@ -535,8 +532,8 @@ msgstr "Value must be greater than 0."
 msgid "Verified"
 msgstr "Verified"
 
-msgid "Verify Market"
-msgstr "Verify Market"
+msgid "Verify"
+msgstr "Verify"
 
 msgid "Verify market"
 msgstr "Verify market"

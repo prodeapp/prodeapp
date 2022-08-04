@@ -168,3 +168,17 @@ export function showWalletError(error: any) {
     }
   }
 }
+
+export function getTwitterShareUrl(message: string): string {
+  return `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
+}
+
+export function getMedalColor(position: number) {
+  const medalColors = [
+    '#E0BC02',
+    '#FF8788',
+    '#B0B0B0',
+  ];
+
+  return medalColors[position - 1] || medalColors[2]
+}

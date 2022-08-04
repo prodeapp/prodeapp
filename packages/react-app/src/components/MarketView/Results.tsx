@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {BoxWrapper, BoxRow} from "../../components"
+import {TableHeader, TableBody} from "../../components"
 import {getAnswerText, getTimeLeft, isFinalized} from "../../lib/helpers";
 import {useEvents} from "../../hooks/useEvents";
 import Button from '@mui/material/Button';
@@ -16,6 +16,7 @@ import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
 import {encodeQuestionText, REALITY_TEMPLATE_ID} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
+import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
 
 const bigColumnSx = {
   width: {xs: '100%', md: '40%'},
@@ -33,8 +34,17 @@ const smallColumnsSx = {
   textAlign: {xs: 'center', md: 'left'}
 }
 
-function CircleItem({color}: {color: string}) {
-  return <div style={{height: '14px', width: '14px', borderRadius: '50%', backgroundColor: color, marginRight: '10px'}}></div>
+function StatusBadge({color, children}: {color: 'red'|'green'|'yellow', children: React.ReactNode}) {
+  const colors = {
+    'red': ['#C42E2F', '#FFCCCC'],
+    'green': ['#0A7846','#6AE8AF'],
+    'yellow': ['#FAD202', '#FAEA99'],
+  };
+
+  return <div style={{fontSize:'14px', padding: '4px 12px', display: 'inline-flex', alignItems: 'center', fontWeight:600, background: colors[color][1]}}>
+    <div style={{height: '6.5px', width: '6.5px', borderRadius: '50%', backgroundColor: colors[color][0], marginRight: '10px'}}></div>
+    {children}
+  </div>
 }
 
 function AnswerColumn(event: Event, finalized: boolean) {
@@ -42,38 +52,36 @@ function AnswerColumn(event: Event, finalized: boolean) {
 
   const answerText = getAnswerText(event.answer, event.outcomes || []);
 
-  const style = {display: 'flex', alignItems: 'center'};
-
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
-      return <div style={style}><CircleItem color="yellow"/> {answerText}</div>
+      return <StatusBadge color="yellow">{answerText}</StatusBadge>
     }
 
-    return <div style={style}><CircleItem color="green"/> <FormatOutcome name={answerText} title={event.title} /></div>
+    return <StatusBadge color="green"><FormatOutcome name={answerText} title={event.title} /></StatusBadge>
   }
 
   const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
 
   if (openingTimeLeft !== false) {
     return <div>
-      <div style={style}><CircleItem color="red"/> <Trans>Pending</Trans></div>
-      <div style={{fontSize: '13px', marginTop: '5px'}}>{t`Open to answers in ${openingTimeLeft}`}</div>
+      <StatusBadge color="red"><Trans>Pending</Trans></StatusBadge>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Open to answers in ${openingTimeLeft}`}</div>
     </div>
   }
 
   if (event.isPendingArbitration) {
-    return <div style={style}><CircleItem color="yellow"/><Trans>Pending arbitration</Trans></div>
+    return <StatusBadge color="yellow"><Trans>Pending arbitration</Trans></StatusBadge>
   }
 
   const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale);
 
   if (!answerCountdown) {
-    return <div style={style}><CircleItem color="yellow"/><Trans>Pending</Trans></div>;
+    return <StatusBadge color="yellow"><Trans>Pending</Trans></StatusBadge>;
   }
 
   return <div>
-    <div style={style}><CircleItem color="yellow"/> {answerText}</div>
-    <div style={{fontSize: '13px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
+    <StatusBadge color="yellow">{answerText}</StatusBadge>
+    <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
   </div>
 }
 
@@ -127,11 +135,12 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
     return null;
   }
 
-  return <Button
-    color="primary" size="small"
+  return <span
+    className="js-link"
     onClick={clickHandler}>
     {event.answer === null ? <Trans>Answer result</Trans> : <Trans>Change result</Trans>}
-  </Button>
+    <ArrowRightIcon style={{marginLeft: '10px'}} />
+  </span>
 }
 
 export default function Results({marketId}: {marketId: string}) {
@@ -155,16 +164,16 @@ export default function Results({marketId}: {marketId: string}) {
       handleClose={handleClose}
       event={currentEvent}
     />}
-  <BoxWrapper>
-    {!isPhone && <BoxRow>
+  <div>
+    {!isPhone && <TableHeader>
       <div style={{width: '40%'}}><Trans>Event</Trans></div>
       <div style={{width: '30%'}}><Trans>Result</Trans></div>
       <div style={{width: '30%'}}></div>
-    </BoxRow>}
+    </TableHeader>}
     {events && events.map((event, i) => {
       const finalized = isFinalized(event);
 
-      return <BoxRow key={i}>
+      return <TableBody key={i} className="padding-lg">
         <div style={{width: '100%'}}>
           <Box sx={{display: {md: 'flex'}, alignItems: 'center', width: '100%', fontWeight: 'normal'}}>
             <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
@@ -176,8 +185,8 @@ export default function Results({marketId}: {marketId: string}) {
             </Box>
           </Box>
         </div>
-      </BoxRow>
+      </TableBody>
     })}
-  </BoxWrapper>
+  </div>
   </>
 }
