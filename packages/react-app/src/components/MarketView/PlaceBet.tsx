@@ -37,6 +37,6 @@ export default function PlaceBet({market, onClick}: {market: Market, onClick: ()
 
     <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>
     <div style={{fontWeight: 'bold', marginBottom: '15px'}}>{timeLeft}</div>
-    <Button color="primary" size="large" fullWidth onClick={onClick}><Trans>Place Bet</Trans> <ArrowRight style={{marginLeft: 10}}/></Button>
+    <Button color="primary" size="large" fullWidth onClick={onClick}><Trans>Place Bet</Trans> - {formatAmount(market.price)} <ArrowRight style={{marginLeft: 10}}/></Button>
   </div>
 }

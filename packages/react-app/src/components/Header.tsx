@@ -44,11 +44,11 @@ const MenuBar = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
     '&.mobile-open': {
       display: 'block',
-      position: 'fixed',
+      position: 'absolute',
       background: theme.palette.secondary.main,
       zIndex: 10,
-      left: 0,
-      width: '100%',
+      left: '-16px',
+      right: '-16px',
       marginLeft: 0,
       color: 'black',
       top: '56px',

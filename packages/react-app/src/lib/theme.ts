@@ -79,6 +79,9 @@ const darkTheme = createTheme({
       fontFamily: 'comfortaa',
       fontSize: '57.33px',
       fontWeight: 700,
+      [theme.breakpoints.down('md')]: {
+        fontSize: '35.78px',
+      }
     },
     /*h1s: {
       fontFamily: 'comfortaa',
@@ -95,6 +98,7 @@ const darkTheme = createTheme({
     h3: {
       fontFamily: 'comfortaa',
       fontSize: '39.81px',
+      fontWeight: 700,
     },
     /*h3s: {
       fontFamily: 'comfortaa',
@@ -103,10 +107,12 @@ const darkTheme = createTheme({
     h4: {
       fontFamily: 'comfortaa',
       fontSize: '33.18px',
+      fontWeight: 700,
     },
     h4s: {
       fontFamily: 'comfortaa',
       fontSize: '27.65px',
+      fontWeight: 700,
       [theme.breakpoints.down('md')]: {
         fontSize: '19.2px',
       },
@@ -137,7 +143,7 @@ const darkTheme = createTheme({
               background-color: ${palette.secondary.light};
               color: ${palette.black.dark};
             }
-            h1 a, h2 a, h3 a, h4 a, h5 a {
+            h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
               color: ${palette.black.dark};
             }
             a {
