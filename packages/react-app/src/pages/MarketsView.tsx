@@ -89,7 +89,7 @@ function MarketsView() {
         <Grid item xs={12} md={8}>
           <MarketInfo market={market} />
 
-          <Tabs value={section} onChange={handleChange} aria-label="Market sections">
+          <Tabs value={section} onChange={handleChange} aria-label="Market sections" sx={{marginLeft: '20px'}}>
             <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
             <Tab label={t`Results`} value="results" {...a11yProps(1)} />
             <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />

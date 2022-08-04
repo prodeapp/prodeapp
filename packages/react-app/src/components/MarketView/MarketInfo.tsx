@@ -1,6 +1,6 @@
 import React from "react";
 import Grid from '@mui/material/Grid';
-import {formatAmount} from "../../lib/helpers";
+import {formatAmount, getMedalColor} from "../../lib/helpers";
 import {DIVISOR} from "../../hooks/useMarketForm";
 import {shortenAddress} from "@usedapp/core";
 import {Trans} from "@lingui/macro";
@@ -23,12 +23,6 @@ function MarketInfo({market}: {market: Market}) {
     },
   }));
 
-  const medalColors = [
-    '#E0BC02',
-    '#FF8788',
-    '#B0B0B0',
-  ]
-
   return <GridStyled container spacing={0}>
     <Grid item xs={6} md={3}>
       <Typography variant="p3" component="div"><Trans>Pool</Trans></Typography>
@@ -39,7 +33,7 @@ function MarketInfo({market}: {market: Market}) {
       <div>
         {market.prizes.map((value, index) => {
           return <div style={{display: 'flex', alignItems: 'center'}} key={index}>
-            <MedalIcon style={{margin: '0 10px 10px 0', fill: medalColors[index] || medalColors[2]}} />
+            <MedalIcon style={{margin: '0 10px 10px 0', fill: getMedalColor(index + 1)}} />
             <Typography variant="h6s" component="h6" key={index}>{Number(value) * 100 / DIVISOR}%</Typography>
           </div>;
         })}

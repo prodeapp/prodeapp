@@ -12,6 +12,8 @@ import { Trans, t } from "@lingui/macro";
 import { Skeleton } from "@mui/material";
 import {useIndexedMarketWinners} from "../../hooks/useMarketWinners";
 import {ReactComponent as EyeIcon} from "../../assets/icons/eye.svg";
+import {ReactComponent as MedalIcon} from "../../assets/icons/medal.svg";
+import {getMedalColor} from "../../lib/helpers";
 
 export default function Bets({marketId}: {marketId: string}) {
   const {account} = useEthers();
@@ -55,7 +57,10 @@ export default function Bets({marketId}: {marketId: string}) {
       {ranking && ranking.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
       {ranking && ranking.length > 0 && ranking.map((rank, i) => {
         return <TableBody key={i}>
-          <div style={{width: '10%'}}>{i+1} {marketWinners[rank.tokenID] && <span>👑</span>}</div>
+          <div style={{width: '10%', display: 'flex'}}>
+            <div>{i+1}</div>
+            {marketWinners[rank.tokenID] && <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(marketWinners[rank.tokenID].ranking)}} />}
+          </div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
           <div style={{width: '180px'}}><span className="js-link" onClick={() => handleOpen(rank)}><EyeIcon /> <Trans>See more details</Trans></span></div>
