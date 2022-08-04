@@ -63,7 +63,7 @@ export default function Bets({marketId}: {marketId: string}) {
           </div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
-          <div style={{width: '180px'}}><span className="js-link" onClick={() => handleOpen(rank)}><EyeIcon /> <Trans>See more details</Trans></span></div>
+          <div style={{width: '180px'}}><span className="js-link" onClick={() => handleOpen(rank)}><EyeIcon /> <Trans>See details</Trans></span></div>
         </TableBody>
       })}
     </div>

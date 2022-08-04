@@ -60,15 +60,15 @@ export const TableBody = styled(TableRow)(({ theme }) => ({
   fontSize: '16px',
   minHeight: '44px',
   borderBottom: `1px solid ${theme.palette.black.dark}`,
+  '&.padding-lg': {
+    paddingTop: '16px',
+    paddingBottom: '16px',
+  },
 }))
 
 export const BoxLabelCell = styled('div')`
   margin-right: 10px;
   min-width: 30%;
-`
-
-export const BoxTitleCell = styled(BoxLabelCell)`
-  font-size: 20px;
 `
 
 export const AnswerFieldWrapper = styled('div')`

@@ -106,6 +106,9 @@ const darkTheme = createTheme({
     h4s: {
       fontFamily: 'comfortaa',
       fontSize: '27.65px',
+      [theme.breakpoints.down('md')]: {
+        fontSize: '19.2px',
+      },
     },
     h5: {
       fontFamily: 'comfortaa',

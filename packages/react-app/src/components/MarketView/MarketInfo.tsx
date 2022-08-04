@@ -13,13 +13,18 @@ function MarketInfo({market}: {market: Market}) {
   const GridStyled = styled(Grid)(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.black.dark}`,
     '& > div': {
-      padding: '20px 50px',
+      padding: '10px 20px',
+      [theme.breakpoints.up('md')]: {
+        padding: '20px 50px',
+      },
       '& > div:first-child': {
         marginBottom: '5px',
       },
     },
-    '& > div + div': {
-      borderLeft: `1px solid ${theme.palette.black.dark}`
+    [theme.breakpoints.up('md')]: {
+      '& > div + div': {
+        borderLeft: `1px solid ${theme.palette.black.dark}`
+      },
     },
   }));
 

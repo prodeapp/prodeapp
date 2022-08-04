@@ -16,6 +16,7 @@ import {styled, useTheme} from "@mui/material/styles";
 import MarketInfo from "../components/MarketView/MarketInfo";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import {ReactComponent as TwitterIcon} from "../assets/icons/twitter.svg";
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -70,13 +71,13 @@ function MarketsView() {
             <MarketStatus marketId={market.id} />
             <h2 style={{fontSize: '27.65px', marginTop: '10px'}}>{market.name}</h2>
 
-            <Grid container spacing={0} style={{borderBottom: `1px solid ${theme.palette.black.dark}`, paddingBottom: '20px'}}>
-              <Grid item xs={12} md={6} sx={{pr: 2}} style={{borderRight: `1px solid ${theme.palette.black.dark}`}}>
-                <div>Market verification</div>
+            <Grid container spacing={0} style={{borderBottom: `1px solid ${theme.palette.black.dark}`, fontSize: '14px', paddingBottom: '20px'}}>
+              <Grid item xs={6} md={6} sx={{pr: 2}} style={{borderRight: `1px solid ${theme.palette.black.dark}`}}>
+                <div style={{fontWeight: 600, marginBottom: 5}}>Market verification</div>
                 <MarketCurateStatus marketHash={market.hash} marketId={market.id}/>
               </Grid>
-              <Grid item xs={12} md={6} sx={{pl: 2}} style={{textAlign: 'right'}}>
-                <div><a href={shareUrl} target="_blank" rel="noreferrer">Share on Twitter</a></div>
+              <Grid item xs={6} md={6} sx={{pl: 2}} style={{textAlign: 'right'}}>
+                <div style={{marginBottom: 5}}><a href={shareUrl} target="_blank" rel="noreferrer"><TwitterIcon /> Share on Twitter</a></div>
                 <div>
                   <ReferralLink marketId={market.id}/>
                 </div>
