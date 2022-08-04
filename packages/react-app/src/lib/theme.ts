@@ -32,7 +32,7 @@ const fonts = `@font-face {
 
 const palette = {
   primary: {
-    light: '#4B75CC',
+    light: '#C2D5FC',
     main: '#4267B3',
     dark: '#385899',
     contrastText: '#FFF',
@@ -78,6 +78,7 @@ const darkTheme = createTheme({
     h1: {
       fontFamily: 'comfortaa',
       fontSize: '57.33px',
+      fontWeight: 700,
     },
     /*h1s: {
       fontFamily: 'comfortaa',
@@ -261,13 +262,23 @@ const darkTheme = createTheme({
         root: {
           boxShadow: 'none',
           textTransform: 'none',
-        },
-        contained: {
+          fontWeight: 700,
           borderRadius: 0,
+          borderColor: 'transparent',
+          '&:hover': {
+            borderColor: 'transparent',
+          }
         },
         sizeLarge: {
           paddingTop: '10.5px',
           paddingBottom: '10.5px',
+        },
+        outlined: {
+          background: '#FFF',
+          '&:hover': {
+            background: palette.primary.light,
+            color: palette.primary.main,
+          },
         },
       },
     },

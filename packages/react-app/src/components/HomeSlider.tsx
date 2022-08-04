@@ -3,6 +3,7 @@ import Carousel from "nuka-carousel";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
 import {styled} from "@mui/material/styles";
+import {Typography} from "@mui/material";
 
 const Slide = styled('div')(({ theme }) => ({
   height: '368px',
@@ -20,15 +21,18 @@ export default function HomeSlider() {
       <Carousel
         renderCenterLeftControls={({ previousSlide }) => null}
         renderCenterRightControls={({ nextSlide }) => null}
+        autoplay={true}
+        autoplayReverse={true}
       >
         <Slide style={{backgroundImage: 'url(/banners/banner-1.jpg)'}}>
-          <div style={{fontSize: '20px'}}>Uncensorable and KYC-free</div>
-          <div style={{fontSize: '40px', fontWeight: '600'}}>Truly decentralized <br />betting platform</div>
+          <div style={{fontSize: '16px', marginBottom: '10px'}}>Uncensorable and KYC-free</div>
+          <Typography variant="h1">Truly decentralized <br />betting platform</Typography>
         </Slide>
-        <Slide>
-          <div style={{fontSize: '40px', fontWeight: '600', marginBottom: '20px'}}>More tournaments, betting modes <br />and prizes are coming</div>
+        <Slide style={{backgroundImage: 'url(/banners/banner-2.jpg)', color: '#FFF'}}>
+          <div style={{fontSize: '16px', marginBottom: '10px'}}>More tournaments</div>
+          <Typography variant="h1" style={{marginBottom: '20px'}}>betting modes and <br />prizes are coming</Typography>
           <div>
-            <Button component={Link} href="https://twitter.com/prode_eth" target="_blank" rel="noopener">Follow us on twitter</Button>
+            <Button component={Link} variant="outlined" size="large" href="https://twitter.com/prode_eth" target="_blank" rel="noopener">Follow us on Twitter</Button>
           </div>
         </Slide>
       </Carousel>
