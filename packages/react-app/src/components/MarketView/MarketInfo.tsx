@@ -17,7 +17,7 @@ function MarketInfo({market}: {market: Market}) {
       [theme.breakpoints.up('md')]: {
         padding: '20px 50px',
       },
-      '& > div:first-child': {
+      '& > div:first-of-type': {
         marginBottom: '5px',
       },
     },

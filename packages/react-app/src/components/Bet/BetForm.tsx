@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormError, BoxWrapper, BoxRow} from "../../components"
+import {FormError, TableBody, TableHeader, BoxRow} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
@@ -145,16 +145,16 @@ export default function BetForm({marketId, price}: BetFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-      <BoxWrapper>
-        <BoxRow>
+      <>
+        <TableHeader>
           <div style={{width: '80%'}}><Trans>Event</Trans></div>
           <div style={{width: '20%'}}><Trans>Outcome</Trans></div>
-        </BoxRow>
+        </TableHeader>
         {fields.map((field, i) => {
           if (!events || !events[i]) {
             return null;
           }
-          return <BoxRow style={{display: 'flex'}} key={field.id}>
+          return <TableBody className="padding-lg" key={field.id}>
             <div style={{width: '60%'}}><FormatEvent title={events[i].title} /></div>
             <div style={{width: '20%'}}>
               <FormControl fullWidth>
@@ -169,12 +169,12 @@ export default function BetForm({marketId, price}: BetFormProps) {
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
             </div>
-          </BoxRow>
+          </TableBody>
         })}
         <BoxRow>
           <Button type="submit" color="primary"><Trans>Place Bet</Trans></Button>
         </BoxRow>
-      </BoxWrapper>
+      </>
     </form>
   );
 }
