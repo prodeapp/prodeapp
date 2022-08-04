@@ -193,6 +193,9 @@ msgstr "Resultado del evento está en disputa."
 msgid "Events"
 msgstr "Eventos"
 
+msgid "Fee"
+msgstr "Comisiones"
+
 msgid "Fee must be greater than 0."
 msgstr "Fee debe ser mayor que 0."
 
@@ -376,6 +379,9 @@ msgstr "Distribución de premios"
 msgid "Prize Distribution (%)"
 msgstr "Distribución de premios (%)"
 
+msgid "Prize Pool"
+msgstr "Pozo Acumulado"
+
 msgid "Prize distribution:"
 msgstr "Distribución de premios:"
 
@@ -499,9 +505,6 @@ msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devue
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
 
-msgid "Total Fee"
-msgstr "Comisión Total"
-
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
@@ -562,5 +565,11 @@ msgstr "Su apuesta"
 msgid "Your betting position is represented by the following NFT."
 msgstr "Su apuesta está representada por el siguiente NFT."
 
+msgid "draw"
+msgstr "empate"
+
 msgid "eSports"
 msgstr "eSports"
+
+msgid "invalid"
+msgstr "inválido"

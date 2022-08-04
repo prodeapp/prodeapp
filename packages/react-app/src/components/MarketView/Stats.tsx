@@ -54,18 +54,23 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // sort stats in each event by amount of bets
     stats.map((evntstat) => { return evntstat.sort((a, b) => (a.amountBets > b.amountBets) ? -1 : ((b.amountBets > a.amountBets) ? 1 : 0)) })
 
-    // filter zero values
-    return stats.map((evntstat) => { return evntstat.filter(stat => stat.amountBets) })
+    // return stats
+    if (bets[0].market.events[0].outcomes.length > 4) {
+        // filter zero values for clarity in the graphs
+        stats = stats.map((evntstat) => { return evntstat.filter((stat) => {return stat.amountBets !== 0 || stat.outcome.toLowerCase() === t`draw`}) })
+    }
+    // filter invalid if has 0 bets.
+    return stats.map((evntstat) => { return evntstat.filter((stat) => {return stat.outcome.toLowerCase() === t`invalid` ?  stat.amountBets !== 0 : true}) })
+    
 }
 
 function statsBarsVertical(events: Stat[]) {
-    console.log(events.length)
     return (
         <BarChart data={events} layout='vertical'>
-            <XAxis hide type="number" />
+            <XAxis hide type="number" domain={[0, 110]} />
             <YAxis type="category" dataKey="outcome" width={150} />
             <Bar dataKey="percentage" stackId="single-stack" fill="#4267B3">
-                <LabelList dataKey="percentage" position="inside" formatter={(value: number) => { return value.toPrecision(3) + '%' }} />
+                <LabelList dataKey="percentage" position="right" formatter={(value: number) => { return value.toPrecision(3) + '%' }} />
             </Bar>
         </BarChart>
     );
@@ -80,7 +85,7 @@ function statsRows(stats: Stat[][]) {
                 <FormatEvent title={event[0].title} />
             </BoxRow>
             <BoxRow style={{ width: '90%', justifyContent: 'center' }}>
-                <ResponsiveContainer width="90%" minHeight={event.length * 30}>
+                <ResponsiveContainer width="100%" minHeight={event.length * 40}>
                     {statsBarsVertical(event)}
                 </ResponsiveContainer>
             </BoxRow>
