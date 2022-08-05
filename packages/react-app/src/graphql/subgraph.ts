@@ -134,6 +134,38 @@ export const ATTRIBUTION_FIELDS = `
   }
 `;
 
+export interface MarketReferral {
+  id: string
+  market: {
+    id: string,
+    name: string
+  }
+  totalAmount: BigNumberish
+  provider: {
+    id: string
+  }
+  claimed: boolean
+  manager: string
+  attributions: [{
+    id: string
+    attributor: {id: string}
+    amount: BigNumberish
+  }]
+}
+
+
+export const MARKETREFERRAL_FIELDS = `
+  fragment MarketReferralFields on MarketReferral {
+    id
+    market{id, name}
+    provider{id}
+    totalAmount
+    attributions{id, attributor{id}, amount}
+    claimed
+    manager
+  }
+`;
+
 export interface Leaderboard extends Player {
   numOfMarkets: string
   numOfBets: string
