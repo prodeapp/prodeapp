@@ -115,6 +115,9 @@ msgstr "Choose question format"
 msgid "Choose template"
 msgstr "Choose template"
 
+msgid "Claim"
+msgstr "Claim"
+
 msgid "Closed"
 msgstr "Closed"
 

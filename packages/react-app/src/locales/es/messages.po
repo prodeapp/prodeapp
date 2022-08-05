@@ -115,6 +115,9 @@ msgstr "Elegir el formato de pregunta"
 msgid "Choose template"
 msgstr "Elija una plantilla"
 
+msgid "Claim"
+msgstr "Claim"
+
 msgid "Closed"
 msgstr "Cerrado"
 
