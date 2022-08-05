@@ -10,7 +10,6 @@ import { ExpandMoreOutlined } from "@mui/icons-material";
 import { shortenAddress, useContractFunction } from "@usedapp/core";
 import { Contract } from "@ethersproject/contracts";
 import { Manager__factory } from "../../typechain";
-import { Box } from "@mui/system";
 
 
 function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) {
@@ -21,7 +20,7 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
     const theme = useTheme();
 
     const { send, state } = useContractFunction(new Contract(marketReferral.manager, Manager__factory.createInterface()), 'claimReferralReward');
-    console.log(state)
+
     const handleClaimOnClick = (manager: string) => {
         send(manager);
     };
@@ -44,7 +43,6 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
                     </div>
         </AccordionSummary>
         <AccordionDetails>
-            <Box    >
             {marketReferral.attributions.map((attribution) => {
                 return <BoxRow key={attribution.id}>
                     <div style={{ width: '80%' }}>{shortenAddress(attribution.attributor.id)}</div>
@@ -52,7 +50,6 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
                 </BoxRow>
             })
            }
-           </Box>
         </AccordionDetails>
     </Accordion>
     )
@@ -78,7 +75,7 @@ export function Referrals({ provider }: { provider: string }) {
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', marginBottom: '30px'}}>
             <Grid item sm={12} md={12}>
-                <BoxRow>
+                <BoxRow key='header'>
                     <div style={{ width: '60%' }}><Trans>Market</Trans></div>
                     <div style={{ width: '15%' }}><Trans>Earn</Trans></div>
                     <div style={{ width: '20%' }}><Trans>Claim</Trans></div>
