@@ -85,6 +85,11 @@ export const useClaimArgs = (account: string) => {
 
       const questionIds = claimsResponse.data.claims.map(data => data.question.id);
 
+      if (questionIds.length === 0) {
+        // we need to add an empty element, otherwise `question_not_in: []` returns nothing instead of returning all the questions
+        questionIds.push('');
+      }
+
       // get questionsIds not claimed
       const actionsResponse = await apolloRealityQuery<{ userActions: {question: {questionId: string}}[] }>(userActionsQuery, {user: account.toLowerCase(), questionIds});
 
