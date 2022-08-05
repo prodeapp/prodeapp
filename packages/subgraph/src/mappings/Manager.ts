@@ -1,20 +1,23 @@
 import { log } from '@graphprotocol/graph-ts';
 import { Attribution } from '../types/schema';
 import { ClaimReferralRewardCall, DistributeRewardsCall } from '../types/templates/Manager/Manager';
-import { getAttributionID, getOrCreateManager } from './utils/helpers';
+import { getAttributionID, getLastAttributionId, getOrCreateManager } from './utils/helpers';
 
 
 export function handleClaimReferralReward(call: ClaimReferralRewardCall): void {
     let i = 0;
-    let attributionId = getAttributionID(call.transaction.from, call.inputs._referral, i.toString())
-    let attribution = Attribution.load(attributionId);
-    while (attribution !== null) {
+    const endId = getLastAttributionId(call.transaction.from.toHexString(), call.inputs._referral.toHexString())
+        
+    for (i; i<=endId; i++) {
+        let attributionId = getAttributionID(call.transaction.from.toHexString(), call.inputs._referral.toHexString(), i)
+        let attribution = Attribution.load(attributionId);
+        if (attribution === null) {
+            log.error("There is an error in getLastAttributionId for the call {}", [attributionId]);
+            return
+        }
         log.debug("handleClaimReferralReward: Attribution {} claimed", [attributionId])
         attribution.claimed = true;
-        attribution.save()
-        i++
-        attributionId = getAttributionID(call.transaction.from, call.inputs._referral, i.toString())
-        attribution = Attribution.load(attributionId);
+        attribution.save();
     }
 }
 

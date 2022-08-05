@@ -2,7 +2,7 @@ import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer, RankingUpdated } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory} from './utils/helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory, getAttributionID, getLastAttributionId} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
@@ -166,11 +166,13 @@ export function handleAttribution(evt: AttributionEvent): void {
     let providerAddress = evt.params._provider;
     let provider = getOrCreatePlayer(providerAddress, market.marketFactory);
     let attributor = getOrCreatePlayer(evt.transaction.from, market.marketFactory);
-    let id = evt.transaction.hash.toHex() + "-" + evt.logIndex.toString()
+    let nextId = getLastAttributionId(provider.id, attributor.id) + 1;
+    const id = getAttributionID(provider.id, attributor.id, nextId)
     let attribution = new Attribution(id)
     attribution.provider = provider.id;
     attribution.attributor = attributor.id;
     attribution.market = market.id;
+    attribution.claimed = false;
     let marketSC = MarketContract.bind(evt.address);
     let manager = marketSC.marketInfo().value2;
     let managerSC = ManagerContract.bind(manager);

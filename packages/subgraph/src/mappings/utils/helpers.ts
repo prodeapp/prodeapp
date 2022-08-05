@@ -1,5 +1,5 @@
 import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution} from "../../types/schema";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();
@@ -53,9 +53,26 @@ export function getOrCreateMarketCuration(hash: string): MarketCuration {
     return marketCuration
 }
 
-export function getAttributionID(player:Address, attributor:Address, id:string): string {
-    return player.toHexString() + "-" + attributor.toHexString() + "-" + id;
+export function getAttributionID(player:string, attributor:string, id:number): string {
+    const playerId = player.toString();
+    const attributorId = attributor.toString();
+    return playerId + "-" + attributorId + "-" + `${id}`;
 
+}
+
+export function getLastAttributionId(player:string, attributor:string): number {
+    let i = 0;
+    let attributionId = getAttributionID(player, attributor, i)
+    let attribution = Attribution.load(attributionId);
+    if (attribution === null) return 0;
+    while (attribution !== null) {
+        i++
+        attributionId = getAttributionID(player, attributor, i)
+        attribution = Attribution.load(attributionId);
+    }
+    // return the last valid attribution index
+    i--
+    return i;
 }
 
 export function getCurrentRanking(market: ByteArray): Bet[] {
