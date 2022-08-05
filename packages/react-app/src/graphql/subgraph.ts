@@ -119,6 +119,7 @@ export interface Attribution {
     id: string
   }
   timestamp: BigNumberish
+  claimed: boolean
 }
 
 
@@ -129,6 +130,7 @@ export const ATTRIBUTION_FIELDS = `
     amount
     attributor{id}
     timestamp
+    claimed
   }
 `;
 
