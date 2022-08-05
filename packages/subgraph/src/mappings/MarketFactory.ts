@@ -1,5 +1,5 @@
 import { Address, BigInt, DataSourceContext, log } from '@graphprotocol/graph-ts';
-import { Market } from '../types/templates';
+import { Manager, Market } from '../types/templates';
 import { NewMarket, CreateMarketCall } from '../types/MarketFactory/MarketFactory';
 import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Event } from '../types/schema';
@@ -19,6 +19,9 @@ export function handleNewMarket(evt: NewMarket): void {
   let mf = getOrCreateMarketFactory(evt.address.toHexString());
   mf.numOfMarkets = mf.numOfMarkets.plus(BigInt.fromI32(1));
   mf.save();
+
+  // Start indexing the manager contract
+  Manager.create(evt.params.manager);
 }
 
 export function handleCreateMarket(call: CreateMarketCall): void {

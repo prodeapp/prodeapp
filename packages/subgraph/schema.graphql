@@ -63,6 +63,7 @@ type CurateItem @entity {
 }
 
 type Attribution @entity {
+  "provider-attributor-market-counter"
   id: ID!
   "Wallet that receives the attribution"
   provider: Player!,
@@ -74,6 +75,7 @@ type Attribution @entity {
   market: Market!
   "timestamp of the attribution"
   timestamp: BigInt!
+  claimed: Boolean!
 }
 
 type Event @entity {
@@ -118,6 +120,7 @@ type Manager @entity {
   id: ID!
   markets: [Market!]!
   managementRewards: BigInt!
+  claimed: Boolean!
 }
 
 type Bet @entity {

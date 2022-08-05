@@ -29,6 +29,7 @@ export function getOrCreateManager(address: Address): Manager {
     if (manager === null) {
         manager = new Manager(address.toHexString())
         manager.managementRewards = BigInt.fromI32(0)
+        manager.claimed = false;
         manager.save()
     }
     return manager
@@ -50,6 +51,11 @@ export function getOrCreateMarketCuration(hash: string): MarketCuration {
         marketCuration.save()
     }
     return marketCuration
+}
+
+export function getAttributionID(player:Address, attributor:Address, id:string): string {
+    return player.toHexString() + "-" + attributor.toHexString() + "-" + id;
+
 }
 
 export function getCurrentRanking(market: ByteArray): Bet[] {
