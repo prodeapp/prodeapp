@@ -25,7 +25,7 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
         send(manager);
     };
 
-    return (<Accordion key={marketReferral.id}>
+    return (<Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel1a-content"
@@ -83,7 +83,7 @@ export function Referrals({ provider }: { provider: string }) {
                 </BoxRow>
 
                 {marketsReferrals && marketsReferrals.map(mr => {
-                    return <ReferralDetail marketReferral={mr} />
+                    return <ReferralDetail marketReferral={mr} key={mr.id}/>
                 })}
             </Grid>
         </Grid>
