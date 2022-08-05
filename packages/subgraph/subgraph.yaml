@@ -104,6 +104,8 @@ templates:
         - Player
         - Event
         - Manager
+        - MarketReferral
+        - Attributions
       abis:
         - name: Market
           file: ./contracts/abis/Market.json
@@ -140,6 +142,8 @@ templates:
       file: ./src/mappings/Manager.ts
       entities:
         - Manager
+        - MarketReferral
+        - Attributions
       abis:
         - name: Manager
           file: ./contracts/abis/Manager.json

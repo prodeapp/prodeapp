@@ -78,6 +78,16 @@ type Attribution @entity {
   claimed: Boolean!
 }
 
+type MarketReferral @entity {
+  id: ID!
+  provider: Player!
+  totalAmount: BigInt!
+  claimed: Boolean!
+  market: Market!
+  attributions: [Attribution!]!
+  manager: String!
+}
+
 type Event @entity {
   "questionID"
   id: ID!

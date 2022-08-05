@@ -1,24 +1,25 @@
 import { log } from '@graphprotocol/graph-ts';
 import { Attribution } from '../types/schema';
 import { ClaimReferralRewardCall, DistributeRewardsCall } from '../types/templates/Manager/Manager';
-import { getAttributionID, getLastAttributionId, getOrCreateManager } from './utils/helpers';
+import { Manager } from '../types/templates/Market/Manager';
+import { getOrCreateManager, getOrCreateMarketReferral } from './utils/helpers';
 
 
 export function handleClaimReferralReward(call: ClaimReferralRewardCall): void {
-    let i = 0;
-    const endId = getLastAttributionId(call.transaction.from.toHexString(), call.inputs._referral.toHexString())
-        
-    for (i; i<=endId; i++) {
-        let attributionId = getAttributionID(call.transaction.from.toHexString(), call.inputs._referral.toHexString(), i)
+    let managerSC = Manager.bind(call.to);
+    let market = managerSC.market();
+    let mr = getOrCreateMarketReferral(market.toHexString() ,call.inputs._referral.toHexString(), call.to.toHexString())
+    let attributions = mr.attributions;
+    mr.claimed = true;
+    mr.save();
+    
+    attributions.forEach((attributionId) => {
         let attribution = Attribution.load(attributionId);
-        if (attribution === null) {
-            log.error("There is an error in getLastAttributionId for the call {}", [attributionId]);
-            return
-        }
-        log.debug("handleClaimReferralReward: Attribution {} claimed", [attributionId])
+        if (attribution === null ) return;
         attribution.claimed = true;
-        attribution.save();
-    }
+        attribution.save()
+        log.debug("handleClaimReferralReward: Attribution {} claimed", [attributionId])
+    })
 }
 
 export function handleDistributeRewards(call: DistributeRewardsCall): void {

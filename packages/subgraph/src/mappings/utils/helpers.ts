@@ -1,5 +1,5 @@
-import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution} from "../../types/schema";
+import { Address, BigInt, ByteArray, log } from "@graphprotocol/graph-ts";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral} from "../../types/schema";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();
@@ -73,6 +73,22 @@ export function getLastAttributionId(player:string, attributor:string): number {
     // return the last valid attribution index
     i--
     return i;
+}
+
+export function getOrCreateMarketReferral(market:string, player:string, manager:string): MarketReferral {
+    let id = market + "-" + player;
+    let mr = MarketReferral.load(id);
+    if (mr === null) {
+        mr = new MarketReferral(id);
+        mr.totalAmount = BigInt.fromI32(0);
+        mr.market = market;
+        mr.provider = player;
+        mr.manager = manager;
+        mr.claimed = false;
+        mr.save()
+        log.debug("getOrCreateMarketReferral: Creating {}", [id]);
+    }
+    return mr
 }
 
 export function getCurrentRanking(market: ByteArray): Bet[] {

@@ -2,7 +2,7 @@ import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer, RankingUpdated } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory, getAttributionID, getLastAttributionId} from './utils/helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory, getAttributionID, getLastAttributionId, getOrCreateMarketReferral} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
@@ -186,6 +186,13 @@ export function handleAttribution(evt: AttributionEvent): void {
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
     provider.save();
+
+    let mr = getOrCreateMarketReferral(market.id, provider.id, manager.toHexString());
+    let attributions = mr.attributions
+    attributions.push(attribution.id)
+    mr.attributions = attributions
+    mr.totalAmount = mr.totalAmount.plus(attribution.amount);
+    mr.save()
 }
 
 export function handleTransfer(evt: Transfer): void {
