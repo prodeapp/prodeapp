@@ -61,6 +61,9 @@ msgstr "Answers"
 msgid "Basketball"
 msgstr "Basketball"
 
+msgid "Bet"
+msgstr "Bet"
+
 msgid "Bet Price"
 msgstr "Bet Price"
 
@@ -561,9 +564,6 @@ msgstr "You"
 
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
-
-msgid "Your Bet"
-msgstr "Your Bet"
 
 msgid "Your betting position is represented by the following NFT."
 msgstr "Your betting position is represented by the following NFT."
