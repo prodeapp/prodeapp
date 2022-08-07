@@ -304,6 +304,9 @@ msgstr "Mercado no encontado."
 msgid "Market sent to Kleros Curate"
 msgstr "Mercado enviado a Kleros Curate"
 
+msgid "Market verification"
+msgstr "Verificación del mercado"
+
 msgid "Markets"
 msgstr "Mercados"
 
@@ -450,6 +453,9 @@ msgstr "Seleccione la fecha"
 
 msgid "Set question"
 msgstr "Definir pregunta"
+
+msgid "Share on Twitter"
+msgstr "Compartir en Twitter"
 
 msgid "Sports"
 msgstr "Deportes"

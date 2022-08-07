@@ -304,6 +304,9 @@ msgstr "Market not found."
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
 
+msgid "Market verification"
+msgstr "Market verification"
+
 msgid "Markets"
 msgstr "Markets"
 
@@ -450,6 +453,9 @@ msgstr "Select date"
 
 msgid "Set question"
 msgstr "Set question"
+
+msgid "Share on Twitter"
+msgstr "Share on Twitter"
 
 msgid "Sports"
 msgstr "Sports"
