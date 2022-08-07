@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
@@ -16,6 +16,8 @@ function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
     outcome: '',
   }});
 
+  const [showActions, setShowActions] = useState(false);
+
   const dialogActions = <DialogActions>
     <Button autoFocus color="primary" type="submit" form="answer-form">
     <Trans>Submit answer</Trans>
@@ -27,9 +29,9 @@ function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
       open={open}
       handleClose={handleClose}
       title={event.title}
-      actions={dialogActions}
+      actions={showActions && dialogActions}
     >
-      <AnswerForm {...{event, register, control, errors, handleSubmit}} />
+      <AnswerForm {...{event, register, control, errors, handleSubmit, setShowActions}} />
     </AppDialog>
   );
 }

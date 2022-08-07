@@ -31,9 +31,10 @@ type AnswerFormProps = {
   register: UseFormRegister<AnswerFormValues>
   errors: FieldErrors<AnswerFormValues>
   handleSubmit: UseFormHandleSubmit<AnswerFormValues>
+  setShowActions: (showActions: boolean) => void
 }
 
-export default function AnswerForm({event, register, errors, handleSubmit}: AnswerFormProps) {
+export default function AnswerForm({event, register, errors, handleSubmit, setShowActions}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
   const [outcomes, setOutcomes] = useState<{value: string|number, text: string}[]>([]);
@@ -71,6 +72,15 @@ export default function AnswerForm({event, register, errors, handleSubmit}: Answ
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
+
+  useEffect(() => {
+    if (!account || walletError) {
+      setShowActions(false);
+      return;
+    }
+
+    setShowActions(state.status !== 'Success');
+  }, [state, account, walletError, setShowActions]);
 
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to answer</Trans>}</Alert>
