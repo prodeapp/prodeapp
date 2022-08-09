@@ -61,6 +61,9 @@ msgstr "Answers"
 msgid "Basketball"
 msgstr "Basketball"
 
+msgid "Bet"
+msgstr "Bet"
+
 msgid "Bet Price"
 msgstr "Bet Price"
 
@@ -114,6 +117,9 @@ msgstr "Choose question format"
 
 msgid "Choose template"
 msgstr "Choose template"
+
+msgid "Claim"
+msgstr "Claim"
 
 msgid "Closed"
 msgstr "Closed"
@@ -192,6 +198,9 @@ msgstr "Event result is pending arbitration."
 
 msgid "Events"
 msgstr "Events"
+
+msgid "Fee"
+msgstr "Fee"
 
 msgid "Fee must be greater than 0."
 msgstr "Fee must be greater than 0."
@@ -295,6 +304,9 @@ msgstr "Market not found."
 msgid "Market sent to Kleros Curate"
 msgstr "Market sent to Kleros Curate"
 
+msgid "Market verification"
+msgstr "Market verification"
+
 msgid "Markets"
 msgstr "Markets"
 
@@ -376,6 +388,9 @@ msgstr "Prize Distribution"
 msgid "Prize Distribution (%)"
 msgstr "Prize Distribution (%)"
 
+msgid "Prize Pool"
+msgstr "Prize Pool"
+
 msgid "Prize distribution:"
 msgstr "Prize distribution:"
 
@@ -439,6 +454,9 @@ msgstr "Select date"
 msgid "Set question"
 msgstr "Set question"
 
+msgid "Share on Twitter"
+msgstr "Share on Twitter"
+
 msgid "Sports"
 msgstr "Sports"
 
@@ -499,9 +517,6 @@ msgstr "To submit the answer you need to deposit a bond of {0} that will be retu
 msgid "Total Bet: {0}"
 msgstr "Total Bet: {0}"
 
-msgid "Total Fee"
-msgstr "Total Fee"
-
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
@@ -556,11 +571,14 @@ msgstr "You"
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 
-msgid "Your Bet"
-msgstr "Your Bet"
-
 msgid "Your betting position is represented by the following NFT."
 msgstr "Your betting position is represented by the following NFT."
 
+msgid "draw"
+msgstr "draw"
+
 msgid "eSports"
 msgstr "eSports"
+
+msgid "invalid"
+msgstr "invalid"

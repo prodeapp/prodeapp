@@ -44,9 +44,18 @@ const AppDialogTitle = (props: DialogTitleProps) => {
 };
 
 export default function AppDialog({handleClose, children, open, title, actions}: DialogProps) {
+
+  const onClose = (event: object, reason: string) => {
+    if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+      return;
+    }
+
+    handleClose();
+  }
+
   return (
     <Dialog
-      onClose={handleClose}
+      onClose={onClose}
       fullWidth={true}
       maxWidth="md"
       aria-labelledby="customized-dialog-title"

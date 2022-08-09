@@ -19,8 +19,10 @@ function MarketStatus({marketId}: {marketId: string}) {
   if (marketStatus === 'ACCEPTING_BETS') {
     return <Chip label={t`Accepting bets`} color="success" />
   } else if (marketStatus === 'WAITING_ANSWERS') {
-    return <Chip label={t`Waiting for results`} color="warning" />;
-  } else if (marketStatus === 'WAITING_REGISTER_POINTS' || marketStatus === 'WAITING_AVAILABITILY_OF_RESULTS') {
+    return <Chip label={t`Waiting for results`} color="warning"/>;
+  } else if (marketStatus === 'WAITING_AVAILABITILY_OF_RESULTS') {
+    return <Chip label={t`Processing results`} color="warning"/>;
+  } else if (marketStatus === 'WAITING_REGISTER_POINTS') {
     return <Chip label={t`Prize distribution:`+' '+getTimeLeft(submissionPeriodEnd, false, locale)} color="warning" />;
   } else if (marketStatus === 'FINALIZED') {
     return <Chip label={t`Finished`} color="success" />

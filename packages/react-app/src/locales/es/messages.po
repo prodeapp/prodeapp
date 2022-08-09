@@ -61,6 +61,9 @@ msgstr "Respuestas"
 msgid "Basketball"
 msgstr "Básquetbol"
 
+msgid "Bet"
+msgstr "Apuesta"
+
 msgid "Bet Price"
 msgstr "Precio de apuesta"
 
@@ -114,6 +117,9 @@ msgstr "Elegir el formato de pregunta"
 
 msgid "Choose template"
 msgstr "Elija una plantilla"
+
+msgid "Claim"
+msgstr "Claim"
 
 msgid "Closed"
 msgstr "Cerrado"
@@ -192,6 +198,9 @@ msgstr "Resultado del evento está en disputa."
 
 msgid "Events"
 msgstr "Eventos"
+
+msgid "Fee"
+msgstr "Comisiones"
 
 msgid "Fee must be greater than 0."
 msgstr "Fee debe ser mayor que 0."
@@ -295,6 +304,9 @@ msgstr "Mercado no encontado."
 msgid "Market sent to Kleros Curate"
 msgstr "Mercado enviado a Kleros Curate"
 
+msgid "Market verification"
+msgstr "Verificación del mercado"
+
 msgid "Markets"
 msgstr "Mercados"
 
@@ -376,6 +388,9 @@ msgstr "Distribución de premios"
 msgid "Prize Distribution (%)"
 msgstr "Distribución de premios (%)"
 
+msgid "Prize Pool"
+msgstr "Pozo Acumulado"
+
 msgid "Prize distribution:"
 msgstr "Distribución de premios:"
 
@@ -439,6 +454,9 @@ msgstr "Seleccione la fecha"
 msgid "Set question"
 msgstr "Definir pregunta"
 
+msgid "Share on Twitter"
+msgstr "Compartir en Twitter"
+
 msgid "Sports"
 msgstr "Deportes"
 
@@ -499,9 +517,6 @@ msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devue
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
 
-msgid "Total Fee"
-msgstr "Comisión Total"
-
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
@@ -556,11 +571,14 @@ msgstr "Usted"
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "Puede transferirlo o venderlo en un marketplace, pero recuerde que el dueño de este NFT puede reclamar el premio si esta apuesta resulta ganadora."
 
-msgid "Your Bet"
-msgstr "Su apuesta"
-
 msgid "Your betting position is represented by the following NFT."
 msgstr "Su apuesta está representada por el siguiente NFT."
 
+msgid "draw"
+msgstr "empate"
+
 msgid "eSports"
 msgstr "eSports"
+
+msgid "invalid"
+msgstr "inválido"

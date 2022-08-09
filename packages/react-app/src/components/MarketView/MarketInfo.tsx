@@ -11,7 +11,8 @@ import {ReactComponent as MedalIcon} from "../../assets/icons/medal.svg";
 
 const MANAGER_ADDRESS: Record<string, string> = {
   '0x64ab34d8cb33f8b8bb3d4b38426896297a3e7f81': 'UBI Burner',
-  '0x0029ec18568f96afe25ea289dac6c4703868924d': 'Protocol Treasury'
+  '0xa3954b4adb7caca9c188c325cf9f2991abb3cf71': 'UBI Burner',
+  '0x0029ec18568f96afe25ea289dac6c4703868924d': 'Protocol Treasury',
 }
 
 function MarketInfo({market}: {market: Market}) {

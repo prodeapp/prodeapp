@@ -1,4 +1,4 @@
-import { shortenAddress, useConfig, useEthers, useLookupAddress } from "@usedapp/core";
+import {shortenAddress, useConfig, useContractFunction, useEthers, useLookupAddress} from "@usedapp/core";
 import React, { useEffect, useState } from "react";
 import { Toolbar, Container, Button, Box, AppBar, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
@@ -13,7 +13,7 @@ import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
-import {getDocsUrl, showWalletError} from "../lib/helpers";
+import {formatAmount, getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
@@ -21,6 +21,9 @@ import {ReactComponent as Logo} from "../assets/logo.svg";
 import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
 import {Radio} from "./Radio";
+import {useClaimArgs} from "../hooks/useReality";
+import {Contract} from "@ethersproject/contracts";
+import {RealityETH_v3_0__factory} from "../typechain";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -259,7 +262,9 @@ function WalletMenu() {
   const [openWalletModal, setOpenWalletModal] = useState(false);
 
   const { account, deactivate } = useEthers();
-  const {ens  } = useLookupAddress(account);
+  const {ens} = useLookupAddress(account);
+
+  const {data: claimArgs} = useClaimArgs(account || '');
 
   useEffect(() => {
     if (ens) {
@@ -279,6 +284,21 @@ function WalletMenu() {
     setOpenWalletModal(false);
   };
 
+  const { state, send } = useContractFunction(
+    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
+    'claimMultipleAndWithdrawBalance'
+  );
+
+  const claimReality = async () => {
+    if (!claimArgs) {
+      return;
+    }
+
+    await send(
+      claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
+    );
+  }
+
   return <>
     <WalletDialog
       open={openWalletModal}
@@ -286,6 +306,8 @@ function WalletMenu() {
     />
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       {!account && <Button onClick={handleOpenWalletModal} color="primary"><Trans>Connect Wallet</Trans></Button>}
+
+      {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans>Claim</Trans> {formatAmount(claimArgs.total)}</Button>}
 
       {account && <>
         <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>

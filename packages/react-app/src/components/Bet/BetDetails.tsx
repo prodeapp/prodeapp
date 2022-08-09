@@ -43,7 +43,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
   return <BoxWrapper>
     {!isPhone && <BoxRow>
       <div style={{ width: '40%'}}><Trans>Event</Trans></div>
-      <div style={{ width: '20%'}}><Trans>Your Bet</Trans></div>
+      <div style={{ width: '20%'}}><Trans>Bet</Trans></div>
       <div style={{ width: '20%'}}><Trans>Result</Trans></div>
       <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
     </BoxRow>}
@@ -58,7 +58,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
         <Box sx={{display: {md: 'flex'}, width: '100%', fontWeight: 'normal'}}>
           <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
           <Box sx={smallColumnsSx}>
-            {isPhone && <div style={mobileLabelSx}><Trans>Your Bet</Trans></div>}
+            {isPhone && <div style={mobileLabelSx}><Trans>Bet</Trans></div>}
             <FormatOutcome name={playerBet} title={event.title} />
           </Box>
           <Box sx={smallColumnsSx}>
