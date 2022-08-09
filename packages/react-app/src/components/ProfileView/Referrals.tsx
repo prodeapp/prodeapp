@@ -11,36 +11,44 @@ import { shortenAddress, useContractFunction } from "@usedapp/core";
 import { Contract } from "@ethersproject/contracts";
 import { Manager__factory } from "../../typechain";
 
-
-function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) {
-    const [expand, setExpand] = React.useState(false);
-    const toggleAcordion = () => {
-        setExpand((prev) => !prev);
-    };
+function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     const theme = useTheme();
 
     const { send, state } = useContractFunction(new Contract(marketReferral.manager, Manager__factory.createInterface()), 'claimReferralReward');
 
-    const handleClaimOnClick = (manager: string) => {
-        send(manager);
+    const handleClaimOnClick = async (manager: string) => {
+        await send(manager);
     };
 
-    return (<Accordion>
+    if (marketReferral.claimed || state.status === 'Success') {
+        return <>{t`Already Claimed` + '!'}</>;
+    }
+
+    if (marketReferral.market.resultSubmissionPeriodStart === '0') {
+        return <div><Trans>Waiting for prize distribution</Trans></div>;
+    }
+
+    if (state.status === 'Mining') {
+        return <CircularProgress />;
+    }
+
+    return <div style={{display:'flex'}}>
+        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans>Claim</Trans></Button>
+        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans>Error</Trans></Typography> : null}
+    </div>
+}
+
+function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) {
+    return <Accordion>
         <AccordionSummary
             expandIcon={<ExpandMoreOutlined />}
             aria-controls="panel1a-content"
-            onClick={toggleAcordion}
         >
             <div style={{ width: '60%' }}><a href={'/#/marketsReferrals/' + marketReferral.market.id}>{marketReferral.market.name}</a></div>
             <div style={{ width: '15%' }}>{formatAmount(marketReferral.totalAmount)}</div>
-            <div style={{ width: '25%' }}>{
-                marketReferral.claimed || state.status === 'Success' ? t`Already Claimed` + '!'
-                : state.status === 'Mining'
-                    ? <CircularProgress />
-                    : <div style={{display:'flex'}}>
-                        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans>Claim</Trans></Button>
-                        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans>Error</Trans></Typography> : null}</div>}
-                    </div>
+            <div style={{ width: '25%' }}>
+                <ClaimAction marketReferral={marketReferral} />
+            </div>
         </AccordionSummary>
         <AccordionDetails>
             {marketReferral.attributions.map((attribution) => {
@@ -52,14 +60,11 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
            }
         </AccordionDetails>
     </Accordion>
-    )
 }
 
 
 export function Referrals({ provider }: { provider: string }) {
     const { data: marketsReferrals, error, isLoading } = useMarketReferrals({ provider });
-
-
 
     if (error) {
         return <Alert severity="error">{error}</Alert>

@@ -139,11 +139,9 @@ export interface MarketReferral {
   market: {
     id: string,
     name: string
+    resultSubmissionPeriodStart: string
   }
   totalAmount: BigNumberish
-  provider: {
-    id: string
-  }
   claimed: boolean
   manager: string
   attributions: [{
@@ -157,8 +155,7 @@ export interface MarketReferral {
 export const MARKETREFERRAL_FIELDS = `
   fragment MarketReferralFields on MarketReferral {
     id
-    market{id, name}
-    provider{id}
+    market{id, name, resultSubmissionPeriodStart}
     totalAmount
     attributions{id, attributor{id}, amount}
     claimed
