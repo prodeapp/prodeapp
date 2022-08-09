@@ -5,9 +5,9 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
   return {
     id: id,
     nonce: 0,
-    market: {
+    markets: [{
       id: '1',
-    },
+    }],
     title: title,
     answer: null,
     outcomes: outcomes,
@@ -17,6 +17,9 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
     minBond: '0',
     lastBond: '0',
     bounty: '0',
+    arbitrator: '',
+    category: '',
+    timeout: '0'
   }
 }
 
