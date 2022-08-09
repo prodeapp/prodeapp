@@ -104,6 +104,8 @@ templates:
         - Player
         - Event
         - Manager
+        - MarketReferral
+        - Attributions
       abis:
         - name: Market
           file: ./contracts/abis/Market.json
@@ -128,3 +130,25 @@ templates:
           handler: handleTransfer
         - event: RankingUpdated(indexed uint256,uint256,uint256)
           handler: handleRankingUpdated
+  - name: Manager
+    kind: ethereum/contract
+    network: xdai
+    source:
+      abi: Manager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      file: ./src/mappings/Manager.ts
+      entities:
+        - Manager
+        - MarketReferral
+        - Attributions
+      abis:
+        - name: Manager
+          file: ./contracts/abis/Manager.json
+      callHandlers:
+        - function: claimReferralReward(address)
+          handler: handleClaimReferralReward
+        - function: distributeRewards()
+          handler: handleDistributeRewards

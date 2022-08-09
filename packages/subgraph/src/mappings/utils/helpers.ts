@@ -1,5 +1,7 @@
-import { Address, BigInt, ByteArray } from "@graphprotocol/graph-ts";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory} from "../../types/schema";
+import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { Realitio } from "../../types/RealitioV3/Realitio";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral} from "../../types/schema";
+import { RealitioAddress } from "./constants";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
     return market.toHexString() + '-' + tokenID.toString();
@@ -29,6 +31,7 @@ export function getOrCreateManager(address: Address): Manager {
     if (manager === null) {
         manager = new Manager(address.toHexString())
         manager.managementRewards = BigInt.fromI32(0)
+        manager.claimed = false;
         manager.save()
     }
     return manager
@@ -52,6 +55,44 @@ export function getOrCreateMarketCuration(hash: string): MarketCuration {
     return marketCuration
 }
 
+export function getAttributionID(player:string, attributor:string, id:number): string {
+    const playerId = player.toString();
+    const attributorId = attributor.toString();
+    return playerId + "-" + attributorId + "-" + `${id}`;
+
+}
+
+export function getLastAttributionId(player:string, attributor:string): number {
+    let i = 0;
+    let attributionId = getAttributionID(player, attributor, i)
+    let attribution = Attribution.load(attributionId);
+    if (attribution === null) return 0;
+    while (attribution !== null) {
+        i++
+        attributionId = getAttributionID(player, attributor, i)
+        attribution = Attribution.load(attributionId);
+    }
+    // return the last valid attribution index
+    i--
+    return i;
+}
+
+export function getOrCreateMarketReferral(market:string, player:string, manager:string): MarketReferral {
+    let id = market + "-" + player;
+    let mr = MarketReferral.load(id);
+    if (mr === null) {
+        mr = new MarketReferral(id);
+        mr.totalAmount = BigInt.fromI32(0);
+        mr.market = market;
+        mr.provider = player;
+        mr.manager = manager;
+        mr.claimed = false;
+        mr.save()
+        log.debug("getOrCreateMarketReferral: Creating {}", [id]);
+    }
+    return mr
+}
+
 export function getCurrentRanking(market: ByteArray): Bet[] {
     let bets: Bet[];
     let tokenID = BigInt.fromI32(0);
@@ -71,7 +112,7 @@ export function duplicateEvent(baseEvent: Event, newEventID: string): Event {
     let entity = new Event(newEventID);
     entity.nonce = baseEvent.nonce;
     entity.arbitrator = baseEvent.arbitrator;
-    entity.market = baseEvent.market;
+    entity.markets = baseEvent.markets;
     entity.category = baseEvent.category;
     entity.title = baseEvent.title;
     entity.lang = baseEvent.lang;
@@ -106,4 +147,38 @@ export function getOrCreateMarketFactory(id: string): MarketFactory {
       mf.save()
     }
     return mf
-  }
+}
+
+export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:BigInt, questionText: string): Event {
+    let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
+    let event = Event.load(questionID.toHexString());
+    if (event === null) {
+        event = new Event(questionID.toHexString());
+    event.markets = [marketAddress.toHexString()];
+    event.nonce = nonce;
+    event.arbitrator = realitioSC.getArbitrator(questionID);
+    event.openingTs = realitioSC.getOpeningTS(questionID);
+    event.timeout = realitioSC.getTimeout(questionID);
+    event.minBond = realitioSC.getMinBond(questionID);
+    event.bounty = realitioSC.getBounty(questionID);
+    event.lastBond = BigInt.fromI32(0);
+    event.finalizeTs = realitioSC.getFinalizeTS(questionID);
+    event.contentHash = realitioSC.getContentHash(questionID);
+    event.historyHash = realitioSC.getHistoryHash(questionID);
+    event.arbitrationOccurred = false;
+    event.isPendingArbitration = false;
+    let fields = questionText.split('\u241f');
+    let outcomes = fields[1].split('"').join('').split(',');
+    event.title = fields[0];
+    event.outcomes = outcomes;
+    event.category = fields[2];
+    event.lang = fields[3];
+    } else {
+        // add market to markets
+        let tmp_markets = event.markets
+        tmp_markets.push(marketAddress.toHexString())
+        event.markets = tmp_markets;
+    }
+    event.save()
+    return event
+}

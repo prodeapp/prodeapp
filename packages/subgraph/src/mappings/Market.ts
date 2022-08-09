@@ -2,7 +2,7 @@ import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer, RankingUpdated } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
 import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
-import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory} from './utils/helpers';
+import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory, getAttributionID, getLastAttributionId, getOrCreateMarketReferral} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     // Start indexing the market; `event.params.market` is the
@@ -26,7 +26,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.price = marketContract.price();
     market.numOfBets = BigInt.fromI32(0);
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
-    market.hasPendingAnswers = true;
+    
     market.sponsoredAmount = BigInt.fromI32(0);
     let creator = managerContract.creator();
     let manager = getOrCreateManager(creator);
@@ -40,13 +40,25 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     } else {
         market.category = event.category;
     }
-    market.save();
 
     let marketCuration = getOrCreateMarketCuration(hash);
     let tmp_markets = marketCuration.markets;
     tmp_markets.push(market.id);
     marketCuration.markets = tmp_markets;
     marketCuration.save();
+    
+    if (tmp_markets.length > 1) {
+        // not the first market with this hash
+        let oldMarket = Market.load(tmp_markets[0])!;
+        // check if already curated.
+        market.curated = oldMarket.curated;
+        // check if the market events already exist and where answered.
+        market.hasPendingAnswers = oldMarket.hasPendingAnswers;
+    } else {
+        market.curated = false;
+        market.hasPendingAnswers = true;
+    }
+    market.save();
 }
 
 export function handlePrizesRegistered(evt: Prizes): void {
@@ -149,7 +161,6 @@ export function handleFundingReceived(evt: FundingReceived): void {
     mf.save()
 }
 
-
 export function handleManagerReward(evt: ManagementReward): void {
     let market = Market.load(evt.address.toHexString())!;
     market.resultSubmissionPeriodStart = evt.block.timestamp;
@@ -166,11 +177,13 @@ export function handleAttribution(evt: AttributionEvent): void {
     let providerAddress = evt.params._provider;
     let provider = getOrCreatePlayer(providerAddress, market.marketFactory);
     let attributor = getOrCreatePlayer(evt.transaction.from, market.marketFactory);
-    let id = evt.transaction.hash.toHex() + "-" + evt.logIndex.toString()
+    let nextId = getLastAttributionId(provider.id, attributor.id) + 1;
+    const id = getAttributionID(provider.id, attributor.id, nextId)
     let attribution = new Attribution(id)
     attribution.provider = provider.id;
     attribution.attributor = attributor.id;
     attribution.market = market.id;
+    attribution.claimed = false;
     let marketSC = MarketContract.bind(evt.address);
     let manager = marketSC.marketInfo().value2;
     let managerSC = ManagerContract.bind(manager);
@@ -184,6 +197,13 @@ export function handleAttribution(evt: AttributionEvent): void {
 
     provider.totalAttributions = provider.totalAttributions.plus(attriibutionAmount);
     provider.save();
+
+    let mr = getOrCreateMarketReferral(market.id, provider.id, manager.toHexString());
+    let attributions = mr.attributions
+    attributions.push(attribution.id)
+    mr.attributions = attributions
+    mr.totalAmount = mr.totalAmount.plus(attribution.amount);
+    mr.save()
 }
 
 export function handleTransfer(evt: Transfer): void {

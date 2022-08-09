@@ -31,7 +31,7 @@ type Market @entity {
   prizes: [BigInt!]
   curated: Boolean!
   players: [Player!]! @derivedFrom(field: "markets")
-  events: [Event!]! @derivedFrom(field: "market")
+  events: [Event!]! @derivedFrom(field: "markets")
   bets: [Bet!]! @derivedFrom(field: "market")
   funders: [Funder!] @derivedFrom(field: "markets")
   attributions: [Attribution!]! @derivedFrom(field: "market")
@@ -63,6 +63,7 @@ type CurateItem @entity {
 }
 
 type Attribution @entity {
+  "provider-attributor-market-counter"
   id: ID!
   "Wallet that receives the attribution"
   provider: Player!,
@@ -74,6 +75,17 @@ type Attribution @entity {
   market: Market!
   "timestamp of the attribution"
   timestamp: BigInt!
+  claimed: Boolean!
+}
+
+type MarketReferral @entity {
+  id: ID!
+  provider: Player!
+  totalAmount: BigInt!
+  claimed: Boolean!
+  market: Market!
+  attributions: [Attribution!]!
+  manager: String!
 }
 
 type Event @entity {
@@ -81,7 +93,7 @@ type Event @entity {
   id: ID!
   nonce: BigInt!
   arbitrator: Bytes!
-  market: Market!
+  markets: [Market!]!
   answer: Bytes
   category: String!
   title: String!
@@ -118,6 +130,7 @@ type Manager @entity {
   id: ID!
   markets: [Market!]!
   managementRewards: BigInt!
+  claimed: Boolean!
 }
 
 type Bet @entity {

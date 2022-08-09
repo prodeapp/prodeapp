@@ -1,14 +1,65 @@
 import React from "react";
-import { shortenAddress } from "@usedapp/core";
 import Alert from "@mui/material/Alert";
-import { Trans } from "@lingui/macro";
-import { Grid, Skeleton } from "@mui/material";
+import { Trans, t } from "@lingui/macro";
+import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Skeleton, Typography, useTheme } from "@mui/material";
 import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";
-import { useAttributions } from "../../hooks/useAttributions";
+import { useMarketReferrals } from "../../hooks/useMarketReferrals";
+import { MarketReferral } from "../../graphql/subgraph";
+import { ExpandMoreOutlined } from "@mui/icons-material";
+import { shortenAddress, useContractFunction } from "@usedapp/core";
+import { Contract } from "@ethersproject/contracts";
+import { Manager__factory } from "../../typechain";
+
+
+function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) {
+    const [expand, setExpand] = React.useState(false);
+    const toggleAcordion = () => {
+        setExpand((prev) => !prev);
+    };
+    const theme = useTheme();
+
+    const { send, state } = useContractFunction(new Contract(marketReferral.manager, Manager__factory.createInterface()), 'claimReferralReward');
+
+    const handleClaimOnClick = (manager: string) => {
+        send(manager);
+    };
+
+    return (<Accordion>
+        <AccordionSummary
+            expandIcon={<ExpandMoreOutlined />}
+            aria-controls="panel1a-content"
+            onClick={toggleAcordion}
+        >
+            <div style={{ width: '60%' }}><a href={'/#/marketsReferrals/' + marketReferral.market.id}>{marketReferral.market.name}</a></div>
+            <div style={{ width: '15%' }}>{formatAmount(marketReferral.totalAmount)}</div>
+            <div style={{ width: '25%' }}>{
+                marketReferral.claimed || state.status === 'Success' ? t`Already Claimed` + '!'
+                : state.status === 'Mining'
+                    ? <CircularProgress />
+                    : <div style={{display:'flex'}}>
+                        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans>Claim</Trans></Button>
+                        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans>Error</Trans></Typography> : null}</div>}
+                    </div>
+        </AccordionSummary>
+        <AccordionDetails>
+            {marketReferral.attributions.map((attribution) => {
+                return <BoxRow key={attribution.id}>
+                    <div style={{ width: '80%' }}>{shortenAddress(attribution.attributor.id)}</div>
+                    <div style={{ width: '20%' }}>{formatAmount(attribution.amount)}</div>
+                </BoxRow>
+            })
+           }
+        </AccordionDetails>
+    </Accordion>
+    )
+}
+
 
 export function Referrals({ provider }: { provider: string }) {
-    const { data: referrals, error, isLoading } = useAttributions({ provider });
+    const { data: marketsReferrals, error, isLoading } = useMarketReferrals({ provider });
+
+
 
     if (error) {
         return <Alert severity="error">{error}</Alert>
@@ -18,27 +69,23 @@ export function Referrals({ provider }: { provider: string }) {
         return <Skeleton animation="wave" height={150} />
     }
 
-    if (!referrals || referrals.length === 0) {
+    if (!marketsReferrals || marketsReferrals.length === 0) {
         return <Alert severity="info"><Trans>Start referring into markets and earn part of the fees that your referred pays.</Trans></Alert>
     }
     return (
-        <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
+        <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', marginBottom: '30px'}}>
             <Grid item sm={12} md={12}>
-                <BoxRow>
-                    <div style={{ width: '40%' }}><Trans>Referred</Trans></div>
-                    <div style={{ width: '40%' }}><Trans>Market</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Earn</Trans></div>
+                <BoxRow key='header'>
+                    <div style={{ width: '60%' }}><Trans>Market</Trans></div>
+                    <div style={{ width: '15%' }}><Trans>Earn</Trans></div>
+                    <div style={{ width: '20%' }}><Trans>Claim</Trans></div>
+                    <div style={{ width: '5%' }}></div>
                 </BoxRow>
 
-                {referrals && referrals.map(refer => {
-                    return (<BoxRow key={refer.id}>
-                        <div style={{ width: '40%' }}>{shortenAddress(refer.attributor.id)}</div>
-                        <div style={{ width: '40%' }}><a href={'/#/markets/' + refer.market.id}>{refer.market.name}</a></div>
-                        <div style={{ width: '20%' }}>{formatAmount(refer.amount)}</div>
-                    </BoxRow>
-                    )
+                {marketsReferrals && marketsReferrals.map(mr => {
+                    return <ReferralDetail marketReferral={mr} key={mr.id}/>
                 })}
             </Grid>
         </Grid>
-    )    
+    )
 }

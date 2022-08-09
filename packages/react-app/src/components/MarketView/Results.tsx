@@ -153,7 +153,7 @@ export default function Results({marketId}: {marketId: string}) {
     setOpenModal(false);
     if (currentEvent) {
       // refetch events and question just in case the user has provided an answer
-      queryClient.invalidateQueries(['useEvents', currentEvent.market.id]);
+      queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id]);
       queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentEvent.id]);
     }
   }

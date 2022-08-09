@@ -55,9 +55,9 @@ export interface Event {
   id: string
   nonce: BigNumberish
   arbitrator: string
-  market: {
+  markets: [{
     id: string
-  }
+  }]
   category: string
   title: string
   answer: string | null
@@ -76,7 +76,7 @@ export const EVENT_FIELDS = `
     id
     nonce
     arbitrator
-    market{id}
+    markets{id}
     category
     title
     answer
@@ -119,6 +119,7 @@ export interface Attribution {
     id: string
   }
   timestamp: BigNumberish
+  claimed: boolean
 }
 
 
@@ -129,6 +130,39 @@ export const ATTRIBUTION_FIELDS = `
     amount
     attributor{id}
     timestamp
+    claimed
+  }
+`;
+
+export interface MarketReferral {
+  id: string
+  market: {
+    id: string,
+    name: string
+  }
+  totalAmount: BigNumberish
+  provider: {
+    id: string
+  }
+  claimed: boolean
+  manager: string
+  attributions: [{
+    id: string
+    attributor: {id: string}
+    amount: BigNumberish
+  }]
+}
+
+
+export const MARKETREFERRAL_FIELDS = `
+  fragment MarketReferralFields on MarketReferral {
+    id
+    market{id, name}
+    provider{id}
+    totalAmount
+    attributions{id, attributor{id}, amount}
+    claimed
+    manager
   }
 `;
 
