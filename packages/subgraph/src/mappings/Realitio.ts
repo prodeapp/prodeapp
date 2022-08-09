@@ -27,41 +27,44 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
     const questionNonce = event.nonce;
-    let marketId = ByteArray.fromHexString(event.market);
-    log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
-    let betID = getBetID(marketId, tokenID);
-    let bet = Bet.load(betID);
-    while (bet !== null) {
-        let betResult = bet.results[questionNonce.toI32()];
-        if (betResult.equals(event.answer!)) {
-            // The player has the correct answer
-            log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
-            bet.points = bet.points.plus(correctAnswerPoints);
-        } else {
-            if (changeAnswer) {
-                // if we are changing the answer, discount the points for the old answer bets.
-                if (betResult.equals(oldAnswer)) {
-                    bet.points = bet.points.minus(correctAnswerPoints);
+    for (let i = 0; i < event.markets.length; i++) {
+        let marketId = ByteArray.fromHexString(event.markets[i]);
+        log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
+        let betID = getBetID(marketId, tokenID);
+        let bet = Bet.load(betID);
+        while (bet !== null) {
+            let betResult = bet.results[questionNonce.toI32()];
+            if (betResult.equals(event.answer!)) {
+                // The player has the correct answer
+                log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
+                bet.points = bet.points.plus(correctAnswerPoints);
+            } else {
+                if (changeAnswer) {
+                    // if we are changing the answer, discount the points for the old answer bets.
+                    if (betResult.equals(oldAnswer)) {
+                        bet.points = bet.points.minus(correctAnswerPoints);
+                    }
                 }
             }
+            bet.save()
+            tokenID = tokenID.plus(BigInt.fromI32(1));
+            betID = getBetID(marketId, tokenID);
+            bet = Bet.load(betID);
         }
-        bet.save()
-        tokenID = tokenID.plus(BigInt.fromI32(1));
-        betID = getBetID(marketId, tokenID);
-        bet = Bet.load(betID);
-    }
+        tokenID = BigInt.fromI32(0);
 
-    // update answer counter in market
-    if (!changeAnswer) {
-        let market = Market.load(event.market);
-        if (market === null) {
-            log.error("handleNewAnswer: market {} not found.", [event.market]);
-            return
+        // update answer counter in market
+        if (!changeAnswer) {
+            let market = Market.load(marketId.toHexString());
+            if (market === null) {
+                log.error("handleNewAnswer: market {} not found.", [marketId.toHexString()]);
+                return
+            }
+            market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
+            log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
+            market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
+            market.save()
         }
-        market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
-        log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
-        market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
-        market.save()
     }
 }
 
@@ -106,15 +109,18 @@ export function handleReopenQuestion(event: LogReopenQuestion): void {
     reopEvnts.push(oldEvent.id);
     entity.reopenedEvents = reopEvnts;
     entity.save();
-    
+
     // Delete old event.
     log.debug("handleReopenQuestion: Deleting event {} after creating event {}", [oldEvent.id, entity.id]);
     store.remove("Event", oldEvent.id);
 
     // It's not possible to bet for answer too soon, so there is no need
     // to recalculate points. But the counter of number of answers has to be updated
-    let market = Market.load(oldEvent.market)!;
-    market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.minus(BigInt.fromI32(1));
-    market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
-    market.save();
+    for (let i=0; i < oldEvent.markets.length; i++) {
+        let market = Market.load(oldEvent.markets[i])!;
+        market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.minus(BigInt.fromI32(1));
+        market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
+        market.save();
+    }
+    
 }

@@ -31,7 +31,7 @@ type Market @entity {
   prizes: [BigInt!]
   curated: Boolean!
   players: [Player!]! @derivedFrom(field: "markets")
-  events: [Event!]! @derivedFrom(field: "market")
+  events: [Event!]! @derivedFrom(field: "markets")
   bets: [Bet!]! @derivedFrom(field: "market")
   funders: [Funder!] @derivedFrom(field: "markets")
   attributions: [Attribution!]! @derivedFrom(field: "market")
@@ -93,7 +93,7 @@ type Event @entity {
   id: ID!
   nonce: BigInt!
   arbitrator: Bytes!
-  market: Market!
+  markets: [Market!]!
   answer: Bytes
   category: String!
   title: String!

@@ -26,7 +26,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     market.price = marketContract.price();
     market.numOfBets = BigInt.fromI32(0);
     market.numOfEventsWithAnswer = BigInt.fromI32(0);
-    market.hasPendingAnswers = true;
+    
     market.sponsoredAmount = BigInt.fromI32(0);
     let creator = managerContract.creator();
     let manager = getOrCreateManager(creator);
@@ -40,13 +40,25 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     } else {
         market.category = event.category;
     }
-    market.save();
 
     let marketCuration = getOrCreateMarketCuration(hash);
     let tmp_markets = marketCuration.markets;
     tmp_markets.push(market.id);
     marketCuration.markets = tmp_markets;
     marketCuration.save();
+    
+    if (tmp_markets.length > 1) {
+        // not the first market with this hash
+        let oldMarket = Market.load(tmp_markets[0])!;
+        // check if already curated.
+        market.curated = oldMarket.curated;
+        // check if the market events already exist and where answered.
+        market.hasPendingAnswers = oldMarket.hasPendingAnswers;
+    } else {
+        market.curated = false;
+        market.hasPendingAnswers = true;
+    }
+    market.save();
 }
 
 export function handlePrizesRegistered(evt: Prizes): void {
@@ -148,7 +160,6 @@ export function handleFundingReceived(evt: FundingReceived): void {
     mf.totalVolumeFunding = mf.totalVolumeFunding.plus(evt.params._amount);
     mf.save()
 }
-
 
 export function handleManagerReward(evt: ManagementReward): void {
     let market = Market.load(evt.address.toHexString())!;

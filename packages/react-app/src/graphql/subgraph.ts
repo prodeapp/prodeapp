@@ -55,9 +55,9 @@ export interface Event {
   id: string
   nonce: BigNumberish
   arbitrator: string
-  market: {
+  markets: [{
     id: string
-  }
+  }]
   category: string
   title: string
   answer: string | null
@@ -76,7 +76,7 @@ export const EVENT_FIELDS = `
     id
     nonce
     arbitrator
-    market{id}
+    markets{id}
     category
     title
     answer
