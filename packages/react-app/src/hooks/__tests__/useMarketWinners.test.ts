@@ -12,9 +12,9 @@ it('first place tie', () => {
   ];
 
   const rankedWinners: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '8', ranking: 1},
-    {tokenID: '3', points: '8', ranking: 1},
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2, 3]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2, 3]},
+    {tokenID: '3', points: '8', ranking: 1, prizes: [1, 2, 3]},
   ];
 
   expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
@@ -31,10 +31,10 @@ it('first place tie + second place', () => {
   ];
 
   const rankedWinners: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '8', ranking: 1},
-    {tokenID: '3', points: '8', ranking: 1},
-    {tokenID: '4', points: '7', ranking: 2},
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2, 3]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2, 3]},
+    {tokenID: '3', points: '8', ranking: 1, prizes: [1, 2, 3]},
+    {tokenID: '4', points: '7', ranking: 2, prizes: [4]},
   ];
 
   expect(getMarketWinners(marketPoints, 4)).toEqual(rankedWinners);
@@ -51,9 +51,9 @@ it('first place + second place + third place', () => {
   ];
 
   const rankedWinners: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '7', ranking: 2},
-    {tokenID: '3', points: '6', ranking: 3},
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1]},
+    {tokenID: '2', points: '7', ranking: 2, prizes: [2]},
+    {tokenID: '3', points: '6', ranking: 3, prizes: [3]},
   ];
 
   expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
@@ -69,31 +69,71 @@ it('first place tie + second place tie + third place', () => {
     {tokenID: '6', points: '5'},
   ];
 
-  const rankedWinners1: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '8', ranking: 1},
+  const rankedWinners: RankedWinners[] = [
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2]},
   ];
 
-  expect(getMarketWinners(marketPoints, 2)).toEqual(rankedWinners1);
+  expect(getMarketWinners(marketPoints, 2)).toEqual(rankedWinners);
+});
 
-  const rankedWinners2: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '8', ranking: 1},
-    {tokenID: '3', points: '7', ranking: 2},
-    {tokenID: '4', points: '7', ranking: 2},
+it('first place tie + second place tie', () => {
+  const marketPoints: MarketPoint[] = [
+    {tokenID: '1', points: '8'},
+    {tokenID: '2', points: '8'},
+    {tokenID: '3', points: '7'},
+    {tokenID: '4', points: '7'},
+    {tokenID: '5', points: '6'},
+    {tokenID: '6', points: '5'},
   ];
 
-  expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners2);
-
-  expect(getMarketWinners(marketPoints, 4)).toEqual(rankedWinners2);
-
-  const rankedWinners3: RankedWinners[] = [
-    {tokenID: '1', points: '8', ranking: 1},
-    {tokenID: '2', points: '8', ranking: 1},
-    {tokenID: '3', points: '7', ranking: 2},
-    {tokenID: '4', points: '7', ranking: 2},
-    {tokenID: '5', points: '6', ranking: 3},
+  const rankedWinners: RankedWinners[] = [
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '3', points: '7', ranking: 2, prizes: [3]},
+    {tokenID: '4', points: '7', ranking: 2, prizes: [3]},
   ];
 
-  expect(getMarketWinners(marketPoints, 5)).toEqual(rankedWinners3);
+  expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
+});
+
+it('first place tie + second place tie + third place', () => {
+  const marketPoints: MarketPoint[] = [
+    {tokenID: '1', points: '8'},
+    {tokenID: '2', points: '8'},
+    {tokenID: '3', points: '7'},
+    {tokenID: '4', points: '7'},
+    {tokenID: '5', points: '6'},
+    {tokenID: '6', points: '5'},
+  ];
+
+  const rankedWinners: RankedWinners[] = [
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '3', points: '7', ranking: 2, prizes: [3, 4]},
+    {tokenID: '4', points: '7', ranking: 2, prizes: [3, 4]},
+  ];
+
+  expect(getMarketWinners(marketPoints, 4)).toEqual(rankedWinners);
+});
+
+it('first place tie + second place tie + third place', () => {
+  const marketPoints: MarketPoint[] = [
+    {tokenID: '1', points: '8'},
+    {tokenID: '2', points: '8'},
+    {tokenID: '3', points: '7'},
+    {tokenID: '4', points: '7'},
+    {tokenID: '5', points: '6'},
+    {tokenID: '6', points: '5'},
+  ];
+
+  const rankedWinners4: RankedWinners[] = [
+    {tokenID: '1', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '2', points: '8', ranking: 1, prizes: [1, 2]},
+    {tokenID: '3', points: '7', ranking: 2, prizes: [3, 4]},
+    {tokenID: '4', points: '7', ranking: 2, prizes: [3, 4]},
+    {tokenID: '5', points: '6', ranking: 3, prizes: [5]},
+  ];
+
+  expect(getMarketWinners(marketPoints, 5)).toEqual(rankedWinners4);
 });

@@ -5,13 +5,16 @@ import {indexObjectsByKey} from "../lib/helpers";
 
 export interface RankedWinners extends MarketPoint {
   ranking: number
+  prizes: number[]
 }
 
 export function getMarketWinners(marketPoints: MarketPoint[], totalPrizes: number) : RankedWinners[] {
   const winners: RankedWinners[] = [];
 
   let currentPointsLevel = '';
+  let currentPrizeLevel = 1;
   let currentRanking = 1;
+  let rankingPrizes: Array<number[]> = [[]]; // initialize ranking[0]
 
   for (let marketPoint of marketPoints) {
 
@@ -28,10 +31,23 @@ export function getMarketWinners(marketPoints: MarketPoint[], totalPrizes: numbe
       currentRanking++;
     }
 
-    winners.push(Object.assign({ranking: currentRanking}, marketPoint));
+    if (!rankingPrizes[currentRanking]) {
+      rankingPrizes[currentRanking] = [];
+    }
+
+    const tmpPrizeLevel = Math.min(totalPrizes, currentPrizeLevel++);
+    if (!rankingPrizes[currentRanking].includes(tmpPrizeLevel)) {
+      rankingPrizes[currentRanking].push(tmpPrizeLevel);
+    }
+
+    winners.push(Object.assign({ranking: currentRanking, prizes: []}, marketPoint));
   }
 
-  return winners
+  return winners.map(winner => {
+    winner.prizes = rankingPrizes[winner.ranking]
+
+    return winner;
+  })
 }
 
 export const useMarketWinners = (marketId: string) => {

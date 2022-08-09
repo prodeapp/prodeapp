@@ -59,7 +59,7 @@ export default function Bets({marketId}: {marketId: string}) {
         return <TableBody key={i}>
           <div style={{width: '10%', display: 'flex'}}>
             <div>{i+1}</div>
-            {marketWinners[rank.tokenID] && <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(marketWinners[rank.tokenID].ranking)}} />}
+            {marketWinners[rank.tokenID] && marketWinners[rank.tokenID].prizes.map(prize => <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(prize)}} />)}
           </div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
