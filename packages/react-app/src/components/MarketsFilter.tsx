@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -9,6 +9,7 @@ import {Trans} from '@lingui/macro';
 import {styled} from "@mui/material/styles";
 import {Radio} from "./Radio";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
+import {GlobalContext} from "../lib/GlobalContext";
 
 const FiltersWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -103,10 +104,14 @@ type MarketsFilterProps = {
 
 function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
   const [activeSection, setActiveSection] = useState<'category' | ''>('');
-  const [verifiedStatus, setVerifiedStatus] = useState<boolean>(false);
 
-  const [status, setStatus] = useState<MarketStatus | undefined>('active');
-  const [category, setCategory] = useState('All');
+  const {marketFilters} = useContext(GlobalContext);
+
+  const {
+    curated, setCurated,
+    status, setStatus,
+    category, setCategory
+  } = marketFilters;
 
   const changeStatus = (newStatus: MarketStatus) => {
     setStatus(newStatus === status ? undefined : newStatus)
@@ -114,7 +119,7 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
 
   const getMarketFilters= () => {
     return {
-      curated: verifiedStatus ? verifiedStatus : undefined,
+      curated: curated ? curated : undefined,
       status,
       category: category === 'All'? '' : category,
       minEvents: 3
@@ -124,7 +129,7 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
   useEffect(() => {
     setMarketFilters(getMarketFilters());
   // eslint-disable-next-line
-  }, [verifiedStatus, status, category]);
+  }, [curated, status, category]);
 
   useEffect(() => {
     setMarketFilters(getMarketFilters());
@@ -154,8 +159,8 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={verifiedStatus}
-                    onClick={() => setVerifiedStatus(!verifiedStatus)}
+                    checked={curated}
+                    onClick={() => setCurated(!curated)}
                   />}
                 label={<Trans>Only verified markets</Trans>}/>
             </FormGroup>

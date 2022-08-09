@@ -125,7 +125,7 @@ export function getSubcategories(category: string): MarketCategory[] {
 
 
 export function getCategoryText(id: string): string {
-  return getFlattenedCategories().filter(c => c.id === id)[0].text;
+  return getFlattenedCategories().filter(c => c.id === id)[0]?.text || '';
 }
 
 export function getMarketUrl(marketId: string) {

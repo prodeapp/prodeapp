@@ -24,6 +24,7 @@ import CurateSubmit from "./pages/CurateSubmit";
 import { I18nProvider } from "./lib/I18nProvider";
 import TokenView from "./pages/TokenView";
 import MarketsFund from "./pages/MarketsFund";
+import { GlobalContextProvider } from './lib/GlobalContext';
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -44,29 +45,31 @@ ReactDOM.render(
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <I18nProvider>
-            <HashRouter>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route index element={<Home />} />
-                  <Route path="markets">
-                    <Route path=":id">
-                      <Route index element={<MarketsView />} />
-                      <Route path="tournament" element={<Tournament />} />
-                      <Route path="fund" element={<MarketsFund />} />
-                      <Route path=":tokenId" element={<TokenView />} />
+            <GlobalContextProvider>
+              <HashRouter>
+                <Routes>
+                  <Route element={<Layout />}>
+                    <Route index element={<Home />} />
+                    <Route path="markets">
+                      <Route path=":id">
+                        <Route index element={<MarketsView />} />
+                        <Route path="tournament" element={<Tournament />} />
+                        <Route path="fund" element={<MarketsFund />} />
+                        <Route path=":tokenId" element={<TokenView />} />
+                      </Route>
+                      <Route path="new" element={<MarketsCreate />} />
                     </Route>
-                    <Route path="new" element={<MarketsCreate />} />
+                    <Route path="leaderboard" element={<Leaderboard />} />
+                    <Route path="profile">
+                      <Route index element={<Profile />} />
+                      <Route path=":id" element={<Profile />} />
+                    </Route>
+                    <Route path="curate/validator" element={<CurateValidator />} />
+                    <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
                   </Route>
-                  <Route path="leaderboard" element={<Leaderboard />} />
-                  <Route path="profile">
-                    <Route index element={<Profile />} />
-                    <Route path=":id" element={<Profile />} />
-                  </Route>
-                  <Route path="curate/validator" element={<CurateValidator />} />
-                  <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
-                </Route>
-              </Routes>
-            </HashRouter>
+                </Routes>
+              </HashRouter>
+            </GlobalContextProvider>
           </I18nProvider>
         </ThemeProvider>
       </ReactQueryProvider>
