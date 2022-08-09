@@ -28,6 +28,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         stat.push({ outcome: t`Invalid`, amountBets: 0, percentage: 0, index: 257, title: event.title, openingTs: event.openingTs })
         return stat
     })
+    if (stats.length === 0) return [];
     // Add stats
     bets.forEach((bet) => {
         bet.results.forEach((result, i) => {
@@ -59,7 +60,6 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 }
 
 function statsBarsVertical(events: Stat[]) {
-    console.log(events.length)
     return (
         <BarChart data={events} layout='vertical'>
             <XAxis hide type="number" />
