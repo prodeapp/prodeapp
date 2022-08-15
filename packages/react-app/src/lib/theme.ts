@@ -288,6 +288,34 @@ const darkTheme = createTheme({
         },
       },
     },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: '56px',
+          height: '42px',
+        },
+        track: {
+          borderRadius: '10px',
+          opacity: 1,
+          backgroundColor: '#E3E3E3',
+        },
+        thumb: {
+          width: '16px',
+          height: '16px',
+        },
+        switchBase: {
+          top: '4px',
+          left: '4px',
+          '&.Mui-checked': {
+            color: 'white',
+            left: '-2px',
+            '&+.MuiSwitch-track': {
+              opacity: 1,
+            },
+          },
+        },
+      },
+    },
   },
 });
 
