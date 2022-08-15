@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from "react";
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import {MarketStatus, UseMarketsProps} from "../hooks/useMarkets";
@@ -74,6 +73,23 @@ const FilterSection = styled('div')(({ theme }) => ({
   },
 }));
 
+const UnderlineButton = styled('div', {
+  shouldForwardProp: (prop) => prop !== 'selected',
+})<{selected?: boolean}>(({ theme, selected }) => ({
+  fontSize: '16px',
+  margin: '0 16px',
+  paddingBottom: '5px',
+  cursor: 'pointer',
+  ...(
+    selected ?
+      {
+        color: theme.palette.primary.main,
+        fontWeight: 700,
+        borderBottom: `2px solid ${theme.palette.primary.main}`,
+      } : {}
+  ),
+}));
+
 type FilterDropdownProps = React.HTMLAttributes<HTMLDivElement> & {
   isOpen: boolean
 }
@@ -143,9 +159,9 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
           <div>
             <div className="filter-label"><Trans>Status</Trans>:</div>
             <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <div><Button onClick={() => changeStatus('active')} color={status === 'active' ? 'primary' : 'secondary'}><Trans>Betting</Trans></Button></div>
-              <div><Button onClick={() => changeStatus('pending')} color={status === 'pending' ? 'primary' : 'secondary'}><Trans>Playing</Trans></Button></div>
-              <div><Button onClick={() => changeStatus('closed')} color={status === 'closed' ? 'primary' : 'secondary'}><Trans>Closed</Trans></Button></div>
+              <div><UnderlineButton onClick={() => changeStatus('active')} selected={status === 'active'}><Trans>Betting</Trans></UnderlineButton></div>
+              <div><UnderlineButton onClick={() => changeStatus('pending')} selected={status === 'pending'}><Trans>Playing</Trans></UnderlineButton></div>
+              <div><UnderlineButton onClick={() => changeStatus('closed')} selected={status === 'closed'}><Trans>Closed</Trans></UnderlineButton></div>
             </Box>
           </div>
           <div>
