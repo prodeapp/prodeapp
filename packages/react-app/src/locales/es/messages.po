@@ -43,6 +43,9 @@ msgstr "Billetera donde se enviará la comisión del creador"
 msgid "All"
 msgstr "Todos"
 
+msgid "Already Claimed"
+msgstr "Ya reclamado"
+
 msgid "Answer closes in {answerCountdown}"
 msgstr "Respuesta se acepta en {answerCountdown}"
 
@@ -186,6 +189,9 @@ msgstr "Ganancia"
 
 msgid "Edit"
 msgstr "Editar"
+
+msgid "Error"
+msgstr "Error"
 
 msgid "Error loading events"
 msgstr "Error cargando los eventos"
@@ -334,6 +340,9 @@ msgstr "Sin respuesta todavía"
 msgid "Not verified yet"
 msgstr "Aún no verificado"
 
+msgid "Not yet"
+msgstr "Todavía no"
+
 msgid "Number of questions"
 msgstr "Número de preguntas"
 
@@ -397,6 +406,9 @@ msgstr "Distribución de premios:"
 msgid "Prizes"
 msgstr "Premios"
 
+msgid "Processing results"
+msgstr "Procesando resultados"
+
 msgid "Publish"
 msgstr "Publicar"
 
@@ -414,9 +426,6 @@ msgstr "Referidos"
 
 msgid "Referrals Earnings: {0}"
 msgstr "Ganancias por Referidos: {0}"
-
-msgid "Referred"
-msgstr "Referido"
 
 msgid "Remove event"
 msgstr "Remover evento"
@@ -556,6 +565,9 @@ msgstr "Verificar mercado"
 msgid "Verify your market"
 msgstr "Verifique su mercado"
 
+msgid "Waiting for prize distribution"
+msgstr "Esperando distribución de premios"
+
 msgid "Waiting for results"
 msgstr "Esperando resultados"
 
@@ -564,6 +576,9 @@ msgstr "Esperando resultado"
 
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "Qué % del pozo ganará el jugador en la posición #X."
+
+msgid "Yes"
+msgstr "Si"
 
 msgid "You"
 msgstr "Usted"

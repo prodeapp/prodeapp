@@ -20,6 +20,7 @@ import { useLocation } from "react-router-dom";
 import {ReactComponent as Logo} from "../assets/logo.svg";
 import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
+import {ReactComponent as ArrowRight} from "../assets/icons/arrow-right-2.svg";
 import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
 import {Contract} from "@ethersproject/contracts";
@@ -305,7 +306,7 @@ function WalletMenu() {
       handleClose={handleCloseWalletModal}
     />
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {!account && <Button onClick={handleOpenWalletModal} color="primary"><Trans>Connect Wallet</Trans></Button>}
+      {!account && <Button onClick={handleOpenWalletModal} color="primary" size="large"><Trans>Connect Wallet</Trans> <ArrowRight style={{marginLeft: 10}}/></Button>}
 
       {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans>Claim</Trans> {formatAmount(claimArgs.total)}</Button>}
 

@@ -11,7 +11,7 @@ import {t, Trans} from '@lingui/macro'
 import {useI18nContext} from "../lib/I18nContext";
 import {styled} from "@mui/material/styles";
 import {usePhone} from "../hooks/useResponsive";
-import {Typography} from "@mui/material";
+import {Typography, useTheme} from "@mui/material";
 
 type MarketsTableProps = {
   markets?: Market[]
@@ -60,6 +60,7 @@ const MarketDetails = styled(Box)(({ theme }) => ({
 function MarketsTable({ markets }: MarketsTableProps) {
   const { locale } = useI18nContext();
   const isPhone = usePhone();
+  const theme = useTheme();
 
   if (!markets || markets.length === 0) {
     return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
@@ -110,7 +111,10 @@ function MarketsTable({ markets }: MarketsTableProps) {
 
             <div>
               <div><Trans>Verified</Trans></div>
-              <div style={{fontWeight: 'bold'}}>{market.curated ? '✅' : '🚫'}</div>
+              <div style={{fontWeight: 'bold', color: market.curated ? theme.palette.success.dark : theme.palette.error.dark}}>
+                {market.curated && <Trans>Yes</Trans>}
+                {!market.curated && <Trans>Not yet</Trans>}
+              </div>
             </div>
           </MarketDetails>
         </Box>

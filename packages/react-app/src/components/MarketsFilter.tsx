@@ -178,7 +178,7 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
                     checked={curated}
                     onClick={() => setCurated(!curated)}
                   />}
-                label={<Trans>Only verified markets</Trans>}/>
+                label={<span style={{fontSize: '14px'}}><Trans>Only verified markets</Trans></span>}/>
             </FormGroup>
           </Box>
         </div>

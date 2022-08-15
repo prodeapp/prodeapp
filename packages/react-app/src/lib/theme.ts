@@ -52,13 +52,13 @@ const palette = {
   error: {
     light: '#FF8788',
     main: '#F73A3B',
-    dark: '#DE3435',
+    dark: '#C42E2F',
     contrastText: '#FFF',
   },
   success: {
     light: '#10C473',
     main: '#0EAB64',
-    dark: '#0C9155',
+    dark: '#0A7846',
     contrastText: '#FFF',
   },
   warning: {
@@ -297,7 +297,7 @@ const darkTheme = createTheme({
         track: {
           borderRadius: '10px',
           opacity: 1,
-          backgroundColor: '#E3E3E3',
+          backgroundColor: '#7D7D7D',
         },
         thumb: {
           width: '16px',

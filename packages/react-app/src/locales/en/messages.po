@@ -43,6 +43,9 @@ msgstr "Address to send management fees to."
 msgid "All"
 msgstr "All"
 
+msgid "Already Claimed"
+msgstr "Already Claimed"
+
 msgid "Answer closes in {answerCountdown}"
 msgstr "Answer closes in {answerCountdown}"
 
@@ -186,6 +189,9 @@ msgstr "Earn"
 
 msgid "Edit"
 msgstr "Edit"
+
+msgid "Error"
+msgstr "Error"
 
 msgid "Error loading events"
 msgstr "Error loading events"
@@ -334,6 +340,9 @@ msgstr "Not answered yet"
 msgid "Not verified yet"
 msgstr "Not verified yet"
 
+msgid "Not yet"
+msgstr "Not yet"
+
 msgid "Number of questions"
 msgstr "Number of questions"
 
@@ -397,6 +406,9 @@ msgstr "Prize distribution:"
 msgid "Prizes"
 msgstr "Prizes"
 
+msgid "Processing results"
+msgstr "Processing results"
+
 msgid "Publish"
 msgstr "Publish"
 
@@ -414,9 +426,6 @@ msgstr "Referrals"
 
 msgid "Referrals Earnings: {0}"
 msgstr "Referrals Earnings: {0}"
-
-msgid "Referred"
-msgstr "Referred"
 
 msgid "Remove event"
 msgstr "Remove event"
@@ -556,6 +565,9 @@ msgstr "Verify market"
 msgid "Verify your market"
 msgstr "Verify your market"
 
+msgid "Waiting for prize distribution"
+msgstr "Waiting for prize distribution"
+
 msgid "Waiting for results"
 msgstr "Waiting for results"
 
@@ -564,6 +576,9 @@ msgstr "Waiting result"
 
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
+
+msgid "Yes"
+msgstr "Yes"
 
 msgid "You"
 msgstr "You"
