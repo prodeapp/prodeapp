@@ -46,11 +46,17 @@ msgstr "All"
 msgid "Already Claimed"
 msgstr "Already Claimed"
 
+msgid "Answer accepted"
+msgstr "Answer accepted"
+
 msgid "Answer closes in {answerCountdown}"
 msgstr "Answer closes in {answerCountdown}"
 
 msgid "Answer result"
 msgstr "Answer result"
+
+msgid "Answer results"
+msgstr "Answer results"
 
 msgid "Answer sent"
 msgstr "Answer sent"
@@ -216,6 +222,9 @@ msgstr "Fee must be lower than 100."
 
 msgid "Finished"
 msgstr "Finished"
+
+msgid "Follow us"
+msgstr "Follow us"
 
 msgid "Football"
 msgstr "Football"
@@ -457,6 +466,9 @@ msgstr "Scan with WalletConnect to connect"
 msgid "See details"
 msgstr "See details"
 
+msgid "See only my bets"
+msgstr "See only my bets"
+
 msgid "Select date"
 msgstr "Select date"
 
@@ -597,3 +609,6 @@ msgstr "eSports"
 
 msgid "invalid"
 msgstr "invalid"
+
+msgid "{0, plural, one {# result left to answer} other {# results left to answer}}"
+msgstr "{0, plural, one {# result left to answer} other {# results left to answer}}"

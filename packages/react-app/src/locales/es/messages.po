@@ -46,11 +46,17 @@ msgstr "Todos"
 msgid "Already Claimed"
 msgstr "Ya reclamado"
 
+msgid "Answer accepted"
+msgstr "Respuesta aceptada"
+
 msgid "Answer closes in {answerCountdown}"
 msgstr "Respuesta se acepta en {answerCountdown}"
 
 msgid "Answer result"
 msgstr "Aportar resultado"
+
+msgid "Answer results"
+msgstr "Responder resultados"
 
 msgid "Answer sent"
 msgstr "Respuesta enviada"
@@ -216,6 +222,9 @@ msgstr "Fee debe ser menor que 100."
 
 msgid "Finished"
 msgstr "Finalizado"
+
+msgid "Follow us"
+msgstr "Síguenos"
 
 msgid "Football"
 msgstr "Fútbol"
@@ -457,6 +466,9 @@ msgstr "Scan con WalletConnect para conectar"
 msgid "See details"
 msgstr "Ver detalles"
 
+msgid "See only my bets"
+msgstr "Ver mis apuestas"
+
 msgid "Select date"
 msgstr "Seleccione la fecha"
 
@@ -597,3 +609,6 @@ msgstr "eSports"
 
 msgid "invalid"
 msgstr "inválido"
+
+msgid "{0, plural, one {# result left to answer} other {# results left to answer}}"
+msgstr "{0, plural, one {# resultado para responder } other {# resultados para responder}}"

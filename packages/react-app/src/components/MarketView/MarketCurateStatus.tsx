@@ -5,6 +5,7 @@ import { useCurateItems } from "../../hooks/useCurateItems";
 import { useEffect, useState } from "react";
 import { CurateItem } from "../../graphql/subgraph";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
+import {ReactComponent as ShieldCheckIcon} from "../../assets/icons/shield-check.svg";
 
 function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, marketId: string }) {
   const { data: curateItems, error, isLoading } = useCurateItems(marketHash);
@@ -45,16 +46,21 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   }
 
   if (activeItem !== null && activeItem.status === 'Registered') {
-    return <div><Trans>Verified</Trans> ✅</div>
+    return <div style={{display: 'flex', alignItems: 'center'}}>
+      <div><Trans>Verified</Trans></div>
+      <ShieldCheckIcon style={{marginLeft: 5}} />
+    </div>
   }
 
-  return <div style={{display: 'flex', justifyContent: 'space-between'}}>
+  return <div style={{display: 'flex'}}>
     {(activeItem === null || activeItem.status === 'Absent')
-      ? <div><Trans>Not verified yet</Trans> ⚠️</div>
+      ? <div><Trans>Not verified yet</Trans></div>
       : <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
-        <Trans>In process</Trans> 👀
+        <Trans>In process</Trans>
       </a>}
-    <div><RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans> <TriangleIcon style={{marginLeft: 5}} /></RouterLink></div>
+    <div style={{borderLeft: '1px solid #303030', paddingLeft: '10px', marginLeft: '10px'}}>
+      <RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans> <TriangleIcon style={{marginLeft: 5}} /></RouterLink>
+    </div>
   </div>
 }
 

@@ -90,7 +90,7 @@ function MarketsView() {
               </Grid>
             </Grid>
 
-            {section !== 'bet' && <PlaceBet market={market} onClick={() => setSection('bet')}/>}
+            {section !== 'bet' && <PlaceBet market={market} onBetClick={() => setSection('bet')} onResultsClick={() => setSection('results')}/>}
           </div>
         </GridLeftColumn>
         <Grid item xs={12} md={8}>

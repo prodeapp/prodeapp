@@ -20,8 +20,8 @@ export interface Market {
   pool: BigNumberish
   prizes: string[]
   curated: boolean
-  numOfEvents: bigint
-  numOfEventsWithAnswer: bigint
+  numOfEvents: string
+  numOfEventsWithAnswer: string
   hasPendingAnswers: boolean
 }
 

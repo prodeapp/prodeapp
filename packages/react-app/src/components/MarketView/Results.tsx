@@ -57,7 +57,10 @@ function AnswerColumn(event: Event, finalized: boolean) {
       return <StatusBadge color="yellow">{answerText}</StatusBadge>
     }
 
-    return <StatusBadge color="green"><FormatOutcome name={answerText} title={event.title} /></StatusBadge>
+    return <div>
+      <StatusBadge color="green"><FormatOutcome name={answerText} title={event.title}/></StatusBadge>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer accepted`}</div>
+    </div>
   }
 
   const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
