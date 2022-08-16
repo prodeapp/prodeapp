@@ -13,7 +13,7 @@ import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
-import {formatAmount, getDocsUrl, showWalletError} from "../lib/helpers";
+import {BRIDGE_URL, formatAmount, getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
@@ -132,7 +132,6 @@ function DropdownMenu({text, children}: {text: string, children: React.ReactNode
   </DropdownLink>
 }
 
-const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 const languages: Record<string, string> = {[LocaleEnum.English]: 'English', [LocaleEnum.Spanish]: 'Español'};
 
 export default function Header() {

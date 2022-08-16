@@ -11,6 +11,8 @@ import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
 
+export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
+
 const dateLocales = {
   es,
   en: enGB
