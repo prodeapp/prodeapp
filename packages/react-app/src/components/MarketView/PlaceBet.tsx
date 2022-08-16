@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import {formatAmount, getTimeLeft} from "../../lib/helpers";
+import {betsClosingSoon, formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
 import { Trans, Plural } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
@@ -31,7 +31,7 @@ export default function PlaceBet({market, onBetClick, onResultsClick}: {market: 
     </Box>
 
     {timeLeft !== false && <>
-      <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>
+      {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>}
       <div style={{fontWeight: 'bold', marginBottom: '15px'}}>{timeLeft}</div>
       <Button color="primary" size="large" fullWidth onClick={onBetClick}><Trans>Place Bet</Trans> - {formatAmount(market.price)} <ArrowRight style={{marginLeft: 10}}/></Button>
     </>}

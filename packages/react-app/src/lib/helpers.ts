@@ -47,6 +47,14 @@ export function getTimeLeft(endDate: Date|string|number, withSeconds = false, lo
   return formatDuration(duration, {format, locale: dateLocales[locale]});
 }
 
+export function betsClosingSoon(timestamp: number): boolean {
+  const now = Math.floor(Date.now()/1000);
+
+  const minDuration = 60 * 60 * 24 * 4; // 4 days
+
+  return (timestamp - now) < minDuration;
+}
+
 export function formatAmount(amount: BigNumberish) {
   const number = new DecimalBigNumber(BigNumber.from(amount),18)
   return `${number.toString()} xDAI`
