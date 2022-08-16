@@ -19,6 +19,8 @@ import Tab from '@mui/material/Tab';
 import {ReactComponent as TwitterIcon} from "../assets/icons/twitter.svg";
 import Button from "@mui/material/Button";
 import {ReactComponent as ArrowRightIcon} from "../assets/icons/arrow-right.svg";
+import {FormControlLabel, FormGroup, Switch} from "@mui/material";
+import {useEthers} from "@usedapp/core";
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -39,7 +41,9 @@ function MarketsView() {
   const { isLoading, data: market } = useMarket(String(id));
   const [section, setSection] = useState<MarketSections>('bets');
   const [searchParams] = useSearchParams();
+  const [onlyMyBets, setOnlyMyBets] = useState(false);
   const theme = useTheme();
+  const {account} = useEthers();
 
   useEffect(() => {
     const referralId = searchParams.get('referralId');
@@ -93,15 +97,28 @@ function MarketsView() {
           {section !== 'bet' && <>
             <MarketInfo market={market} />
 
-            <Tabs value={section} onChange={handleChange} aria-label="Market sections" sx={{marginLeft: '20px'}}>
-              <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
-              <Tab label={t`Results`} value="results" {...a11yProps(1)} />
-              <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />
-            </Tabs>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+              <Tabs value={section} onChange={handleChange} aria-label="Market sections" sx={{marginLeft: '20px'}}>
+                <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
+                <Tab label={t`Results`} value="results" {...a11yProps(1)} />
+                <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />
+              </Tabs>
+              {account && section === 'bets' && <div>
+                <FormGroup>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={onlyMyBets}
+                        onClick={() => setOnlyMyBets(!onlyMyBets)}
+                      />}
+                    label={<span style={{fontSize: '14px'}}><Trans>See only my bets</Trans></span>}/>
+                </FormGroup>
+              </div>}
+            </div>
 
             {section === 'results' && <Results marketId={market.id} />}
 
-            {section === 'bets' && <Bets marketId={market.id} />}
+            {section === 'bets' && <Bets marketId={market.id} onlyMyBets={onlyMyBets} />}
 
             {section === 'stats' && <Stats marketId={market.id} />}
           </>}

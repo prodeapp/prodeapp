@@ -226,6 +226,7 @@ const darkTheme = createTheme({
           minHeight: '44px',
           textTransform: 'none',
           color: '#B0B0B0',
+          fontSize: '16px',
           '&.Mui-selected': {
             color: palette.black.dark,
             fontWeight: 700,

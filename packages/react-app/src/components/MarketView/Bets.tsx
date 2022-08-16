@@ -15,7 +15,7 @@ import {ReactComponent as EyeIcon} from "../../assets/icons/eye.svg";
 import {ReactComponent as MedalIcon} from "../../assets/icons/medal.svg";
 import {getMedalColor} from "../../lib/helpers";
 
-export default function Bets({marketId}: {marketId: string}) {
+export default function Bets({marketId, onlyMyBets}: {marketId: string, onlyMyBets?: boolean}) {
   const {account} = useEthers();
   const { isLoading, error, data: ranking } = useRanking(marketId);
   const marketWinners = useIndexedMarketWinners(marketId);
@@ -56,6 +56,10 @@ export default function Bets({marketId}: {marketId: string}) {
       </TableHeader>
       {ranking && ranking.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
       {ranking && ranking.length > 0 && ranking.map((rank, i) => {
+        if (onlyMyBets && account && rank.player.id.toLowerCase() !== account.toLowerCase()) {
+          return null
+        }
+
         return <TableBody key={i}>
           <div style={{width: '10%', display: 'flex'}}>
             <div>{i+1}</div>
