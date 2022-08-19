@@ -1,6 +1,7 @@
 import { log, BigInt, store } from '@graphprotocol/graph-ts';
 import { SetValue } from '../types/KeyValue/KeyValue'
 import { Market } from '../types/schema';
+import {getOrCreateMarketCuration} from "./utils/helpers";
 
 export function handleSetValue(evt: SetValue): void {
     log.info("handleSetValue: key {} value {} from {}", [evt.params.key, evt.params.value, evt.transaction.from.toHexString()]);
@@ -14,6 +15,16 @@ export function handleSetValue(evt: SetValue): void {
 
         if (market.creator == evt.transaction.from.toHexString() && market.pool.equals(BigInt.fromI32(0))) {
             log.debug("handleSetValue: Deleting event {} ", [market.id]);
+
+            let marketCuration = getOrCreateMarketCuration(market.hash);
+
+            const position = marketCuration.markets.indexOf(market.id);
+            const tmp = marketCuration.markets;
+            tmp.splice(position, 1);
+            marketCuration.markets = tmp;
+
+            marketCuration.save();
+
             store.remove("Market", market.id);
         }
     }
