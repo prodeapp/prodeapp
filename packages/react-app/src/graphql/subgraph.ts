@@ -18,7 +18,6 @@ export interface Market {
     managementRewards: BigNumberish
   }
   creator: string
-  deleted: boolean
   pool: string
   prizes: string[]
   curated: boolean
@@ -43,7 +42,6 @@ export const MARKET_FIELDS = `
       protocolFee
       manager{id, managementRewards}
       creator
-      deleted
       pool
       prizes
       curated
