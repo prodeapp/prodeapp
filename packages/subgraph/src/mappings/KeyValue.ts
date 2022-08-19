@@ -1,4 +1,4 @@
-import { log, BigInt } from '@graphprotocol/graph-ts';
+import { log, BigInt, store } from '@graphprotocol/graph-ts';
 import { SetValue } from '../types/KeyValue/KeyValue'
 import { Market } from '../types/schema';
 
@@ -13,8 +13,8 @@ export function handleSetValue(evt: SetValue): void {
         }
 
         if (market.creator == evt.transaction.from.toHexString() && market.pool.equals(BigInt.fromI32(0))) {
-            market.deleted = true;
-            market.save();
+            log.debug("handleSetValue: Deleting event {} ", [market.id]);
+            store.remove("Market", market.id);
         }
     }
 }
