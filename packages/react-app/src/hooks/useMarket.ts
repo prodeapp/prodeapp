@@ -12,12 +12,16 @@ const query = `
 `;
 
 export const useMarket = (marketId: string) => {
-  return useQuery<Market, Error>(
+  return useQuery<Market | undefined, Error>(
     ["useMarket", marketId],
     async () => {
       const response = await apolloProdeQuery<{ market: Market }>(query, {marketId});
 
       if (!response) throw new Error("No response from TheGraph");
+
+      if (response.data.market.deleted) {
+        return;
+      }
 
       return response.data.market;
     }

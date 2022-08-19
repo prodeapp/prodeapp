@@ -175,6 +175,9 @@ msgstr "Create a market and earn fees on each bet."
 msgid "Current result"
 msgstr "Current result"
 
+msgid "Delete market"
+msgstr "Delete market"
+
 msgid "Description"
 msgstr "Description"
 
@@ -525,6 +528,9 @@ msgstr "This field is required."
 
 msgid "This is the first submission for this market"
 msgstr "This is the first submission for this market"
+
+msgid "This market has been deleted."
+msgstr "This market has been deleted."
 
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"

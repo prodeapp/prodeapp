@@ -25,6 +25,7 @@ type Market @entity {
   protocolFee: BigInt!
   manager: Manager!
   creator: String!
+  deleted: Boolean!
   numOfEvents: BigInt!
   numOfEventsWithAnswer: BigInt!
   hasPendingAnswers: Boolean!

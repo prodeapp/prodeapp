@@ -175,6 +175,9 @@ msgstr "Cree un mercado y gane comisiones de cada apuesta"
 msgid "Current result"
 msgstr "Resultado actual"
 
+msgid "Delete market"
+msgstr "Eliminar mercado"
+
 msgid "Description"
 msgstr "Descripción"
 
@@ -525,6 +528,9 @@ msgstr "Este campo es requerido."
 
 msgid "This is the first submission for this market"
 msgstr "Esta es el primer envío de este mercado"
+
+msgid "This market has been deleted."
+msgstr "Este mercado ha sido eliminado."
 
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "Este mercado tiene más de un envío a la lista"

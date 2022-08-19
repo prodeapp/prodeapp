@@ -32,6 +32,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     let manager = getOrCreateManager(creator);
     market.manager = manager.id;
     market.creator = evt.transaction.from.toHexString();
+    market.deleted = false;
     market.numOfEvents = BigInt.fromI32(evt.params._questionIDs.length);
     let event = Event.load(evt.params._questionIDs[0].toHexString())
     if (event === null) {

@@ -87,6 +87,26 @@ dataSources:
           handler: handleMetaEvidence
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: KeyValue
+    network: xdai
+    source:
+      abi: KeyValue
+      address: "0xF230b73987024ed614AE93f8A5fdF2416aD0B835"
+      startBlock: 23769288
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: KeyValue
+          file: ./contracts/abis/KeyValue.json
+      entities:
+        - Market
+      eventHandlers:
+        - event: SetValue(string,string)
+          handler: handleSetValue
+      file: ./src/mappings/KeyValue.ts
+      language: wasm/assemblyscript
 templates:
   - name: Market
     kind: ethereum/contract

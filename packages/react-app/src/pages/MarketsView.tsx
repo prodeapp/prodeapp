@@ -20,7 +20,8 @@ import {ReactComponent as TwitterIcon} from "../assets/icons/twitter.svg";
 import Button from "@mui/material/Button";
 import {ReactComponent as ArrowRightIcon} from "../assets/icons/arrow-right.svg";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
-import {useEthers} from "@usedapp/core";
+import { useEthers} from "@usedapp/core";
+import DeleteMarket from "../components/MarketView/DeleteMarket";
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -76,6 +77,10 @@ function MarketsView() {
           <div>
             <MarketStatus marketId={market.id} />
             <h2 style={{fontSize: '27.65px', marginTop: '10px'}}>{market.name}</h2>
+
+            {account?.toLowerCase() === market.creator && market.pool === '0' && <div style={{marginBottom: '20px'}}>
+              <DeleteMarket marketId={market.id} />
+            </div>}
 
             <Grid container spacing={0} style={{borderBottom: `1px solid ${theme.palette.black.dark}`, fontSize: '14px', paddingBottom: '20px'}}>
               <Grid item xs={6} md={6} sx={{pr: 2}} style={{borderRight: `1px solid ${theme.palette.black.dark}`}}>
