@@ -27,7 +27,7 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Us
   return useQuery<Market[], Error>(
     ["useMarkets", curated, status, category, minEvents, creatorId],
     async () => {
-      const variables: QueryVariables = {curated, deleted: false, orderDirection: 'desc'};
+      const variables: QueryVariables = {curated, orderDirection: 'desc'};
 
       if (category) {
         variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)];

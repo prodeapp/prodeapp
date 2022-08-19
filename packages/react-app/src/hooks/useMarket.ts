@@ -19,10 +19,6 @@ export const useMarket = (marketId: string) => {
 
       if (!response) throw new Error("No response from TheGraph");
 
-      if (response.data.market.deleted) {
-        return;
-      }
-
       return response.data.market;
     }
   );
