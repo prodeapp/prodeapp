@@ -201,6 +201,7 @@ function WalletDialog({open, handleClose}: DialogProps) {
   const { readOnlyUrls } = useConfig();
   const [walletError, setWalletError] = useState<Error | undefined>();
   const hasWindowFocus = useWindowFocus();
+  const [askSwitchNetwork, setAskSwitchNetwork] = useState(true);
 
   async function activateWalletConnect() {
     try {
@@ -225,15 +226,16 @@ function WalletDialog({open, handleClose}: DialogProps) {
   useEffect(() => {
     if (error && error.message !== walletError?.message) {
       if (error.message.includes('Unsupported chain id')) {
-        if (hasWindowFocus) {
+        if (hasWindowFocus && askSwitchNetwork) {
           // Ask to change the network in the wallet.
           switchNetwork(100)
+          setAskSwitchNetwork(false)
         }
       } else {
         setWalletError(error)
       }
     }
-  }, [error, walletError, switchNetwork, hasWindowFocus])
+  }, [error, walletError, switchNetwork, hasWindowFocus, askSwitchNetwork])
 
   return (
     <AppDialog
