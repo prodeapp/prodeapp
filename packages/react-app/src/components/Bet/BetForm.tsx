@@ -27,7 +27,7 @@ import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 
 export type BetFormValues = {
-  outcomes: {value: number|''}[]
+  outcomes: {value: number|""|[number]}[]
 }
 
 type BetFormProps = {
@@ -126,11 +126,27 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
 
   const onSubmit = async (data: BetFormValues) => {
     const results = data.outcomes.map(outcome => {
-      if (outcome.value === '') {
-        throw Error(t`Invalid outcome`)
+      if (typeof outcome.value === 'object') {
+        // multiple-select
+        let outcomeValue = Object(outcome.value);
+        if (outcomeValue.length === 0) {
+           throw Error(t`Invalid outcome`)
+        }
+        if (outcomeValue.every((x: any) => typeof x === 'number')) {
+          const answerChoice = outcomeValue.reduce((partialSum: number, value:number) => partialSum + 2**value, 0);
+          return hexZeroPad(hexlify(answerChoice), 32);
+        } else {
+          // TODO: Update select to show only invalid result. This option it's incompatible with multiselect
+          if (outcomeValue.includes(INVALID_RESULT)) return INVALID_RESULT
+        }
+      } else {
+        // single-select
+        if (outcome.value === '') {
+          throw Error(t`Invalid outcome`)
+        }
+        return hexZeroPad(hexlify(outcome.value), 32)
       }
-
-      return hexZeroPad(hexlify(outcome.value), 32)
+      throw Error(t`Invalid outcome`)
     });
 
     await send(
@@ -160,8 +176,9 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue=""
+                  defaultValue={events[i].templateID == 3 ? [] : ""}
                   id={`event-${i}-outcome-select`}
+                  multiple={events[i].templateID == 3}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}

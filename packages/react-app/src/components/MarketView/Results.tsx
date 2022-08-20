@@ -50,7 +50,7 @@ function StatusBadge({color, children}: {color: 'red'|'green'|'yellow', children
 function AnswerColumn(event: Event, finalized: boolean) {
   const { locale } = useI18nContext();
 
-  const answerText = getAnswerText(event.answer, event.outcomes || []);
+  const answerText = getAnswerText(event.answer, event.outcomes || [], event.templateID);
 
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {

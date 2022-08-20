@@ -71,6 +71,7 @@ export interface Event {
   minBond: string
   lastBond: string
   bounty: string
+  templateID: number
 }
 
 export const EVENT_FIELDS = `
@@ -90,6 +91,7 @@ export const EVENT_FIELDS = `
     minBond
     lastBond
     bounty
+    templateID
   }
 `;
 
@@ -217,7 +219,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' |'openingTs'>[]
+    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' |'openingTs' | 'templateID'>[]
   }
   tokenID: string
   points: BigNumberish
@@ -243,6 +245,7 @@ export const BET_FIELDS = `
         title
         outcomes
         openingTs
+        templateID
       }
     }
     tokenID
