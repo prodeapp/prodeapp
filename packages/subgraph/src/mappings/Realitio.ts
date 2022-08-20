@@ -29,14 +29,14 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
     const questionNonce = event.nonce;
     for (let i = 0; i < event.markets.length; i++) {
         let marketId = ByteArray.fromHexString(event.markets[i]);
-        log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
+        // log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
         let betID = getBetID(marketId, tokenID);
         let bet = Bet.load(betID);
         while (bet !== null) {
             let betResult = bet.results[questionNonce.toI32()];
             if (betResult.equals(event.answer!)) {
                 // The player has the correct answer
-                log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
+                // log.debug("handleNewAnswer: Bet {} has correct answer.", [betID.toString()]);
                 bet.points = bet.points.plus(correctAnswerPoints);
             } else {
                 if (changeAnswer) {
@@ -61,7 +61,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
                 return
             }
             market.numOfEventsWithAnswer = market.numOfEventsWithAnswer.plus(BigInt.fromI32(1));
-            log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
+            // log.debug("handleNewAnswer: numOfEvents {}, withAnswer {}, hasPendingAnswers {}", [market.numOfEvents.toString(), market.numOfEventsWithAnswer.toString(), market.numOfEventsWithAnswer.equals(market.numOfEvents).toString()])
             market.hasPendingAnswers = market.numOfEventsWithAnswer.notEqual(market.numOfEvents);
             market.save()
         }
@@ -93,7 +93,7 @@ export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
     let questionID = event.params.question_id.toHexString();
     let evnt = Event.load(questionID);
     if (evnt == null) {
-        log.info('cannot find question {} to finalize', [questionID]);
+        log.warning('cannot find question {} to add bounty', [questionID]);
         return;
     }
     evnt.bounty = event.params.bounty;
@@ -111,7 +111,7 @@ export function handleReopenQuestion(event: LogReopenQuestion): void {
     entity.save();
 
     // Delete old event.
-    log.debug("handleReopenQuestion: Deleting event {} after creating event {}", [oldEvent.id, entity.id]);
+    log.info("handleReopenQuestion: Deleting event {} after creating event {}", [oldEvent.id, entity.id]);
     store.remove("Event", oldEvent.id);
 
     // It's not possible to bet for answer too soon, so there is no need

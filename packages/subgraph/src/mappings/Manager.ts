@@ -18,7 +18,7 @@ export function handleClaimReferralReward(call: ClaimReferralRewardCall): void {
         if (attribution === null ) return;
         attribution.claimed = true;
         attribution.save()
-        log.debug("handleClaimReferralReward: Attribution {} claimed", [attributionId])
+        // log.debug("handleClaimReferralReward: Attribution {} claimed", [attributionId])
     })
 }
 
@@ -26,5 +26,5 @@ export function handleDistributeRewards(call: DistributeRewardsCall): void {
     let manager = getOrCreateManager(call.to);
     manager.claimed = true;
     manager.save()
-    log.debug("handleDistributeRewards: Rewards for manager {} distributed", [manager.id]);
+    log.info("handleDistributeRewards: Rewards for manager {} distributed", [manager.id]);
 }

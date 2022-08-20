@@ -89,7 +89,7 @@ export function handlePlaceBet(evt: PlaceBet): void {
     player.save()
 
     let betID = getBetID(evt.address, evt.params.tokenID)
-    log.info("handlePlaceBet: Betid: {}", [betID.toString()])
+    log.debug("handlePlaceBet: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)
     if (bet == null) {
         bet = new Bet(betID)
@@ -115,12 +115,12 @@ export function handlePlaceBet(evt: PlaceBet): void {
 
 export function handleBetReward(evt: BetReward): void {
     let betID = getBetID(evt.address, evt.params._tokenID)
-    log.info("handleBetReward: Betid: {}", [betID.toString()])
+    // log.info("handleBetReward: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     bet.claim = true;
     bet.reward = evt.params._reward;
     bet.save()
-    log.debug("handleBetReward: {} reward claimed from token {}", [evt.params._reward.toString(), evt.params._tokenID.toString()])
+    // log.debug("handleBetReward: {} reward claimed from token {}", [evt.params._reward.toString(), evt.params._tokenID.toString()])
 
     
     let market = Market.load(evt.address.toHexString())!;
