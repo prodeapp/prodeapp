@@ -14,6 +14,10 @@ const getCountryFromEvent = (title: string) => {
     return "f1";
   }
 
+  if (title.includes("FIFA World Cup")) {
+    return "fifa_wc";
+  }
+
   return "ar";
 }
 
