@@ -60,7 +60,7 @@ export function formatAmount(amount: BigNumberish) {
   return `${number.toString()} xDAI`
 }
 
-export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: number, noAnswerText = t`Not answered yet`): string {
+export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: BigNumberish, noAnswerText = t`Not answered yet`): string {
 
   if (currentAnswer === null) {
     return noAnswerText;
@@ -73,7 +73,7 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
     return t`Answered too soon`;
   }
 
-  if (templateID == 3) {
+  if (templateID === '3') {
     function getAnswers(value: number) {
       const answers = value.toString(2)
       var indexes = [], i;

@@ -71,7 +71,7 @@ export interface Event {
   minBond: string
   lastBond: string
   bounty: string
-  templateID: number
+  templateID: BigNumberish
 }
 
 export const EVENT_FIELDS = `

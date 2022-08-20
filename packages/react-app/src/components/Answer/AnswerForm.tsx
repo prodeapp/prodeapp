@@ -159,8 +159,8 @@ export default function AnswerForm({ event, register, errors, handleSubmit, setS
             <div style={{ width: '60%' }}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue={event.templateID == 3 ? [] : ""}
-                  multiple={event.templateID == 3}
+                  defaultValue={event.templateID === '3' ? [] : ""}
+                  multiple={event.templateID === '3'}
                   id={`question-outcome-select`}
                   {...register(`outcome`, { required: t`This field is required.` })}
                 >

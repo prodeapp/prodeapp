@@ -168,6 +168,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <Grid container spacing={3}>
         {fields.map((field, i) => {
+
           if (!events || !events[i]) {
             return null;
           }
@@ -176,9 +177,9 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue={events[i].templateID == 3 ? [] : ""}
+                  defaultValue={events[i].templateID === '3' ? [] : ""}
                   id={`event-${i}-outcome-select`}
-                  multiple={events[i].templateID == 3}
+                  multiple={events[i].templateID === '3'}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
