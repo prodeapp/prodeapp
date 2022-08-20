@@ -1,6 +1,6 @@
 import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
 import { Realitio } from "../../types/RealitioV3/Realitio";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral, Market} from "../../types/schema";
 import { RealitioAddress } from "./constants";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
@@ -24,7 +24,6 @@ export function getOrCreatePlayer(address: Address, marketFactory: string): Play
     }
     return player
 }
-
 
 export function getOrCreateManager(address: Address): Manager {
     let manager = Manager.load(address.toHexString())
@@ -55,36 +54,36 @@ export function getOrCreateMarketCuration(hash: string): MarketCuration {
     return marketCuration
 }
 
-export function getAttributionID(player:string, attributor:string, id:number): string {
-    const playerId = player.toString();
-    const attributorId = attributor.toString();
-    return playerId + "-" + attributorId + "-" + `${id}`;
+export function getAttributionID(provider:string, attributor:string, id:number): string {
+    const providerId = provider.toString();  // who will receive the fees
+    const attributorId = attributor.toString();  // who has use the referral link
+    return providerId + "-" + attributorId + "-" + `${id}`;
 
 }
 
-export function getLastAttributionId(player:string, attributor:string): number {
+export function getLastAttributionId(provider:string, attributor:string): number {
     let i = 0;
-    let attributionId = getAttributionID(player, attributor, i)
+    let attributionId = getAttributionID(provider, attributor, i)
     let attribution = Attribution.load(attributionId);
     if (attribution === null) return 0;
     while (attribution !== null) {
         i++
-        attributionId = getAttributionID(player, attributor, i)
+        attributionId = getAttributionID(provider, attributor, i)
         attribution = Attribution.load(attributionId);
     }
     // return the last valid attribution index
-    i--
-    return i;
+    return i--;
 }
 
-export function getOrCreateMarketReferral(market:string, player:string, manager:string): MarketReferral {
-    let id = market + "-" + player;
+export function getOrCreateMarketReferral(market:string, provider:string, manager:string): MarketReferral {
+    let id = market + "-" + provider;
     let mr = MarketReferral.load(id);
+    let marketEntity = Market.load(market);
     if (mr === null) {
         mr = new MarketReferral(id);
         mr.totalAmount = BigInt.fromI32(0);
-        mr.market = market;
-        mr.provider = player;
+        mr.market = marketEntity!.id;
+        mr.provider = getOrCreatePlayer(Address.fromString(provider), marketEntity!.marketFactory).id;
         mr.manager = manager;
         mr.claimed = false;
         mr.save()

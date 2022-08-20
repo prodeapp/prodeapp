@@ -174,12 +174,12 @@ export function handleManagerReward(evt: ManagementReward): void {
 export function handleAttribution(evt: AttributionEvent): void {
     
     let market = Market.load(evt.address.toHexString())!;
-    let providerAddress = evt.params._provider;
-    let provider = getOrCreatePlayer(providerAddress, market.marketFactory);
-    let attributor = getOrCreatePlayer(evt.transaction.from, market.marketFactory);
+    let providerAddress = evt.params._provider;  
+    let provider = getOrCreatePlayer(providerAddress, market.marketFactory); // Who receives the referral fee
+    let attributor = getOrCreatePlayer(evt.transaction.from, market.marketFactory); // Who has used the referral link.
     let nextId = getLastAttributionId(provider.id, attributor.id) + 1;
-    const id = getAttributionID(provider.id, attributor.id, nextId)
-    let attribution = new Attribution(id)
+    const attributionId = getAttributionID(provider.id, attributor.id, nextId)
+    let attribution = new Attribution(attributionId)
     attribution.provider = provider.id;
     attribution.attributor = attributor.id;
     attribution.market = market.id;
