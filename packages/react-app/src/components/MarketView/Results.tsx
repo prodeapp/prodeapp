@@ -107,7 +107,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
       const reopenQuestion = async () => {
         await send(
           REALITY_TEMPLATE_ID,
-          encodeQuestionText('single-select', event.title, event.outcomes, event.category, 'en_US'),
+          encodeQuestionText(event.templateID==='3'? 'multiple-select': 'single-select', event.title, event.outcomes, event.category, 'en_US'),
           event.arbitrator,
           event.timeout,
           event.openingTs,
