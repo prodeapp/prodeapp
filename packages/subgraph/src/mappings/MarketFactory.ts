@@ -29,11 +29,11 @@ export function handleCreateMarket(call: CreateMarketCall): void {
   while (true) {
     let questionID = marketSC.try_questionIDs(BigInt.fromI32(nonce));
     if (questionID.reverted) {
-      log.warning("handleCreateMarket: questionID ask reverted. Breaking while", [])
+      // log.warning("handleCreateMarket: questionID ask reverted. Breaking while", [])
       break;
     };
     let questionData = call.inputs.questionsData[nonce];
-    getOrCreateEvent(questionID.value, marketAddress, BigInt.fromI32(nonce), questionData.question);
+    getOrCreateEvent(questionID.value, marketAddress, BigInt.fromI32(nonce), questionData.question, questionData.templateID);
     // log.debug("handleCreateMarket: event {} for nonce {} created", [questionID.value.toHexString(), nonce.toString()]);
     nonce++
   }

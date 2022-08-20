@@ -148,7 +148,7 @@ export function getOrCreateMarketFactory(id: string): MarketFactory {
     return mf
 }
 
-export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:BigInt, questionText: string): Event {
+export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:BigInt, questionText: string, templateID:BigInt): Event {
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
     let event = Event.load(questionID.toHexString());
     if (event === null) {
@@ -172,6 +172,7 @@ export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:
     event.outcomes = outcomes;
     event.category = fields[2];
     event.lang = fields[3];
+    event.templateID = templateID;
     } else {
         // add market to markets
         let tmp_markets = event.markets

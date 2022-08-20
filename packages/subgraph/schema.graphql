@@ -99,6 +99,7 @@ type Event @entity {
   title: String!
   lang: String!
   outcomes: [String!]!
+  templateID: BigInt!
   answerFinalizedTimestamp: BigInt
   arbitrationOccurred: Boolean!
   isPendingArbitration: Boolean!
