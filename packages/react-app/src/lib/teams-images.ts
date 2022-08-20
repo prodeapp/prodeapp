@@ -86,6 +86,38 @@ import WHITEHARD from '../assets/logos/f1/tire-white-hard.png'
 import GREENINTERMEDIATE from '../assets/logos/f1/tire-green-intermediate.png'
 import BLUEFULLWET from '../assets/logos/f1/tire-blue-full-wet.png'
 
+import WALES from '../assets/logos/fifa_wc/wales.png'
+import USA from '../assets/logos/fifa_wc/usa.png'
+import URUGUAY from '../assets/logos/fifa_wc/uruguay.png'
+import TUNISIA from '../assets/logos/fifa_wc/tunisia.png'
+import SWITZERLAND from '../assets/logos/fifa_wc/switzerland.png'
+import SPAIN from '../assets/logos/fifa_wc/spain.png'
+import SOUTH_KOREA from '../assets/logos/fifa_wc/south_korea.png'
+import SERBIA from '../assets/logos/fifa_wc/serbia.png'
+import SENEGAL from '../assets/logos/fifa_wc/senegal.png'
+import SAUDI_ARABIA from '../assets/logos/fifa_wc/saudi_arabia.png'
+import QATAR from '../assets/logos/fifa_wc/qatar.png'
+import PORTUGAL from '../assets/logos/fifa_wc/portugal.png'
+import POLAND from '../assets/logos/fifa_wc/poland.png'
+import NETHERLANDS from '../assets/logos/fifa_wc/netherlands.png'
+import MOROCCO from '../assets/logos/fifa_wc/morocco.png'
+import MEXICO from '../assets/logos/fifa_wc/mexico.png'
+import JAPAN from '../assets/logos/fifa_wc/japan.png'
+import IRAN from '../assets/logos/fifa_wc/iran.png'
+import GHANA from '../assets/logos/fifa_wc/ghana.png'
+import GERMANY from '../assets/logos/fifa_wc/germany.png'
+import FRANCE from '../assets/logos/fifa_wc/france.png'
+import ENGLAND from '../assets/logos/fifa_wc/england.png'
+import ECUADOR from '../assets/logos/fifa_wc/ecuador.png'
+import DENMARK from '../assets/logos/fifa_wc/denmark.png'
+import CROATIA from '../assets/logos/fifa_wc/croatia.png'
+import COSTA_RICA from '../assets/logos/fifa_wc/costa_rica.png'
+import CANADA from '../assets/logos/fifa_wc/canada.png'
+import CAMEROON from '../assets/logos/fifa_wc/cameroon.png'
+import BRAZIL from '../assets/logos/fifa_wc/brazil.png'
+import BELGIUM from '../assets/logos/fifa_wc/belgium.png'
+import ARGENTINA from '../assets/logos/fifa_wc/argentina.png'
+
 
 const images: Record<string, Record<string, string>> = {
   'ar': {
@@ -190,8 +222,41 @@ const images: Record<string, Record<string, string>> = {
     'Hard Slick Tire': WHITEHARD,
     'Intermediate Tire': GREENINTERMEDIATE,
     'Full Wet Tire': BLUEFULLWET
-
   },
+  'fifa_wc': {
+    'Wales': WALES,
+    'USA': USA,
+    'Uruguay': URUGUAY,
+    'Tunisia': TUNISIA,
+    'Switzerland': SWITZERLAND,
+    'Spain': SPAIN,
+    'Korea Republic': SOUTH_KOREA,
+    'Serbia': SERBIA,
+    'Senegal': SENEGAL,
+    'Saudi Arabia': SAUDI_ARABIA,
+    'Qatar': QATAR,
+    'Portugal': PORTUGAL,
+    'Poland': POLAND,
+    'Netherlands': NETHERLANDS,
+    'Morocco': MOROCCO,
+    'Mexico': MEXICO,
+    'Japan': JAPAN,
+    'IR Iran': IRAN,
+    'Ghana': GHANA,
+    'Germany': GERMANY,
+    'France': FRANCE,
+    'England': ENGLAND,
+    'Ecuador': ECUADOR,
+    'Denmark': DENMARK,
+    'Croatia': CROATIA,
+    'Costa Rica': COSTA_RICA,
+    'Canada': CANADA,
+    'Cameroon': CAMEROON,
+    'Brazil': BRAZIL,
+    'Belgium': BELGIUM,
+    'Argentina': ARGENTINA
+
+  }
 }
 
 export function getTeamImage(teamName: string, country: string): string {
