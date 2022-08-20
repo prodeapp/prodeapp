@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormError, TableBody, TableHeader, BoxRow} from "../../components"
+import {FormError} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
@@ -17,11 +17,14 @@ import { Trans, t } from "@lingui/macro";
 import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
+import Grid from '@mui/material/Grid';
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
 import {INVALID_RESULT} from "../Answer/AnswerForm";
 import {FormatEvent} from "../FormatEvent";
+import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
+import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 
 export type BetFormValues = {
   outcomes: {value: number|''}[]
@@ -30,6 +33,7 @@ export type BetFormValues = {
 type BetFormProps = {
   marketId: string
   price: BigNumberish
+  cancelHandler: () => void
 }
 
 function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
@@ -46,12 +50,12 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
     </div>
     <img src={image} style={{margin: '20px 0'}} alt="Bet NFT" />
     <div>
-      <Button component={Link} href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
+      <Button component={Link} size="large" href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
     </div>
   </div>
 }
 
-export default function BetForm({marketId, price}: BetFormProps) {
+export default function BetForm({marketId, price, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEventsToBet(marketId);
   const [success, setSuccess] = useState(false);
@@ -144,19 +148,16 @@ export default function BetForm({marketId, price}: BetFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <h2 style={{margin: '35px 0', fontSize: '33.18px', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans>Place your bet</Trans></h2>
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-      <>
-        <TableHeader>
-          <div style={{width: '80%'}}><Trans>Event</Trans></div>
-          <div style={{width: '20%'}}><Trans>Outcome</Trans></div>
-        </TableHeader>
+      <Grid container spacing={3}>
         {fields.map((field, i) => {
           if (!events || !events[i]) {
             return null;
           }
-          return <TableBody className="padding-lg" key={field.id}>
-            <div style={{width: '60%'}}><FormatEvent title={events[i].title} /></div>
-            <div style={{width: '20%'}}>
+          return <React.Fragment key={events[i].id}>
+            <Grid item xs={6}><FormatEvent title={events[i].title} /></Grid>
+            <Grid item xs={6}>
               <FormControl fullWidth>
                 <Select
                   defaultValue=""
@@ -168,13 +169,20 @@ export default function BetForm({marketId, price}: BetFormProps) {
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
-            </div>
-          </TableBody>
+            </Grid>
+          </React.Fragment>
         })}
-        <BoxRow>
-          <Button type="submit" color="primary"><Trans>Place Bet</Trans></Button>
-        </BoxRow>
-      </>
+        <Grid item xs={6}>
+          <Button type="button" color="primary" size="large" variant="outlined" fullWidth onClick={cancelHandler}>
+            <Trans>Cancel</Trans> <CrossIcon style={{marginLeft: 10}} />
+          </Button>
+        </Grid>
+        <Grid item xs={6}>
+          <Button type="submit" color="primary" size="large" fullWidth>
+            <Trans>Place Bet</Trans> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
+          </Button>
+        </Grid>
+      </Grid>
     </form>
   );
 }

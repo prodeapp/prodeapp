@@ -6,10 +6,12 @@ import { useEffect, useState } from "react";
 import { CurateItem } from "../../graphql/subgraph";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as ShieldCheckIcon} from "../../assets/icons/shield-check.svg";
+import {useTheme} from "@mui/material/styles";
 
 function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, marketId: string }) {
   const { data: curateItems, error, isLoading } = useCurateItems(marketHash);
   const [activeItem, setActiveItem] = useState<CurateItem | null>(null);
+  const theme = useTheme();
 
   useEffect(() => {
 
@@ -59,7 +61,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
         <Trans>In process</Trans>
       </a>}
     <div style={{borderLeft: '1px solid #303030', paddingLeft: '10px', marginLeft: '10px'}}>
-      <RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans> <TriangleIcon style={{marginLeft: 5}} /></RouterLink>
+      <RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans> <TriangleIcon style={{marginLeft: 5, fill: 'currentColor', color: theme.palette.primary.main}} /></RouterLink>
     </div>
   </div>
 }

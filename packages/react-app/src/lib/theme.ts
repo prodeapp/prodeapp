@@ -282,6 +282,7 @@ const darkTheme = createTheme({
         },
         outlined: {
           background: '#FFF',
+          borderColor: palette.primary.main,
           '&:hover': {
             background: palette.primary.light,
             color: palette.primary.main,

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useMarket} from "../hooks/useMarket";
 import {useParams, useSearchParams} from "react-router-dom";
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import {getMarketUrl, getReferralKey, getTwitterShareUrl} from "../lib/helpers";
 import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
@@ -128,12 +129,12 @@ function MarketsView() {
             {section === 'stats' && <Stats marketId={market.id} />}
           </>}
 
-          {section === 'bet' && <>
-            <Button variant="text" onClick={() => setSection('bets')} style={{marginTop: 20}}>
+          {section === 'bet' && <Box sx={{mx: 17, mb: 10}}>
+            <Button variant="text" onClick={() => setSection('bets')} style={{margin: '40px 0', fontSize: '16px'}}>
               <ArrowRightIcon style={{marginRight: 10, transform: 'rotate(180deg)'}}/> Return to the market
             </Button>
-            <BetForm marketId={market.id} price={market.price} />
-          </>}
+            <BetForm marketId={market.id} price={market.price} cancelHandler={() => setSection('bets')}/>
+          </Box>}
         </Grid>
       </Grid>
     </>
