@@ -12,7 +12,7 @@ export function handleNewMarket(evt: NewMarket): void {
   context.setString('manager', evt.params.manager.toHexString())
   context.setString('factory', evt.address.toHexString())
   Market.createWithContext(evt.params.market, context);
-  log.info("handleNewMarket: {}", [evt.params.market.toHexString()])
+  // log.debug("handleNewMarket: {}", [evt.params.market.toHexString()])
   let mf = getOrCreateMarketFactory(evt.address.toHexString());
   mf.numOfMarkets = mf.numOfMarkets.plus(BigInt.fromI32(1));
   mf.save();
@@ -22,7 +22,7 @@ export function handleNewMarket(evt: NewMarket): void {
 }
 
 export function handleCreateMarket(call: CreateMarketCall): void {
-  log.debug("handleCreateMarket: call for create Market", []);
+  log.debug("handleCreateMarket: call for create Market {}", [call.outputs.value0.toHexString()]);
   const marketAddress = call.outputs.value0;
   const marketSC = MarketSC.bind(marketAddress);
   let nonce = 0;
@@ -34,7 +34,7 @@ export function handleCreateMarket(call: CreateMarketCall): void {
     };
     let questionData = call.inputs.questionsData[nonce];
     getOrCreateEvent(questionID.value, marketAddress, BigInt.fromI32(nonce), questionData.question);
-    log.debug("handleCreateMarket: event {} for nonce {} created", [questionID.value.toHexString(), nonce.toString()]);
+    // log.debug("handleCreateMarket: event {} for nonce {} created", [questionID.value.toHexString(), nonce.toString()]);
     nonce++
   }
 }
