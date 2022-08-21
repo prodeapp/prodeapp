@@ -4,12 +4,12 @@ import { intervalToDuration } from 'date-fns'
 import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
 import { es, enGB } from 'date-fns/locale';
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { DecimalBigNumber } from "./DecimalBigNumber";
-import { Event, Outcome } from "../graphql/subgraph";
-import { ANSWERED_TOO_SOON, INVALID_RESULT } from "../components/Answer/AnswerForm";
-import { t } from "@lingui/macro";
-import { I18nContextProps } from "./types";
+import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
+import {DecimalBigNumber} from "./DecimalBigNumber";
+import {Event, Outcome} from "../graphql/subgraph";
+import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
+import {t} from "@lingui/macro";
+import {I18nContextProps} from "./types";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -23,7 +23,7 @@ export function formatDate(timestamp: number) {
   return format(date, 'MMMM d yyyy, HH:mm')
 }
 
-export function getTimeLeft(endDate: Date | string | number, withSeconds = false, locale: I18nContextProps['locale']): string | false {
+export function getTimeLeft(endDate: Date|string|number, withSeconds = false, locale: I18nContextProps['locale']): string | false {
   const startDate = new Date()
 
   if (typeof endDate === 'number' || typeof endDate === 'string') {
@@ -44,11 +44,11 @@ export function getTimeLeft(endDate: Date | string | number, withSeconds = false
     format.push('minutes');
   }
 
-  return formatDuration(duration, { format, locale: dateLocales[locale] });
+  return formatDuration(duration, {format, locale: dateLocales[locale]});
 }
 
 export function betsClosingSoon(timestamp: number): boolean {
-  const now = Math.floor(Date.now() / 1000);
+  const now = Math.floor(Date.now()/1000);
 
   const minDuration = 60 * 60 * 24 * 4; // 4 days
 
@@ -56,7 +56,7 @@ export function betsClosingSoon(timestamp: number): boolean {
 }
 
 export function formatAmount(amount: BigNumberish) {
-  const number = new DecimalBigNumber(BigNumber.from(amount), 18)
+  const number = new DecimalBigNumber(BigNumber.from(amount),18)
   return `${number.toString()} xDAI`
 }
 
@@ -106,31 +106,31 @@ export function isFinalized(event: Event) {
   );
 }
 
-type MarketCategory = { id: string, text: string, children?: MarketCategory[] }
+type MarketCategory = {id: string, text: string, children?: MarketCategory[]}
 
 export const MARKET_CATEGORIES: MarketCategory[] = [
   {
     id: "sports",
     text: t`Sports`,
     children: [
-      { id: "football", text: t`Football` },
-      { id: "basketball", text: t`Basketball` },
-      { id: "tenis", text: t`Tennis` },
-      { id: "esports", text: t`eSports` },
+      {id: "football", text: t`Football`},
+      {id: "basketball", text: t`Basketball`},
+      {id: "tenis", text: t`Tennis`},
+      {id: "esports", text: t`eSports`},
     ]
   },
-  { id: "misc", text: t`Miscellaneous` },
+  {id: "misc", text: t`Miscellaneous`},
 ]
 
-type FlattenedCategory = { id: string, text: string, isChild: boolean };
+type FlattenedCategory = {id: string, text: string, isChild: boolean};
 
 export function getFlattenedCategories(): FlattenedCategory[] {
   const data: FlattenedCategory[] = [];
   MARKET_CATEGORIES.forEach(category => {
-    data.push({ id: category.id, text: category.text, isChild: false });
+    data.push({id: category.id, text: category.text, isChild: false});
 
     category.children && category.children.forEach(subcategory => {
-      data.push({ id: subcategory.id, text: subcategory.text, isChild: true });
+      data.push({id: subcategory.id, text: subcategory.text, isChild: true});
     })
   })
 
@@ -138,7 +138,7 @@ export function getFlattenedCategories(): FlattenedCategory[] {
 }
 
 export function getSubcategories(category: string): MarketCategory[] {
-  for (let cat of MARKET_CATEGORIES) {
+  for(let cat of MARKET_CATEGORIES){
     if (cat.id === category) {
       return cat.children || [];
     }
@@ -164,7 +164,7 @@ export type IndexedObjects<T> = Record<string, T>;
 
 export function indexObjectsByKey<T extends Record<string, any>>(objects: T[], key: string): IndexedObjects<T> {
   return objects.reduce((objs, obj) => {
-    return { ...objs, [obj[key]]: obj }
+    return {...objs, [obj[key]]: obj}
   }, {})
 }
 

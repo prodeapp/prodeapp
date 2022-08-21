@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { FormError, BoxWrapper, BoxRow } from "../../components"
-import { FormControl, MenuItem, Select } from "@mui/material";
-import { Control } from "react-hook-form";
-import { UseFormHandleSubmit, UseFormRegister } from "react-hook-form/dist/types/form";
-import { FieldErrors } from "react-hook-form/dist/types/errors";
-import { ErrorMessage } from "@hookform/error-message";
-import { useContractFunction, useEthers } from "@usedapp/core";
-import { Contract } from "@ethersproject/contracts";
-import { RealityETH_v3_0__factory } from "../../typechain";
+import React, {useEffect, useState} from "react";
+import {FormError, BoxWrapper, BoxRow} from "../../components"
+import {FormControl, MenuItem, Select} from "@mui/material";
+import {Control} from "react-hook-form";
+import {UseFormHandleSubmit, UseFormRegister} from "react-hook-form/dist/types/form";
+import {FieldErrors} from "react-hook-form/dist/types/errors";
+import {ErrorMessage} from "@hookform/error-message";
+import {useContractFunction, useEthers} from "@usedapp/core";
+import {Contract} from "@ethersproject/contracts";
+import {RealityETH_v3_0__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
-import { Event } from "../../graphql/subgraph";
+import {Event} from "../../graphql/subgraph";
 import FormHelperText from "@mui/material/FormHelperText";
-import { formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError } from "../../lib/helpers";
+import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
-import { useI18nContext } from "../../lib/I18nContext";
+import {useI18nContext} from "../../lib/I18nContext";
 
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
@@ -34,10 +34,10 @@ type AnswerFormProps = {
   setShowActions: (showActions: boolean) => void
 }
 
-export default function AnswerForm({ event, register, errors, handleSubmit, setShowActions }: AnswerFormProps) {
+export default function AnswerForm({event, register, errors, handleSubmit, setShowActions}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
   const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
-  const [outcomes, setOutcomes] = useState<{ value: string | number, text: string }[]>([]);
+  const [outcomes, setOutcomes] = useState<{value: string|number, text: string}[]>([]);
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
@@ -51,19 +51,19 @@ export default function AnswerForm({ event, register, errors, handleSubmit, setS
     setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
 
     // outcomes
-    let _outcomes: { value: string | number, text: string }[] = [];
+    let _outcomes: {value: string|number, text: string}[] = [];
 
     _outcomes = event.outcomes
-      // first map and then filter to keep the index of each outcome as value
-      .map((outcome, i) => ({ value: i, text: outcome }))
-      .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+        // first map and then filter to keep the index of each outcome as value
+        .map((outcome, i) => ({value: i, text: outcome}))
+        .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
 
-    if (event.answer !== INVALID_RESULT) {
-      _outcomes.push({ value: INVALID_RESULT, text: 'Invalid result' });
+    if(event.answer !== INVALID_RESULT) {
+      _outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
     }
 
     if (event.answer && event.answer !== ANSWERED_TOO_SOON) {
-      _outcomes.push({ value: ANSWERED_TOO_SOON, text: 'Answered too soon' });
+      _outcomes.push({value: ANSWERED_TOO_SOON, text: 'Answered too soon'});
     }
 
     setOutcomes(_outcomes);
@@ -132,37 +132,37 @@ export default function AnswerForm({ event, register, errors, handleSubmit, setS
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="answer-form">
-      {state.status === 'Mining' && <div style={{ textAlign: 'center', marginBottom: 15 }}><CircularProgress /></div>}
-      {state.errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{state.errorMessage}</Alert>}
+      {state.status === 'Mining' && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
+      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <div style={{ width: '40%' }}>
-            <Trans>Current result</Trans>
+          <div style={{width: '40%'}}>
+          <Trans>Current result</Trans>
           </div>
-          <div style={{ width: '60%' }}>
+          <div style={{width: '60%'}}>
             {getAnswerText(event.answer, event.outcomes || [], event.templateID)}
           </div>
         </BoxRow>
         {event.bounty !== '0' && <BoxRow>
-          <div style={{ width: '40%' }}>
-            <Trans>Reward</Trans>
+          <div style={{width: '40%'}}>
+          <Trans>Reward</Trans>
           </div>
-          <div style={{ width: '60%' }}>
+          <div style={{width: '60%'}}>
             {formatAmount(event.bounty)}
           </div>
         </BoxRow>}
         {!finalized && <>
           <BoxRow>
-            <div style={{ width: '40%' }}>
-              <Trans>New result</Trans>
+            <div style={{width: '40%'}}>
+            <Trans>New result</Trans>
             </div>
-            <div style={{ width: '60%' }}>
+            <div style={{width: '60%'}}>
               <FormControl fullWidth>
                 <Select
                   defaultValue={event.templateID === '3' ? [] : ""}
                   multiple={event.templateID === '3'}
                   id={`question-outcome-select`}
-                  {...register(`outcome`, { required: t`This field is required.` })}
+                  {...register(`outcome`, {required: t`This field is required.`})}
                 >
                   {outcomes.map((outcome, i) => <MenuItem value={outcome.value} key={i}><Trans id={outcome.text} /></MenuItem>)}
                 </Select>
