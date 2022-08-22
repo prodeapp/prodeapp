@@ -22,8 +22,10 @@ import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
 
+type ValidOutcomes = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON;
+
 export type AnswerFormValues = {
-  outcome: number | '' | [number] | []
+  outcome: ValidOutcomes | [ValidOutcomes] | ''
 }
 
 type AnswerFormProps = {
@@ -93,23 +95,22 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
 
   const onSubmit = async (data: AnswerFormValues) => {
     let answer = ''
+
     if (typeof data.outcome === 'object') {
-      const eventOutcome = Object(data.outcome)
       // TODO: Update the multiple select if there are answers with invalid or too soon.
       // this options are incompatible with multi-select
-      if (eventOutcome.includes(INVALID_RESULT)) {
+      if (data.outcome.includes(INVALID_RESULT)) {
         answer = INVALID_RESULT
-      }
-      else if (eventOutcome.includes(ANSWERED_TOO_SOON)) {
+      } else if (data.outcome.includes(ANSWERED_TOO_SOON)) {
         answer = ANSWERED_TOO_SOON
-      }
-      else {
-        const answerChoice = eventOutcome.reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0);
+      } else {
+        const answerChoice = (data.outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0);
         answer = hexZeroPad(hexlify(answerChoice), 32);
       }
     } else {
       answer = hexZeroPad(hexlify(data.outcome), 32)
     }
+
     await send(
       event.id,
       answer,
