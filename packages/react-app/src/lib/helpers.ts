@@ -10,6 +10,7 @@ import {Event, Outcome} from "../graphql/subgraph";
 import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
+import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "./reality";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -73,7 +74,7 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
     return t`Answered too soon`;
   }
 
-  if (templateID === '3') {
+  if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
     function getAnswers(value: number) {
       const answers = value.toString(2)
       var indexes = [], i;

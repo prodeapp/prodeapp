@@ -17,6 +17,7 @@ import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} 
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
+import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
 
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
@@ -159,8 +160,8 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
             <div style={{width: '60%'}}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue={event.templateID === '3' ? [] : ""}
-                  multiple={event.templateID === '3'}
+                  defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
+                  multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   id={`question-outcome-select`}
                   {...register(`outcome`, {required: t`This field is required.`})}
                 >

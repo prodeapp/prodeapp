@@ -25,6 +25,7 @@ import {INVALID_RESULT} from "../Answer/AnswerForm";
 import {FormatEvent} from "../FormatEvent";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
+import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
 
 export type BetFormValues = {
   outcomes: {value: number|""|[number]}[]
@@ -177,9 +178,9 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue={events[i].templateID === '3' ? [] : ""}
+                  defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
                   id={`event-${i}-outcome-select`}
-                  multiple={events[i].templateID === '3'}
+                  multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}

@@ -14,7 +14,7 @@ import {ANSWERED_TOO_SOON} from "../Answer/AnswerForm";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
-import {encodeQuestionText, REALITY_TEMPLATE_ID} from "../../lib/reality";
+import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, REALITY_TEMPLATE_SINGLE_SELECT} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
 
@@ -106,8 +106,8 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
         await send(
-          REALITY_TEMPLATE_ID,
-          encodeQuestionText(event.templateID==='3'? 'multiple-select': 'single-select', event.title, event.outcomes, event.category, 'en_US'),
+          REALITY_TEMPLATE_SINGLE_SELECT,
+          encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
           event.arbitrator,
           event.timeout,
           event.openingTs,
