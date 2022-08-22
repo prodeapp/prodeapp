@@ -60,6 +60,19 @@ export function formatAmount(amount: BigNumberish) {
   return `${number.toString()} xDAI`
 }
 
+function getMultiSelectAnswers(value: number): number[] {
+  const answers = value.toString(2);
+  const indexes = [];
+
+  for(let i = 0; i < answers.length; i++) {
+    if (answers[i] === '1') {
+      indexes.push(answers.length - i - 1);
+    }
+  }
+
+  return indexes;
+}
+
 export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: BigNumberish, noAnswerText = t`Not answered yet`): string {
 
   if (currentAnswer === null) {
@@ -74,18 +87,8 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
   }
 
   if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
-    function getAnswers(value: number) {
-      const answers = value.toString(2)
-      var indexes = [], i;
-      for(i = 0; i < answers.length; i++)
-        if (answers[i] === '1')
-            indexes.push(answers.length - i -1);
-      return indexes
-    }
-
-    const answers = getAnswers(BigNumber.from(currentAnswer).toNumber());
-    const textAnswers = answers.reduce((curAnswer, answer) => curAnswer.length === 0 ? curAnswer + transOutcome(outcomes[answer] || noAnswerText) : curAnswer + ', ' + transOutcome(outcomes[answer] || noAnswerText), '')
-    return textAnswers
+    return getMultiSelectAnswers(BigNumber.from(currentAnswer).toNumber())
+            .map(answer => transOutcome(outcomes[answer] || noAnswerText)).join(', ');
   }
 
   const value = BigNumber.from(currentAnswer);
