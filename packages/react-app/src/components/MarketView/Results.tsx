@@ -10,11 +10,10 @@ import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
-import {ANSWERED_TOO_SOON} from "../Answer/AnswerForm";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
-import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
 

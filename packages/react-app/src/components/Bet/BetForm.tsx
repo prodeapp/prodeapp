@@ -7,7 +7,6 @@ import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {Market__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
-import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
@@ -21,14 +20,14 @@ import Grid from '@mui/material/Grid';
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
-import {INVALID_RESULT} from "../Answer/AnswerForm";
 import {FormatEvent} from "../FormatEvent";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
-import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 
 export type BetFormValues = {
-  outcomes: {value: number|""|[number]}[]
+  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | ''}[]
 }
 
 type BetFormProps = {
@@ -126,29 +125,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
   }
 
   const onSubmit = async (data: BetFormValues) => {
-    const results = data.outcomes.map(outcome => {
-      if (typeof outcome.value === 'object') {
-        // multiple-select
-        let outcomeValue = Object(outcome.value);
-        if (outcomeValue.length === 0) {
-           throw Error(t`Invalid outcome`)
-        }
-        if (outcomeValue.every((x: any) => typeof x === 'number')) {
-          const answerChoice = outcomeValue.reduce((partialSum: number, value:number) => partialSum + 2**value, 0);
-          return hexZeroPad(hexlify(answerChoice), 32);
-        } else {
-          // TODO: Update select to show only invalid result. This option it's incompatible with multiselect
-          if (outcomeValue.includes(INVALID_RESULT)) return INVALID_RESULT
-        }
-      } else {
-        // single-select
-        if (outcome.value === '') {
-          throw Error(t`Invalid outcome`)
-        }
-        return hexZeroPad(hexlify(outcome.value), 32)
-      }
-      throw Error(t`Invalid outcome`)
-    });
+    const results = data.outcomes.map(outcome => formatOutcome(outcome.value));
 
     await send(
       isAddress(referral) ? referral : AddressZero,

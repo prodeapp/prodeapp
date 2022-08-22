@@ -7,10 +7,9 @@ import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
-import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
-import {REALITY_TEMPLATE_MULTIPLE_SELECT} from "./reality";
+import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
