@@ -19,7 +19,8 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
     bounty: '0',
     arbitrator: '',
     category: '',
-    timeout: '0'
+    timeout: '0',
+    templateID: '2',
   }
 }
 
