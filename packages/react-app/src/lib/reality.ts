@@ -2,8 +2,14 @@
 import {MarketFactory} from "../typechain";
 import {keccak256} from "@ethersproject/solidity";
 import {BigNumber} from "@ethersproject/bignumber";
+import {hexlify, hexZeroPad} from "@ethersproject/bytes";
+import {FormEventOutcomeValue} from "../components/Answer/AnswerForm";
 
-export const REALITY_TEMPLATE_ID = 2;
+export const REALITY_TEMPLATE_SINGLE_SELECT = '2';
+export const REALITY_TEMPLATE_MULTIPLE_SELECT = '3';
+
+export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
+export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
 
 export function encodeQuestionText(
   qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
@@ -45,4 +51,31 @@ export function getQuestionsHash(questionIDs: string[]) {
     questionIDs.map(_ => 'bytes32'),
     questionIDs.sort((a, b) => a > b ? 1 : -1)
   );
+}
+
+export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | '') {
+  if (outcome === '') {
+    // it should never happen because this function is called within a form so the form validation should prevent it
+    // we add this check anyway to simplify the usage of this function
+    throw Error(`Invalid outcome`)
+  }
+
+  if (typeof outcome === 'object') {
+    // multi-select
+
+    // INVALID_RESULT and ANSWERED_TOO_SOON are incompatible with multi-select
+    if (outcome.includes(INVALID_RESULT)) {
+      return INVALID_RESULT;
+    }
+
+    if (outcome.includes(ANSWERED_TOO_SOON)) {
+      return ANSWERED_TOO_SOON;
+    }
+
+    const answerChoice = (outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0);
+    return hexZeroPad(hexlify(answerChoice), 32);
+  }
+
+  // single-select
+  return hexZeroPad(hexlify(outcome), 32);
 }

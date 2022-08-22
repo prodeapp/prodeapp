@@ -7,9 +7,9 @@ import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {Event, Outcome} from "../graphql/subgraph";
-import {ANSWERED_TOO_SOON, INVALID_RESULT} from "../components/Answer/AnswerForm";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
+import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -60,11 +60,24 @@ export function formatAmount(amount: BigNumberish) {
   return `${number.toString()} xDAI`
 }
 
-export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], noAnswerText = t`Not answered yet`) {
+function getMultiSelectAnswers(value: number): number[] {
+  const answers = value.toString(2);
+  const indexes = [];
+
+  for(let i = 0; i < answers.length; i++) {
+    if (answers[i] === '1') {
+      indexes.push(answers.length - i - 1);
+    }
+  }
+
+  return indexes;
+}
+
+export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: BigNumberish, noAnswerText = t`Not answered yet`): string {
+
   if (currentAnswer === null) {
     return noAnswerText;
   }
-
   if (currentAnswer === INVALID_RESULT) {
     return t`Invalid result`;
   }
@@ -73,8 +86,12 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
     return t`Answered too soon`;
   }
 
-  const value = BigNumber.from(currentAnswer);
+  if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
+    return getMultiSelectAnswers(BigNumber.from(currentAnswer).toNumber())
+            .map(answer => transOutcome(outcomes[answer] || noAnswerText)).join(', ');
+  }
 
+  const value = BigNumber.from(currentAnswer);
   return transOutcome(outcomes[value.toNumber()] || noAnswerText);
 }
 

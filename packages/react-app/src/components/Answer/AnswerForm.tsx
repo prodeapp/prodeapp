@@ -9,7 +9,6 @@ import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
-import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { BigNumber } from "@ethersproject/bignumber";
 import {Event} from "../../graphql/subgraph";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -17,12 +16,12 @@ import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} 
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
+import {formatOutcome, REALITY_TEMPLATE_MULTIPLE_SELECT, INVALID_RESULT, ANSWERED_TOO_SOON} from "../../lib/reality";
 
-export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
+export type FormEventOutcomeValue = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON;
 
 export type AnswerFormValues = {
-  outcome: number|''
+  outcome: FormEventOutcomeValue | [FormEventOutcomeValue] | ''
 }
 
 type AnswerFormProps = {
@@ -51,7 +50,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
     setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
 
     // outcomes
-    let _outcomes: {value: string|number, text: string}[] = [];
+    let _outcomes: {value: FormEventOutcomeValue, text: string}[] = [];
 
     _outcomes = event.outcomes
         // first map and then filter to keep the index of each outcome as value
@@ -93,7 +92,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const onSubmit = async (data: AnswerFormValues) => {
     await send(
       event.id,
-      hexZeroPad(hexlify(data.outcome), 32),
+      formatOutcome(data.outcome),
       currentBond,
       {
         value: currentBond
@@ -122,7 +121,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
           <Trans>Current result</Trans>
           </div>
           <div style={{width: '60%'}}>
-            {getAnswerText(event.answer, event.outcomes || [])}
+            {getAnswerText(event.answer, event.outcomes || [], event.templateID)}
           </div>
         </BoxRow>
         {event.bounty !== '0' && <BoxRow>
@@ -141,7 +140,8 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
             <div style={{width: '60%'}}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue=""
+                  defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
+                  multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   id={`question-outcome-select`}
                   {...register(`outcome`, {required: t`This field is required.`})}
                 >

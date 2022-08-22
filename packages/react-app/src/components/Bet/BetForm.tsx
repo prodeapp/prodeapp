@@ -7,7 +7,6 @@ import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {Market__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
-import { hexZeroPad, hexlify } from "@ethersproject/bytes";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
@@ -21,13 +20,14 @@ import Grid from '@mui/material/Grid';
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBetToken} from "../../hooks/useBetToken";
 import CircularProgress from "@mui/material/CircularProgress";
-import {INVALID_RESULT} from "../Answer/AnswerForm";
 import {FormatEvent} from "../FormatEvent";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
+import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 
 export type BetFormValues = {
-  outcomes: {value: number|''}[]
+  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | ''}[]
 }
 
 type BetFormProps = {
@@ -125,13 +125,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
   }
 
   const onSubmit = async (data: BetFormValues) => {
-    const results = data.outcomes.map(outcome => {
-      if (outcome.value === '') {
-        throw Error(t`Invalid outcome`)
-      }
-
-      return hexZeroPad(hexlify(outcome.value), 32)
-    });
+    const results = data.outcomes.map(outcome => formatOutcome(outcome.value));
 
     await send(
       isAddress(referral) ? referral : AddressZero,
@@ -152,6 +146,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <Grid container spacing={3}>
         {fields.map((field, i) => {
+
           if (!events || !events[i]) {
             return null;
           }
@@ -160,8 +155,9 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
             <Grid item xs={6}>
               <FormControl fullWidth>
                 <Select
-                  defaultValue=""
+                  defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
                   id={`event-${i}-outcome-select`}
+                  multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}

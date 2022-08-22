@@ -10,11 +10,10 @@ import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
-import {ANSWERED_TOO_SOON} from "../Answer/AnswerForm";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../../typechain";
-import {encodeQuestionText, REALITY_TEMPLATE_ID} from "../../lib/reality";
+import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
 
@@ -50,7 +49,7 @@ function StatusBadge({color, children}: {color: 'red'|'green'|'yellow', children
 function AnswerColumn(event: Event, finalized: boolean) {
   const { locale } = useI18nContext();
 
-  const answerText = getAnswerText(event.answer, event.outcomes || []);
+  const answerText = getAnswerText(event.answer, event.outcomes || [], event.templateID);
 
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
@@ -106,8 +105,8 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
         await send(
-          REALITY_TEMPLATE_ID,
-          encodeQuestionText('single-select', event.title, event.outcomes, event.category, 'en_US'),
+          event.templateID,
+          encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
           event.arbitrator,
           event.timeout,
           event.openingTs,
