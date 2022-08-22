@@ -6,7 +6,7 @@ import { Bet } from "../../graphql/subgraph";
 import Alert from "@mui/material/Alert";
 import { Trans, t } from "@lingui/macro";
 import { Skeleton, useTheme } from "@mui/material";
-import { transOutcome } from "../../lib/helpers";
+import { transOutcome, getAnswerText } from "../../lib/helpers";
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import { FormatEvent } from "../FormatEvent";
 
@@ -32,6 +32,11 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // Add stats
     bets.forEach((bet) => {
         bet.results.forEach((result, i) => {
+            if (stats[i]?.[parseInt(result)] === undefined) {
+                // this bet it's a combination of outcomes, so need to be initialized
+                let evnt = bet.market.events[i]
+                stats[i][parseInt(result)] = { outcome: getAnswerText(result, evnt.outcomes, evnt.templateID), amountBets: 0, percentage: 0, index: stats[i].length, title: evnt.title, openingTs: evnt.openingTs }
+            }
             if (parseInt(result) > 256) {
                 const nResults = stats[i].length - 1;
                 stats[i][nResults].amountBets = stats[i][nResults].amountBets + 1
