@@ -55,7 +55,7 @@ export type Outcome = string
 
 export interface Event {
   id: string
-  nonce: BigNumberish
+  nonce: string
   arbitrator: string
   markets: [{
     id: string

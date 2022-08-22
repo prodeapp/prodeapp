@@ -10,7 +10,7 @@ import Alert from "@mui/material/Alert";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import type {BigNumberish} from "ethers";
-import {useEventsToBet} from "../../hooks/useEvents";
+import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
@@ -27,7 +27,7 @@ import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from ".
 import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 
 export type BetFormValues = {
-  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | ''}[]
+  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', nonce: number}[]
 }
 
 type BetFormProps = {
@@ -57,7 +57,7 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
 export default function BetForm({marketId, price, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEventsToBet(marketId);
+  const { isLoading, error, data: events } = useEvents(marketId);
   const [success, setSuccess] = useState(false);
   const [tokenId, setTokenId] = useState<BigNumber|false>(false);
   const [referral, setReferral] = useState(AddressZero);
@@ -125,7 +125,15 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
   }
 
   const onSubmit = async (data: BetFormValues) => {
-    const results = data.outcomes.map(outcome => formatOutcome(outcome.value));
+    const results = data.outcomes
+      /**
+       * ============================================================
+       * THE RESULTS MUST BE SORTED BY 'nonce' IN 'ascending' ORDER
+       * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
+       * ============================================================
+       */
+      .sort((a, b) => Number(a.nonce) > Number(b.nonce) ? 1 : -1)
+      .map(outcome => formatOutcome(outcome.value));
 
     await send(
       isAddress(referral) ? referral : AddressZero,
@@ -165,6 +173,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
+              <input type="hidden" {...register(`outcomes.${i}.nonce`, {required: t`This field is required`})} value={Number(events[i].nonce)} />
             </Grid>
           </React.Fragment>
         })}

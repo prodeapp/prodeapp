@@ -30,22 +30,6 @@ export const useEvents = (marketId: string) => {
   );
 };
 
-export const useEventsToBet = (marketId: string) => {
-  return useQuery<Event[], Error>(
-    ["useEventsToBet", marketId],
-    async () => {
-      /**
-       * ================================================================
-       * THIS HOOK IS USED TO BUILD THE DATA SENT TO Market.placeBet()
-       * AND IT IS REQUIRED TO HAVE orderBy = 'nonce' AND orderDirection = 'asc'
-       * OTHERWISE THE BETS WILL BE SENT IN INCORRECT ORDER
-       * ================================================================
-       */
-      return fetchEvents(marketId, 'nonce', 'asc');
-    }
-  );
-};
-
 export function useIndexedEvents(events?: Event[]) {
   return useMemo(() => indexObjectsByKey(events || [], 'id'), [events])
 }
