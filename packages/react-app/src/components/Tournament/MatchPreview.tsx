@@ -7,7 +7,7 @@ import {
 } from './styles';
 import {MatchComponentProps} from "@g-loot/react-tournament-brackets/dist/src/types";
 
-function Match({
+function MatchPreview({
                  bottomHovered,
                  bottomParty,
                  bottomText,
@@ -33,4 +33,4 @@ function Match({
   );
 }
 
-export default Match;
+export default MatchPreview;
