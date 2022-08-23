@@ -191,3 +191,11 @@ type MarketFactory @entity {
   totalVolumeFunding: BigInt!
   markets: [Market!]! @derivedFrom(field: "marketFactory")
 }
+
+type _Schema_
+  @fulltext(
+    name: "marketTitleSearch"
+    language: en
+    algorithm: rank
+    include: [{ entity: "Market", fields: [{ name: "name" }] }]
+  )

@@ -3,6 +3,8 @@ description: Subgraph that tracks markets data
 repository: https://github.com/prodeapp/prodeapp
 schema:
   file: ./schema.graphql
+features:
+  - fullTextSearch
 dataSources:
   - kind: ethereum/contract
     name: MarketFactory
