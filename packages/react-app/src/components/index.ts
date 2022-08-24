@@ -1,12 +1,12 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
-export const FormError = styled('div')`
-  color: red;
-  margin-top: 5px;
-  font-weight: normal;
-  font-size: 14px;
-`
+export const FormError = styled('div')(({ theme }) => ({
+  color: theme.palette.error.dark,
+  marginTop: '5px',
+  fontWeight: 'normal',
+  fontSize: '14px',
+}))
 
 export const Header = styled('header')`
   align-items: center;

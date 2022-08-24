@@ -78,7 +78,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
           <div style={{width: '100%'}}>
             <TextField {...register('market', {
               required: t`This field is required.`
-            })} style={{width: '100%'}}/>
+            })} error={!!errors.market} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
           </div>
         </BoxRow>
@@ -91,6 +91,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
               {...register('category', {
                 required: t`This field is required.`
               })}
+              error={!!errors.category}
               style={{width: '100%'}}>
               {getFlattenedCategories().map(cat => <MenuItem value={cat.id} key={cat.id}>{cat.isChild ? `-- ${cat.text}` : cat.text}</MenuItem>)}
             </TextField>
@@ -175,7 +176,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
               valueAsNumber: true,
               validate: v => !isNaN(Number(v)) || t`Invalid number.`,
               min: { value: 0.01, message: t`Price must be greater than 0.01` }
-            })} style={{width: '100%'}} />
+            })} error={!!errors.price} style={{width: '100%'}} />
             <FormError><ErrorMessage errors={errors} name="price" /></FormError>
           </div>
         </BoxRow>
@@ -185,7 +186,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
             <TextField {...register('manager', {
               required: t`This field is required.`,
               validate: v => isAddress(v) || 'Invalid address.',
-            })} style={{width: '100%'}} />
+            })} error={!!errors.manager} style={{width: '100%'}} />
             <FormHelperText><Trans>Address to send management fees to.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="manager" /></FormError>
           </div>
@@ -199,7 +200,7 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
               validate: v => !isNaN(Number(v)) || 'Invalid number.',
               min: {value: 0, message: t`Fee must be greater than 0.`},
               max: {value: 100, message: t`Fee must be lower than 100.`}
-            })} style={{width: '100%'}} />
+            })} error={!!errors.managementFee} style={{width: '100%'}} />
             <FormHelperText><Trans>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>

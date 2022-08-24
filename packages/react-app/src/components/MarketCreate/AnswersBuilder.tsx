@@ -26,7 +26,10 @@ export default function AnswersBuilder({eventIndex, answersFields, addAnswer, de
       {answersFields.map((answerField, i) => {
         return <Grid item xs={6} md={4} key={answerField.id}>
           <AnswerField>
-            <TextField {...register(`events.${eventIndex}.answers.${i}.value`, {required: t`This field is required.`})} style={{width: '150px'}} />
+            <TextField
+              {...register(`events.${eventIndex}.answers.${i}.value`, {required: t`This field is required.`})}
+              error={!!errors.events?.[eventIndex]?.answers?.[i]?.value}
+              style={{width: '150px'}} />
             <div style={{cursor: 'pointer', marginLeft: '10px'}} onClick={deleteAnswer(i)}>[x]</div>
           </AnswerField>
           <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.answers.${i}.value`} /></FormError>

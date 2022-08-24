@@ -17,7 +17,7 @@ export default function QuestionBuilder({eventIndex}: QuestionBuilderProps) {
     <div style={{display: 'flex'}}>
       <TextField {...register(`events.${eventIndex}.questionPlaceholder`, {
         required: t`This field is required.`
-      })} style={{flexGrow: 1}}/>
+      })} error={!!errors.events?.[eventIndex]?.questionPlaceholder} style={{flexGrow: 1}}/>
     </div>
     <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.questionPlaceholder`} /></FormError>
   </div>

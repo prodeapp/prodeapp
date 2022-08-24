@@ -144,6 +144,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
                   multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   id={`question-outcome-select`}
                   {...register(`outcome`, {required: t`This field is required.`})}
+                  error={!!errors.outcome}
                 >
                   {outcomes.map((outcome, i) => <MenuItem value={outcome.value} key={i}><Trans id={outcome.text} /></MenuItem>)}
                 </Select>

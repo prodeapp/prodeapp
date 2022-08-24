@@ -186,14 +186,26 @@ const darkTheme = createTheme({
         disableUnderline: true,
       },
     },
-    MuiOutlinedInput:{
+    MuiOutlinedInput: {
       styleOverrides: {
+        root: {
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: palette.black.dark,
+            borderWidth: 1,
+            opacity: 1,
+          },
+          '&.Mui-error .MuiOutlinedInput-notchedOutline': {
+            borderColor: palette.error.dark,
+            opacity: 1,
+          },
+        },
         notchedOutline: {
           borderColor: palette.black.dark,
-          borderRadius: '6px',
+          borderRadius: '4px',
+          opacity: 0.4,
         },
         input: {
-          padding: '8.5px 14px',
+          padding: '18.5px 14px',
         },
       },
     },
@@ -204,7 +216,7 @@ const darkTheme = createTheme({
             padding: 0,
           },
           '.MuiOutlinedInput-root .MuiAutocomplete-input': {
-            padding: '8.5px 14px',
+            padding: '18.5px 14px',
           }
         },
       },

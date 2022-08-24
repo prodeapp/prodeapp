@@ -167,6 +167,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
                   id={`event-${i}-outcome-select`}
                   multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
+                  error={!!errors.outcomes?.[i]?.value}
                 >
                   {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
                   <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
