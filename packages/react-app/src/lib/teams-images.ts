@@ -117,6 +117,7 @@ import CAMEROON from '../assets/logos/fifa_wc/cameroon.png'
 import BRAZIL from '../assets/logos/fifa_wc/brazil.png'
 import BELGIUM from '../assets/logos/fifa_wc/belgium.png'
 import ARGENTINA from '../assets/logos/fifa_wc/argentina.png'
+import AUSTRALIA from '../assets/logos/fifa_wc/australia.png'
 
 
 const images: Record<string, Record<string, string>> = {
@@ -254,8 +255,8 @@ const images: Record<string, Record<string, string>> = {
     'Cameroon': CAMEROON,
     'Brazil': BRAZIL,
     'Belgium': BELGIUM,
-    'Argentina': ARGENTINA
-
+    'Argentina': ARGENTINA,
+    'Australia': AUSTRALIA
   }
 }
 
