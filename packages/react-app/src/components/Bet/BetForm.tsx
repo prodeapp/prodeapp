@@ -159,8 +159,8 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
             return null;
           }
           return <React.Fragment key={events[i].id}>
-            <Grid item xs={6}><FormatEvent title={events[i].title} /></Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}><FormatEvent title={events[i].title} /></Grid>
+            <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <Select
                   defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}

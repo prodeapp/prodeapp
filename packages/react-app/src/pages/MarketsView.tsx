@@ -74,7 +74,7 @@ function MarketsView() {
   return (
     <>
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
-        <GridLeftColumn item xs={12} md={4}>
+        <GridLeftColumn item xs={12} lg={4}>
           <div>
             <MarketStatus marketId={market.id} />
             <h2 style={{fontSize: '27.65px', marginTop: '10px'}}>{market.name}</h2>
@@ -99,7 +99,7 @@ function MarketsView() {
             {section !== 'bet' && <PlaceBet market={market} onBetClick={() => setSection('bet')} onResultsClick={() => setSection('results')}/>}
           </div>
         </GridLeftColumn>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={8}>
           {section !== 'bet' && <>
             <MarketInfo market={market} />
 
@@ -129,8 +129,8 @@ function MarketsView() {
             {section === 'stats' && <Stats marketId={market.id} />}
           </>}
 
-          {section === 'bet' && <Box sx={{mx: 17, mb: 10}}>
-            <Button variant="text" onClick={() => setSection('bets')} style={{margin: '40px 0', fontSize: '16px'}}>
+          {section === 'bet' && <Box sx={{mx: {md: 17}, mb: 10}}>
+            <Button variant="text" onClick={() => setSection('bets')} sx={{margin: {xs: '10px 0', md: '40px 0'}, fontSize: '16px'}}>
               <ArrowRightIcon style={{marginRight: 10, transform: 'rotate(180deg)'}}/> Return to the market
             </Button>
             <BetForm marketId={market.id} price={market.price} cancelHandler={() => setSection('bets')}/>
