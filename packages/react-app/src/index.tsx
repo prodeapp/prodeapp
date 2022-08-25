@@ -25,6 +25,7 @@ import { I18nProvider } from "./lib/I18nProvider";
 import TokenView from "./pages/TokenView";
 import MarketsFund from "./pages/MarketsFund";
 import { GlobalContextProvider } from './lib/GlobalContext';
+import WelcomeDialog from "./components/WelcomeDialog";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -46,6 +47,7 @@ ReactDOM.render(
           <CssBaseline />
           <I18nProvider>
             <GlobalContextProvider>
+              <WelcomeDialog />
               <HashRouter>
                 <Routes>
                   <Route element={<Layout />}>

@@ -106,6 +106,9 @@ msgstr "Fecha límite de apuesta (UTC)"
 msgid "Bridge"
 msgstr "Bridge"
 
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgid "Category"
 msgstr "Categoría"
 
@@ -129,6 +132,9 @@ msgstr "Elija una plantilla"
 
 msgid "Claim"
 msgstr "Claim"
+
+msgid "Close and bridge later"
+msgstr "Cerrar y usar el bridge luego"
 
 msgid "Closed"
 msgstr "Cerrado"
@@ -247,14 +253,23 @@ msgstr "Ir al mercado"
 msgid "Go to step"
 msgstr "Ir al paso"
 
+msgid "Go to the bridge"
+msgstr "Ir al bridge"
+
 msgid "Go to the market"
 msgstr "Ir al mercado"
 
 msgid "Groups"
 msgstr "Grupos"
 
+msgid "Hey! Welcome to Prode"
+msgstr "¡Hola! Bienvenido a Prode"
+
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "He creado un nuevo mercado en @prode_eth: {marketName} {0}"
+
+msgid "If first you want to take a look around, you can access the bridge later from the link in the main menu."
+msgstr "Si primero quieres revisar la app, puedes acceder al bridge luego desde el enlace en el menu principal."
 
 msgid "In process"
 msgstr "En proceso"
@@ -271,11 +286,11 @@ msgstr "Market hash inválido"
 msgid "Invalid number."
 msgstr "Número inválido."
 
-msgid "Invalid outcome"
-msgstr "Salida inválida"
-
 msgid "Invalid result"
 msgstr "Respuesta inválida"
+
+msgid "It looks like you have 0 xDAI in your wallet."
+msgstr "Parece que tienes 0 xDAI en tu billetera."
 
 msgid "Item Id"
 msgstr "Item Id"
@@ -364,9 +379,6 @@ msgstr "Solo mercados verificados"
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Disponible para responder en {openingTimeLeft}"
 
-msgid "Outcome"
-msgstr "Resultado"
-
 msgid "Participants"
 msgstr "Participantes"
 
@@ -378,6 +390,9 @@ msgstr "Pendiente de arbitraje"
 
 msgid "Place Bet"
 msgstr "Apostar"
+
+msgid "Place your bet"
+msgstr "Enviar apuesta"
 
 msgid "Player"
 msgstr "Apostador"
@@ -615,6 +630,12 @@ msgstr "eSports"
 
 msgid "invalid"
 msgstr "inválido"
+
+msgid "xDAI is bridged DAI, so if you have DAI in any other network (Ethereum Mainnet, Arbitrum, Optimism, etc.), you can use the bridge to transfer some of it to Gnosis Chain."
+msgstr "xDAI es DAI puenteado, por lo tanto si tienes DAI en alguna otra red (Ethereum Mainnet, Arbitrum, Optimism, etc.), puedes usar el bridge para transferir un poco a Gnosis Chain."
+
+msgid "xDAI is the native token of Gnosis Chain, and the one used to place bets in the markets."
+msgstr "xDAI es el token nativo de Gnosis Chain, y es usado para realizar apuestas en los mercados."
 
 msgid "{0, plural, one {# result left to answer} other {# results left to answer}}"
 msgstr "{0, plural, one {# resultado para responder } other {# resultados para responder}}"
