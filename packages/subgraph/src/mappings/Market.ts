@@ -103,6 +103,7 @@ export function handlePlaceBet(evt: PlaceBet): void {
         bet.reward = BigInt.fromI32(0)
         bet.claim = false;
         bet.reward = BigInt.fromI32(0)
+        bet.timestamp = evt.block.timestamp;
     }
     bet.count = bet.count.plus(BigInt.fromI32(1))
     bet.save()

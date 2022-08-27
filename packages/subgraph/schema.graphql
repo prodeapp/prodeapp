@@ -105,6 +105,7 @@ type Event @entity {
   isPendingArbitration: Boolean!
   openingTs: BigInt!
   finalizeTs: BigInt!
+  creationTs: BigInt!
   timeout: BigInt!
   minBond: BigInt!
   lastBond: BigInt!
@@ -147,6 +148,7 @@ type Bet @entity {
   claim: Boolean!
   reward: BigInt!
   ranking: BigInt
+  timestamp: BigInt!
 }
 
 type Funder @entity {

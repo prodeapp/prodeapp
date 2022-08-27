@@ -148,7 +148,7 @@ export function getOrCreateMarketFactory(id: string): MarketFactory {
     return mf
 }
 
-export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:BigInt, questionText: string, templateID:BigInt): Event {
+export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:BigInt, questionText: string, templateID:BigInt, timestamp:BigInt): Event {
     let realitioSC = Realitio.bind(Address.fromBytes(RealitioAddress));
     let event = Event.load(questionID.toHexString());
     if (event === null) {
@@ -162,6 +162,7 @@ export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:
     event.bounty = realitioSC.getBounty(questionID);
     event.lastBond = BigInt.fromI32(0);
     event.finalizeTs = realitioSC.getFinalizeTS(questionID);
+    event.creationTs = timestamp;
     event.contentHash = realitioSC.getContentHash(questionID);
     event.historyHash = realitioSC.getHistoryHash(questionID);
     event.arbitrationOccurred = false;

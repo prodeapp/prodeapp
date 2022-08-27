@@ -33,7 +33,7 @@ export function handleCreateMarket(call: CreateMarketCall): void {
       break;
     };
     let questionData = call.inputs.questionsData[nonce];
-    getOrCreateEvent(questionID.value, marketAddress, BigInt.fromI32(nonce), questionData.question, questionData.templateID);
+    getOrCreateEvent(questionID.value, marketAddress, BigInt.fromI32(nonce), questionData.question, questionData.templateID, call.block.timestamp);
     // log.debug("handleCreateMarket: event {} for nonce {} created", [questionID.value.toHexString(), nonce.toString()]);
     nonce++
   }
