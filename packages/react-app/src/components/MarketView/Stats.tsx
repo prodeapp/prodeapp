@@ -25,7 +25,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         let stat = event.outcomes.map((outcome, index) => {
             return { outcome: transOutcome(outcome), amountBets: 0, percentage: 0, index: index, title: event.title, openingTs: event.openingTs }
         })
-        stat.push({ outcome: t`Invalid`, amountBets: 0, percentage: 0, index: -1, title: event.title, openingTs: event.openingTs })
+        stat.push({ outcome: t`Invalid result`, amountBets: 0, percentage: 0, index: -1, title: event.title, openingTs: event.openingTs })
         return stat
     })
     if (stats.length === 0) return [];
