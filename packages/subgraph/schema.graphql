@@ -126,6 +126,10 @@ type Player @entity {
   numOfBets: BigInt!
   attributions: [Attribution!]! @derivedFrom(field: "provider")
   totalAttributions: BigInt!
+  "timestamp of the first bet"
+  firstBetTs: BigInt!
+  "timestamp of their last bast"
+  lastBetTs: BigInt!
 }
 
 type Manager @entity {

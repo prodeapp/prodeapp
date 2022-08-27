@@ -84,8 +84,12 @@ export function handlePlaceBet(evt: PlaceBet): void {
         player.markets = tmp_markets;
         player.numOfMarkets = player.numOfMarkets.plus(BigInt.fromI32(1));
     }
+    if (player.numOfBets.equals(BigInt.fromI32(0))) {
+        player.firstBetTs = evt.block.timestamp;
+    }
     player.numOfBets = player.numOfBets.plus(BigInt.fromI32(1));
     player.amountBet = player.amountBet.plus(evt.transaction.value)
+    player.lastBetTs = evt.block.timestamp;
     player.save()
 
     let betID = getBetID(evt.address, evt.params.tokenID)
