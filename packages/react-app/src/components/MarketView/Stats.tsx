@@ -25,27 +25,24 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         let stat = event.outcomes.map((outcome, index) => {
             return { outcome: transOutcome(outcome), amountBets: 0, percentage: 0, index: index, title: event.title, openingTs: event.openingTs }
         })
-        stat.push({ outcome: t`Invalid`, amountBets: 0, percentage: 0, index: 257, title: event.title, openingTs: event.openingTs })
+        stat.push({ outcome: t`Invalid result`, amountBets: 0, percentage: 0, index: -1, title: event.title, openingTs: event.openingTs })
         return stat
     })
     if (stats.length === 0) return [];
     // Add stats
     bets.forEach((bet) => {
         bet.results.forEach((result, i) => {
-            if (stats[i]?.[parseInt(result)] === undefined) {
+            let evnt = bet.market.events[i]
+            let betText = getAnswerText(result, evnt.outcomes, evnt.templateID)
+            let betStatIndex = stats[i].findIndex((evnt) => evnt.outcome===betText);
+            if (betStatIndex === -1) {
                 // this bet it's a combination of outcomes, so need to be initialized
-                let evnt = bet.market.events[i]
-                stats[i][parseInt(result)] = { outcome: getAnswerText(result, evnt.outcomes, evnt.templateID), amountBets: 0, percentage: 0, index: stats[i].length, title: evnt.title, openingTs: evnt.openingTs }
+                betStatIndex = stats[i].length
+                stats[i][betStatIndex] = { outcome: getAnswerText(result, evnt.outcomes, evnt.templateID), amountBets: 0, percentage: 0, index: stats[i].length, title: evnt.title, openingTs: evnt.openingTs }
             }
-            if (parseInt(result) > 256) {
-                const nResults = stats[i].length - 1;
-                stats[i][nResults].amountBets = stats[i][nResults].amountBets + 1
-            } else {
-                stats[i][parseInt(result)].amountBets = stats[i][parseInt(result)].amountBets + 1
-            }
+            stats[i][betStatIndex].amountBets = stats[i][betStatIndex].amountBets + 1
         })
     })
-
     // Normalize data
     const nBets = bets.length
     stats.forEach((evntStat, i) => {
