@@ -94,6 +94,9 @@ msgstr "Precio de Apuesta"
 msgid "Bets"
 msgstr "Apuestas"
 
+msgid "Bets can be placed until {0}"
+msgstr "Se reciben apuestas hasta el {0}"
+
 msgid "Bets will not be accepted passed this time. It should be before the beginning of the first event."
 msgstr "No se aceptarán apuestas pasado este tiempo. Debe ser antes del comienzo del primer evento."
 
@@ -105,6 +108,9 @@ msgstr "Fecha límite de apuesta (UTC)"
 
 msgid "Bridge"
 msgstr "Bridge"
+
+msgid "By verifying your market future bettors will know that:"
+msgstr "Al verificar tu mercado los apostadores sabrán que:"
 
 msgid "Cancel"
 msgstr "Cancelar"
@@ -140,7 +146,7 @@ msgid "Closed"
 msgstr "Cerrado"
 
 msgid "Congratulations!"
-msgstr "Felicitacions!"
+msgstr "¡Felicitaciones!"
 
 msgid "Connect Wallet"
 msgstr "Conectar Billetera"
@@ -177,6 +183,9 @@ msgstr "Crear Mercado"
 
 msgid "Create a market and earn fees on each bet."
 msgstr "Cree un mercado y gane comisiones de cada apuesta"
+
+msgid "Create a new market<0/>in 3 simple steps"
+msgstr "Crea un nuevo mercado<0/>en 3 simples pasos"
 
 msgid "Current result"
 msgstr "Resultado actual"
@@ -232,6 +241,9 @@ msgstr "Fee debe ser menor que 100."
 msgid "Finished"
 msgstr "Finalizado"
 
+msgid "First prize"
+msgstr "Primer premio"
+
 msgid "Follow us"
 msgstr "Síguenos"
 
@@ -249,9 +261,6 @@ msgstr "La cantidad a financiar debe ser mayor a 0.01"
 
 msgid "Go to market"
 msgstr "Ir al mercado"
-
-msgid "Go to step"
-msgstr "Ir al paso"
 
 msgid "Go to the bridge"
 msgstr "Ir al bridge"
@@ -273,9 +282,6 @@ msgstr "Si primero quieres revisar la app, puedes acceder al bridge luego desde 
 
 msgid "In process"
 msgstr "En proceso"
-
-msgid "Invalid"
-msgstr "Inválido"
 
 msgid "Invalid JSON"
 msgstr "JSON inválido"
@@ -316,6 +322,9 @@ msgstr "Mercado"
 msgid "Market Name"
 msgstr "Nombre del Mercado"
 
+msgid "Market detail"
+msgstr "Detalles del mercado"
+
 msgid "Market funded successfully!"
 msgstr "¡Mercado financiado con éxito!"
 
@@ -352,8 +361,8 @@ msgstr "Misceláneas"
 msgid "New result"
 msgstr "Nuevo resultado"
 
-msgid "Next step"
-msgstr "Siguiente paso"
+msgid "Next"
+msgstr "Siguiente"
 
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
@@ -412,8 +421,11 @@ msgstr "Pozo"
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
+msgid "Previous"
+msgstr "Anterior"
+
 msgid "Price"
-msgstr "Precios"
+msgstr "Precio"
 
 msgid "Price must be greater than 0.01"
 msgstr "Precio debe ser mayor a 0.01"
@@ -429,9 +441,6 @@ msgstr "Pozo Acumulado"
 
 msgid "Prize distribution:"
 msgstr "Distribución de premios:"
-
-msgid "Prizes"
-msgstr "Premios"
 
 msgid "Processing results"
 msgstr "Procesando resultados"
@@ -469,8 +478,8 @@ msgstr "Resultado"
 msgid "Results"
 msgstr "Resultados"
 
-msgid "Review the market data"
-msgstr "Revisar la información del mercado"
+msgid "Review and publish your market"
+msgstr "Revisa y publica tu mercado"
 
 msgid "Reward"
 msgstr "Recompensa"
@@ -481,20 +490,23 @@ msgstr "Receptor de recompensas"
 msgid "Scan with WalletConnect to connect"
 msgstr "Scan con WalletConnect para conectar"
 
+msgid "Second prize"
+msgstr "Segundo premio"
+
 msgid "See details"
 msgstr "Ver detalles"
 
 msgid "See only my bets"
 msgstr "Ver mis apuestas"
 
-msgid "Select date"
-msgstr "Seleccione la fecha"
-
 msgid "Set question"
 msgstr "Definir pregunta"
 
 msgid "Share on Twitter"
 msgstr "Compartir en Twitter"
+
+msgid "Share this tournament on your social networks to reach the highest number of interested users."
+msgstr "Comparte este torneo en tus redes sociales para alcanzar la mayor cantidad de interesados."
 
 msgid "Sports"
 msgstr "Deportes"
@@ -514,6 +526,9 @@ msgstr "Estadísticas"
 msgid "Status"
 msgstr "Estado"
 
+msgid "Step {0}"
+msgstr "Paso {0}"
+
 msgid "Submit"
 msgstr "Enviar"
 
@@ -523,8 +538,20 @@ msgstr "Enviar resultado"
 msgid "Tennis"
 msgstr "Tenis"
 
+msgid "The closing time is before the start of the first event."
+msgstr "La fecha de cierre es anterior al comienzo del primer evento."
+
+msgid "The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
+msgstr "El nombre del evento debe ser una pregunta en inglés, por ejemplo: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
+
+msgid "The events are of public knowledge."
+msgstr "Los eventos son de público conocimiento."
+
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
 msgstr "El creador recibirá este porcentaje del pozo de premios. Además, será recompensado cuando apuestas sean comercializadas en mercados secundarios."
+
+msgid "The market was correctly created and has no errors."
+msgstr "El mercado fue creado correctamente y no tiene errores."
 
 msgid "The market was successfully created and is ready to take bets."
 msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
@@ -534,6 +561,9 @@ msgstr "La suma de los premios debe ser igual a 100."
 
 msgid "There's not much time left, hurry!"
 msgstr "¡Apúrate, queda poco tiempo!"
+
+msgid "Third prize"
+msgstr "Tercer premio"
 
 msgid "This field is required"
 msgstr "Este campo es requerido"
@@ -570,6 +600,9 @@ msgstr "Error inesperado"
 
 msgid "Unknown"
 msgstr "Desconocido"
+
+msgid "Unsupported chain, please switch to Gnosis Chain."
+msgstr "Red no soportada, por favor conéctese a Gnosis Chain."
 
 msgid "Valid JSON"
 msgstr "JSON válido"
@@ -619,8 +652,17 @@ msgstr "Usted"
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "Puede transferirlo o venderlo en un marketplace, pero recuerde que el dueño de este NFT puede reclamar el premio si esta apuesta resulta ganadora."
 
+msgid "You will receive {0}% of the prize pool as fee."
+msgstr "Recibirás {0}% del pool de premios como comisión."
+
 msgid "Your betting position is represented by the following NFT."
 msgstr "Su apuesta está representada por el siguiente NFT."
+
+msgid "Your market"
+msgstr "Tu mercado"
+
+msgid "Your questions are well formulated."
+msgstr "Tus preguntas están bien formuladas."
 
 msgid "draw"
 msgstr "empate"

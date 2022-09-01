@@ -28,6 +28,7 @@ declare module '@mui/material/styles' {
     p1: React.CSSProperties;
     p2: React.CSSProperties;
     p3: React.CSSProperties;
+    h1s: React.CSSProperties;
     h4s: React.CSSProperties;
     h6s: React.CSSProperties;
   }
@@ -37,6 +38,7 @@ declare module '@mui/material/styles' {
     p1?: React.CSSProperties;
     p2?: React.CSSProperties;
     p3?: React.CSSProperties;
+    h1s?: React.CSSProperties;
     h4s?: React.CSSProperties;
     h6s?: React.CSSProperties;
   }
@@ -47,6 +49,7 @@ declare module '@mui/material/Typography' {
     p1: true;
     p2: true;
     p3: true;
+    h1s: true;
     h4s: true;
     h6s: true;
   }

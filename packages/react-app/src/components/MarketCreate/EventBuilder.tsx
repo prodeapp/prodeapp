@@ -1,6 +1,6 @@
 import { useFieldArray, useFormContext} from "react-hook-form";
 import React, {useState} from "react";
-import {BoxLabelCell, BoxRow} from "../index";
+import {FormLabel, FormRow} from "../index";
 import Button from "@mui/material/Button";
 import QuestionBuilder from "./QuestionBuilder";
 import AnswersBuilder from "./AnswersBuilder";
@@ -44,24 +44,27 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
     setOpenModal(false);
   }
 
-  return <div>
+  return <div style={{borderBottom: '1px solid black', marginBottom: '30px'}}>
     <TemplateDialog
       open={openModal}
       handleClose={handleClose}
       onTemplateChange={onTemplateChange}
     />
-    <BoxRow>
-      <BoxLabelCell><Trans>Question</Trans></BoxLabelCell>
-      <div style={{width: '100%', display: 'flex'}}>
+    <FormRow>
+      <FormLabel><Trans>Question</Trans> #{eventIndex+1}</FormLabel>
+      <div>
         <QuestionBuilder {...{eventIndex}} />
-        <Button style={{flexGrow: 0, marginLeft: '10px'}} onClick={() => setOpenModal(true)}><Trans>Choose Question</Trans></Button>
+        <Button onClick={() => setOpenModal(true)} variant="outlined"><Trans>Choose Question</Trans></Button>
       </div>
-    </BoxRow>
-    <BoxRow>
-      <BoxLabelCell><Trans>Answers</Trans></BoxLabelCell>
+    </FormRow>
+    <FormRow>
+      <FormLabel><Trans>Answers</Trans></FormLabel>
       <AnswersBuilder {...{eventIndex, answersFields, addAnswer, deleteAnswer}} />
-    </BoxRow>
+    </FormRow>
 
-    <div style={{textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeEvent(eventIndex)}>- <Trans>Remove event</Trans></Button></div>
+    <FormRow>
+      <Button onClick={addAnswer} variant="outlined"><Trans>Add answer</Trans> +</Button>
+      <Button onClick={() => removeEvent(eventIndex)} color="error" sx={{ml: 2}}><Trans>Remove event</Trans> -</Button>
+    </FormRow>
   </div>
 }

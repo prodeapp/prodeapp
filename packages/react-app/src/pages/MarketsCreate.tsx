@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
+import {FormError, FormRow, FormLabel, BigAlert} from "../components"
+import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import Box from '@mui/material/Box';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -20,6 +19,7 @@ import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
 import {Link as RouterLink} from "react-router-dom";
@@ -31,8 +31,11 @@ import {
   getTwitterShareUrl
 } from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
-import {MenuItem} from "@mui/material";
-import {styled} from "@mui/material/styles";
+import {MenuItem, Typography} from "@mui/material";
+import {styled, useTheme} from "@mui/material/styles";
+import {ReactComponent as TriangleIcon} from "../assets/icons/triangle-right.svg";
+import {ReactComponent as ShieldCheckIcon} from "../assets/icons/shield-check.svg";
+import {ReactComponent as TwitterIcon} from "../assets/icons/twitter-2.svg";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -41,6 +44,8 @@ export const formatAnswers = (answers: string[]) => {
 const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
 
 const today = new Date();
+
+const wrapperStyle = {width: '100%', maxWidth: '675px'};
 
 interface FormStepProps<T> {
   useFormReturn: UseFormReturn<T>
@@ -52,6 +57,13 @@ interface PreviewStepProps {
   step1State: MarketFormStep1Values
   step2State: MarketFormStep2Values
   setActiveStep: (step: number) => void
+}
+
+interface SuccessStepProps {
+  marketName: string
+  marketId: string
+  step1State: MarketFormStep1Values
+  step2State: MarketFormStep2Values
 }
 
 function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1Values>) {
@@ -71,20 +83,20 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
   const onSubmit = () => setActiveStep(1)
 
   return <FormProvider {...useFormReturn}>
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <BoxWrapper>
-        <BoxRow>
-          <BoxLabelCell><Trans>Market Name</Trans></BoxLabelCell>
-          <div style={{width: '100%'}}>
+    <form onSubmit={handleSubmit(onSubmit)} style={wrapperStyle}>
+      <div>
+        <FormRow>
+          <FormLabel><Trans>Market Name</Trans></FormLabel>
+          <div>
             <TextField {...register('market', {
               required: t`This field is required.`
             })} error={!!errors.market} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="market" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Category</Trans></BoxLabelCell>
-          <div style={{width: '100%'}}>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Category</Trans></FormLabel>
+          <div>
             <TextField
               select
               value={category}
@@ -97,10 +109,10 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
             </TextField>
             <FormError><ErrorMessage errors={errors} name="category" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Betting Deadline (UTC)</Trans></BoxLabelCell>
-          <div style={{textAlign: 'right'}}>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Betting Deadline (UTC)</Trans></FormLabel>
+          <div>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <Controller
                 control={control}
@@ -108,12 +120,11 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
                 rules={{required: t`This field is required`}}
                 render={({ field }) => (
                   <DateTimePicker
-                    label={t`Select date`}
                     minDate={today}
                     onChange={field.onChange}
                     value={field.value}
                     inputFormat={DATE_FORMAT}
-                    renderInput={(params) => <TextField {...params} />}
+                    renderInput={(params) => <TextField {...params} fullWidth />}
                   />
                 )}
               />
@@ -121,18 +132,18 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
             <FormHelperText><Trans>Bets will not be accepted passed this time. It should be before the beginning of the first event.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="closingTime" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Events</Trans></BoxLabelCell>
-        </BoxRow>
-        <BoxRow>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Events</Trans></FormLabel>
+        </FormRow>
+        <FormRow>
           <Alert severity="info" sx={{width: '100%'}}><Trans>A market must have at least three events.</Trans></Alert>
-        </BoxRow>
+        </FormRow>
         {eventsFields.length > 0 &&
-        <BoxRow style={{flexDirection: 'column'}}>
+        <FormRow style={{flexDirection: 'column'}}>
           {eventsFields.map((questionField, i) => {
             return (
-              <div key={questionField.id} style={{padding: '10px', minWidth: '100%'}}>
+              <div key={questionField.id} style={{minWidth: '100%'}}>
                 <EventBuilder
                   eventIndex={i}
                   {...{removeEvent}}
@@ -140,15 +151,15 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
               </div>
             )
           })}
-        </BoxRow>
+        </FormRow>
         }
-        <BoxRow>
-          <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addEvent} color="primary">+ <Trans>Add event</Trans></Button></div>
-        </BoxRow>
-      </BoxWrapper>
+        <FormRow>
+          <Button onClick={addEvent} variant="outlined" fullWidth><Trans>Add event</Trans> +</Button>
+        </FormRow>
+      </div>
 
-      {isValid && eventsFields.length >= 3 && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <Button type="submit"><Trans>Next step</Trans></Button>
+      {isValid && eventsFields.length >= 3 && <div style={{marginBottom: '20px'}}>
+        <Button type="submit" fullWidth size="large"><Trans>Next</Trans> &gt;</Button>
       </div>}
     </form>
   </FormProvider>
@@ -166,11 +177,11 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
   const onSubmit = () => setActiveStep(2)
 
   return <FormProvider {...useFormReturn}>
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <BoxWrapper>
-        <BoxRow>
-          <BoxLabelCell><Trans>Bet Price (xDAI)</Trans></BoxLabelCell>
-          <div style={{width: '100%'}}>
+    <form onSubmit={handleSubmit(onSubmit)} style={wrapperStyle}>
+      <div>
+        <FormRow>
+          <FormLabel><Trans>Bet Price (xDAI)</Trans></FormLabel>
+          <div>
             <TextField {...register('price', {
               required: t`This field is required.`,
               valueAsNumber: true,
@@ -179,10 +190,10 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
             })} error={!!errors.price} style={{width: '100%'}} />
             <FormError><ErrorMessage errors={errors} name="price" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Manager</Trans></BoxLabelCell>
-          <div style={{width: '100%'}}>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Manager</Trans></FormLabel>
+          <div>
             <TextField {...register('manager', {
               required: t`This field is required.`,
               validate: v => isAddress(v) || 'Invalid address.',
@@ -190,10 +201,10 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
             <FormHelperText><Trans>Address to send management fees to.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="manager" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Management Fee</Trans> (%)</BoxLabelCell>
-          <div style={{width: '100%'}}>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Management Fee</Trans> (%)</FormLabel>
+          <div>
             <TextField {...register('managementFee', {
               required: t`This field is required.`,
               valueAsNumber: true,
@@ -204,39 +215,44 @@ function Step2Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep2
             <FormHelperText><Trans>The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.</Trans></FormHelperText>
             <FormError><ErrorMessage errors={errors} name="managementFee" /></FormError>
           </div>
-        </BoxRow>
-        <BoxRow>
-          <BoxLabelCell><Trans>Prize Distribution (%)</Trans></BoxLabelCell>
+        </FormRow>
+        <FormRow>
+          <FormLabel><Trans>Prize Distribution (%)</Trans></FormLabel>
           <PrizeWeightsBuilder />
-        </BoxRow>
-      </BoxWrapper>
+        </FormRow>
 
-      {isValid && <div style={{textAlign: 'center', width: '100%', marginBottom: '20px'}}>
-        <div><Button type="submit"><Trans>Next step</Trans></Button></div>
-        <Button variant="text" onClick={()=> setActiveStep(0)}><Trans>Go to step</Trans> 1</Button>
-      </div>}
+        <FormRow style={{marginBottom: '20px'}}>
+          {isValid && <Button type="submit" fullWidth size="large" sx={{mb: 2}}><Trans>Next</Trans> &gt;</Button>}
+          <Button variant="outlined" onClick={()=> setActiveStep(0)} fullWidth size="large">&lt; <Trans>Previous</Trans></Button>
+        </FormRow>
+      </div>
     </form>
   </FormProvider>
 }
 
-const PreviewTextWrapper = styled('div')(({ theme }) => ({
-  flexGrow: 1,
-  border: `1px solid ${theme.palette.black.dark}`,
-  padding: '15px',
-}));
+function PreviewText({title, value, component, setActiveStep, step}: {title?: string|undefined, value?: string|number|undefined, component?: React.ReactNode|undefined, setActiveStep: (step: number) => void, step: number}) {
+  const theme = useTheme();
 
-function PreviewText({title, value, setActiveStep, step}: {title: string, value: string|number, setActiveStep: (step: number) => void, step: number}) {
   return <div style={{display: 'flex', justifyItems: 'space-between', marginBottom: '20px'}}>
-    <PreviewTextWrapper>
-      <div style={{opacity: '0.85'}}>{title}</div>
-      <div dangerouslySetInnerHTML={{__html: String(value)}}></div>
-    </PreviewTextWrapper>
-    <div style={{display: 'flex'}}><Button variant="text" onClick={()=> setActiveStep(step)}><Trans>Edit</Trans></Button></div>
+    <div style={wrapperStyle}>
+      {title !== undefined && <FormLabel style={{opacity: '0.85'}}>{title}</FormLabel>}
+      {value !== undefined && <TextField
+        fullWidth
+        value={String(value)}
+        InputProps={{
+          readOnly: true,
+        }}
+      />}
+      {component !== undefined && component}
+    </div>
+    <div style={{display: 'flex', alignItems: 'end'}}>
+      <Button variant="text" size="large" onClick={()=> setActiveStep(step)}><Trans>Edit</Trans> <TriangleIcon style={{marginLeft: '10px', fill: 'currentColor', color: theme.palette.primary.main}}/></Button>
+    </div>
   </div>
 }
 
 function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1Values, setActiveStep: (step: number) => void}) {
-  return <div style={{marginLeft: '20px'}}>
+  return <div>
     {step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return <PreviewText key={i} title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
@@ -245,15 +261,19 @@ function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1
 }
 
 function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewStepProps) {
+  const prizes = [t`First prize`, t`Second prize`, t`Third prize`];
+
   return <div>
 
-    <h2><Trans>Review the market data</Trans></h2>
+    <h2><Trans>Review and publish your market</Trans></h2>
 
     <PreviewText title={t`Market Name`} value={step1State.market} setActiveStep={setActiveStep} step={0} />
 
     <PreviewText title={t`Category`} value={getCategoryText(step1State.category)} setActiveStep={setActiveStep} step={0} />
 
-    <div style={{fontWeight: 'bold', marginBottom: '10px'}}><Trans>Events</Trans></div>
+    <div style={{fontWeight: 'bold', margin: '35px 0', fontSize: '14px', borderBottom: '1px solid #303030', paddingBottom: '5px', ...wrapperStyle}}>
+      <Trans>Events</Trans>
+    </div>
     <PreviewEvents step1State={step1State} setActiveStep={setActiveStep} />
 
     <PreviewText title={t`Betting Deadline (UTC)`} value={format(step1State.closingTime, DATE_FORMAT)} setActiveStep={setActiveStep} step={0} />
@@ -264,49 +284,161 @@ function PreviewStep({onSubmit, step1State, step2State, setActiveStep}: PreviewS
 
     <PreviewText title={t`Management Fee`} value={`${step2State.managementFee}%`} setActiveStep={setActiveStep} step={1} />
 
-    <PreviewText title={t`Prizes`} value={step2State.prizeWeights.map((p, i) => `#${i+1}: ${p.value}%`).join('<br />')} setActiveStep={setActiveStep} step={1} />
+    <PreviewText
+      component={
+        <Grid container spacing={2}>
+          {step2State.prizeWeights.map((p, i) => {
+            return <Grid item xs={6} md={4} key={i}>
+              <div>
+                <FormLabel>{prizes[i] || `Prize #${i+1}`}</FormLabel>
+                <TextField
+                  fullWidth
+                  value={p.value}
+                  InputProps={{
+                    readOnly: true
+                  }}
+                />
+              </div>
+            </Grid>
+          })}
+        </Grid>
+      }
+      setActiveStep={setActiveStep}
+      step={1}
+    />
 
-    <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-      <div><Button onClick={onSubmit} color="primary"><Trans>Create Market</Trans></Button></div>
-      <div><Button variant="text" onClick={()=> setActiveStep(1)}><Trans>Go to step</Trans> 2</Button></div>
+    <div style={{marginBottom: '20px', ...wrapperStyle}}>
+      <Button onClick={onSubmit} color="primary" fullWidth size="large" sx={{mb: 2}}><Trans>Create Market</Trans> &gt;</Button>
+      <Button variant="outlined" onClick={()=> setActiveStep(1)} fullWidth size="large">&lt; <Trans>Previous</Trans></Button>
     </div>
   </div>
 }
 
-function SuccessStep({marketName, marketId}: {marketName: string, marketId: string}) {
+function SuccessStep({marketName, marketId, step1State, step2State}: SuccessStepProps) {
   const shareUrl = getTwitterShareUrl(t`I have created a new market on @prode_eth: ${marketName} ${getMarketUrl(marketId)}`)
 
-  return <div>
-    <BoxWrapper sx={{display: 'flex', justifyContent: 'space-between', padding: 2}}>
-      <div>
-        <div><Trans>Congratulations!</Trans></div>
-        <div><Trans>The market was successfully created and is ready to take bets.</Trans></div>
-      </div>
-      <div>
-        <Button component={Link} href={shareUrl} target="_blank" rel="noopener">Share on Twitter</Button>
-      </div>
-    </BoxWrapper>
+  const boxSx = {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
+    padding: 4,
+    border: '1px solid #303030',
+  };
 
-    <Grid container spacing={2}>
-      <Grid item xs={6} md={6}>
-        <BoxWrapper sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', textAlign: 'center', padding: 2}}>
-          <h3><Trans>Verify your market</Trans></h3>
-          <div style={{margin: '15px 0'}}>[REASONS...]</div>
-          <div><Button component={RouterLink} to={`/curate/submit/${marketId}`}><Trans>Verify market</Trans></Button></div>
-        </BoxWrapper>
+  return <Box sx={{maxWidth: '918px', mx: 'auto', my: {xs: 4, md: 8}}}>
+
+    <BigAlert severity="success" icon={<ShieldCheckIcon width="24" height="26" />}>
+      <Box sx={{display: {md: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
+        <div>
+          <div><AlertTitle><Trans>Congratulations!</Trans></AlertTitle></div>
+          <div><Trans>The market was successfully created and is ready to take bets.</Trans></div>
+        </div>
+        <Box sx={{mt: {xs: 2, md: 0}, minWidth: '230px', textAlign: 'right'}}>
+          <Button component={Link} size="large" href={shareUrl} target="_blank" rel="noopener" sx={{background: '#00ACEE'}}>
+            Share on Twitter <TwitterIcon style={{marginLeft: '10px'}} />
+          </Button>
+        </Box>
+      </Box>
+    </BigAlert>
+
+    <Grid container spacing={2} sx={{mt: 4}}>
+      <Grid item xs={12} md={6}>
+        <Box sx={boxSx}>
+          <Typography variant="h4s" sx={{textAlign: 'center'}}><Trans>Verify your market</Trans></Typography>
+          <div style={{margin: '15px 0'}}><Trans>By verifying your market future bettors will know that:</Trans></div>
+
+          <ul style={{padding: 0, listStylePosition: 'inside'}}>
+            <li><Trans>The events are of public knowledge.</Trans></li>
+            <li><Trans>Your questions are well formulated.</Trans></li>
+            <li><Trans>The closing time is before the start of the first event.</Trans></li>
+            <li><Trans>The market was correctly created and has no errors.</Trans></li>
+          </ul>
+
+          <div><Button component={RouterLink} to={`/curate/submit/${marketId}`} fullWidth><Trans>Verify market</Trans></Button>
+          </div>
+        </Box>
       </Grid>
-      <Grid item xs={6} md={6}>
-        <BoxWrapper sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: 2}}>
-          <div><Button component={RouterLink} to={`/markets/${marketId}?new=1`}><Trans>Go to the market</Trans></Button></div>
-        </BoxWrapper>
+      <Grid item xs={12} md={6}>
+        <Box sx={boxSx}>
+          <Typography variant="h4s" sx={{textAlign: 'center'}}><Trans>Your market</Trans></Typography>
+
+          <ul style={{padding: 0, listStylePosition: 'inside'}}>
+            <li><Trans>Bets can be placed until {format(step1State.closingTime, DATE_FORMAT)}</Trans></li>
+            <li><Trans>You will receive {`${step2State.managementFee}%`} of the prize pool as fee.</Trans></li>
+            <li><Trans>Share this tournament on your social networks to reach the highest number of interested users.</Trans></li>
+          </ul>
+
+          <div>
+            <Button component={RouterLink} to={`/markets/${marketId}?new=1`} variant="outlined" fullWidth><Trans>Go to the market</Trans></Button>
+          </div>
+        </Box>
       </Grid>
     </Grid>
-  </div>
+  </Box>
+}
+
+const Banner = styled('div')(({ theme }) => ({
+  height: '368px',
+  padding: '50px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+}));
+
+function BigStepper({steps, activeStep}: {steps: string[], activeStep: number}) {
+  const cssTriangle = (size: number, color: string) => {
+    return {
+      content: "''",
+      width: 0,
+      height: 0,
+      borderStyle: 'solid',
+      borderWidth: `${size}px ${size}px 0 ${size}px`,
+      borderColor: `${color} transparent transparent transparent`,
+    }
+  }
+  const StepperWrapper = styled(Grid)(({ theme }) => ({
+    '& > div': {
+      border: '1px solid #303030',
+      '&.current-step': {
+        position: 'relative',
+        '&:before': {
+          ...cssTriangle(23, theme.palette.black.dark),
+          position: 'absolute',
+          bottom: '-23px',
+        },
+        '&:after': {
+          ...cssTriangle(23, theme.palette.secondary.light),
+          position: 'absolute',
+          bottom: '-22px',
+        },
+      },
+      '&.previous-step': {
+        color: theme.palette.black.light,
+        background: theme.palette.secondary.dark,
+      },
+      '&.next-step': {
+        background: theme.palette.secondary.main,
+      }
+    }
+  }));
+
+  return <StepperWrapper container>
+    {steps.map((label, i) => {
+      return <Grid item xs={4} sx={{px: {xs: 2, md: 3}, py: {xs: 2, md: 6}, mb: 4}}
+                   className={`${i === activeStep ? 'current-step' : (i < activeStep ? 'previous-step' : 'next-step')}`}>
+        <Typography variant="p3"><Trans>Step {i+1}</Trans></Typography>
+        <Typography variant="h5">{label}</Typography>
+      </Grid>
+    })}
+  </StepperWrapper>
 }
 
 function MarketsCreate() {
   const { account, error: walletError } = useEthers();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(3);
 
   const defaultClosingTime = dateAdd(today, {days: 5});
   const useForm1Return = useForm<MarketFormStep1Values>({
@@ -358,23 +490,28 @@ function MarketsCreate() {
   }
 
   return <div style={{marginTop: 40}}>
-    {activeStep < 3 && <div style={{marginBottom: 20}}>
-      <Stepper activeStep={activeStep} alternativeLabel>
-        <Step><StepLabel><Trans>Market</Trans></StepLabel></Step>
-        <Step><StepLabel><Trans>Price</Trans></StepLabel></Step>
-        <Step><StepLabel><Trans>Publish</Trans></StepLabel></Step>
-      </Stepper>
+
+    {activeStep < 3 && <Banner style={{backgroundImage: 'url(/banners/banner-3.jpg)'}}>
+      <Typography variant="h1s"><Trans>Create a new market<br />in 3 simple steps</Trans></Typography>
+    </Banner>}
+
+    {activeStep < 3 && <div style={{marginBottom: 50}}>
+      <BigStepper steps={[t`Market detail`, t`Price`, t`Publish`]} activeStep={activeStep} />
     </div>}
 
-    {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+    <Container>
 
-    {activeStep === 0 && <Step1Form useFormReturn={useForm1Return} setActiveStep={setActiveStep} />}
+      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
 
-    {activeStep === 1 && <Step2Form useFormReturn={useForm2Return} setActiveStep={setActiveStep} />}
+      {activeStep === 0 && <Step1Form useFormReturn={useForm1Return} setActiveStep={setActiveStep} />}
 
-    {activeStep === 2 && <PreviewStep onSubmit={onSubmit} setActiveStep={setActiveStep} step1State={step1State} step2State={step2State} />}
+      {activeStep === 1 && <Step2Form useFormReturn={useForm2Return} setActiveStep={setActiveStep} />}
 
-    {activeStep === 3 && <SuccessStep marketName={step1State.market} marketId={marketId} />}
+      {activeStep === 2 && <PreviewStep onSubmit={onSubmit} setActiveStep={setActiveStep} step1State={step1State} step2State={step2State} />}
+
+      {activeStep === 3 && <SuccessStep marketName={step1State.market} marketId={marketId} step1State={step1State} step2State={step2State} />}
+
+    </Container>
   </div>
 }
 

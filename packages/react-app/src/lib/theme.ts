@@ -83,10 +83,14 @@ const darkTheme = createTheme({
         fontSize: '35.78px',
       }
     },
-    /*h1s: {
+    h1s: {
       fontFamily: 'comfortaa',
       fontSize: '47.78px',
-    },*/
+      fontWeight: 700,
+      [theme.breakpoints.down('md')]: {
+        fontSize: '35.78px',
+      }
+    },
     h2: {
       fontFamily: 'comfortaa',
       fontSize: '47.78px',
@@ -119,6 +123,11 @@ const darkTheme = createTheme({
     },
     h5: {
       fontFamily: 'comfortaa',
+      fontSize: '23.04px',
+      fontWeight: 700,
+      [theme.breakpoints.down('md')]: {
+        fontSize: '18px',
+      },
     },
     h6s: {
       fontFamily: 'comfortaa',

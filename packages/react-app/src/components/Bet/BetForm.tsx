@@ -180,7 +180,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
         })}
         <Grid item xs={6}>
           <Button type="button" color="primary" size="large" variant="outlined" fullWidth onClick={cancelHandler}>
-            <Trans>Cancel</Trans> <CrossIcon style={{marginLeft: 10}} />
+            <Trans>Cancel</Trans> <CrossIcon style={{marginLeft: 10}} width={10} height={10} />
           </Button>
         </Grid>
         <Grid item xs={6}>

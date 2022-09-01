@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Alert from "@mui/material/Alert";
 
 export const FormError = styled('div')(({ theme }) => ({
   color: theme.palette.error.dark,
@@ -7,21 +8,6 @@ export const FormError = styled('div')(({ theme }) => ({
   fontWeight: 'normal',
   fontSize: '14px',
 }))
-
-export const Header = styled('header')`
-  align-items: center;
-  color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  min-height: 70px;
-`;
-
-export const Image = styled('img')`
-  height: 40vmin;
-  margin-bottom: 16px;
-  pointer-events: none;
-`;
 
 export const BoxWrapper = styled(Box)`
   font-size: 16px;
@@ -39,6 +25,17 @@ export const BoxRow = styled('div')`
     border-top: 1px solid #272727;
   }
 `
+
+export const FormRow = styled('div')`
+  margin-bottom: 30px;
+`
+
+export const FormLabel = styled('div')(({ theme }) => ({
+  color: theme.palette.black.dark,
+  fontSize: '14px',
+  fontWeight: 'bold',
+  marginBottom: '5px',
+}))
 
 const TableRow = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -71,13 +68,24 @@ export const BoxLabelCell = styled('div')`
   min-width: 30%;
 `
 
-export const AnswerFieldWrapper = styled('div')`
-  & + & {
-    margin-top: 10px;
-  }
-`
-
-export const AnswerField = styled('div')`
-  display: inline-flex;
-  align-items: center;
-`
+export const BigAlert = styled(Alert, {
+  shouldForwardProp: (prop) => prop !== 'ml',
+})<{ml?: number}>(({ theme, ml }) => ({
+  fontSize: '19.2px',
+  padding: '24px 28px',
+  borderLeftWidth: '8px',
+  borderLeftStyle: 'solid',
+  borderRadius: 0,
+  '.MuiAlertTitle-root': {
+      fontSize: '27.65px',
+      fontFamily: "'comfortaa', sans-serif",
+      fontWeight: 'bold',
+  },
+  '.MuiAlert-message': {
+    flexGrow: 1,
+    padding: 0,
+  },
+  '.MuiAlert-icon': {
+    padding: 0,
+  },
+}));

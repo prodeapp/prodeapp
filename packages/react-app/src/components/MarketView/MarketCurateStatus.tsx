@@ -50,7 +50,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   if (activeItem !== null && activeItem.status === 'Registered') {
     return <div style={{display: 'flex', alignItems: 'center'}}>
       <div><Trans>Verified</Trans></div>
-      <ShieldCheckIcon style={{marginLeft: 5}} />
+      <ShieldCheckIcon width="12" height="13" style={{marginLeft: 5}} />
     </div>
   }
 
