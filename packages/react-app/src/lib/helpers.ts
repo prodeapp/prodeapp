@@ -182,6 +182,11 @@ export function getDocsUrl(locale: I18nContextProps['locale']) {
 
 export function showWalletError(error: any) {
   if (error?.message) {
+
+    if (error?.message.includes("Unsupported chain id")) {
+      return t`Unsupported chain, please switch to Gnosis Chain.`;
+    }
+
     if (error?.message.startsWith('{')) {
       try {
         const _error = JSON.parse(error?.message);
