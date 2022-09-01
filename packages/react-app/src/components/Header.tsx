@@ -70,7 +70,7 @@ const MenuBar = styled(Box)(({ theme }) => ({
     '&>a': {
       height: '100%',
       '&+a': {
-        marginLeft: '50px',
+        marginLeft: '7px',
       },
     },
   },
@@ -149,7 +149,7 @@ export default function Header() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container>
         <Toolbar disableGutters sx={{alignItems: 'stretch'}}>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

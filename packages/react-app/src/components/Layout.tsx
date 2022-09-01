@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -7,9 +6,9 @@ function Layout() {
   return (
     <>
       <Header />
-      <Container sx={{flexGrow: 1}}>
+      <div style={{flexGrow: 1}}>
         <Outlet />
-      </Container>
+      </div>
       <Footer />
     </>
   );

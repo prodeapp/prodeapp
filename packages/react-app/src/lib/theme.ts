@@ -178,7 +178,7 @@ const darkTheme = createTheme({
     },
     MuiContainer: {
       defaultProps: {
-        maxWidth: 'xl',
+        maxWidth: false,
       },
     },
     MuiInput: {
@@ -251,6 +251,8 @@ const darkTheme = createTheme({
         root: {
           borderRadius: 0,
           height: '28px',
+          fontSize: '14px',
+          fontWeight: 'bold',
         },
       },
     },

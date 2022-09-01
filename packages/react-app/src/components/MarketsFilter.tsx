@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Container from '@mui/material/Container';
 import {MarketStatus, UseMarketsProps} from "../hooks/useMarkets";
 import {getCategoryText, getFlattenedCategories} from "../lib/helpers";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
@@ -10,7 +11,7 @@ import {Radio} from "./Radio";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
 import {GlobalContext} from "../lib/GlobalContext";
 
-const FiltersWrapper = styled('div')(({ theme }) => ({
+const FiltersWrapper = styled(Container)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
@@ -40,14 +41,14 @@ const FiltersWrapper = styled('div')(({ theme }) => ({
         flexDirection: 'row',
 
         '&+div': {
-          marginLeft: '20px',
+          marginLeft: '13px',
         },
       },
     },
 
     '.filter-label': {
       fontWeight: 'bold',
-      marginRight: '10px',
+      marginRight: '13px',
 
       [theme.breakpoints.down('md')]: {
         marginRight: 0,
@@ -75,20 +76,37 @@ const FilterSection = styled('div')(({ theme }) => ({
 
 const UnderlineButton = styled('div', {
   shouldForwardProp: (prop) => prop !== 'selected',
-})<{selected?: boolean}>(({ theme, selected }) => ({
-  fontSize: '16px',
-  margin: '0 16px',
-  paddingBottom: '5px',
-  cursor: 'pointer',
-  ...(
-    selected ?
-      {
-        color: theme.palette.primary.main,
-        fontWeight: 700,
-        borderBottom: `2px solid ${theme.palette.primary.main}`,
-      } : {}
-  ),
-}));
+})<{selected?: boolean}>(({ theme, selected }) => {
+
+  const activeBorder = {
+    content: '""',
+    borderBottom: `2px solid ${theme.palette.primary.main}`,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: '-5px',
+  };
+
+  return {
+    fontSize: '16px',
+    margin: '0 13px',
+    cursor: 'pointer',
+    position: 'relative',
+    ...(
+      selected ?
+        {
+          color: theme.palette.primary.main,
+          fontWeight: 700,
+        } : {}
+    ),
+    '&:after': {
+      ...(
+        selected ? activeBorder : {}
+      ),
+    },
+    '&:hover:after': activeBorder,
+  }
+});
 
 type FilterDropdownProps = React.HTMLAttributes<HTMLDivElement> & {
   isOpen: boolean
@@ -173,6 +191,7 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
             <FormGroup>
               <FormControlLabel
+                sx={{m: 0}}
                 control={
                   <Switch
                     checked={curated}

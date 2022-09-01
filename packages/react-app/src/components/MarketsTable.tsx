@@ -78,13 +78,13 @@ function MarketsTable({ markets }: MarketsTableProps) {
         status = <Chip label={t`Playing`} color="warning" />;
       }
 
-      return <Grid item xs={12} sm={6} key={i}>
+      return <Grid item xs={12} md={6} key={i}>
         <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
-          <Box sx={{p: 2, paddingRight: {md: '15%'}}}>
+          <Box sx={{p: '24px', paddingRight: {md: '15%'}}}>
             <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
               <div>
                 <div style={{fontWeight: 'normal', marginBottom: '5px'}}>{status}</div>
-                <h2 style={{fontSize: '27.65px', marginTop: '20px'}}><Link to={`/markets/${market.id.toString()}`}>{market.name}</Link></h2>
+                <Typography variant="h4s" component="h2" style={{marginTop: '20px'}}><Link to={`/markets/${market.id.toString()}`}>{market.name}</Link></Typography>
               </div>
               {timeLeft && <div style={{textAlign: 'center'}}>
                 {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>}

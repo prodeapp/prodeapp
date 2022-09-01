@@ -13,6 +13,9 @@ const Slide = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   backgroundSize: 'cover',
   backgroundPosition: 'center',
+  [theme.breakpoints.up('sm')]: {
+    paddingLeft: '8.33%',
+  },
 }));
 
 export default function HomeSlider() {
