@@ -63,6 +63,7 @@ export default function Footer() {
           <FooterNav ml={2}>
             <div style={{fontWeight: 700}}><Trans>Follow us</Trans>:</div>
             <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
+            <div><a href="https://t.me/prode_eth" target="_blank" rel="noreferrer">Telegram</a></div>
             <div><a href="http://github.com/prodeapp" target="_blank" rel="noreferrer">Github</a></div>
           </FooterNav>
         </FooterContainer>
