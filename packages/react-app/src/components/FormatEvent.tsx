@@ -10,6 +10,10 @@ const getCountryFromEvent = (title: string) => {
     return "en";
   }
 
+  if (title.includes("La Liga")) {
+    return "es";
+  }
+
   if (title.includes("F1") && title.includes("Grand Prix")) {
     return "f1";
   }

@@ -48,6 +48,27 @@ import TOTTENHAM from '../assets/logos/en/tottenham.png'
 import WEST_HAM from '../assets/logos/en/west_ham.png'
 import WOLVES from '../assets/logos/en/wolves.png'
 
+import ALMERIA from '../assets/logos/es/almeria.png'
+import ATHLETIC_CLUB from '../assets/logos/es/athletic_club.png'
+import ATLETICO_MADRID from '../assets/logos/es/atletico_madrid.png'
+import BARCELONA from '../assets/logos/es/barcelona.png'
+import CADIZ from '../assets/logos/es/cadiz.png'
+import CELTA_VIGO from '../assets/logos/es/celta_vigo.png'
+import ELCHE from '../assets/logos/es/elche.png'
+import ESPANYOL from '../assets/logos/es/espanyol.png'
+import GETAFE from '../assets/logos/es/getafe.png'
+import GIRONA from '../assets/logos/es/girona.png'
+import MALLORCA from '../assets/logos/es/mallorca.png'
+import OSASUNA from '../assets/logos/es/osasuna.png'
+import RAYO_VALLECANO from '../assets/logos/es/rayo_vallecano.png'
+import REAL_BETIS from '../assets/logos/es/betis.png'
+import REAL_MADRID from '../assets/logos/es/real_madrid.png'
+import REAL_SOCIEDAD from '../assets/logos/es/real_sociedad.png'
+import SEVILLA from '../assets/logos/es/sevilla.png'
+import VALENCIA from '../assets/logos/es/valencia.png'
+import VALLADOLID from '../assets/logos/es/valladolid.png'
+import VILLARREAL from '../assets/logos/es/villareal.png'
+
 import VERSTAPPEN from '../assets/logos/f1/max-verstappen.png'
 import PEREZ from '../assets/logos/f1/sergio-perez.png'
 import LECLERC from '../assets/logos/f1/charles-leclerc.png'
@@ -223,6 +244,28 @@ const images: Record<string, Record<string, string>> = {
     'Hard Slick Tire': WHITEHARD,
     'Intermediate Tire': GREENINTERMEDIATE,
     'Full Wet Tire': BLUEFULLWET
+  },
+  'es': {
+    'Almería': ALMERIA,
+    'Athletic Club': ATHLETIC_CLUB,
+    'Atlético de Madrid': ATLETICO_MADRID,
+    'Barcelona': BARCELONA,
+    'Betis': REAL_BETIS,
+    'Celta de Vigo': CELTA_VIGO,
+    'Cádiz CF': CADIZ,
+    'Elche': ELCHE,
+    'Espanyol': ESPANYOL,
+    'Getafe': GETAFE,
+    'Girona': GIRONA,
+    'Mallorca': MALLORCA,
+    'Osasuna': OSASUNA,
+    'Rayo Vallecano': RAYO_VALLECANO,
+    'Real Madrid': REAL_MADRID,
+    'Real Sociedad': REAL_SOCIEDAD,
+    'Sevilla': SEVILLA,
+    'Valencia': VALENCIA,
+    'Valladolid': VALLADOLID,
+    'Villareal': VILLARREAL,
   },
   'fifa_wc': {
     'Wales': WALES,

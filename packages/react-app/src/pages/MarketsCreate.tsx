@@ -438,7 +438,7 @@ function BigStepper({steps, activeStep}: {steps: string[], activeStep: number}) 
 
 function MarketsCreate() {
   const { account, error: walletError } = useEthers();
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
 
   const defaultClosingTime = dateAdd(today, {days: 5});
   const useForm1Return = useForm<MarketFormStep1Values>({
