@@ -10,7 +10,7 @@ const getCountryFromEvent = (title: string) => {
     return "en";
   }
 
-  if (title.includes("La Liga")) {
+  if (title.includes("La Liga Santander")) {
     return "es";
   }
 
