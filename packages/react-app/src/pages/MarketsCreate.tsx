@@ -489,7 +489,7 @@ function MarketsCreate() {
     return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to create a market.</Trans>}</Alert>
   }
 
-  return <div style={{marginTop: 40}}>
+  return <div>
 
     {activeStep < 3 && <Banner style={{backgroundImage: 'url(/banners/banner-3.jpg)'}}>
       <Typography variant="h1s"><Trans>Create a new market<br />in 3 simple steps</Trans></Typography>

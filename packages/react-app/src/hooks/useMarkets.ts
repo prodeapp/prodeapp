@@ -42,10 +42,10 @@ export const useMarkets = ({curated, status, category, minEvents, creatorId}: Us
           variables['closingTime_gt'] = String(Math.round(Date.now() / 1000))
           variables['orderDirection'] = 'asc'
         } else if (status === 'pending') {
-          variables['hasPendingAnswers'] = true
+          variables['resultSubmissionPeriodStart'] = '0'
           variables['closingTime_lt'] = String(Math.round(Date.now() / 1000))
         } else if (status === 'closed') {
-          variables['hasPendingAnswers'] = false
+          variables['resultSubmissionPeriodStart_gt'] = '0'
         }
       }
 

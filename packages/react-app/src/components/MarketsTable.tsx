@@ -72,10 +72,12 @@ function MarketsTable({ markets }: MarketsTableProps) {
 
       let status = <Chip label={t`Closed`} color="error" />;
 
-      if (timeLeft !== false) {
-        status = <Chip label={t`Betting`} color="success" />;
-      } else if (market.hasPendingAnswers) {
-        status = <Chip label={t`Playing`} color="warning" />;
+      if (market.resultSubmissionPeriodStart === '0') {
+        if (timeLeft !== false) {
+          status = <Chip label={t`Betting`} color="success" />;
+        } else {
+          status = <Chip label={t`Playing`} color="warning" />;
+        }
       }
 
       return <Grid item xs={12} md={6} key={i}>
