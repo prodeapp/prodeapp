@@ -13,6 +13,7 @@ const MANAGER_ADDRESS: Record<string, string> = {
   '0x64ab34d8cb33f8b8bb3d4b38426896297a3e7f81': 'UBI Burner',
   '0xa3954b4adb7caca9c188c325cf9f2991abb3cf71': 'UBI Burner',
   '0x0029ec18568f96afe25ea289dac6c4703868924d': 'Protocol Treasury',
+  '0xbca74372c17597fa9da905c7c2b530766768027c': 'Protocol Treasury',
 }
 
 function MarketInfo({market}: {market: Market}) {
