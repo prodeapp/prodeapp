@@ -12,6 +12,7 @@ enum CurationStatus {
 type Market @entity {
   id: ID!
   hash: String!
+  nonce: BigInt!
   name: String!
   category: String!
   closingTime: BigInt!

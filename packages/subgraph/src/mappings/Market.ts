@@ -1,7 +1,7 @@
 import { log, BigInt, Address, dataSource } from '@graphprotocol/graph-ts';
 import { BetReward, FundingReceived, ManagementReward, PlaceBet, QuestionsRegistered, Prizes, Market as MarketContract, Attribution as AttributionEvent, Transfer, RankingUpdated } from '../types/templates/Market/Market';
 import { Manager as ManagerContract } from '../types/templates/Market/Manager'
-import { Bet, Funder, Event, Market, Attribution } from '../types/schema';
+import { Bet, Funder, Event, Market, Attribution, MarketFactory } from '../types/schema';
 import {getBetID, getOrCreateManager, getOrCreatePlayer, getOrCreateMarketCuration, getOrCreateMarketFactory, getAttributionID, getLastAttributionId, getOrCreateMarketReferral} from './utils/helpers';
 
 export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
@@ -11,12 +11,14 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
     let context = dataSource.context()
     let hash = context.getString('hash')
     let mf = context.getString('factory')
+    let marketFactory = MarketFactory.load(mf)!;
     let managerAddress = Address.fromBytes(Address.fromHexString(context.getString('manager')));
     let managerContract = ManagerContract.bind(managerAddress);
     let marketContract = MarketContract.bind(evt.address);
     let market = new Market(evt.address.toHexString());
     market.name = marketContract.name();
     market.hash = hash;
+    market.nonce = marketFactory.numOfMarkets.minus(BigInt.fromI32(1));
     market.marketFactory = mf;
     market.managementFee = managerContract.creatorFee();
     market.protocolFee = managerContract.protocolFee();
