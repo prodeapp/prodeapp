@@ -37,30 +37,29 @@ export default function Leaderboard() {
     },
   ];
 
-  // TODO: use relative height
   return (
-
     <Container style={{ width: '100%', marginTop: '20px' }}>
+      <Typography variant="h5"><Trans>Global Metrics:</Trans></Typography>
       <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
 
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Bets ($): {marketFactory ? formatAmount(marketFactory.totalVolumeBets) : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans>Total Bets</Trans>: {marketFactory ? formatAmount(marketFactory.totalVolumeBets) : <Skeleton />}</Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Bets (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans>Total Bets</Trans> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}</Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Players: {marketFactory ? marketFactory.numOfPlayers : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans>Total Players: {marketFactory ? marketFactory.numOfPlayers : <Skeleton />}</Trans></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Markets: {marketFactory ? marketFactory.numOfMarkets : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans>Total Markets: {marketFactory ? marketFactory.numOfMarkets : <Skeleton />}</Trans></Typography>
           </BoxWrapper>
         </Grid>
       </Grid>
@@ -81,8 +80,8 @@ export default function Leaderboard() {
           </Grid>
         </BoxRow>
       </BoxWrapper>
-      {leaderboard && <DataGrid
-        rows={leaderboard}
+      {<DataGrid
+        rows={leaderboard? leaderboard! : []}
         columns={columns}
         loading={isLoading}
         pageSize={pageSize}
