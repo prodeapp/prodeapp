@@ -65,7 +65,8 @@ export default function Leaderboard() {
         pagination
         disableSelectionOnClick
         disableColumnFilter
-        sortModel= {[{ field: sorting, sort: direction }]}
+        sortModel={[{ field: sorting, sort: direction }]}
+        autoHeight={true}
       />}
     </Container>
 
