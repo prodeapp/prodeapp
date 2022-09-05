@@ -121,8 +121,6 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
       .map(outcome => formatOutcome(outcome.value));
 
     await placeBet(
-      process.env.REACT_APP_MARKET_FACTORY as string,
-      market.nonce,
       isAddress(referral) ? referral : AddressZero,
       results
     )

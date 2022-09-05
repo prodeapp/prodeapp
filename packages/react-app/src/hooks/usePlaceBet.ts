@@ -9,7 +9,7 @@ import {useEffect, useState} from "react";
 interface UsePlaceBetReturn {
   state: TransactionStatus
   tokenId: BigNumber|false
-  placeBet: (_marketFactory: string, _marketIndex: BigNumberish, _attribution: string, _results: BytesLike[]) => Promise<TransactionReceipt | undefined>
+  placeBet: (_attribution: string, _results: BytesLike[]) => Promise<TransactionReceipt | undefined>
   hasVoucher: boolean
 }
 
@@ -29,7 +29,7 @@ const useMarketPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish)
     }
   }, [events])
   
-  const placeBet = async (_marketFactory: string, _marketIndex: BigNumberish, _attribution: string, _results: BytesLike[]) => {
+  const placeBet = async (_attribution: string, _results: BytesLike[]) => {
     return await send(
       _attribution,
       _results,
@@ -73,10 +73,9 @@ const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
     }
   }, [events])
 
-  const placeBet = async (_marketFactory: string, _marketIndex: BigNumberish, _attribution: string, _results: BytesLike[]) => {
+  const placeBet = async (_attribution: string, _results: BytesLike[]) => {
     return await send(
-      _marketFactory,
-      _marketIndex,
+      marketId,
       _attribution,
       _results
     );

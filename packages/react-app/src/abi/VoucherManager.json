@@ -37,6 +37,19 @@
   },
   {
     "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "fundAddress",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_to",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "function",
     "stateMutability": "view",
     "outputs": [
       {
@@ -45,24 +58,11 @@
         "internalType": "bool"
       }
     ],
-    "name": "factoryWhitelist",
+    "name": "marketsWhitelist",
     "inputs": [
       {
         "type": "address",
         "name": "",
-        "internalType": "address"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "stateMutability": "payable",
-    "outputs": [],
-    "name": "fundAddress",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "_to",
         "internalType": "address"
       }
     ]
@@ -94,13 +94,8 @@
     "inputs": [
       {
         "type": "address",
-        "name": "_marketFactory",
+        "name": "_market",
         "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "_marketIndex",
-        "internalType": "uint256"
       },
       {
         "type": "address",
@@ -141,26 +136,14 @@
     "type": "function",
     "stateMutability": "nonpayable",
     "outputs": [],
-    "name": "whitelistMarketFactory",
+    "name": "whitelistMarket",
     "inputs": [
       {
         "type": "address",
-        "name": "_marketFactory",
+        "name": "_market",
         "internalType": "address"
       }
     ]
-  },
-  {
-    "type": "event",
-    "name": "FactoryWhitelisted",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "_marketFactory",
-        "indexed": true
-      }
-    ],
-    "anonymous": false
   },
   {
     "type": "event",
@@ -180,6 +163,18 @@
         "type": "uint256",
         "name": "_amount",
         "indexed": false
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "MarketWhitelisted",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "_market",
+        "indexed": true
       }
     ],
     "anonymous": false
