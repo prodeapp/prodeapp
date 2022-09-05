@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { BigNumberish } from 'ethers';
 import { useState } from 'react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import { formatAmount } from '../lib/helpers';
+import { formatAmountDecimalPlaces } from '../lib/helpers';
 import { shortenAddress } from "@usedapp/core";
 import { BoxWrapper, BoxRow } from '../components';
 
@@ -12,6 +12,7 @@ export default function Leaderboard() {
   const { isLoading, data: leaderboard } = useLeaderboard();
   const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet'>('pricesReceived');
   const [direction, setDirection] = useState<'asc' | 'desc'>('desc');
+  const [pageSize, setPageSize] = useState<number>(10);
 
   const columns = [
     {
@@ -22,13 +23,13 @@ export default function Leaderboard() {
     { field: 'numOfBets', headerName: '# of Bets', type: 'number', flex: 1 },
     { field: 'numOfMarkets', headerName: '# of Markets', type: 'number', flex: 1 },
     {
-      field: 'pricesReceived', headerName: 'Prices Received', type: 'string', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
-        return formatAmount(params.value);
+      field: 'pricesReceived', headerName: 'Prices Received', type: 'number', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
+        return formatAmountDecimalPlaces(params.value);
       }
     },
     {
-      field: 'amountBet', headerName: 'Amount Beted', type: 'string', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
-        return formatAmount(params.value);
+      field: 'amountBet', headerName: 'Amount Beted', type: 'number', flex: 1, valueFormatter: (params: { value: BigNumberish; }) => {
+        return formatAmountDecimalPlaces(params.value);
       }
     },
   ];
@@ -58,12 +59,12 @@ export default function Leaderboard() {
         rows={leaderboard}
         columns={columns}
         loading={isLoading}
-        pageSize={10}
+        pageSize={pageSize}
+        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         rowsPerPageOptions={[10, 50, 100]}
-        style={{ height: '90%' }}
+        pagination
         disableSelectionOnClick
         disableColumnFilter
-        autoPageSize
         sortModel= {[{ field: sorting, sort: direction }]}
       />}
     </Container>
