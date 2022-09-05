@@ -152,7 +152,7 @@ export interface MarketReferral {
   manager: string
   attributions: [{
     id: string
-    attributor: {id: string}
+    attributor: { id: string }
     amount: BigNumberish
   }]
 }
@@ -221,7 +221,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' |'openingTs' | 'templateID'>[]
+    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
   }
   tokenID: string
   points: BigNumberish
@@ -279,5 +279,27 @@ export const CURATE_ITEM_FIELDS = `
     json
     timestamp
     status
+  }
+`;
+
+
+export interface MarketFactory {
+  id: string
+  numOfBets: BigNumberish
+  numOfMarkets: BigNumberish
+  numOfPlayers: BigNumberish
+  prizedClaimed: BigNumberish
+  totalVolumeBets: BigNumberish
+  totalVolumeFunding: BigNumberish
+}
+
+export const MARKET_FACTORY_FIELDS = `
+  fragment MarketFactoryFields on MarketFactory {
+    numOfBets
+    numOfMarkets
+    numOfPlayers
+    prizedClaimed
+    totalVolumeBets
+    totalVolumeFunding
   }
 `;

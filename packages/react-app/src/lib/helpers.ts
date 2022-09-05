@@ -60,6 +60,11 @@ export function formatAmount(amount: BigNumberish) {
   return `${number.toString()} xDAI`
 }
 
+export function formatAmountDecimalPlaces(amount: BigNumberish) {
+  const number = new DecimalBigNumber(BigNumber.from(amount),18)
+  return `${parseFloat(number.toString()).toFixed(2)} xDAI`
+}
+
 function getMultiSelectAnswers(value: number): number[] {
   const answers = value.toString(2);
   const indexes = [];
