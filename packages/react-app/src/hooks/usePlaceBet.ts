@@ -60,10 +60,11 @@ const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
   const [hasVoucher, setHasVoucher] = useState(false);
 
   const { value: voucherBalance } = useCall({ contract, method: 'balance', args: [account] }) || {value: [BigNumber.from(0)]}
+  const { value: marketWhitelisted } = useCall({ contract, method: 'marketsWhitelist', args: [marketId] }) || {value: [false]}
 
   useEffect(() => {
-    setHasVoucher(voucherBalance[0].gte(price))
-  }, [voucherBalance, price]);
+    setHasVoucher(voucherBalance[0].gte(price) && marketWhitelisted[0])
+  }, [voucherBalance, price, marketWhitelisted]);
 
   const [tokenId, setTokenId] = useState<BigNumber|false>(false);
 
