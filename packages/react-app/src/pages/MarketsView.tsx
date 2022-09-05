@@ -133,7 +133,7 @@ function MarketsView() {
             <Button variant="text" onClick={() => setSection('bets')} sx={{margin: {xs: '10px 0', md: '40px 0'}, fontSize: '16px'}}>
               <ArrowRightIcon style={{marginRight: 10, transform: 'rotate(180deg)'}}/> Return to the market
             </Button>
-            <BetForm marketId={market.id} price={market.price} cancelHandler={() => setSection('bets')}/>
+            <BetForm market={market} cancelHandler={() => setSection('bets')}/>
           </Box>}
         </Grid>
       </Grid>

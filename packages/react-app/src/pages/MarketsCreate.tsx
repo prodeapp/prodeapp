@@ -427,7 +427,7 @@ function BigStepper({steps, activeStep}: {steps: string[], activeStep: number}) 
 
   return <StepperWrapper container>
     {steps.map((label, i) => {
-      return <Grid item xs={4} sx={{px: {xs: 2, md: 3}, py: {xs: 2, md: 6}, mb: 4}}
+      return <Grid item key={i} xs={4} sx={{px: {xs: 2, md: 3}, py: {xs: 2, md: 6}, mb: 4}}
                    className={`${i === activeStep ? 'current-step' : (i < activeStep ? 'previous-step' : 'next-step')}`}>
         <Typography variant="p3"><Trans>Step {i+1}</Trans></Typography>
         <Typography variant="h5">{label}</Typography>

@@ -4,6 +4,7 @@ export interface Market {
   id: string
   hash: string
   name: string
+  nonce: string
   category: string
   price: BigNumberish
   numOfBets: string
@@ -31,6 +32,7 @@ export const MARKET_FIELDS = `
       id
       hash
       name
+      nonce
       category
       price
       numOfBets

@@ -3,13 +3,10 @@ import {FormError} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {Market__factory} from "../../typechain";
+import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
-import type {BigNumberish} from "ethers";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
@@ -25,14 +22,15 @@ import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
 import {FormEventOutcomeValue} from "../Answer/AnswerForm";
+import {usePlaceBet} from "../../hooks/usePlaceBet";
+import {Market} from "../../graphql/subgraph";
 
 export type BetFormValues = {
   outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', nonce: number}[]
 }
 
 type BetFormProps = {
-  marketId: string
-  price: BigNumberish
+  market: Market
   cancelHandler: () => void
 }
 
@@ -55,17 +53,14 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
   </div>
 }
 
-export default function BetForm({marketId, price, cancelHandler}: BetFormProps) {
+export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(marketId);
-  const [success, setSuccess] = useState(false);
-  const [tokenId, setTokenId] = useState<BigNumber|false>(false);
+  const { isLoading, error, data: events } = useEvents(market.id);
   const [referral, setReferral] = useState(AddressZero);
 
   const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
       outcomes: [],
     }});
-
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -78,27 +73,17 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
   }, [events, append, remove]);
 
   useEffect(() => {
-    setReferral(window.localStorage.getItem(getReferralKey(marketId)) || '');
-  }, [marketId]);
+    setReferral(window.localStorage.getItem(getReferralKey(market.id)) || '');
+  }, [market]);
 
-  const { state, send, events: placeBetEvents } = useContractFunction(
-    new Contract(marketId, Market__factory.createInterface()),
-    'placeBet'
-  );
-
-  useEffect(()=> {
-    if (placeBetEvents) {
-      setTokenId(placeBetEvents.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false);
-    }
-  }, [placeBetEvents]);
+  const { state, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
 
   useEffect(() => {
-    if (state.status === 'Success') {
-      queryClient.invalidateQueries(['useMarket', marketId]);
-      queryClient.invalidateQueries(['useRanking', marketId]);
-      setSuccess(true);
+    if (tokenId !== false) {
+      queryClient.invalidateQueries(['useMarket', market.id]);
+      queryClient.invalidateQueries(['useRanking', market.id]);
     }
-  }, [state, marketId]);
+  }, [tokenId, market.id]);
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -108,11 +93,11 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
     return <div><Trans>Loading...</Trans></div>
   }
 
-  if (success) {
+  if (tokenId !== false) {
     return <>
       <Alert severity="success" sx={{mb: 3}}><Trans>Bet placed!</Trans></Alert>
 
-      {tokenId !== false && <BetNFT marketId={marketId} tokenId={tokenId} />}
+      <BetNFT marketId={market.id} tokenId={tokenId} />
     </>
   }
 
@@ -135,12 +120,9 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
       .sort((a, b) => Number(a.nonce) > Number(b.nonce) ? 1 : -1)
       .map(outcome => formatOutcome(outcome.value));
 
-    await send(
+    await placeBet(
       isAddress(referral) ? referral : AddressZero,
-      results,
-      {
-        value: price
-      }
+      results
     )
   }
 
@@ -185,7 +167,7 @@ export default function BetForm({marketId, price, cancelHandler}: BetFormProps) 
         </Grid>
         <Grid item xs={6}>
           <Button type="submit" color="primary" size="large" fullWidth>
-            <Trans>Place Bet</Trans> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
+            {!hasVoucher && <Trans>Place Bet</Trans>} {hasVoucher && <Trans>You have a free voucher! Place Bet</Trans>} <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
           </Button>
         </Grid>
       </Grid>
