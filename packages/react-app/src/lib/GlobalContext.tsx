@@ -5,7 +5,7 @@ interface MarketFiltersProp {
   curated: UseMarketsProps['curated'],
   setCurated: (curated: boolean) => void
   status: UseMarketsProps['status'],
-  setStatus: (status?: MarketStatus) => void,
+  setStatus: (status: MarketStatus) => void,
   category: NonNullable<UseMarketsProps['category']>,
   setCategory: (category: string) => void
 }
@@ -18,7 +18,7 @@ export const GlobalContext = React.createContext<GlobalContextInterface>({} as G
 
 const useMarketFilters = (): MarketFiltersProp => {
   const [curated, setCurated] = useState<boolean>(false);
-  const [status, setStatus] = useState<MarketStatus | undefined>('active');
+  const [status, setStatus] = useState<MarketStatus>('active');
   const [category, setCategory] = useState('All');
 
   return {

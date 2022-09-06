@@ -148,7 +148,7 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
   } = marketFilters;
 
   const changeStatus = (newStatus: MarketStatus) => {
-    setStatus(newStatus === status ? undefined : newStatus)
+    setStatus(newStatus)
   }
 
   const getMarketFilters= () => {
