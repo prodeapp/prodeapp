@@ -6,10 +6,12 @@ import {Market} from "../../graphql/subgraph";
 import { Trans, Plural } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
 import { ReactComponent as CurrencyIcon } from "../../assets/icons/currency.svg";
-import {Typography} from "@mui/material";
+import {Alert, Typography} from "@mui/material";
 import {ReactComponent as ArrowRight} from "../../assets/icons/arrow-right-2.svg";
+import {usePlaceBet} from "../../hooks/usePlaceBet";
 
 export default function PlaceBet({market, onBetClick, onResultsClick}: {market: Market, onBetClick: () => void, onResultsClick: () => void}) {
+  const { hasVoucher } = usePlaceBet(market.id, market.price);
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
   const { locale } = useI18nContext();
 
@@ -31,6 +33,7 @@ export default function PlaceBet({market, onBetClick, onResultsClick}: {market: 
     </Box>
 
     {timeLeft !== false && <>
+      {hasVoucher && <Alert severity={"info"} sx={{mb: 2, fontWeight: 700, justifyContent: 'center'}}><Trans>You have a voucher available to place a bet for free!</Trans></Alert>}
       {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>}
       <div style={{fontWeight: 'bold', marginBottom: '15px'}}>{timeLeft}</div>
       <Button color="primary" size="large" fullWidth onClick={onBetClick}><Trans>Place Bet</Trans> - {formatAmount(market.price)} <ArrowRight style={{marginLeft: 10}}/></Button>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {FormError} from "../../components"
+import {BigAlert, FormError} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
@@ -24,6 +24,8 @@ import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from ".
 import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 import {usePlaceBet} from "../../hooks/usePlaceBet";
 import {Market} from "../../graphql/subgraph";
+import Box from "@mui/material/Box";
+import AlertTitle from "@mui/material/AlertTitle";
 
 export type BetFormValues = {
   outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', nonce: number}[]
@@ -133,6 +135,16 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2 style={{margin: '35px 0', fontSize: '33.18px', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans>Place your bet</Trans></h2>
+
+      {hasVoucher && <BigAlert severity="info" sx={{mb: 4}}>
+        <Box sx={{display: {md: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
+          <div>
+            <div><AlertTitle><Trans>Congratulations!</Trans></AlertTitle></div>
+            <div><Trans>You have a voucher available to place a bet for free!</Trans></div>
+          </div>
+        </Box>
+      </BigAlert>}
+
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <Grid container spacing={3}>
         {fields.map((field, i) => {
@@ -167,7 +179,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
         </Grid>
         <Grid item xs={6}>
           <Button type="submit" color="primary" size="large" fullWidth>
-            {!hasVoucher && <Trans>Place Bet</Trans>} {hasVoucher && <Trans>You have a free voucher! Place Bet</Trans>} <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
+            <Trans>Place Bet</Trans> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
           </Button>
         </Grid>
       </Grid>

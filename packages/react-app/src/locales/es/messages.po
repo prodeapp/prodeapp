@@ -664,8 +664,8 @@ msgstr "Usted"
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "Puede transferirlo o venderlo en un marketplace, pero recuerde que el dueño de este NFT puede reclamar el premio si esta apuesta resulta ganadora."
 
-msgid "You have a free voucher! Place Bet"
-msgstr "¡Tienes un voucher gratuito! Enviar apuesta"
+msgid "You have a voucher available to place a bet for free!"
+msgstr "¡Tienes un voucher disponible para realizar una apuesta gratuita!"
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."
