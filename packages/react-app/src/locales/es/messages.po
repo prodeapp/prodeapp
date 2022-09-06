@@ -259,6 +259,9 @@ msgstr "Cantidad a financiar (xDAI)"
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"
 
+msgid "Global Metrics:"
+msgstr "Métricas Globales:"
+
 msgid "Go to market"
 msgstr "Ir al mercado"
 
@@ -589,6 +592,15 @@ msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devue
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
 
+msgid "Total Bets"
+msgstr "Total de Apuestas"
+
+msgid "Total Markets: {0}"
+msgstr "Total de Mercados: {0}"
+
+msgid "Total Players: {0}"
+msgstr "Total de Apostadores: {0}"
+
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
@@ -672,9 +684,6 @@ msgstr "empate"
 
 msgid "eSports"
 msgstr "eSports"
-
-msgid "invalid"
-msgstr "inválido"
 
 msgid "xDAI is bridged DAI, so if you have DAI in any other network (Ethereum Mainnet, Arbitrum, Optimism, etc.), you can use the bridge to transfer some of it to Gnosis Chain."
 msgstr "xDAI es DAI puenteado, por lo tanto si tienes DAI en alguna otra red (Ethereum Mainnet, Arbitrum, Optimism, etc.), puedes usar el bridge para transferir un poco a Gnosis Chain."

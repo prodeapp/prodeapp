@@ -63,7 +63,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         stats = stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.amountBets !== 0 || stat.outcome.toLowerCase() === t`draw` }) })
     }
     // filter invalid if has 0 bets.
-    return stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.outcome.toLowerCase() === t`invalid` ? stat.amountBets !== 0 : true }) })
+    return stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.outcome === t`Invalid result` ? stat.amountBets !== 0 : true }) })
 
 }
 
