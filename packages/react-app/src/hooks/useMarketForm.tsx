@@ -81,12 +81,12 @@ export default function useMarketForm() {
     const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
     const openingTS = closingTime + 1;
 
-    const questionsData = step1State.events.map(event => {
+    const questionsData = step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
         templateID: REALITY_TEMPLATE_SINGLE_SELECT,
         question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
-        openingTS: openingTS,
+        openingTS: openingTS + i,
       }
     })
 
