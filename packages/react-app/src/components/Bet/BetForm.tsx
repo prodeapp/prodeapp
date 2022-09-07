@@ -7,7 +7,6 @@ import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
-import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
 import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
@@ -26,6 +25,8 @@ import {usePlaceBet} from "../../hooks/usePlaceBet";
 import {Market} from "../../graphql/subgraph";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
+import {useGroupedEvents} from "../../hooks/useGroupedEvents";
+import Typography from "@mui/material/Typography";
 
 export type BetFormValues = {
   outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', nonce: number}[]
@@ -57,22 +58,25 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
 export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(market.id);
+  const groupedEvents = useGroupedEvents(market);
   const [referral, setReferral] = useState(AddressZero);
 
   const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
       outcomes: [],
     }});
 
-  const { fields, append, remove } = useFieldArray({
+  const { append, remove } = useFieldArray({
     control,
     name: "outcomes",
   });
 
   useEffect(()=> {
     remove();
-    events && events.forEach(() => append({value: ''}))
-  }, [events, append, remove]);
+
+    groupedEvents.forEach(group => {
+      group.events.forEach(() => append({value: ''}));
+    })
+  }, [groupedEvents, append, remove]);
 
   useEffect(() => {
     setReferral(window.localStorage.getItem(getReferralKey(market.id)) || '');
@@ -91,10 +95,6 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     window.scrollTo(0, 0)
   }, []);
 
-  if (isLoading ) {
-    return <div><Trans>Loading...</Trans></div>
-  }
-
   if (tokenId !== false) {
     return <>
       <Alert severity="success" sx={{mb: 3}}><Trans>Bet placed!</Trans></Alert>
@@ -105,10 +105,6 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
 
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to place a bet.</Trans>}</Alert>
-  }
-
-  if (error) {
-    return <Alert severity="error"><Trans>Error loading events</Trans>.</Alert>
   }
 
   const onSubmit = async (data: BetFormValues) => {
@@ -146,30 +142,33 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
       </BigAlert>}
 
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-      <Grid container spacing={3}>
-        {fields.map((field, i) => {
 
-          if (!events || !events[i]) {
-            return null;
-          }
-          return <React.Fragment key={events[i].id}>
-            <Grid item xs={12} md={6}><FormatEvent title={events[i].title} /></Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <Select
-                  defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
-                  id={`event-${i}-outcome-select`}
-                  multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-                  {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
-                  error={!!errors.outcomes?.[i]?.value}
-                >
-                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
-                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
-                </Select>
-                <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
-              </FormControl>
-              <input type="hidden" {...register(`outcomes.${i}.nonce`, {required: t`This field is required`})} value={Number(events[i].nonce)} />
-            </Grid>
+      <Grid container spacing={3}>
+        {groupedEvents.map((group, i: number) => {
+          return <React.Fragment key={i}>
+            {group.title !== '' && <Grid item xs={12}><Typography variant="h6s" sx={{fontWeight: 700}}>{group.title}</Typography></Grid>}
+
+            {group.events.map((event, j) => {
+              return <React.Fragment key={event.id}>
+                <Grid item xs={12} md={6}><FormatEvent title={event.title} /></Grid>
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <Select
+                      defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
+                      id={`event-${j}-outcome-select`}
+                      multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
+                      {...register(`outcomes.${j}.value`, {required: t`This field is required`})}
+                      error={!!errors.outcomes?.[j]?.value}
+                    >
+                      {event.outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
+                      <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
+                    </Select>
+                    <FormError><ErrorMessage errors={errors} name={`outcomes.${j}.value`} /></FormError>
+                  </FormControl>
+                  <input type="hidden" {...register(`outcomes.${j}.nonce`, {required: t`This field is required`})} value={Number(event.nonce)} />
+                </Grid>
+              </React.Fragment>
+            })}
           </React.Fragment>
         })}
         <Grid item xs={6}>
