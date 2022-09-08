@@ -125,7 +125,7 @@ export function handleBetReward(evt: BetReward): void {
     // log.info("handleBetReward: Betid: {}", [betID.toString()])
     let bet = Bet.load(betID)!
     bet.claim = true;
-    bet.reward = evt.params._reward;
+    bet.reward = bet.reward.plus(evt.params._reward);
     bet.save()
     // log.debug("handleBetReward: {} reward claimed from token {}", [evt.params._reward.toString(), evt.params._tokenID.toString()])
 
