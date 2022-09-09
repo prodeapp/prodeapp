@@ -107,6 +107,7 @@ type Event @entity {
   openingTs: BigInt!
   finalizeTs: BigInt!
   creationTs: BigInt!
+  lastAnswerTs: BigInt
   timeout: BigInt!
   minBond: BigInt!
   lastBond: BigInt!
