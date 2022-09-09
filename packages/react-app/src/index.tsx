@@ -26,6 +26,7 @@ import TokenView from "./pages/TokenView";
 import MarketsFund from "./pages/MarketsFund";
 import { GlobalContextProvider } from './lib/GlobalContext';
 import WelcomeDialog from "./components/WelcomeDialog";
+import SendVouchers from "./pages/SendVouchers";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -68,6 +69,7 @@ ReactDOM.render(
                     </Route>
                     <Route path="curate/validator" element={<CurateValidator />} />
                     <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
+                    <Route path="send-vouchers" element={<SendVouchers />} />
                   </Route>
                 </Routes>
               </HashRouter>
