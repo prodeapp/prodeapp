@@ -10,6 +10,7 @@ import {Contract} from "@ethersproject/contracts";
 import { parseEther } from "@ethersproject/units";
 import {BigNumber} from "@ethersproject/bignumber";
 
+
 interface VoucherData {
   address: string
   value: string
@@ -33,8 +34,20 @@ const BATCHER_ABI = [
   }
 ]
 
+const VOUCHER_MANAGER_ABI = [
+  {
+    "type": "function",
+    "stateMutability": "payable",
+    "outputs": [],
+    "name": "fundAddress",
+    "inputs": [{"type": "address", "name": "_to", "internalType": "address"}]
+  }
+]
+
 function SendVouchers() {
   const { state, send } = useContractFunction(new Contract(TRANSACTION_BATCHER, BATCHER_ABI), 'batchSend');
+
+  const voucherContract = new Contract(process.env.REACT_APP_VOUCHER_MANAGER as string, VOUCHER_MANAGER_ABI);
 
   const [vouchers, setVouchers] = useState<VoucherData[]>([]);
 
@@ -52,7 +65,7 @@ function SendVouchers() {
     await send(
       Array(vouchers.length).fill(process.env.REACT_APP_VOUCHER_MANAGER),
       values,
-      vouchers.map(voucher => voucher.address),
+      vouchers.map(async (voucher) => (await voucherContract.populateTransaction.fundAddress(voucher.address)).data),
       {
         value: values.reduce((partialSum, a) => partialSum.add(a), BigNumber.from(0))
       }
