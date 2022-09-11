@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
 import {MarketStatus, UseMarketsProps} from "../hooks/useMarkets";
 import {getCategoryText, getFlattenedCategories} from "../lib/helpers";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
@@ -10,59 +9,7 @@ import {styled} from "@mui/material/styles";
 import {Radio} from "./Radio";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
 import {GlobalContext} from "../lib/GlobalContext";
-
-const FiltersWrapper = styled(Container)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  padding: theme.spacing(2),
-
-  [theme.breakpoints.down('md')]: {
-    flexDirection: 'column',
-  },
-
-  '.filter-columns': {
-    display: 'flex',
-
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-      '&>div+div': {
-        marginTop: '15px',
-      },
-    },
-
-    '&>div': {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-
-      [theme.breakpoints.up('md')]: {
-        flexDirection: 'row',
-
-        '&+div': {
-          marginLeft: '13px',
-        },
-      },
-    },
-
-    '.filter-label': {
-      fontWeight: 'bold',
-      marginRight: '13px',
-
-      [theme.breakpoints.down('md')]: {
-        marginRight: 0,
-        marginBottom: '5px',
-      },
-    },
-  },
-
-  '& > div': {
-    [theme.breakpoints.down('md')]: {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
+import FiltersWrapper from "./FiltersWrapper";
 
 const FilterSection = styled('div')(({ theme }) => ({
   background: theme.palette.secondary.main,
