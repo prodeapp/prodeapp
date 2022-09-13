@@ -216,6 +216,9 @@ const darkTheme = createTheme({
         input: {
           padding: '18.5px 14px',
         },
+        inputSizeSmall: {
+          padding: '8.5px 14px',
+        },
       },
     },
     MuiAutocomplete: {

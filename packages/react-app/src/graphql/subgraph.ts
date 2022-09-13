@@ -307,3 +307,17 @@ export const MARKET_FACTORY_FIELDS = `
     totalVolumeFunding
   }
 `;
+
+export interface Ad {
+  id: string
+  itemId: string
+  svg: string
+  bids: AdBid[]
+}
+
+export interface AdBid {
+  id: string
+  market: string
+  bidder: string
+  itemId: string
+}
