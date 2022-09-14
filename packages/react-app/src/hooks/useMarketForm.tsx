@@ -96,7 +96,7 @@ export default function useMarketForm() {
       'PRODE',
       step2State.manager,
       Math.round(step2State.managementFee * DIVISOR / 100),
-      closingTime,
+      closingTime - 1,
       parseUnits(String(step2State.price), 18),
       minBond,
       orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),

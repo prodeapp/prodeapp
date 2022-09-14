@@ -23,6 +23,16 @@ export function formatDate(timestamp: number) {
   return format(date, 'MMMM d yyyy, HH:mm')
 }
 
+// https://stackoverflow.com/a/72190364
+export function localTimeToUtc(utcTime: Date | string | number) {
+  if (typeof utcTime === 'string' || typeof utcTime === 'number') {
+    utcTime = new Date(utcTime);
+  }
+
+  const tzOffset = utcTime.getTimezoneOffset() * 60000
+  return new Date(utcTime.getTime() + tzOffset)
+}
+
 export function getTimeLeft(endDate: Date|string|number, withSeconds = false, locale: I18nContextProps['locale']): string | false {
   const startDate = new Date()
 
