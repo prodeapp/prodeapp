@@ -41,7 +41,7 @@ export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
-const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
+export const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
 
 const today = new Date();
 
@@ -76,6 +76,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
   const addEvent = () => {
     return appendEvent({
       questionPlaceholder: '',
+      openingTs: null,
       answers: formatAnswers(['', ''])
     })
   }
@@ -255,7 +256,7 @@ function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1
   return <div>
     {step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
-      return <PreviewText key={i} title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
+      return <PreviewText key={i} title={eventData.question} value={`${t`Opening Time`}: ${format(event.openingTs!, DATE_FORMAT)}, ${t`Answers`}: ${eventData.answers.join(', ')}`} setActiveStep={setActiveStep} step={0} />
     })}
   </div>
 }
