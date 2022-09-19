@@ -39,6 +39,14 @@ type Market @entity {
   marketFactory: MarketFactory!
   "Amount of the prize that was funded by sponsor"
   sponsoredAmount: BigInt!
+  "All the bids for this market"
+  bids: [Bid!]! @derivedFrom(field: "market")
+  # "Current Ad with highest bid, null if there is no Ad with Bid."
+  # highestBidAd: Base64Ad
+  "Current highest bid, null if there are not."
+  highestBid: Bid
+  "Ad Balance"
+  adBalance: BigInt!
 }
 
 type MarketCuration @entity {
@@ -206,3 +214,48 @@ type _Schema_
     algorithm: rank
     include: [{ entity: "Market", fields: [{ name: "name" }] }]
   )
+
+# type Base64Ad @entity {
+#   "address of the Smart Contract"
+#   id: ID!
+#   "Markets where this Ad has bids (active or not)."
+#   markets: [Market!]!
+#   "entity with curate information of this Ad"
+#   curateBase64AdItem: CurateBase64AdItem
+#   "All the bids of this ad"
+#   Bids: [Bid!]! @derivedFrom(field: "base64Ad")
+#   activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
+# }
+
+type Bid @entity {
+  "market-bider-itemID"
+  id: ID!
+  market: Market!
+  bidPerSecond: BigInt!
+  "Address of the bidder."
+  bidder: Bytes!
+  "Balance of the Bid"
+  balance: BigInt!,
+  startTimestamp: BigInt!,
+  removed: Boolean!
+  currentHighest: Boolean!
+  "Address of the ad"
+  base64Ad: Bytes!
+  "Curate info for the Ad of this Bid"
+  curateBase64AdItem: CurateBase64AdItem
+}
+
+type CurateBase64AdItem @entity {
+  "CurateProxySVG itemID"
+  id: ID!
+  "Address of the Ad"
+  addressAd: Bytes,
+  "itemID in technical list of Curate"
+  technicalItemID: Bytes,
+  "itemID in the content list of Curate"
+  contentItemID: Bytes,
+  "Status in the content curation list. Enum with statuses"
+  contentStatus: CurationStatus!
+  "Status in the technical curation list. Enum with statuses"
+  technicalStatus: CurationStatus!
+}

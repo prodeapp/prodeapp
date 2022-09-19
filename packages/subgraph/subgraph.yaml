@@ -109,6 +109,92 @@ dataSources:
           handler: handleSetValue
       file: ./src/mappings/KeyValue.ts
       language: wasm/assemblyscript
+  # - kind: ethereum/contract
+  #   name: Base64AdFactory
+  #   network: xdai
+  #   source:
+  #     abi: Base64AdFactory
+  #     address: "0x1234123412341234123412341234123412341234"
+  #     startBlock:  24242498
+  #   mapping:
+  #     kind: ethereum/events
+  #     apiVersion: 0.0.6
+  #     abis:
+  #       - name: Base64AdFactory
+  #         file: ./contracts/abis/Base64AdFactory.json
+  #     entities:
+  #       - Base64Ad
+  #       - Base64AdFactory
+  #       - Market
+  #     eventHandlers:
+  #       - event: NewAd(indexed address)
+  #         handler: handleNewAd
+  #     file: ./src/mappings/Base64AdFactory.ts
+  #     language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: Billing
+    network: xdai
+    source:
+      abi: Billing
+      address: "0x1234123412341234123412341234123412341234"
+      startBlock:  24242498
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Billing
+          file: ./contracts/abis/Billing.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BalanceChanged(indexed address,uint256)
+          handler: handleBalanceChanged
+      file: ./src/mappings/Billing.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: FirstPriceAuction
+    network: xdai
+    source:
+      abi: FirstPriceAuction
+      address: "0x1234123412341234123412341234123412341234"
+      startBlock:  24242498
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: FirstPriceAuction
+          file: ./contracts/abis/FirstPriceAuction.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BidUpdate(indexed address,indexed address,bytes32,indexed uint256,uint256)
+          handler: handleBidUpdate
+        - event: NewHighestBid(indexed address,address,bytes32)
+          handler: handleNewHighestBid
+      file: ./src/mappings/FirstPriceAuction.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: CurateProxySVG
+    network: xdai
+    source:
+      abi: CurateProxySVG
+      address: "0x1234123412341234123412341234123412341234"
+      startBlock:  24242498
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: CurateProxySVG
+          file: ./contracts/abis/CurateProxySVG.json
+      entities:
+        - CurateBase64AdItem
+      eventHandlers:
+        - event: newItemMapped(indexed address,indexed bytes32,bytes32,bytes32)
+          handler: handleNewItemMapped
+      file: ./src/mappings/CurateProxySVG.ts
+      language: wasm/assemblyscript
 templates:
   - name: Market
     kind: ethereum/contract
