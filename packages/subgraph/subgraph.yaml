@@ -124,11 +124,12 @@ dataSources:
           file: ./contracts/abis/Base64AdFactory.json
       entities:
         - Base64Ad
-        - Base64AdFactory
-        - Market
-      eventHandlers:
-        - event: NewAd(indexed address)
-          handler: handleNewAd
+      # eventHandlers:
+      #   - event: NewAd(indexed address)
+      #     handler: handleNewAd
+      callHandlers:
+        - function: createAd(string,string)
+          handler: handleCreateAd
       file: ./src/mappings/Base64AdFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
