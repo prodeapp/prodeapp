@@ -41,8 +41,8 @@ type Market @entity {
   sponsoredAmount: BigInt!
   "All the bids for this market"
   bids: [Bid!]! @derivedFrom(field: "market")
-  # "Current Ad with highest bid, null if there is no Ad with Bid."
-  # highestBidAd: Base64Ad
+  "Current Ad with highest bid, null if there is no Ad with Bid."
+  highestBidAd: Base64Ad
   "Current highest bid, null if there are not."
   highestBid: Bid
   "Ad Balance"
@@ -215,17 +215,17 @@ type _Schema_
     include: [{ entity: "Market", fields: [{ name: "name" }] }]
   )
 
-# type Base64Ad @entity {
-#   "address of the Smart Contract"
-#   id: ID!
-#   "Markets where this Ad has bids (active or not)."
-#   markets: [Market!]!
-#   "entity with curate information of this Ad"
-#   curateBase64AdItem: CurateBase64AdItem
-#   "All the bids of this ad"
-#   Bids: [Bid!]! @derivedFrom(field: "base64Ad")
-#   activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
-# }
+type Base64Ad @entity {
+  "address of the Smart Contract"
+  id: ID!
+  "Markets where this Ad has bids (active or not)."
+  markets: [Market!]!
+  "entity with curate information of this Ad"
+  curateBase64AdItem: CurateBase64AdItem
+  "All the bids of this ad"
+  Bids: [Bid!]! @derivedFrom(field: "base64Ad")
+  activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
+}
 
 type Bid @entity {
   "market-bider-itemID"
@@ -240,7 +240,7 @@ type Bid @entity {
   removed: Boolean!
   currentHighest: Boolean!
   "Address of the ad"
-  base64Ad: Bytes!
+  base64Ad: Base64Ad!
   "Curate info for the Ad of this Bid"
   curateBase64AdItem: CurateBase64AdItem
 }
@@ -248,8 +248,7 @@ type Bid @entity {
 type CurateBase64AdItem @entity {
   "CurateProxySVG itemID"
   id: ID!
-  "Address of the Ad"
-  addressAd: Bytes,
+  base64Ad: Base64Ad!,
   "itemID in technical list of Curate"
   technicalItemID: Bytes,
   "itemID in the content list of Curate"

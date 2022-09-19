@@ -109,28 +109,28 @@ dataSources:
           handler: handleSetValue
       file: ./src/mappings/KeyValue.ts
       language: wasm/assemblyscript
-  # - kind: ethereum/contract
-  #   name: Base64AdFactory
-  #   network: xdai
-  #   source:
-  #     abi: Base64AdFactory
-  #     address: "0x1234123412341234123412341234123412341234"
-  #     startBlock:  24242498
-  #   mapping:
-  #     kind: ethereum/events
-  #     apiVersion: 0.0.6
-  #     abis:
-  #       - name: Base64AdFactory
-  #         file: ./contracts/abis/Base64AdFactory.json
-  #     entities:
-  #       - Base64Ad
-  #       - Base64AdFactory
-  #       - Market
-  #     eventHandlers:
-  #       - event: NewAd(indexed address)
-  #         handler: handleNewAd
-  #     file: ./src/mappings/Base64AdFactory.ts
-  #     language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: Base64AdFactory
+    network: xdai
+    source:
+      abi: Base64AdFactory
+      address: "0x1234123412341234123412341234123412341234"
+      startBlock:  24242498
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Base64AdFactory
+          file: ./contracts/abis/Base64AdFactory.json
+      entities:
+        - Base64Ad
+        - Base64AdFactory
+        - Market
+      eventHandlers:
+        - event: NewAd(indexed address)
+          handler: handleNewAd
+      file: ./src/mappings/Base64AdFactory.ts
+      language: wasm/assemblyscript
   - kind: ethereum/contract
     name: Billing
     network: xdai

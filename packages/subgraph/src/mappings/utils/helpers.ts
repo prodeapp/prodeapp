@@ -201,14 +201,12 @@ export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes):
         bid.currentHighest = false;
         bid.removed = false;
         bid.startTimestamp = BigInt.fromI32(0);
-        let curateItem = CurateBase64AdItem.load(itemID.toHexString());
+        let curateItem = CurateBase64AdItem.load(itemID.toHexString())!;
         if (curateItem === null) {
-            log.warning("getOrCreateBid: Creating bid for an item that is not in curate?, bidID: {}", [bidID])
-            bid.base64Ad = new Address(0)
+            log.warning('getOrCreateBid: CurateItem not found when creating Bid for itemID {}', [itemID.toHexString()])
         } else {
-            bid.base64Ad = curateItem.addressAd? curateItem.addressAd : new Address(0);
-        }
-        
+            bid.base64Ad = curateItem.base64Ad;        
+        }       
         bid.save()
         log.debug('getOrCreateBid: New Bid with id: {}!', [bidID]);
         return bid
