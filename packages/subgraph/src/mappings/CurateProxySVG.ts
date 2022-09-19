@@ -2,7 +2,7 @@ import { log } from '@graphprotocol/graph-ts';
 import { newItemMapped } from '../types/CurateProxySVG/CurateProxySVG';
 import { Base64Ad, CurateBase64AdItem } from '../types/schema';
 
-export function handleNewItemMapped(event: newItemMapped) {
+export function handleNewItemMapped(event: newItemMapped): void {
     let base64Ad = Base64Ad.load(event.params._svgAddress.toHexString())!;
     let curateItem = new CurateBase64AdItem(event.params._itemID.toHexString());
     curateItem.base64Ad = base64Ad.id;

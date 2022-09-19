@@ -3,7 +3,7 @@ import { BidUpdate, NewHighestBid } from '../types/FirstPriceAuction/FirstPriceA
 import { Base64Ad, Bid, Market } from '../types/schema'
 import { getOrCreateBid } from './utils/helpers'
 
-export function handleBidUpdate(event: BidUpdate) {
+export function handleBidUpdate(event: BidUpdate): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
     bid.bidPerSecond = event.params._bidPerSecond;
     bid.balance = event.params._newBalance
@@ -23,7 +23,7 @@ export function handleBidUpdate(event: BidUpdate) {
 
 }
 
-export function handleNewHighestBid(event: NewHighestBid) {
+export function handleNewHighestBid(event: NewHighestBid): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
     log.debug("handleNewHighestBid: New Highest Bid with id: {}", [bid.id]);
     bid.currentHighest = true;
