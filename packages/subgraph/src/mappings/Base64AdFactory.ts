@@ -8,9 +8,9 @@ export function handleNewAd(event: NewAd): void {
     base64Ad.save()
 }
 
-export function handleCreateAd(call: CreateAdCall): void {
-    let base64Ad = new Base64Ad(call.outputs.value0.toHexString());
-    base64Ad.svg = call.inputs._svg;
-    base64Ad.markets = [];
-    base64Ad.save()
-}
+// export function handleCreateAd(call: CreateAdCall): void {
+//     let base64Ad = new Base64Ad(call.outputs.value0.toHexString());
+//     base64Ad.svg = call.inputs._svg;
+//     base64Ad.markets = [];
+//     base64Ad.save()
+// }

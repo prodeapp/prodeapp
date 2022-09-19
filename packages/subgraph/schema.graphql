@@ -222,7 +222,7 @@ type Base64Ad @entity {
   markets: [Market!]!
   "entity with curate information of this Ad"
   curateBase64AdItem: CurateBase64AdItem
-  svg: String
+  # svg: String
   "All the bids of this ad"
   Bids: [Bid!]! @derivedFrom(field: "base64Ad")
   activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
