@@ -61,7 +61,7 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
         market.hasPendingAnswers = true;
     }
 
-    market.adBalance = BigInt.fromI32(0);
+    market.billingBalance = BigInt.fromI32(0);
     market.save();
 }
 

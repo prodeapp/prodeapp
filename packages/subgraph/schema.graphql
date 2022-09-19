@@ -45,8 +45,8 @@ type Market @entity {
   highestBidAd: Base64Ad
   "Current highest bid, null if there are not."
   highestBid: Bid
-  "Ad Balance"
-  adBalance: BigInt!
+  "Market Billing Balance"
+  billingBalance: BigInt!
 }
 
 type MarketCuration @entity {
