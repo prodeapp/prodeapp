@@ -1,4 +1,4 @@
-import { BigNumberish } from "@ethersproject/bignumber";
+import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 
 export interface Market {
   id: string
@@ -320,4 +320,5 @@ export interface AdBid {
   market: string
   bidder: string
   itemId: string
+  value: BigNumber
 }
