@@ -28,6 +28,7 @@ import { GlobalContextProvider } from './lib/GlobalContext';
 import WelcomeDialog from "./components/WelcomeDialog";
 import SendVouchers from "./pages/SendVouchers";
 import AdsList from "./pages/AdsList";
+import AdsCreate from "./pages/AdsCreate";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -73,6 +74,7 @@ ReactDOM.render(
                     <Route path="send-vouchers" element={<SendVouchers />} />
                     <Route path="ads">
                       <Route index element={<AdsList />} />
+                      <Route path="create" element={<AdsCreate />} />
                     </Route>
                   </Route>
                 </Routes>

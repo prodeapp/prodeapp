@@ -6,6 +6,7 @@ import {GlobalContext} from "../lib/GlobalContext";
 import Button from "@mui/material/Button";
 import FiltersWrapper from "./FiltersWrapper";
 import TextField from "@mui/material/TextField";
+import {Link as RouterLink} from "react-router-dom";
 
 type AdsFilterProps = {
   setAdsFilters: (data: UseAdsProps) => void
@@ -51,7 +52,7 @@ function AdsFilter({setAdsFilters}: AdsFilterProps) {
         </div>
         <div>
           <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <Button>Submit ad</Button>
+            <Button component={RouterLink} to={`/ads/create`}>Submit ad</Button>
           </Box>
         </div>
       </FiltersWrapper>
