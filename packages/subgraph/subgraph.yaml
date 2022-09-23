@@ -11,8 +11,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b"
-      startBlock: 23172705
+      address: "0xf811C2895B4cFF1D7A63Ea7C04f60Eb11335F146"
+      startBlock: 24298630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,7 +40,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 23172705
+      startBlock: 24298630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -69,7 +69,7 @@ dataSources:
     source:
       abi: GeneralizedTCR
       address: "0x86E72802D9AbBF7505a889721fD4D6947B02320E"
-      startBlock: 23165985
+      startBlock: 24298630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -95,7 +95,7 @@ dataSources:
     source:
       abi: KeyValue
       address: "0xF230b73987024ed614AE93f8A5fdF2416aD0B835"
-      startBlock: 23769288
+      startBlock: 24298630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -114,8 +114,8 @@ dataSources:
     network: xdai
     source:
       abi: Base64AdFactory
-      address: "0x1234123412341234123412341234123412341234"
-      startBlock:  24242498
+      address: "0xC344F4b9B368279C736ee317A7a4f09eFBD0190c"
+      startBlock:  24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -137,8 +137,8 @@ dataSources:
     network: xdai
     source:
       abi: Billing
-      address: "0x1234123412341234123412341234123412341234"
-      startBlock:  24242498
+      address: "0x7EC1941A0E15327d92CE848Fe37a98d47a7cBFE0"
+      startBlock:  24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -158,8 +158,8 @@ dataSources:
     network: xdai
     source:
       abi: FirstPriceAuction
-      address: "0x1234123412341234123412341234123412341234"
-      startBlock:  24242498
+      address: "0xbe7AdAecD587638B06b06a666d36C4279655F7f1"
+      startBlock:  24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -181,8 +181,8 @@ dataSources:
     network: xdai
     source:
       abi: CurateProxySVG
-      address: "0x1234123412341234123412341234123412341234"
-      startBlock:  24242498
+      address: "0xda86232029a048c9aa0f642239a002b481283ba9"
+      startBlock:  24298630
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
