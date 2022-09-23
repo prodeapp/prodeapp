@@ -306,9 +306,9 @@ export const MARKET_FACTORY_FIELDS = `
 
 export interface Base64Ad {
   id: string
-  curateBase64AdItem: CurateBase64AdItem
+  curateBase64AdItem: Pick<CurateBase64AdItem, 'id'>[]
   markets: Pick<Market, 'id'>[]
-  Bids: AdBid[]
+  Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'bidder' | 'balance' | 'startTimestamp' | 'removed' | 'currentHighest'>[]
   activeMarkets: Pick<Market, 'id'>[]
 }
 
@@ -317,7 +317,15 @@ export const BASE64_AD_FIELDS = `
     id
     curateBase64AdItem {id}
     markets {id}
-    Bids {id}
+    Bids {
+      id
+      bidPerSecond
+      bidder
+      balance
+      startTimestamp
+      removed
+      currentHighest
+    }
     activeMarkets {id}
   }
 `;
