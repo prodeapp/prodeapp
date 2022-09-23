@@ -4,23 +4,26 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
-import {Ad} from "../graphql/subgraph";
+import {Base64Ad} from "../graphql/subgraph";
 import {formatAmount} from "../lib/helpers";
 import {Trans} from "@lingui/macro";
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
+import {useSvgAd} from "../hooks/useSvgAd";
 
-function AdBox({ad}: {ad: Ad}) {
+function AdBox({ad}: {ad: Base64Ad}) {
+  const svgAd = useSvgAd(ad.id);
+
   return <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
     <Box sx={{p: '24px', width: '100%'}}>
       <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'center'}}>
-        <div dangerouslySetInnerHTML={{__html: ad.svg}} style={{margin: '0 auto'}}></div>
+        <div dangerouslySetInnerHTML={{__html: svgAd}} style={{margin: '0 auto'}}></div>
       </div>
     </Box>
     <MarketDetails sx={{minWidth: {md: '245px'}}}>
       <div>
         <div><Trans>Total Bids</Trans></div>
-        <div style={{fontWeight: 'bold'}}>{ad.bids.length}</div>
+        <div style={{fontWeight: 'bold'}}>{ad.Bids.length}</div>
       </div>
 
       <div>

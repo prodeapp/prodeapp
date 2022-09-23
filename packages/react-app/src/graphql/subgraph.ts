@@ -1,4 +1,4 @@
-import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
+import {BigNumberish} from "@ethersproject/bignumber";
 
 export interface Market {
   id: string
@@ -304,17 +304,38 @@ export const MARKET_FACTORY_FIELDS = `
   }
 `;
 
-export interface Ad {
+export interface Base64Ad {
   id: string
-  itemId: string
-  svg: string
-  bids: AdBid[]
+  curateBase64AdItem: CurateBase64AdItem
+  markets: Pick<Market, 'id'>[]
+  Bids: AdBid[]
+  activeMarkets: Pick<Market, 'id'>[]
 }
+
+export const BASE64_AD_FIELDS = `
+  fragment Base64AdsFields on Base64Ad {
+    id
+    curateBase64AdItem {id}
+    markets {id}
+    Bids {id}
+    activeMarkets {id}
+  }
+`;
 
 export interface AdBid {
   id: string
   market: string
+  bidPerSecond: string
   bidder: string
-  itemId: string
-  value: BigNumber
+  balance: string
+  startTimestamp: string
+  removed: boolean
+  currentHighest: boolean
+  base64Ad: Pick<Base64Ad, 'id'>
+  curateBase64AdItem: CurateBase64AdItem
+}
+
+export interface CurateBase64AdItem {
+  id: string
+  base64Ad: Pick<Base64Ad, 'id'>
 }
