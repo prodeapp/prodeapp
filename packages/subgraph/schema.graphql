@@ -41,6 +41,8 @@ type Market @entity {
   sponsoredAmount: BigInt!
   "All the bids for this market"
   bids: [Bid!]! @derivedFrom(field: "market")
+  "All Ads (active or not) that has a bid in this market"
+  ads: [Base64Ad!]! @derivedFrom(field: "markets")
   "Current Ad with highest bid, null if there is no Ad with Bid."
   highestBidAd: Base64Ad
   "Current highest bid, null if there are not."
@@ -221,7 +223,7 @@ type Base64Ad @entity {
   "address of the Smart Contract"
   id: ID!
   "Markets where this Ad has bids (active or not)."
-  markets: [Market!]!
+  markets: [Market!]! @derivedFrom(field: "ads")
   "entity with curate information of this Ad"
   curateBase64AdItem: CurateBase64AdItem
   # svg: String
