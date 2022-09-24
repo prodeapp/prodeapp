@@ -220,7 +220,6 @@ export function getOrCreateBase64Ad(address: string): Base64Ad {
     let base64Ad = Base64Ad.load(address);
     if (base64Ad == null){
         base64Ad = new Base64Ad(address);
-        base64Ad.markets = [];
         base64Ad.save()
     }
     return base64Ad
