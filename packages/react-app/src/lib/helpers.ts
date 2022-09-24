@@ -6,7 +6,7 @@ import compareAsc from 'date-fns/compareAsc'
 import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
-import {Event, Outcome} from "../graphql/subgraph";
+import {AdBid, Event, Outcome} from "../graphql/subgraph";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
@@ -233,6 +233,15 @@ export function getMedalColor(position: number) {
   return medalColors[position - 1] || medalColors[2]
 }
 
+export function getBidBalance(bid: AdBid) {
+  const balance = BigNumber.from(bid.balance).sub(
+    BigNumber.from(bid.bidPerSecond).mul(
+      Math.round(Date.now() / 1000) - Number(bid.startTimestamp)
+    )
+  );
+
+  return balance.lt(0) ? BigNumber.from(0) : balance;
+}
 
 export function formatPlayerName(name:string, address:string){
   if (name === address){

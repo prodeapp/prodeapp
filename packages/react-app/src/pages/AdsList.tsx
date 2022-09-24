@@ -5,13 +5,14 @@ import Alert from "@mui/material/Alert";
 import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
 import {Base64Ad} from "../graphql/subgraph";
-import {formatAmount} from "../lib/helpers";
+import {formatAmount, getBidBalance} from "../lib/helpers";
 import {Trans} from "@lingui/macro";
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
 import {useSvgAd} from "../hooks/useSvgAd";
-import {BigNumber} from "@ethersproject/bignumber";
 import {BigNumberish} from "ethers";
+import {Link as RouterLink} from "react-router-dom";
+import Button from "@mui/material/Button";
 
 function AdBox({ad}: {ad: Base64Ad}) {
   const svgAd = useSvgAd(ad.id);
@@ -19,14 +20,8 @@ function AdBox({ad}: {ad: Base64Ad}) {
   const [minBid, setMinBid] = useState<BigNumberish>(0);
 
   useEffect(() => {
-    const bids = ad.Bids.map(b => {
-      const balance = BigNumber.from(b.balance).sub(
-        BigNumber.from(b.bidPerSecond).mul(
-          Math.round(Date.now() / 1000) - Number(b.startTimestamp)
-        )
-      );
-
-      return balance.lt(0) ? BigNumber.from(0) : balance;
+    const bids = ad.Bids.map(bid => {
+      return getBidBalance(bid)
     }).sort((a, b) => {
       return a.sub(b).lt(0) ? 1 : -1
     });
@@ -68,6 +63,10 @@ function AdBox({ad}: {ad: Base64Ad}) {
           <div style={{fontWeight: 'bold'}}>{formatAmount(minBid)}</div>
         </div>
       </>}
+
+      <div>
+        <Button component={RouterLink} to={`/ads/${ad.id}`} color={'primary'} fullWidth><Trans>See ad</Trans></Button>
+      </div>
     </MarketDetails>
   </Box>
 }

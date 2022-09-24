@@ -312,7 +312,7 @@ export interface Base64Ad {
   id: string
   curateBase64AdItem: Pick<CurateBase64AdItem, 'id'>[]
   markets: Pick<Market, 'id'>[]
-  Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'bidder' | 'balance' | 'startTimestamp' | 'removed' | 'currentHighest'>[]
+  Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'removed' | 'currentHighest'>[]
   activeMarkets: Pick<Market, 'id'>[]
 }
 
@@ -324,6 +324,10 @@ export const BASE64_AD_FIELDS = `
     Bids {
       id
       bidPerSecond
+      market {
+        id
+        name
+      }
       bidder
       balance
       startTimestamp
@@ -336,15 +340,13 @@ export const BASE64_AD_FIELDS = `
 
 export interface AdBid {
   id: string
-  market: string
+  market: Pick<Market, 'id' | 'name'>
   bidPerSecond: string
   bidder: string
   balance: string
   startTimestamp: string
   removed: boolean
   currentHighest: boolean
-  base64Ad: Pick<Base64Ad, 'id'>
-  curateBase64AdItem: CurateBase64AdItem
 }
 
 export interface CurateBase64AdItem {
