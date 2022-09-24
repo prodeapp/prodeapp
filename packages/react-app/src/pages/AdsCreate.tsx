@@ -7,6 +7,8 @@ import Alert from "@mui/material/Alert";
 import { Trans, t } from "@lingui/macro";
 import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
+import {Base64AdFactory__factory} from "../typechain";
+import {parseUnits} from "@ethersproject/units";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
@@ -66,29 +68,28 @@ function AdsCreate() {
 
   const { account, error: walletError } = useEthers();
 
-  //const { state, send } = useContractFunction(new Contract(/*process.env.REACT_APP_BASE64_AD_FACTORY as string*/ '', /*Base64AdFactory__factory.createInterface()*/ ''), 'createAd');
+  const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_BASE64_AD_FACTORY as string, Base64AdFactory__factory.createInterface()), 'createAd');
 
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
   }
 
   const onClick = async () => {
-    /*try {
+    try {
       await send(
-        '',
-        svg,
+        btoa(svg),
         {
-          value: 0
+          value: parseUnits(String(30 + 6.9), 18),
         }
       );
     } catch (e: any) {
       alert(e?.message || t`Unexpected error`);
-    }*/
+    }
   }
 
-  /*if (state.status === 'Success') {
+  if (state.status === 'Success') {
     return <Alert severity="success"><Trans>Ad created.</Trans></Alert>
-  }*/
+  }
 
   const fileChangedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
@@ -120,7 +121,7 @@ function AdsCreate() {
 
   return <Container>
     <div>
-      {/*state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>*/}
+      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <FormRow>
         <FormLabel><Trans>Image</Trans></FormLabel>
         <div style={{width: '100%'}}>
