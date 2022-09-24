@@ -18,7 +18,7 @@ export type MarketFormStep1Values = {
   market: string
   category: string
   closingTime: Date
-  events: {questionPlaceholder: string, answers: Answers}[]
+  events: {questionPlaceholder: string, openingTs: Date | null, answers: Answers}[]
 }
 
 export type MarketFormStep2Values = {
@@ -79,14 +79,13 @@ export default function useMarketForm() {
   const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
     const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC');
     const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
-    const openingTS = closingTime + 1;
 
     const questionsData = step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
         templateID: REALITY_TEMPLATE_SINGLE_SELECT,
         question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
-        openingTS: openingTS + i,
+        openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
       }
     })
 
@@ -97,7 +96,7 @@ export default function useMarketForm() {
       'PRODE',
       step2State.manager,
       Math.round(step2State.managementFee * DIVISOR / 100),
-      closingTime,
+      closingTime - 1,
       parseUnits(String(step2State.price), 18),
       minBond,
       orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),

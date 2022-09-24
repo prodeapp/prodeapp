@@ -22,13 +22,14 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import {UseFormReturn} from "react-hook-form/dist/types";
 import format from 'date-fns/format'
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useSearchParams} from "react-router-dom";
 import {
   getFlattenedCategories,
   getCategoryText,
   getMarketUrl,
   showWalletError,
-  getTwitterShareUrl
+  getTwitterShareUrl,
+  localTimeToUtc
 } from "../lib/helpers";
 import { Trans, t } from "@lingui/macro";
 import {MenuItem, Typography} from "@mui/material";
@@ -41,7 +42,7 @@ export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
 }
 
-const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
+export const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
 
 const today = new Date();
 
@@ -76,6 +77,7 @@ function Step1Form({useFormReturn, setActiveStep}: FormStepProps<MarketFormStep1
   const addEvent = () => {
     return appendEvent({
       questionPlaceholder: '',
+      openingTs: null,
       answers: formatAnswers(['', ''])
     })
   }
@@ -255,7 +257,7 @@ function PreviewEvents({step1State, setActiveStep}: {step1State: MarketFormStep1
   return <div>
     {step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
-      return <PreviewText key={i} title={eventData.question} value={eventData.answers.join(', ')} setActiveStep={setActiveStep} step={0} />
+      return <PreviewText key={i} title={eventData.question} value={`${t`Opening Time`}: ${format(event.openingTs!, DATE_FORMAT)}, ${t`Answers`}: ${eventData.answers.join(', ')}`} setActiveStep={setActiveStep} step={0} />
     })}
   </div>
 }
@@ -464,6 +466,72 @@ function MarketsCreate() {
   const step1State = useForm1Return.getValues();
   const step2State = useForm2Return.getValues();
 
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const importData = searchParams.get('import');
+
+    if (importData !== null) {
+      try {
+        const data = JSON.parse(importData);
+
+        if (data.title) {
+          useForm1Return.setValue('market', data.title);
+        }
+
+        if (data.closingTime) {
+          useForm1Return.setValue('closingTime', localTimeToUtc(data.closingTime));
+        }
+
+        if (data.category) {
+          useForm1Return.setValue('category', data.category);
+        }
+
+        if (data.events) {
+          useForm1Return.setValue(
+            'events',
+            data.events.map((e: any) => ({
+              questionPlaceholder: e.question,
+              openingTs: localTimeToUtc(e.openingTs),
+              answers: e.answers.map((a: any) => ({value: a}))
+            }))
+          );
+        }
+
+        if (data.price) {
+          useForm2Return.setValue(
+            'price',
+            data.price
+          );
+        }
+
+        if (data.manager) {
+          useForm2Return.setValue(
+            'manager',
+            data.manager
+          );
+        }
+
+        if (data.managementFee) {
+          useForm2Return.setValue(
+            'managementFee',
+            data.managementFee
+          );
+        }
+
+        if (data.prizeWeights) {
+          useForm2Return.setValue(
+            'prizeWeights',
+            data.prizeWeights.map((p: any) => ({value: Number(p)}))
+          );
+        }
+
+      } catch (e) {
+        console.error('Failed market import', e);
+      }
+    }
+  }, [searchParams, useForm1Return, useForm2Return]);
+
   const {state, createMarket, marketId} = useMarketForm();
 
   const onSubmit = async () => {
@@ -479,7 +547,7 @@ function MarketsCreate() {
   }, [state]);
 
   useEffect(() => {
-    if (step2State.manager === '') {
+    if (step2State.manager === '' && account) {
       useForm2Return.setValue('manager', account || '');
     }
   // eslint-disable-next-line
