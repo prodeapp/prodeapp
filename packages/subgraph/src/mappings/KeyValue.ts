@@ -1,6 +1,6 @@
 import { log, BigInt, store } from '@graphprotocol/graph-ts';
 import { SetValue } from '../types/KeyValue/KeyValue'
-import { Market } from '../types/schema';
+import { Market, Player } from '../types/schema';
 import {getOrCreateMarketCuration} from "./utils/helpers";
 
 export function handleSetValue(evt: SetValue): void {
@@ -26,6 +26,14 @@ export function handleSetValue(evt: SetValue): void {
             marketCuration.save();
 
             store.remove("Market", market.id);
+        }
+    } else if (evt.params.key == 'setName') {
+        let player = Player.load(evt.transaction.from.toHexString())
+        if (player !== null){
+            player.name = evt.params.value
+            player.save()
+        } else{
+            log.warning('handleSetValue: Player {} do not exist', [evt.transaction.from.toHexString()]);
         }
     }
 }
