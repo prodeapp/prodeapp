@@ -207,6 +207,7 @@ export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes):
             log.warning('getOrCreateBid: CurateItem not found when creating Bid for itemID {}', [itemID.toHexString()])
         } else {
             bid.base64Ad = curateItem.base64Ad;        
+            bid.curateBase64AdItem = curateItem.id;
         }       
         bid.save()
         log.debug('getOrCreateBid: New Bid with id: {}!', [bidID]);
