@@ -11,8 +11,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b"
-      startBlock: 23172705
+      address: "0xf811C2895B4cFF1D7A63Ea7C04f60Eb11335F146"
+      startBlock: 24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,7 +40,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 23172705
+      startBlock: 24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -69,7 +69,7 @@ dataSources:
     source:
       abi: GeneralizedTCR
       address: "0x86E72802D9AbBF7505a889721fD4D6947B02320E"
-      startBlock: 23165985
+      startBlock: 24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -90,12 +90,54 @@ dataSources:
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
+    name: ContentCurate
+    network: xdai
+    source:
+      abi: GeneralizedTCR
+      address: "0x76D159faDCDE966d68885b7267Ce42F4F655238D"
+      startBlock: 24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - Base64Ad
+        - CurateBase64AdItem
+      eventHandlers:
+        - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
+          handler: handleItemStatusChange
+      file: ./src/mappings/ContentCurate.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: TechnicalCurate
+    network: xdai
+    source:
+      abi: GeneralizedTCR
+      address: "0x950B8Be040B686bCB6cF9ee24D4B2E65ae6fe5fC"
+      startBlock: 24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - Base64Ad
+        - CurateBase64AdItem
+      eventHandlers:
+        - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
+          handler: handleItemStatusChange
+      file: ./src/mappings/TechnicalCurate.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
     name: KeyValue
     network: xdai
     source:
       abi: KeyValue
       address: "0xF230b73987024ed614AE93f8A5fdF2416aD0B835"
-      startBlock: 23769288
+      startBlock: 24296648
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -108,6 +150,95 @@ dataSources:
         - event: SetValue(string,string)
           handler: handleSetValue
       file: ./src/mappings/KeyValue.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: Base64AdFactory
+    network: xdai
+    source:
+      abi: Base64AdFactory
+      address: "0xC344F4b9B368279C736ee317A7a4f09eFBD0190c"
+      startBlock:  24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Base64AdFactory
+          file: ./contracts/abis/Base64AdFactory.json
+      entities:
+        - Base64Ad
+      eventHandlers:
+        - event: NewAd(indexed address)
+          handler: handleNewAd
+      # callHandlers:
+      #   - function: createAd(string,string)
+      #     handler: handleCreateAd
+      file: ./src/mappings/Base64AdFactory.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: Billing
+    network: xdai
+    source:
+      abi: Billing
+      address: "0x7EC1941A0E15327d92CE848Fe37a98d47a7cBFE0"
+      startBlock:  24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Billing
+          file: ./contracts/abis/Billing.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BalanceChanged(indexed address,uint256)
+          handler: handleBalanceChanged
+      file: ./src/mappings/Billing.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: FirstPriceAuction
+    network: xdai
+    source:
+      abi: FirstPriceAuction
+      address: "0xbe7AdAecD587638B06b06a666d36C4279655F7f1"
+      startBlock:  24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: FirstPriceAuction
+          file: ./contracts/abis/FirstPriceAuction.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BidUpdate(indexed address,indexed address,bytes32,indexed uint256,uint256)
+          handler: handleBidUpdate
+        - event: NewHighestBid(indexed address,address,bytes32)
+          handler: handleNewHighestBid
+      file: ./src/mappings/FirstPriceAuction.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: CurateProxySVG
+    network: xdai
+    source:
+      abi: CurateProxySVG
+      address: "0xda86232029a048c9aa0f642239a002b481283ba9"
+      startBlock:  24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: CurateProxySVG
+          file: ./contracts/abis/CurateProxySVG.json
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - CurateBase64AdItem
+      eventHandlers:
+        - event: newItemMapped(indexed address,indexed bytes32,bytes32,bytes32)
+          handler: handleNewItemMapped
+      file: ./src/mappings/CurateProxySVG.ts
       language: wasm/assemblyscript
 templates:
   - name: Market

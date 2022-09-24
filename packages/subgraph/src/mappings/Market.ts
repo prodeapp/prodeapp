@@ -60,6 +60,8 @@ export function handleQuestionsRegistered(evt: QuestionsRegistered): void {
         market.curated = false;
         market.hasPendingAnswers = true;
     }
+
+    market.billingBalance = BigInt.fromI32(0);
     market.save();
 }
 

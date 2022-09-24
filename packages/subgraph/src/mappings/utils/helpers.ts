@@ -1,6 +1,6 @@
-import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, Bytes, log, ethereum, crypto } from "@graphprotocol/graph-ts";
 import { Realitio } from "../../types/RealitioV3/Realitio";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral, Market} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral, Market, Bid, CurateBase64AdItem, Base64Ad, CurateAdsMapper} from "../../types/schema";
 import { RealitioAddress } from "./constants";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
@@ -183,4 +183,50 @@ export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:
     }
     event.save()
     return event
+}
+
+export function getBidID(market: Address, bidder: Address, itemID: Bytes): string {
+    return market.toHexString() + '-' + bidder.toHexString() + '-' + itemID.toHexString();
+
+}
+
+export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes): Bid {
+    const bidID = getBidID(market, bidder, itemID)
+    let bid = Bid.load(bidID);
+    if (bid === null){
+        bid = new Bid(bidID);
+        bid.balance = BigInt.fromI32(0);
+        bid.bidPerSecond = BigInt.fromI32(0);
+        bid.bidder = bidder;
+        bid.market = Market.load(market.toHexString())!.id;
+        bid.currentHighest = false;
+        bid.removed = false;
+        bid.startTimestamp = BigInt.fromI32(0);
+        let curateItem = CurateBase64AdItem.load(itemID.toHexString());
+        if (curateItem === null) {
+            log.warning('getOrCreateBid: CurateItem not found when creating Bid for itemID {}', [itemID.toHexString()])
+        } else {
+            bid.base64Ad = curateItem.base64Ad;        
+        }       
+        bid.save()
+        log.debug('getOrCreateBid: New Bid with id: {}!', [bidID]);
+        return bid
+    }
+    return bid;
+}
+
+export function getOrCreateBase64Ad(address: string): Base64Ad {
+    let base64Ad = Base64Ad.load(address);
+    if (base64Ad == null){
+        base64Ad = new Base64Ad(address);
+        base64Ad.markets = [];
+        base64Ad.save()
+    }
+    return base64Ad
+}
+
+export function getCurateProxyIDFromItemID(_itemID: Bytes): string {
+    let curateMapper = CurateAdsMapper.load(_itemID.toHexString())!;
+    return curateMapper.curateBase64AdItem;
+
 }

@@ -21,7 +21,7 @@ import {getOrCreateRegistry} from "./utils/helpers";
 // Registration and removal requests can be challenged. Once the request resolves (either by
 // passing the challenge period or via dispute resolution), the item state is updated to 0 or 1.
 
-function getStatus(status: number): string {
+export function getStatus(status: number): string {
   if (status == 0) return "Absent";
   if (status == 1) return "Registered";
   if (status == 2) return "RegistrationRequested";
@@ -29,12 +29,12 @@ function getStatus(status: number): string {
   return 'Error';
 }
 
-function u8toString(byteArray:Uint8Array):string {
+export function u8toString(byteArray:Uint8Array):string {
   const bufferString = byteArray.reduce((str, byte) => str + String.fromCharCode(byte), '');
   return bufferString
 };
 
-function u8toBigInt(byteArray:Uint8Array):BigInt {
+export function u8toBigInt(byteArray:Uint8Array):BigInt {
   let result = BigInt.fromI32(0);
   for (let i=0; i<byteArray.length; i++) {
     result = result.times(BigInt.fromI32(256)).plus(BigInt.fromI32(byteArray[i]));
@@ -125,13 +125,13 @@ function getTimestmapFromData(data:Bytes): BigInt {
   return timestamp
 }
 
-function getStatusFromItemID(itemID: Bytes, contractAddress: Address): string {
+export function getStatusFromItemID(itemID: Bytes, contractAddress: Address): string {
   let tcr = GeneralizedTCR.bind(contractAddress);
   let itemInfo = tcr.getItemInfo(itemID);
   return getStatus(itemInfo.value1)
 }
 
-function getDataFromItemID(itemID: Bytes, contractAddress: Address): Bytes {
+export function getDataFromItemID(itemID: Bytes, contractAddress: Address): Bytes {
   let tcr = GeneralizedTCR.bind(contractAddress);
   let itemInfo = tcr.getItemInfo(itemID);
   return itemInfo.value0
