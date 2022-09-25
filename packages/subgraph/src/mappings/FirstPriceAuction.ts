@@ -10,15 +10,6 @@ export function handleBidUpdate(event: BidUpdate): void {
     if (event.params._newBalance.equals(BigInt.fromI32(0))) {
         bid.removed = true;
     }
-    let base64Ad = getOrCreateBase64Ad(bid.base64Ad);
-    if (base64Ad !== null) {
-        log.debug("handleBidUpdate: Updating base64Ad {}", [bid.base64Ad]);
-        if (!base64Ad.markets.includes(event.params._market.toHexString())) {
-            let tmp_markets = base64Ad.markets;
-            tmp_markets.push(event.params._market.toHexString());
-            base64Ad.markets = tmp_markets;
-        }
-    }
     bid.save()
 }
 
