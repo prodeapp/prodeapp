@@ -174,6 +174,9 @@ export default function Header() {
               <a href={BRIDGE_URL} target="_blank" rel="noreferrer">
                 <Trans>Bridge</Trans>
               </a>
+              <RouterLink to='/ads'>
+                <Trans>Ads</Trans>
+              </RouterLink>
               <a href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
                 <Trans>Documentation</Trans>
               </a>
