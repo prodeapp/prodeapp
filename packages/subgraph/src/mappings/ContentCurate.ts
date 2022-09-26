@@ -1,10 +1,10 @@
 /* eslint-disable prefer-const */
 import { Address, Bytes, log } from '@graphprotocol/graph-ts';
-import { CurateBase64AdItem } from '../types/schema';
+import { CurateAdsMapper, CurateBase64AdItem } from '../types/schema';
 
 import {
-  GeneralizedTCR,
   ItemStatusChange,
+  ItemSubmitted,
 } from '../types/ContentCurate/GeneralizedTCR';
 import { getDataFromItemID, getStatusFromItemID } from './GeneralizedTCR';
 import { getCurateProxyIDFromItemID } from './utils/helpers';
@@ -17,9 +17,6 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
   log.debug("handleItemSubmitted: itemID {} for contentCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
   let curateItem = CurateBase64AdItem.load(itemID);
 
-  let data = getDataFromItemID(evt.params._itemID, evt.address);
-  log.debug("handleItemStatusChange: data = {}", [data.toHexString()]);
-
   if (curateItem === null) {
     log.error('handleItemStatusChange: CurateBase64AdItem with itemId {} not found for contentItemID {}', [
       itemID,
@@ -27,7 +24,18 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
     ]);
     return;
   }
+
+  let data = getDataFromItemID(evt.params._itemID, evt.address);
+  log.debug("handleItemStatusChange: data = {}", [data.toHexString()]);
   curateItem.contentStatus = getStatusFromItemID(curateItem.contentItemID, evt.address)
   log.debug("handleItemStatusChange: ItemID {} has status {} in contentCurate", [evt.params._itemID.toHexString(), curateItem.contentStatus])
   curateItem.save();
+}
+
+export function handleItemSubmitted(evt: ItemSubmitted): void {
+  let curateMapper = new CurateAdsMapper(evt.params._itemID.toHexString())
+  const data = getDataFromItemID(evt.params._itemID, evt.address);
+  log.debug("handleItemSubmitted: Data {}", [data.toHexString()]);
+  curateMapper.curateBase64AdItem = data.slice(3, 69).toString();
+  curateMapper.save()
 }
