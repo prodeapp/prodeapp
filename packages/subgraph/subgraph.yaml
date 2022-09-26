@@ -108,6 +108,8 @@ dataSources:
       eventHandlers:
         - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
           handler: handleItemStatusChange
+        - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
+          handler: handleItemSubmitted
       file: ./src/mappings/ContentCurate.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
@@ -129,6 +131,8 @@ dataSources:
       eventHandlers:
         - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
           handler: handleItemStatusChange
+        - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
+          handler: handleItemSubmitted
       file: ./src/mappings/TechnicalCurate.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
