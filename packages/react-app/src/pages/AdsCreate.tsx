@@ -94,6 +94,7 @@ function AdsCreate() {
   const fileChangedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
       setError("Empty file");
+      setSvg('');
       return false;
     }
 
@@ -101,6 +102,7 @@ function AdsCreate() {
 
     if (!Object.values(VALID_EXTENSIONS).includes(file.type)) {
       setError("File type not supported. Must be svg, png or jpg.");
+      setSvg('');
       return false;
     }
 
@@ -108,15 +110,20 @@ function AdsCreate() {
 
     if (height !== IMAGE_DIMENSION.height || width !== IMAGE_DIMENSION.width) {
       setError("Image dimension must be 290x430");
+      setSvg('');
       return false;
     }
 
-    if (file.size > 1e6) {
-      setError("File size must be lower than 1MB");
+    const _svg = await wrapSvg(file);
+
+    if (_svg.length > (1024 * 10)) {
+      setError("SVG size must be lower than 10 KB");
+      setSvg('');
       return false;
     }
 
-    setSvg(await wrapSvg(file))
+    setError('');
+    setSvg(_svg)
   }
 
   return <Container>
