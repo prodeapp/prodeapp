@@ -15,7 +15,7 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
   if (evt.params._resolved == false) return; // No-op.
 
   const itemID = getCurateProxyIDFromItemID(evt.params._itemID);
-  log.debug("handleItemSubmitted: itemID {} for technicalCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
+  log.debug("handleItemStatusChange: itemID {} for technicalCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
   let curateItem = CurateBase64AdItem.load(itemID);
 
   if (curateItem === null) {
