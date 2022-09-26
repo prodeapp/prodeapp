@@ -36,7 +36,7 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
 export function handleItemSubmitted(evt: ItemSubmitted): void {
   let curateMapper = new CurateAdsMapper(evt.params._itemID.toHexString())
   const data = getDataFromItemID(evt.params._itemID, evt.address);
-  log.debug("handleItemSubmitted: Data {}", [data.toHexString()]);
+  log.debug("handleItemSubmitted: Data {} for itemID {}", [data.toHexString(), evt.params._itemID.toHexString()]);
   curateMapper.curateBase64AdItem = data.slice(3, 69).toString();
   curateMapper.save()
 }
