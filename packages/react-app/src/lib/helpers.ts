@@ -10,6 +10,7 @@ import {Event, Outcome} from "../graphql/subgraph";
 import {t} from "@lingui/macro";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
+import { shortenAddress } from '@usedapp/core'
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -230,4 +231,12 @@ export function getMedalColor(position: number) {
   ];
 
   return medalColors[position - 1] || medalColors[2]
+}
+
+
+export function formatPlayerName(name:string, address:string){
+  if (name === address){
+    return shortenAddress(address);
+  }
+  return name;
 }

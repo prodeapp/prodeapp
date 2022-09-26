@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useRanking} from "../../hooks/useRanking";
-import {shortenAddress, useEthers} from "@usedapp/core";
+import {useEthers} from "@usedapp/core";
 import {TableHeader, TableBody} from "../../components"
 import Box from '@mui/material/Box';
 import AppDialog from "../Dialog";
@@ -13,7 +13,7 @@ import { Skeleton } from "@mui/material";
 import {useIndexedMarketWinners} from "../../hooks/useMarketWinners";
 import {ReactComponent as EyeIcon} from "../../assets/icons/eye.svg";
 import {ReactComponent as MedalIcon} from "../../assets/icons/medal.svg";
-import {getMedalColor} from "../../lib/helpers";
+import {formatPlayerName, getMedalColor} from "../../lib/helpers";
 
 export default function Bets({marketId, onlyMyBets}: {marketId: string, onlyMyBets?: boolean}) {
   const {account} = useEthers();
@@ -65,7 +65,7 @@ export default function Bets({marketId, onlyMyBets}: {marketId: string, onlyMyBe
             <div>{i+1}</div>
             {marketWinners[rank.tokenID] && marketWinners[rank.tokenID].prizes.map(prize => <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(prize)}} />)}
           </div>
-          <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : shortenAddress(rank.player.id)}</Link></div>
+          <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : formatPlayerName(rank.player.name, rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
           <div style={{width: '180px'}}><span className="js-link" onClick={() => handleOpen(rank)}><EyeIcon /> <Trans>See details</Trans></span></div>
         </TableBody>
