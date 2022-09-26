@@ -223,7 +223,7 @@ type Base64Ad @entity {
   "address of the Smart Contract"
   id: ID!
   "Markets where this Ad has bids (active or not)."
-  markets: [Market!]! @derivedFrom(field: "ads")
+  markets: [Market!]!
   "entity with curate information of this Ad"
   curateBase64AdItem: CurateBase64AdItem
   # svg: String

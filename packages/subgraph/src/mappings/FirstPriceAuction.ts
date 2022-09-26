@@ -17,6 +17,7 @@ export function handleBidUpdate(event: BidUpdate): void {
             let tmp_markets = base64Ad.markets;
             tmp_markets.push(event.params._market.toHexString());
             base64Ad.markets = tmp_markets;
+            base64Ad.save()
         }
     }
     bid.save()
