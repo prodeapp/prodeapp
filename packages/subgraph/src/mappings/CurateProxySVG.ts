@@ -20,11 +20,4 @@ export function handleNewItemMapped(event: newItemMapped): void {
     base64Ad.curateBase64AdItem = curateItem.id;
     base64Ad.save()
 
-    let curateMapperC = new CurateAdsMapper(event.params._contentItemID.toHexString())
-    curateMapperC.curateBase64AdItem = curateItem.id;
-    curateMapperC.save()
-
-    let curateMapperT = new CurateAdsMapper(event.params._technicalItemID.toHexString())
-    curateMapperT.curateBase64AdItem = curateItem.id;
-    curateMapperT.save()
 }

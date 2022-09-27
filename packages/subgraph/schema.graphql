@@ -266,5 +266,6 @@ type CurateBase64AdItem @entity {
 type CurateAdsMapper @entity {
   "ItemID in curate"
   id: ID!
-  curateBase64AdItem: CurateBase64AdItem!
+  base64Ad: Base64Ad!
+  ipfs: String!
 }

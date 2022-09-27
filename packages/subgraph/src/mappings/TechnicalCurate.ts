@@ -7,14 +7,19 @@ import {
   ItemSubmitted,
   ItemStatusChange,
 } from '../types/ContentCurate/GeneralizedTCR';
-import { getDataFromItemID, getStatusFromItemID } from './GeneralizedTCR';
-import { getCurateProxyIDFromItemID } from './utils/helpers';
+import { getDataFromItemID, getStatusFromItemID, u8toString } from './GeneralizedTCR';
+import { getCurateProxyIDFromItemID, getOrCreateBase64Ad } from './utils/helpers';
+import { getAddressFromData, getIPFSFromData } from './ContentCurate';
 
 
 export function handleItemStatusChange(evt: ItemStatusChange): void {
   if (evt.params._resolved == false) return; // No-op.
 
   const itemID = getCurateProxyIDFromItemID(evt.params._itemID);
+  if (itemID === null){
+    log.warning('handleItemStatusChange: ItemID {} not found in the proxy', [evt.params._itemID.toHexString()])
+    return
+  }
   log.debug("handleItemStatusChange: itemID {} for technicalCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
   let curateItem = CurateBase64AdItem.load(itemID);
 
@@ -36,7 +41,11 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
 export function handleItemSubmitted(evt: ItemSubmitted): void {
   let curateMapper = new CurateAdsMapper(evt.params._itemID.toHexString())
   const data = getDataFromItemID(evt.params._itemID, evt.address);
-  log.debug("handleItemSubmitted: Data {} for itemID {}", [data.toHexString(), evt.params._itemID.toHexString()]);
-  curateMapper.curateBase64AdItem = data.slice(3, 69).toString();
+
+  const adAddress = getAddressFromData(data);
+  log.debug("handleItemSubmitted: Ad address {} in itemID {}", [adAddress, evt.params._itemID.toHexString()])
+  const baseAd = getOrCreateBase64Ad(adAddress)
+  curateMapper.base64Ad = baseAd.id;
+  curateMapper.ipfs = getIPFSFromData(data);
   curateMapper.save()
 }
