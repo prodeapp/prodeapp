@@ -226,8 +226,12 @@ export function getOrCreateBase64Ad(address: string): Base64Ad {
     return base64Ad
 }
 
-export function getCurateProxyIDFromItemID(_itemID: Bytes): string {
+export function getCurateProxyIDFromItemID(_itemID: Bytes): string | null {
     let curateMapper = CurateAdsMapper.load(_itemID.toHexString())!;
-    return curateMapper.curateBase64AdItem;
 
+    let base64Ad = Base64Ad.load(curateMapper.base64Ad)
+    if (base64Ad !== null){
+        return base64Ad.curateBase64AdItem;
+    }
+    return null
 }

@@ -1,19 +1,48 @@
 /* eslint-disable prefer-const */
-import { Address, Bytes, log } from '@graphprotocol/graph-ts';
+import { Address, ByteArray, Bytes, log } from '@graphprotocol/graph-ts';
 import { CurateAdsMapper, CurateBase64AdItem } from '../types/schema';
 
 import {
   ItemStatusChange,
   ItemSubmitted,
 } from '../types/ContentCurate/GeneralizedTCR';
-import { getDataFromItemID, getStatusFromItemID } from './GeneralizedTCR';
-import { getCurateProxyIDFromItemID } from './utils/helpers';
+import { getDataFromItemID, getStatusFromItemID, u8toString } from './GeneralizedTCR';
+import { getCurateProxyIDFromItemID, getOrCreateBase64Ad } from './utils/helpers';
 
+
+export function getAddressFromData(data: Bytes): string {
+  // first byte it's the data type and lenght: Array of 2 elements.
+  // second byte it's the length of the first element of the array (it's an address, then 20)
+  // 20 length of address + 3 the beggining of the data.
+  // The rest is the ipfs
+  // start = 2 + 2 + 1
+  // end = start + 20*2
+  return '0x' + data.toHexString().slice(6, 20*2 + 6)
+}
+
+export function getIPFSFromData(data: Bytes): string {
+  // first byte it's the data type and lenght: Array of 2 elements.
+  // second byte it's the length of the first element of the array (it's an address, then 20)
+  // 20 length of address + 3 the beggining of the data.
+  // The rest is the ipfs
+  // start = 2 + 2
+  // '80' in hex it's equal to a short string with length 0
+  if (data.toHexString().slice(46,48) != '80') {
+    return u8toString(data.slice(24))
+  }
+  // there is no IPFS
+  return ''
+  
+}
 
 export function handleItemStatusChange(evt: ItemStatusChange): void {
   if (evt.params._resolved == false) return; // No-op.
 
   const itemID = getCurateProxyIDFromItemID(evt.params._itemID);
+  if (itemID === null){
+    log.warning('handleItemStatusChange: ItemID {} not found in the proxy', [evt.params._itemID.toHexString()])
+    return
+  }
   log.debug("handleItemStatusChange: itemID {} for contentCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
   let curateItem = CurateBase64AdItem.load(itemID);
 
@@ -36,6 +65,12 @@ export function handleItemSubmitted(evt: ItemSubmitted): void {
   let curateMapper = new CurateAdsMapper(evt.params._itemID.toHexString())
   const data = getDataFromItemID(evt.params._itemID, evt.address);
   log.debug("handleItemSubmitted: Data {} for itemID {}", [data.toHexString(), evt.params._itemID.toHexString()]);
-  curateMapper.curateBase64AdItem = data.slice(3, 69).toString();
+  
+  const adAddress = getAddressFromData(data);
+  // log.debug("handleItemSubmitted: Ad address {} in itemID {}", [adAddress, evt.params._itemID.toHexString()])
+  // log.debug("handleItemSubmitted: ipfs {} stored for the itemID {}", [getIPFSFromData(data), evt.params._itemID.toHexString()])
+  const baseAd = getOrCreateBase64Ad(adAddress)
+  curateMapper.base64Ad = baseAd.id;
+  curateMapper.ipfs = getIPFSFromData(data);
   curateMapper.save()
 }
