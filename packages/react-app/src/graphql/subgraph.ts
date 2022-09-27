@@ -304,18 +304,18 @@ export const MARKET_FACTORY_FIELDS = `
   }
 `;
 
-export interface Base64Ad {
+export interface SVGAd {
   id: string
-  curateBase64AdItem: Pick<CurateBase64AdItem, 'id'>[]
+  curateSVGAdItem: Pick<CurateSVGAdItem, 'id'>[]
   markets: Pick<Market, 'id'>[]
   Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'removed' | 'currentHighest'>[]
   activeMarkets: Pick<Market, 'id'>[]
 }
 
-export const BASE64_AD_FIELDS = `
-  fragment Base64AdsFields on Base64Ad {
+export const SVG_AD_FIELDS = `
+  fragment SVGAdsFields on SVGAd {
     id
-    curateBase64AdItem {id}
+    curateSVGAdItem {id}
     markets {id}
     Bids {
       id
@@ -345,7 +345,7 @@ export interface AdBid {
   currentHighest: boolean
 }
 
-export interface CurateBase64AdItem {
+export interface CurateSVGAdItem {
   id: string
-  base64Ad: Pick<Base64Ad, 'id'>
+  SVGAd: Pick<SVGAd, 'id'>
 }

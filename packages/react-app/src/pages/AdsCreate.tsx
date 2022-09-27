@@ -7,7 +7,7 @@ import Alert from "@mui/material/Alert";
 import { Trans, t } from "@lingui/macro";
 import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
-import {Base64AdFactory__factory} from "../typechain";
+import {SVGFactory__factory} from "../typechain";
 import {parseUnits} from "@ethersproject/units";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
@@ -68,7 +68,7 @@ function AdsCreate() {
 
   const { account, error: walletError } = useEthers();
 
-  const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_BASE64_AD_FACTORY as string, Base64AdFactory__factory.createInterface()), 'createAd');
+  const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface()), 'createAd');
 
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
