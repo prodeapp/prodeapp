@@ -310,7 +310,7 @@ export const MARKET_FACTORY_FIELDS = `
 
 export interface SVGAd {
   id: string
-  curateSVGAdItem: Pick<CurateSVGAdItem, 'id'>
+  curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null
   markets: Pick<Market, 'id'>[]
   Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'removed' | 'currentHighest'>[]
   activeMarkets: Pick<Market, 'id'>[]

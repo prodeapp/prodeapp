@@ -8,7 +8,7 @@ import { Trans, t } from "@lingui/macro";
 import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
 import {SVGFactory__factory} from "../typechain";
-import {parseUnits} from "@ethersproject/units";
+import {useSVGAdFactoryDeposit} from "../hooks/useSVGFactoryDeposit";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
@@ -70,6 +70,8 @@ function AdsCreate() {
 
   const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface()), 'createAd');
 
+  const baseDeposit = useSVGAdFactoryDeposit();
+
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
   }
@@ -77,9 +79,9 @@ function AdsCreate() {
   const onClick = async () => {
     try {
       await send(
-        btoa(svg),
+        svg,
         {
-          value: parseUnits(String(30 + 6.9), 18),
+          value: baseDeposit,
         }
       );
     } catch (e: any) {

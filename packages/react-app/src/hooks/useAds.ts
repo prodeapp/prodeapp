@@ -9,7 +9,7 @@ export interface UseAdsProps {
 const query = `
     ${SVG_AD_FIELDS}
     query AdsQuery {
-      SVGAds {
+      svgads(where: {curateSVGAdItem_not: null}) {
         ...SVGAdsFields
       }
     }
@@ -19,11 +19,11 @@ export const useAds = ({market}: UseAdsProps = {}) => {
   return useQuery<SVGAd[], Error>(
     ["useAds", market],
     async () => {
-      const response = await apolloProdeQuery<{ svgAds: SVGAd[] }>(query);
+      const response = await apolloProdeQuery<{ svgads: SVGAd[] }>(query);
 
       if (!response) throw new Error("No response from TheGraph");
 
-      return response.data.svgAds;
+      return response.data.svgads;
     }
   );
 };
