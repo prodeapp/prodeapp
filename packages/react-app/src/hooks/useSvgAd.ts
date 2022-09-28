@@ -1,11 +1,11 @@
 import {useCall} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {useEffect, useState} from "react";
-import {Base64Ad__factory} from "../typechain";
+import {SVG__factory} from "../typechain";
 
-export const useSvgAd = (base64Ad: string) => {
+export const useSvgAd = (SVGAd: string) => {
   // TODO: fix args
-  const { value: tokenUri } = useCall({ contract: new Contract(base64Ad, Base64Ad__factory.createInterface()), method: 'getSVG', args: [base64Ad, 0] }) || {}
+  const { value: tokenUri } = useCall({ contract: new Contract(SVGAd, SVG__factory.createInterface()), method: 'getSVG', args: [SVGAd, 0] }) || {}
 
   const [image, setImage] = useState('');
 
