@@ -11,7 +11,7 @@ export const useSvgAd = (SVGAd: string) => {
 
   useEffect(() => {
     if (tokenUri !== undefined) {
-      setImage(atob(tokenUri[0]));
+      setImage(tokenUri[0]);
     }
   }, [tokenUri]);
 

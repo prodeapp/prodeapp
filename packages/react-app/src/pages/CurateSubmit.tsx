@@ -97,7 +97,7 @@ function CurateSubmit() {
 
   const { account, error: walletError } = useEthers();
 
-  const submissionDeposit = useSubmissionDeposit();
+  const submissionDeposit = useSubmissionDeposit(process.env.REACT_APP_CURATE_REGISTRY as string);
 
   const useFormReturn = useForm<CurateSubmitFormValues>({defaultValues: {
     name: '',

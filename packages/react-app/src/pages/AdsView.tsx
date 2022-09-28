@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid';
 import {Trans} from "@lingui/macro";
 import {styled, useTheme} from "@mui/material/styles";
 import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 import {TableHeader, TableBody} from "../components"
 import {useAd} from "../hooks/useAd";
 import {useSvgAd} from "../hooks/useSvgAd";
@@ -64,19 +65,24 @@ function AdsView() {
 
   return (
     <>
-      <PlaceBidDialog
+      {ad.curateSVGAdItem !== null && <PlaceBidDialog
         open={openModal}
         handleClose={handleClose}
         itemId={ad.curateSVGAdItem.id}
         market={placeBidMarket}
-      />
+      />}
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
         <GridLeftColumn item xs={12} lg={4}>
-          <div>
-            <div dangerouslySetInnerHTML={{__html: svgAd}} style={{textAlign: 'center'}}></div>
+          <div style={{textAlign: 'center'}}>
+            <div dangerouslySetInnerHTML={{__html: svgAd}}></div>
+
+            <div style={{marginTop: '20px'}}>
+              <Button color="primary" onClick={() => handleOpen('')}>Place new bid</Button>
+            </div>
           </div>
         </GridLeftColumn>
         <Grid item xs={12} lg={8} sx={{p: 3}}>
+          {groupedBids.length === 0 && <Alert severity="info"><Trans>No bids found.</Trans></Alert>}
           {groupedBids.map((bidInfo, i) => {
             return <div key={i}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>

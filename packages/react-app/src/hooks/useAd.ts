@@ -5,7 +5,7 @@ import {apolloProdeQuery} from "../lib/apolloClient";
 const query = `
     ${SVG_AD_FIELDS}
     query AdsQuery($id: String) {
-      SVGAd(id: $id) {
+      svgad(id: $id) {
         ...SVGAdsFields
       }
     }
@@ -15,11 +15,11 @@ export const useAd = (id: string) => {
   return useQuery<SVGAd, Error>(
     ["useAd", id],
     async () => {
-      const response = await apolloProdeQuery<{ SVGAd: SVGAd }>(query, {id: id.toLowerCase()});
+      const response = await apolloProdeQuery<{ svgad: SVGAd }>(query, {id: id.toLowerCase()});
 
       if (!response) throw new Error("No response from TheGraph");
 
-      return response.data.SVGAd;
+      return response.data.svgad;
     }
   );
 };
