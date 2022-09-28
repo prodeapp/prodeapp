@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {Base64Ad, BASE64_AD_FIELDS} from "../graphql/subgraph";
+import {SVGAd, SVG_AD_FIELDS} from "../graphql/subgraph";
 import {apolloProdeQuery} from "../lib/apolloClient";
 
 export interface UseAdsProps {
@@ -7,23 +7,23 @@ export interface UseAdsProps {
 }
 
 const query = `
-    ${BASE64_AD_FIELDS}
+    ${SVG_AD_FIELDS}
     query AdsQuery {
-      base64Ads {
-        ...Base64AdsFields
+      SVGAds {
+        ...SVGAdsFields
       }
     }
 `;
 
 export const useAds = ({market}: UseAdsProps = {}) => {
-  return useQuery<Base64Ad[], Error>(
+  return useQuery<SVGAd[], Error>(
     ["useAds", market],
     async () => {
-      const response = await apolloProdeQuery<{ base64Ads: Base64Ad[] }>(query);
+      const response = await apolloProdeQuery<{ svgAds: SVGAd[] }>(query);
 
       if (!response) throw new Error("No response from TheGraph");
 
-      return response.data.base64Ads;
+      return response.data.svgAds;
     }
   );
 };

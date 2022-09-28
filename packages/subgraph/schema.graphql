@@ -42,9 +42,9 @@ type Market @entity {
   "All the bids for this market"
   bids: [Bid!]! @derivedFrom(field: "market")
   "All Ads (active or not) that has a bid in this market"
-  ads: [Base64Ad!]! @derivedFrom(field: "markets")
+  ads: [SVGAd!]! @derivedFrom(field: "markets")
   "Current Ad with highest bid, null if there is no Ad with Bid."
-  highestBidAd: Base64Ad
+  highestBidAd: SVGAd
   "Current highest bid, null if there are not."
   highestBid: Bid
   "Market Billing Balance"
@@ -218,16 +218,16 @@ type _Schema_
     include: [{ entity: "Market", fields: [{ name: "name" }] }]
   )
 
-type Base64Ad @entity {
+type SVGAd @entity {
   "address of the Smart Contract"
   id: ID!
   "Markets where this Ad has bids (active or not)."
   markets: [Market!]!
   "entity with curate information of this Ad"
-  curateBase64AdItem: CurateBase64AdItem
+  curateSVGAdItem: CurateSVGAdItem
   # svg: String
   "All the bids of this ad"
-  Bids: [Bid!]! @derivedFrom(field: "base64Ad")
+  Bids: [Bid!]! @derivedFrom(field: "SVGAd")
   activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
 }
 
@@ -244,15 +244,15 @@ type Bid @entity {
   removed: Boolean!
   currentHighest: Boolean!
   "Address of the ad"
-  base64Ad: Base64Ad!
+  SVGAd: SVGAd!
   "Curate info for the Ad of this Bid"
-  curateBase64AdItem: CurateBase64AdItem
+  curateSVGAdItem: CurateSVGAdItem
 }
 
-type CurateBase64AdItem @entity {
+type CurateSVGAdItem @entity {
   "CurateProxySVG itemID = keccack256(abi.encode(itemID, itemID))"
   id: ID!
-  base64Ad: Base64Ad!,
+  SVGAd: SVGAd!,
   "itemID in technical list of Curate"
   technicalItemID: Bytes!,
   "itemID in the content list of Curate"
@@ -266,6 +266,6 @@ type CurateBase64AdItem @entity {
 type CurateAdsMapper @entity {
   "ItemID in curate"
   id: ID!
-  base64Ad: Base64Ad!
+  SVGAd: SVGAd!
   ipfs: String!
 }
