@@ -1,13 +1,13 @@
 /* eslint-disable prefer-const */
 import { Address, ByteArray, Bytes, log } from '@graphprotocol/graph-ts';
-import { CurateAdsMapper, CurateBase64AdItem } from '../types/schema';
+import { CurateAdsMapper, CurateSVGAdItem } from '../types/schema';
 
 import {
   ItemStatusChange,
   ItemSubmitted,
 } from '../types/ContentCurate/GeneralizedTCR';
 import { getDataFromItemID, getStatusFromItemID, u8toString } from './GeneralizedTCR';
-import { getCurateProxyIDFromItemID, getOrCreateBase64Ad } from './utils/helpers';
+import { getCurateProxyIDFromItemID, getOrCreateSVGAd } from './utils/helpers';
 
 
 export function getAddressFromData(data: Bytes): string {
@@ -44,10 +44,10 @@ export function handleItemStatusChange(evt: ItemStatusChange): void {
     return
   }
   log.debug("handleItemStatusChange: itemID {} for contentCurate itemID {}", [itemID, evt.params._itemID.toHexString()])
-  let curateItem = CurateBase64AdItem.load(itemID);
+  let curateItem = CurateSVGAdItem.load(itemID);
 
   if (curateItem === null) {
-    log.error('handleItemStatusChange: CurateBase64AdItem with itemId {} not found for contentItemID {}', [
+    log.error('handleItemStatusChange: CurateSVGAdItem with itemId {} not found for contentItemID {}', [
       itemID,
       evt.params._itemID.toHexString(),
     ]);
@@ -69,8 +69,8 @@ export function handleItemSubmitted(evt: ItemSubmitted): void {
   const adAddress = getAddressFromData(data);
   // log.debug("handleItemSubmitted: Ad address {} in itemID {}", [adAddress, evt.params._itemID.toHexString()])
   // log.debug("handleItemSubmitted: ipfs {} stored for the itemID {}", [getIPFSFromData(data), evt.params._itemID.toHexString()])
-  const baseAd = getOrCreateBase64Ad(adAddress)
-  curateMapper.base64Ad = baseAd.id;
+  const baseAd = getOrCreateSVGAd(adAddress)
+  curateMapper.SVGAd = baseAd.id;
   curateMapper.ipfs = getIPFSFromData(data);
   curateMapper.save()
 }

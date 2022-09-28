@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts';
 import { BalanceChanged } from '../types/Billing/Billing';
-import { Bid, Market } from '../types/schema';
+import { Market } from '../types/schema';
 
 
 export function handleBalanceChanged(event: BalanceChanged): void {

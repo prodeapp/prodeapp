@@ -4,7 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
-import {Base64Ad} from "../graphql/subgraph";
+import {SVGAd} from "../graphql/subgraph";
 import {formatAmount, getBidBalance} from "../lib/helpers";
 import {Trans} from "@lingui/macro";
 import Box from "@mui/material/Box";
@@ -14,7 +14,7 @@ import {BigNumberish} from "ethers";
 import {Link as RouterLink} from "react-router-dom";
 import Button from "@mui/material/Button";
 
-function AdBox({ad}: {ad: Base64Ad}) {
+function AdBox({ad}: {ad: SVGAd}) {
   const svgAd = useSvgAd(ad.id);
   const [maxBid, setMaxBid] = useState<BigNumberish>(0);
   const [minBid, setMinBid] = useState<BigNumberish>(0);
