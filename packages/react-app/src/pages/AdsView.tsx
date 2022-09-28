@@ -1,16 +1,16 @@
-import React, {useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import {useParams} from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import {Trans} from "@lingui/macro";
 import {styled, useTheme} from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import {TableHeader, TableBody} from "../components"
-import { useEthers} from "@usedapp/core";
 import {useAd} from "../hooks/useAd";
 import {useSvgAd} from "../hooks/useSvgAd";
 import {AdBid} from "../graphql/subgraph";
 import {formatAmount, getBidBalance} from "../lib/helpers";
 import Typography from "@mui/material/Typography";
+import PlaceBidDialog from "../components/Ads/PlaceBidDialog";
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -42,7 +42,17 @@ function AdsView() {
   const groupedBids = useIndexedBids(ad?.Bids);
   const svgAd = useSvgAd(String(id));
   const theme = useTheme();
-  const {account} = useEthers();
+  const [openModal, setOpenModal] = useState(false);
+  const [placeBidMarket, setPlaceBidMarket] = useState('');
+
+  const handleClose = () => {
+    setOpenModal(false);
+  }
+
+  const handleOpen = (market: string) => {
+    setPlaceBidMarket(market);
+    setOpenModal(true);
+  }
 
   if (isLoading) {
     return <div><Trans>Loading...</Trans></div>
@@ -54,6 +64,12 @@ function AdsView() {
 
   return (
     <>
+      <PlaceBidDialog
+        open={openModal}
+        handleClose={handleClose}
+        itemId={ad.curateSVGAdItem.id}
+        market={placeBidMarket}
+      />
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
         <GridLeftColumn item xs={12} lg={4}>
           <div>
@@ -63,7 +79,14 @@ function AdsView() {
         <Grid item xs={12} lg={8} sx={{p: 3}}>
           {groupedBids.map((bidInfo, i) => {
             return <div key={i}>
-              <Typography variant="h6">{bidInfo.market.name}</Typography>
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+                <div>
+                  <Typography variant="h6">{bidInfo.market.name}</Typography>
+                </div>
+                <div>
+                  <Button color="primary" size="small" onClick={() => handleOpen(bidInfo.market.id)}>Place bid</Button>
+                </div>
+              </div>
               <TableHeader>
                 <div style={{width: '33%'}}>Bidder</div>
                 <div style={{width: '33%'}}>Bid per second</div>
@@ -77,7 +100,6 @@ function AdsView() {
                     <div style={{width: '33%'}}>{formatAmount(getBidBalance(bid))}</div>
                   </TableBody>
                 })}
-
             </div>
           })}
         </Grid>
