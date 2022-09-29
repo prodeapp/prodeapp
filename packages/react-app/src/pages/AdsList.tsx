@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useAds, UseAdsProps} from "../hooks/useAds";
+import React, {useContext} from "react";
+import {useAds} from "../hooks/useAds";
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from "@mui/material/Alert";
 import Grid from '@mui/material/Grid';
@@ -10,31 +10,30 @@ import {Trans} from "@lingui/macro";
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
 import {useSvgAd} from "../hooks/useSvgAd";
-import {BigNumberish} from "ethers";
 import {Link as RouterLink} from "react-router-dom";
 import Button from "@mui/material/Button";
 import ImgSvg from "../components/ImgSvg";
+import {BigNumber} from "@ethersproject/bignumber";
+import {GlobalContext} from "../lib/GlobalContext";
+
+function getBidsInfo(ad: SVGAd): {max: BigNumber, min: BigNumber} {
+  const bids = ad.Bids.map(bid => {
+    return getBidBalance(bid)
+  }).sort((a, b) => {
+    return a.sub(b).lt(0) ? 1 : -1
+  });
+
+  if (bids.length > 0) {
+    return {max: bids[0], min: bids[bids.length - 1]}
+  }
+
+  return {max: BigNumber.from(0), min: BigNumber.from(0)}
+}
 
 function AdBox({ad}: {ad: SVGAd}) {
   const svgAd = useSvgAd(ad.id);
-  const [maxBid, setMaxBid] = useState<BigNumberish>(0);
-  const [minBid, setMinBid] = useState<BigNumberish>(0);
 
-  useEffect(() => {
-    const bids = ad.Bids.map(bid => {
-      return getBidBalance(bid)
-    }).sort((a, b) => {
-      return a.sub(b).lt(0) ? 1 : -1
-    });
-
-    if (bids.length > 0) {
-      setMaxBid(bids[0]);
-      setMinBid(bids[bids.length - 1]);
-    } else {
-      setMaxBid(0);
-      setMinBid(0);
-    }
-  }, [ad]);
+  const {max: maxBid, min: minBid} = getBidsInfo(ad);
 
   return <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
     <Box sx={{p: '24px', width: '100%'}}>
@@ -74,15 +73,14 @@ function AdBox({ad}: {ad: SVGAd}) {
   </Box>
 }
 
-
 function AdsList() {
-  const [adFilters, setAdsFilters] = useState<UseAdsProps>({});
+  const {adsFilters} = useContext(GlobalContext);
 
-  const { isLoading, error, data: ads } = useAds(adFilters);
+  const { isLoading, error, data: ads } = useAds(adsFilters.filters);
 
   return (
     <>
-      <AdsFilter setAdsFilters={setAdsFilters} />
+      <AdsFilter />
 
       {isLoading && <CircularProgress />}
 
