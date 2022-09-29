@@ -13,6 +13,9 @@ interface MarketFiltersProp {
 interface AdsFiltersProp {
   market: string,
   setMarket: (market: string) => void
+  filters: {
+    market: string
+  }
 }
 
 interface GlobalContextInterface {
@@ -42,7 +45,10 @@ const useAdsFilters = (): AdsFiltersProp => {
 
   return {
     market,
-    setMarket
+    setMarket,
+    filters: {
+      market
+    }
   }
 }
 

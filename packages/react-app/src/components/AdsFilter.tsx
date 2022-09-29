@@ -1,6 +1,5 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import Box from '@mui/material/Box';
-import {UseAdsProps} from "../hooks/useAds";
 import {Trans} from '@lingui/macro';
 import {GlobalContext} from "../lib/GlobalContext";
 import Button from "@mui/material/Button";
@@ -8,29 +7,10 @@ import FiltersWrapper from "./FiltersWrapper";
 import TextField from "@mui/material/TextField";
 import {Link as RouterLink} from "react-router-dom";
 
-type AdsFilterProps = {
-  setAdsFilters: (data: UseAdsProps) => void
-}
+function AdsFilter() {
+  const {adsFilters: {setMarket}} = useContext(GlobalContext);
 
-function AdsFilter({setAdsFilters}: AdsFilterProps) {
-  const {adsFilters} = useContext(GlobalContext);
-
-  const {
-    market, setMarket,
-  } = adsFilters;
-
-  const getAdsFilters = () => {
-    return {
-      market: market
-    };
-  }
-
-  useEffect(() => {
-    setAdsFilters(getAdsFilters());
-  // eslint-disable-next-line
-  }, []);
-
-  const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setMarket(evt.target.value);
   }
 
@@ -44,7 +24,7 @@ function AdsFilter({setAdsFilters}: AdsFilterProps) {
               <TextField
                 onChange={onChange}
                 style={{width: '100%'}}
-                placeholder={`Market name`}
+                placeholder={`Market ID`}
                 size="small"
               />
             </Box>
