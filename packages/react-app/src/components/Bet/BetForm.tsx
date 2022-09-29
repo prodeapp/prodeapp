@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {BigAlert, FormError} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {useFieldArray, useForm} from "react-hook-form";
@@ -58,7 +58,6 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(market.id);
-  const [referral, setReferral] = useState(AddressZero);
 
   const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
       outcomes: [],
@@ -73,10 +72,6 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     remove();
     events && events.forEach(() => append({value: ''}))
   }, [events, append, remove]);
-
-  useEffect(() => {
-    setReferral(window.localStorage.getItem(getReferralKey(market.id)) || '');
-  }, [market]);
 
   const { state, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
 
@@ -121,6 +116,8 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
        */
       .sort((a, b) => Number(a.nonce) > Number(b.nonce) ? 1 : -1)
       .map(outcome => formatOutcome(outcome.value));
+
+    const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
 
     await placeBet(
       isAddress(referral) ? referral : AddressZero,

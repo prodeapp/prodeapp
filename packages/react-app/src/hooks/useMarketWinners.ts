@@ -1,6 +1,6 @@
 import {MarketPoint, useMarketPoints} from "./useMarketPoints";
 import {useMarket} from "./useMarket";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo} from "react";
 import {indexObjectsByKey} from "../lib/helpers";
 
 export interface RankedWinners extends MarketPoint {
@@ -50,21 +50,15 @@ export function getMarketWinners(marketPoints: MarketPoint[], totalPrizes: numbe
   })
 }
 
-export const useMarketWinners = (marketId: string) => {
+export const useMarketWinners = (marketId: string): RankedWinners[] => {
   const {data: marketPoints} = useMarketPoints(marketId);
   const {data: market} = useMarket(marketId);
 
-  const [winners, setWinners] = useState<RankedWinners[]>([]);
+  if (!market || !marketPoints) {
+    return [];
+  }
 
-  useEffect(() => {
-    if (!market || !marketPoints) {
-      return;
-    }
-
-    setWinners(getMarketWinners(marketPoints, market.prizes.length));
-  }, [market, marketPoints])
-
-  return winners;
+  return getMarketWinners(marketPoints, market.prizes.length)
 };
 
 export function useIndexedMarketWinners(marketId: string) {

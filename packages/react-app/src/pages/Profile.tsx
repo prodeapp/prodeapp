@@ -6,7 +6,7 @@ import { usePlayer } from "../hooks/usePlayer";
 import Alert from "@mui/material/Alert";
 import * as React from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Trans } from '@lingui/macro';
 import { Bets } from '../components/ProfileView/Bets';
 import { Referrals } from '../components/ProfileView/Referrals';
@@ -15,14 +15,9 @@ import { Markets } from '../components/ProfileView/Markets';
 export default function Profile() {
   const { id } = useParams();
   const { account, error: walletError } = useEthers();
-  const [playerId, setPlayerId] = useState('');
   const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets');
+  const playerId = id || account || '';
   const { data: player } = usePlayer(String(playerId));
-
-
-  useEffect(() => {
-    setPlayerId(id || account || '')
-  }, [id, account]);
 
   if (!id) {
     if (!account || walletError) {

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {FormError, BoxWrapper, BoxRow} from "../../components"
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {Control} from "react-hook-form";
@@ -33,10 +33,28 @@ type AnswerFormProps = {
   setShowActions: (showActions: boolean) => void
 }
 
+function getOutcomes(event: Event) {
+  // outcomes
+  let outcomes: {value: FormEventOutcomeValue, text: string}[] = [];
+
+  outcomes = event.outcomes
+    // first map and then filter to keep the index of each outcome as value
+    .map((outcome, i) => ({value: i, text: outcome}))
+    .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+
+  if(event.answer !== INVALID_RESULT) {
+    outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
+  }
+
+  if (event.answer && event.answer !== ANSWERED_TOO_SOON) {
+    outcomes.push({value: ANSWERED_TOO_SOON, text: 'Answered too soon'});
+  }
+
+  return outcomes;
+}
+
 export default function AnswerForm({event, register, errors, handleSubmit, setShowActions}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
-  const [currentBond, setCurrentBond] = useState<BigNumber>(BigNumber.from(0));
-  const [outcomes, setOutcomes] = useState<{value: string|number, text: string}[]>([]);
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
@@ -44,33 +62,10 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
     'submitAnswer'
   );
 
-  useEffect(() => {
-    const minBond = BigNumber.from(event.minBond);
-    const lastBond = BigNumber.from(event.lastBond);
-    setCurrentBond(lastBond.gt(0) ? lastBond.mul(2) : minBond);
+  const lastBond = BigNumber.from(event.lastBond);
+  const currentBond = lastBond.gt(0) ? lastBond.mul(2) : BigNumber.from(event.minBond);
 
-    // outcomes
-    let _outcomes: {value: FormEventOutcomeValue, text: string}[] = [];
-
-    _outcomes = event.outcomes
-        // first map and then filter to keep the index of each outcome as value
-        .map((outcome, i) => ({value: i, text: outcome}))
-        .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
-
-    if(event.answer !== INVALID_RESULT) {
-      _outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
-    }
-
-    if (event.answer && event.answer !== ANSWERED_TOO_SOON) {
-      _outcomes.push({value: ANSWERED_TOO_SOON, text: 'Answered too soon'});
-    }
-
-    setOutcomes(_outcomes);
-  }, [event]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, []);
+  const outcomes = getOutcomes(event);
 
   useEffect(() => {
     if (!account || walletError) {

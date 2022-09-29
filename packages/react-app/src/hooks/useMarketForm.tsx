@@ -1,4 +1,3 @@
-import {useState, useEffect} from "react";
 import {encodeQuestionText, getQuestionId, REALITY_TEMPLATE_SINGLE_SELECT} from "../lib/reality";
 import {parseUnits} from "@ethersproject/units";
 import {useCall, useContractFunction} from "@usedapp/core";
@@ -67,15 +66,6 @@ export default function useMarketForm() {
   const { value: realitio } = useCall({ contract: marketFactoryContract, method: 'realitio', args: [] }) || {}
   const { value: timeout } = useCall({ contract: marketFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
 
-  const [marketId, setMarketId] = useState('');
-
-  useEffect(()=> {
-    if (events && events[0].args.market) {
-
-      setMarketId(events?.[0].args.market.toLowerCase());
-    }
-  }, [events]);
-
   const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
     const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC');
     const closingTime = Math.floor(utcClosingTime.getTime() / 1000);
@@ -108,6 +98,6 @@ export default function useMarketForm() {
     isLoading: !arbitrator || !realitio || !timeout,
     state,
     createMarket,
-    marketId,
+    marketId: events?.[0].args?.market?.toLowerCase() || '',
   }
 }

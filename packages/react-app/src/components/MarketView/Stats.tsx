@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRanking } from "../../hooks/useRanking";
 import { BoxWrapper, BoxRow } from "../../components"
 import Box from '@mui/material/Box';
@@ -64,19 +64,11 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     }
     // filter invalid if has 0 bets.
     return stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.outcome === t`Invalid result` ? stat.amountBets !== 0 : true }) })
-
 }
 
 export function Stats({ marketId }: { marketId: string }) {
     const { isLoading, error, data: ranking } = useRanking(marketId);
-    const [stats, setStats] = useState<Stat[][]>([]);
     const theme = useTheme();
-
-    useEffect(() => {
-        if (ranking && ranking.length > 0) {
-            setStats(bets2Stats(ranking));
-        }
-    }, [ranking])
 
     if (isLoading) {
         return <Skeleton animation="wave" height={150} />
@@ -86,10 +78,12 @@ export function Stats({ marketId }: { marketId: string }) {
         return <Alert severity="error">{error}</Alert>
     }
 
+    const stats = ranking && ranking.length > 0 ? bets2Stats(ranking) : []
+
     return <>
         <BoxWrapper>
-            {stats && stats.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
-            {stats && stats.length > 0 && stats.map((event, i) => {
+            {stats.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
+            {stats.length > 0 && stats.map((event, i) => {
                 return (
                     <Box key={i} sx={{ padding: '20px', borderBottom: '1px' }}>
                         <BoxRow style={{ width: '90%', justifyContent: 'center' }}>

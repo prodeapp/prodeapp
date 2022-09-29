@@ -260,7 +260,6 @@ function WalletDialog({open, handleClose}: DialogProps) {
 }
 
 function WalletMenu() {
-  const [accountName, setAccountName] = useState("");
   const [openWalletModal, setOpenWalletModal] = useState(false);
 
   const { account, deactivate } = useEthers();
@@ -268,15 +267,13 @@ function WalletMenu() {
 
   const {data: claimArgs} = useClaimArgs(account || '');
 
-  useEffect(() => {
-    if (ens) {
-      setAccountName(ens);
-    } else if (account) {
-      setAccountName(shortenAddress(account));
-    } else {
-      setAccountName("");
-    }
-  }, [account, ens, setAccountName]);
+  let accountName = '';
+
+  if (ens) {
+    accountName = ens;
+  } else if (account) {
+    accountName = shortenAddress(account);
+  }
 
   const handleOpenWalletModal = () => {
     setOpenWalletModal(true);

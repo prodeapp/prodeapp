@@ -4,7 +4,6 @@ import {Market__factory, VoucherManager__factory} from "../typechain";
 import {BytesLike} from "ethers";
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {TransactionReceipt} from "@ethersproject/providers";
-import {useEffect, useState} from "react";
 
 interface UsePlaceBetReturn {
   state: TransactionStatus
@@ -21,14 +20,8 @@ const useMarketPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish)
     'placeBet'
   );
 
-  const [tokenId, setTokenId] = useState<BigNumber|false>(false);
+  const tokenId: BigNumber|false = events ? (events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false) : false;
 
-  useEffect(()=> {
-    if (events) {
-      setTokenId(events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false);
-    }
-  }, [events])
-  
   const placeBet = async (_attribution: string, _results: BytesLike[]) => {
     return await send(
       _attribution,
@@ -57,22 +50,10 @@ const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
     'placeBet'
   );
 
-  const [hasVoucher, setHasVoucher] = useState(false);
-
   const { value: voucherBalance } = useCall({ contract, method: 'balance', args: [account] }) || {value: [BigNumber.from(0)]}
   const { value: marketWhitelisted } = useCall({ contract, method: 'marketsWhitelist', args: [marketId] }) || {value: [false]}
 
-  useEffect(() => {
-    setHasVoucher(voucherBalance[0].gte(price) && marketWhitelisted[0])
-  }, [voucherBalance, price, marketWhitelisted]);
-
-  const [tokenId, setTokenId] = useState<BigNumber|false>(false);
-
-  useEffect(()=> {
-    if (events) {
-      setTokenId(events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false);
-    }
-  }, [events])
+  const tokenId: BigNumber|false = events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false;
 
   const placeBet = async (_attribution: string, _results: BytesLike[]) => {
     return await send(
@@ -86,7 +67,7 @@ const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
     state,
     tokenId,
     placeBet,
-    hasVoucher,
+    hasVoucher: voucherBalance[0].gte(price) && marketWhitelisted[0],
   }
 }
 
@@ -96,15 +77,13 @@ export const usePlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
 
   // we need to keep track of the tokenId once a bet is placed using a voucher
   // because hookReturn changes to marketPlaceBet and the previous tokenId is lost
-  const [tokenId, setTokenId] = useState<BigNumber|false>(false);
+  let tokenId: BigNumber|false = false;
 
-  useEffect(() => {
-    if (marketPlaceBet.tokenId !== false) {
-      setTokenId(marketPlaceBet.tokenId)
-    } else if (voucherPlaceBet.tokenId  !== false) {
-      setTokenId(voucherPlaceBet.tokenId)
-    }
-  }, [marketPlaceBet.tokenId, voucherPlaceBet.tokenId]);
+  if (marketPlaceBet.tokenId !== false) {
+    tokenId = marketPlaceBet.tokenId;
+  } else if (voucherPlaceBet.tokenId  !== false) {
+    tokenId = voucherPlaceBet.tokenId;
+  }
 
   return {
     state: voucherPlaceBet.hasVoucher ? voucherPlaceBet.state : marketPlaceBet.state,
