@@ -13,6 +13,7 @@ import {useSvgAd} from "../hooks/useSvgAd";
 import {BigNumberish} from "ethers";
 import {Link as RouterLink} from "react-router-dom";
 import Button from "@mui/material/Button";
+import ImgSvg from "../components/ImgSvg";
 
 function AdBox({ad}: {ad: SVGAd}) {
   const svgAd = useSvgAd(ad.id);
@@ -38,7 +39,9 @@ function AdBox({ad}: {ad: SVGAd}) {
   return <Box sx={{display: 'flex', flexDirection: {xs: 'column', md: 'row'}, justifyContent: 'space-between'}}>
     <Box sx={{p: '24px', width: '100%'}}>
       <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'center'}}>
-        <div dangerouslySetInnerHTML={{__html: svgAd}} style={{margin: '0 auto'}}></div>
+        <div style={{margin: '0 auto'}}>
+          <ImgSvg svg={svgAd} width={290} />
+        </div>
       </div>
     </Box>
     <MarketDetails sx={{minWidth: {md: '245px'}}}>
