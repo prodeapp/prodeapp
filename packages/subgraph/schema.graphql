@@ -241,7 +241,6 @@ type Bid @entity {
   "Balance of the Bid"
   balance: BigInt!,
   startTimestamp: BigInt!,
-  removed: Boolean!
   currentHighest: Boolean!
   "Address of the ad"
   SVGAd: SVGAd!

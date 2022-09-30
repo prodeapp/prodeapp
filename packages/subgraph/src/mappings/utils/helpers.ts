@@ -201,7 +201,6 @@ export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes):
         bid.bidder = bidder;
         bid.market = Market.load(market.toHexString())!.id;
         bid.currentHighest = false;
-        bid.removed = false;
         bid.startTimestamp = BigInt.fromI32(0);
         let curateItem = CurateSVGAdItem.load(itemID.toHexString());
         if (curateItem === null) {
