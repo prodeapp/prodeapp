@@ -132,12 +132,12 @@ function AdsView() {
                     <div style={{width: '25%'}}>{shortenAddress(bid.bidder)}</div>
                     <div style={{width: '25%'}}>
                       {formatAmount(bid.bidPerSecond)}
-                      {bid.currentHighest && !bid.removed && <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(1)}} />}
+                      {bid.currentHighest && <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(1)}} />}
                     </div>
                     <div style={{width: '25%'}}>{formatAmount(getBidBalance(bid))}</div>
                     <div style={{width: '25%'}}>
                       {account?.toLowerCase() === bid.bidder.toLowerCase() && itemId && <>
-                        {!bid.removed && <Button color="primary" variant="outlined" size="small" onClick={handleRemove(itemId, bid.market.id)}>Remove</Button>}
+                        <Button color="primary" variant="outlined" size="small" onClick={handleRemove(itemId, bid.market.id)}>Remove</Button>
                         <Button color="primary" variant="outlined" size="small" onClick={() => handleOpen(bidInfo.market.id)}>Update</Button>
                       </>}
                     </div>
