@@ -1,15 +1,17 @@
-import { BigInt, log } from '@graphprotocol/graph-ts';
+import { BigInt, log, store } from '@graphprotocol/graph-ts';
 import { BidUpdate, NewHighestBid } from '../types/FirstPriceAuction/FirstPriceAuction'
 import { Bid, Market } from '../types/schema'
 import { getOrCreateSVGAd, getOrCreateBid } from './utils/helpers'
 
 export function handleBidUpdate(event: BidUpdate): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
+    if (event.params._newBalance.equals(BigInt.fromI32(0))) {
+        store.remove("Bid", bid.id);
+        return
+    }
     bid.bidPerSecond = event.params._bidPerSecond;
     bid.balance = event.params._newBalance
-    if (event.params._newBalance.equals(BigInt.fromI32(0))) {
-        bid.removed = true;
-    }
+    
     let svgAd = getOrCreateSVGAd(bid.SVGAd);
     if (svgAd !== null) {
         log.debug("handleBidUpdate: Updating svgAd {}", [bid.SVGAd]);
