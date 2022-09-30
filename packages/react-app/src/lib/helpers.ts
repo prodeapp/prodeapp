@@ -202,7 +202,9 @@ export function showWalletError(error: any) {
       return t`Unsupported chain, please switch to Gnosis Chain.`;
     }
 
-    if (error?.message.startsWith('{')) {
+    // we use this function to return early when connected to a unsupported chain,
+    // but we don't want to return early for every error that can occur (random RPC errors, etc)
+    /*if (error?.message.startsWith('{')) {
       try {
         const _error = JSON.parse(error?.message);
 
@@ -212,7 +214,7 @@ export function showWalletError(error: any) {
       }
     } else {
       return error?.message;
-    }
+    }*/
   }
 }
 
