@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
-import {MarketStatus, UseMarketsProps} from "../hooks/useMarkets";
+import {MarketStatus} from "../hooks/useMarkets";
 import {getCategoryText, getFlattenedCategories} from "../lib/helpers";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
 import {Trans} from '@lingui/macro';
@@ -132,11 +132,7 @@ function FilterDropdown(props: FilterDropdownProps) {
   </FilterDropdownStyled>
 }
 
-type MarketsFilterProps = {
-  setMarketFilters: (data: UseMarketsProps) => void
-}
-
-function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
+function MarketsFilter() {
   const [activeSection, setActiveSection] = useState<'category' | ''>('');
 
   const {marketFilters} = useContext(GlobalContext);
@@ -150,25 +146,6 @@ function MarketsFilter({setMarketFilters}: MarketsFilterProps) {
   const changeStatus = (newStatus: MarketStatus) => {
     setStatus(newStatus)
   }
-
-  const getMarketFilters= () => {
-    return {
-      curated: curated ? curated : undefined,
-      status,
-      category: category === 'All'? '' : category,
-      minEvents: 3
-    };
-  }
-
-  useEffect(() => {
-    setMarketFilters(getMarketFilters());
-  // eslint-disable-next-line
-  }, [curated, status, category]);
-
-  useEffect(() => {
-    setMarketFilters(getMarketFilters());
-  // eslint-disable-next-line
-  }, []);
 
   return (
     <div>

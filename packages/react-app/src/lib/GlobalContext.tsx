@@ -8,6 +8,7 @@ interface MarketFiltersProp {
   setStatus: (status: MarketStatus) => void,
   category: NonNullable<UseMarketsProps['category']>,
   setCategory: (category: string) => void
+  filters: UseMarketsProps
 }
 
 interface GlobalContextInterface {
@@ -27,7 +28,13 @@ const useMarketFilters = (): MarketFiltersProp => {
     status,
     setStatus,
     category,
-    setCategory
+    setCategory,
+    filters: {
+      curated: curated ? curated : undefined,
+      status,
+      category: category === 'All'? '' : category,
+      minEvents: 3
+    }
   }
 }
 
