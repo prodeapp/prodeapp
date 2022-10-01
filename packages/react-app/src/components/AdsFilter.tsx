@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import {Link as RouterLink} from "react-router-dom";
 
 function AdsFilter() {
-  const {adsFilters: {setMarket}} = useContext(GlobalContext);
+  const {adsFilters: {market, setMarket}} = useContext(GlobalContext);
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setMarket(evt.target.value);
@@ -23,6 +23,7 @@ function AdsFilter() {
             <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
               <TextField
                 onChange={onChange}
+                defaultValue={market}
                 style={{width: '100%'}}
                 placeholder={`Market ID`}
                 size="small"
