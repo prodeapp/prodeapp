@@ -39,7 +39,7 @@ function AdBox({ad}: {ad: SVGAd}) {
     <Box sx={{p: '24px', width: '100%'}}>
       <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'center'}}>
         <div style={{margin: '0 auto'}}>
-          <AdImg svg={svgAd} width={290} />
+          {svgAd && <AdImg svg={svgAd} width={290} />}
         </div>
       </div>
     </Box>
