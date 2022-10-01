@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useForm} from "react-hook-form";
@@ -12,6 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { usePlayerName } from "../../hooks/usePlayerName";
 
 export type ProfileFormValues = {
   name: string
@@ -61,6 +62,13 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
     </div>
   }
 
+
+  const NameIsUnique = async (name: string) => {
+    const {data} = usePlayerName(name);
+    console.log(data);
+    return data?.length === 0 || 'Player name already in Use'
+  };
+
   const onSubmit = async (data: ProfileFormValues) => {
     await send(
       'setName',
@@ -81,7 +89,8 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
           <div style={{width: '410px', marginRight: '20px'}}>
             <FormControl fullWidth>
               <TextField {...register('name', {
-                required: t`This field is required.`
+                required: t`This field is required.`,
+                validate: value => NameIsUnique(value)
               })} placeholder={t`Your username`} error={!!errors.name} style={{width: '100%'}}/>
               <FormError><ErrorMessage errors={errors} name={`name`} /></FormError>
             </FormControl>
