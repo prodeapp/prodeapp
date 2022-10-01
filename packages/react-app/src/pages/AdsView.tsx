@@ -13,7 +13,7 @@ import {AdBid} from "../graphql/subgraph";
 import {formatAmount, getBidBalance, getMedalColor} from "../lib/helpers";
 import Typography from "@mui/material/Typography";
 import PlaceBidDialog from "../components/Ads/PlaceBidDialog";
-import ImgSvg from "../components/ImgSvg";
+import {AdImg} from "../components/ImgSvg";
 import {ReactComponent as MedalIcon} from "../assets/icons/medal.svg";
 import {shortenAddress, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -99,7 +99,7 @@ function AdsView() {
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
         <GridLeftColumn item xs={12} lg={4}>
           <div style={{textAlign: 'center'}}>
-            <ImgSvg svg={svgAd} width={290} />
+            <AdImg svg={svgAd} width={290} />
 
             <div style={{marginTop: '20px'}}>
               <Button color="primary" onClick={() => handleOpen('')}>Place new bid</Button>

@@ -9,7 +9,7 @@ import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
 import {SVGFactory__factory} from "../typechain";
 import {useSVGAdFactoryDeposit} from "../hooks/useSVGFactoryDeposit";
-import ImgSvg from "../components/ImgSvg";
+import {AdImg} from "../components/ImgSvg";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
@@ -153,7 +153,7 @@ function AdsCreate() {
 
       {svg && <>
         <FormRow>
-          <ImgSvg svg={svg} width={290} />
+          <AdImg svg={svg} width={290} />
         </FormRow>
         <FormRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>

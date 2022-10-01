@@ -1,4 +1,7 @@
 import * as React from 'react';
+import {useState} from "react";
+import Alert from "@mui/material/Alert";
+import {Trans} from "@lingui/macro";
 
 type ImgSvgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   svg: string
@@ -17,4 +20,16 @@ export default function ImgSvg({svg, alt, ...rest}: ImgSvgProps) {
     alt={alt || ''}
     {...rest}
   />
+}
+
+export function AdImg(props: ImgSvgProps) {
+  const [error, setError] = useState(false);
+
+  if (error) {
+    return <Alert severity="error"><Trans>Failed to load image.</Trans></Alert>
+  }
+
+  const onError = () => setError(true);
+
+  return <ImgSvg {...props} onError={onError} />
 }

@@ -12,7 +12,7 @@ import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
 import {useSvgAd} from "../hooks/useSvgAd";
 import {Link as RouterLink} from "react-router-dom";
 import Button from "@mui/material/Button";
-import ImgSvg from "../components/ImgSvg";
+import {AdImg} from "../components/ImgSvg";
 import {BigNumber} from "@ethersproject/bignumber";
 import {GlobalContext} from "../lib/GlobalContext";
 
@@ -39,7 +39,7 @@ function AdBox({ad}: {ad: SVGAd}) {
     <Box sx={{p: '24px', width: '100%'}}>
       <div style={{height: '95%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', textAlign: 'center'}}>
         <div style={{margin: '0 auto'}}>
-          <ImgSvg svg={svgAd} width={290} />
+          <AdImg svg={svgAd} width={290} />
         </div>
       </div>
     </Box>
