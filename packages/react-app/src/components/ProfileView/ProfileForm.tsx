@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useForm} from "react-hook-form";
@@ -12,7 +12,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { usePlayerName } from "../../hooks/usePlayerName";
+import { Player, PLAYER_FIELDS } from "../../graphql/subgraph";
+import { apolloProdeQuery } from "../../lib/apolloClient";
 
 export type ProfileFormValues = {
   name: string
@@ -28,6 +29,20 @@ const innerStyles: React.CSSProperties = {
   maxWidth: '640px',
   margin: '0 auto',
   padding: '15px',
+};
+
+
+const fetchPlayerByName = async (name: string) => {
+  const query = `
+    query PlayersNameQuery($playerName: String) {
+        players(where: {name:$playerName}) {
+            id
+        }
+    }
+`;
+  const response = await apolloProdeQuery<{ players: Player[] }>(query, {playerName: name});
+  if (!response) throw new Error("No response from TheGraph");
+  return response.data.players;
 };
 
 export default function ProfileForm({defaultName}: {defaultName: string}) {
@@ -63,17 +78,18 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
   }
 
 
-  const NameIsUnique = async (name: string) => {
-    const {data} = usePlayerName(name);
-    console.log(data);
-    return data?.length === 0 || 'Player name already in Use'
-  };
+  
 
   const onSubmit = async (data: ProfileFormValues) => {
     await send(
       'setName',
       data.name
     )
+  }
+
+  const isNameUnique = async (name:string) => {
+    const names = await fetchPlayerByName(name)
+    return names.length === 0
   }
 
   return (
@@ -90,7 +106,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
             <FormControl fullWidth>
               <TextField {...register('name', {
                 required: t`This field is required.`,
-                validate: value => NameIsUnique(value)
+                validate: async (value) => await isNameUnique(value) || 'Name already in use, please select another name'
               })} placeholder={t`Your username`} error={!!errors.name} style={{width: '100%'}}/>
               <FormError><ErrorMessage errors={errors} name={`name`} /></FormError>
             </FormControl>
