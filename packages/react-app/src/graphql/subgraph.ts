@@ -312,7 +312,7 @@ export interface SVGAd {
   id: string
   curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null
   markets: Pick<Market, 'id'>[]
-  Bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'currentHighest'>[]
+  bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'currentHighest'>[]
   activeMarkets: Pick<Market, 'id'>[]
 }
 
@@ -321,7 +321,7 @@ export const SVG_AD_FIELDS = `
     id
     curateSVGAdItem {id}
     markets {id}
-    Bids {
+    bids {
       id
       bidPerSecond
       market {

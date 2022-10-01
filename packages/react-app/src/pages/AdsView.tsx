@@ -48,7 +48,7 @@ const firstPriceAuctionContract = new Contract(process.env.REACT_APP_FIRST_PRICE
 function AdsView() {
   const { id } = useParams();
   const { isLoading, data: ad } = useAd(String(id));
-  const groupedBids = useIndexedBids(ad?.Bids);
+  const groupedBids = useIndexedBids(ad?.bids);
   const svgAd = useSvgAd(String(id));
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);

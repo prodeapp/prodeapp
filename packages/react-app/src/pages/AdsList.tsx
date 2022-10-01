@@ -17,7 +17,7 @@ import {BigNumber} from "@ethersproject/bignumber";
 import {GlobalContext} from "../lib/GlobalContext";
 
 function getBidsInfo(ad: SVGAd): {max: BigNumber, min: BigNumber} {
-  const bids = ad.Bids.map(bid => {
+  const bids = ad.bids.map(bid => {
     return getBidBalance(bid)
   }).sort((a, b) => {
     return a.sub(b).lt(0) ? 1 : -1
@@ -46,15 +46,15 @@ function AdBox({ad}: {ad: SVGAd}) {
     <MarketDetails sx={{minWidth: {md: '245px'}}}>
       <div>
         <div><Trans>Total Bids</Trans></div>
-        <div style={{fontWeight: 'bold'}}>{ad.Bids.length}</div>
+        <div style={{fontWeight: 'bold'}}>{ad.bids.length}</div>
       </div>
 
-      {ad.Bids.length === 1 && <div>
+      {ad.bids.length === 1 && <div>
         <div><Trans>Current Bid</Trans></div>
         <div style={{fontWeight: 'bold'}}>{formatAmount(maxBid)}</div>
       </div>}
 
-      {ad.Bids.length > 1 && <>
+      {ad.bids.length > 1 && <>
         <div>
           <div><Trans>Highest Bid</Trans></div>
           <div style={{fontWeight: 'bold'}}>{formatAmount(maxBid)}</div>
