@@ -6,6 +6,11 @@ import { getOrCreateSVGAd, getOrCreateBid } from './utils/helpers'
 export function handleBidUpdate(event: BidUpdate): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
     if (event.params._newBalance.equals(BigInt.fromI32(0))) {
+        let market = Market.load(bid.market)!;
+        if (market.highestBid == bid.id) {
+            market.highestBid = null;
+            market.save();
+        }
         store.remove("Bid", bid.id);
         return
     }
