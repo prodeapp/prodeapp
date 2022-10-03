@@ -16,6 +16,7 @@ export function getOrCreatePlayer(address: Address, marketFactory: string): Play
         player.numOfMarkets = BigInt.fromI32(0)
         player.numOfBets = BigInt.fromI32(0)
         player.totalAttributions = BigInt.fromI32(0)
+        player.name = address.toHexString();
         player.save()
 
         let mf = getOrCreateMarketFactory(marketFactory);

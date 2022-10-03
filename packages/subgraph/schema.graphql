@@ -107,6 +107,7 @@ type Event @entity {
   openingTs: BigInt!
   finalizeTs: BigInt!
   creationTs: BigInt!
+  lastAnswerTs: BigInt
   timeout: BigInt!
   minBond: BigInt!
   lastBond: BigInt!
@@ -119,6 +120,7 @@ type Event @entity {
 
 type Player @entity {
   id: ID!
+  name: String!
   amountBet: BigInt!
   pricesReceived: BigInt!
   markets: [Market!]!

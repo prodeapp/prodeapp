@@ -11,6 +11,7 @@ import { Trans } from '@lingui/macro';
 import { Bets } from '../components/ProfileView/Bets';
 import { Referrals } from '../components/ProfileView/Referrals';
 import { Markets } from '../components/ProfileView/Markets';
+import ProfileForm from "../components/ProfileView/ProfileForm";
 
 export default function Profile() {
   const { id } = useParams();
@@ -28,7 +29,6 @@ export default function Profile() {
   return (
     <Container>
       <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
-
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>  
             <Typography variant='h5'><Trans>Total Bet: {player? formatAmount(player?.amountBet) : <Skeleton />}</Trans></Typography>
@@ -45,6 +45,9 @@ export default function Profile() {
           </BoxWrapper>
         </Grid>
       </Grid>
+
+      {player && account && player.id.toLowerCase() === account.toLowerCase() && <ProfileForm defaultName={player.name} />}
+
       <BoxWrapper>
         <BoxRow style={{ justifyContent: 'center' }}>
           <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>

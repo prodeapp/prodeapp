@@ -22,6 +22,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
     }
     event.answer = evt.params.answer
     event.lastBond = evt.params.bond;
+    event.lastAnswerTs = evt.block.timestamp;
     event.save();
 
     // update points with this answer.

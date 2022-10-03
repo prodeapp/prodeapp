@@ -1,6 +1,6 @@
-import { log, BigInt, store } from '@graphprotocol/graph-ts';
+import { log, BigInt, store, TypedMap } from '@graphprotocol/graph-ts';
 import { SetValue } from '../types/KeyValue/KeyValue'
-import { Market } from '../types/schema';
+import { Market, Player } from '../types/schema';
 import {getOrCreateMarketCuration} from "./utils/helpers";
 
 export function handleSetValue(evt: SetValue): void {
@@ -26,6 +26,24 @@ export function handleSetValue(evt: SetValue): void {
             marketCuration.save();
 
             store.remove("Market", market.id);
+        }
+    } else if (evt.params.key == 'setName') {
+        let player = Player.load(evt.transaction.from.toHexString())
+        if (player !== null){
+            let nameLookupTable = new TypedMap<string, string>();
+            if (nameLookupTable.isSet(evt.params.value) && nameLookupTable.get(evt.params.value) != '') {
+                log.warning('handleSetValue: Player name {} already exist.', [evt.params.value])
+                return;
+            }
+            if (player.name != player.id) {
+                // Player changing it's name, release the old name setting as owner an empty string
+                nameLookupTable.set(player.name, '');    
+            }
+            player.name = evt.params.value
+            player.save()
+            nameLookupTable.set(evt.params.value, player.id);
+        } else{
+            log.warning('handleSetValue: Player {} do not exist', [evt.transaction.from.toHexString()]);
         }
     }
 }

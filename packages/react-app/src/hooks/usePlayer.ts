@@ -20,6 +20,7 @@ export const usePlayer = (playerId: string) => {
       if (!response) throw new Error("No response from TheGraph");
 
       return response.data.player;
-    }
+    },
+    {enabled: !!playerId}
   );
 };

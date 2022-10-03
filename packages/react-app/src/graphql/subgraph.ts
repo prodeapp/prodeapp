@@ -102,6 +102,7 @@ export interface Player {
   amountBet: BigNumberish
   pricesReceived: BigNumberish
   totalAttributions: BigNumberish
+  name: string
 }
 
 
@@ -111,6 +112,7 @@ export const PLAYER_FIELDS = `
     amountBet
     pricesReceived
     totalAttributions
+    name
   }
 `;
 
@@ -217,6 +219,7 @@ export interface Bet {
   id: string
   player: {
     id: string
+    name: string
   }
   market: {
     id: string
@@ -235,7 +238,8 @@ export const BET_FIELDS = `
   fragment BetFields on Bet {
     id
     player {
-      id
+      id,
+      name
     }
     market {
       id,

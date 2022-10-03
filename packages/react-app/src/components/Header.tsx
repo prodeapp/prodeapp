@@ -13,7 +13,7 @@ import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from "@lingui/macro";
-import {BRIDGE_URL, formatAmount, getDocsUrl, showWalletError} from "../lib/helpers";
+import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
@@ -25,6 +25,7 @@ import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
 import {Contract} from "@ethersproject/contracts";
 import {RealityETH_v3_0__factory} from "../typechain";
+import { usePlayer } from "../hooks/usePlayer";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -202,6 +203,7 @@ function WalletDialog({open, handleClose}: DialogProps) {
   const [walletError, setWalletError] = useState<Error | undefined>();
   const hasWindowFocus = useWindowFocus();
   const [askSwitchNetwork, setAskSwitchNetwork] = useState(true);
+  
 
   async function activateWalletConnect() {
     try {
@@ -264,6 +266,7 @@ function WalletMenu() {
 
   const { account, deactivate } = useEthers();
   const {ens} = useLookupAddress(account);
+  const {data: player} = usePlayer(account || "")
 
   const {data: claimArgs} = useClaimArgs(account || '');
 
@@ -271,6 +274,8 @@ function WalletMenu() {
 
   if (ens) {
     accountName = ens;
+  } else if (player) {
+    accountName = formatPlayerName(player.name, player.id);
   } else if (account) {
     accountName = shortenAddress(account);
   }

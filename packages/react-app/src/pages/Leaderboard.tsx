@@ -3,12 +3,14 @@ import { DataGrid } from '@mui/x-data-grid'
 import { BigNumberish } from 'ethers';
 import { useState } from 'react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
-import { formatAmount, formatAmountDecimalPlaces } from '../lib/helpers';
-import { shortenAddress } from "@usedapp/core";
+import { formatAmount, formatAmountDecimalPlaces, formatPlayerName } from '../lib/helpers';
 import { BoxWrapper, BoxRow } from '../components';
 import { Trans } from '@lingui/macro';
 import { useMarketFactory } from '../hooks/useMarketFactory';
 
+function formatName(params: {row: { id: string, name:string; }}){
+  return formatPlayerName(params.row.name, params.row.id)
+}
 
 export default function Leaderboard() {
   const { isLoading, data: leaderboard } = useLeaderboard();
@@ -19,9 +21,7 @@ export default function Leaderboard() {
 
   const columns = [
     {
-      field: 'id', headerName: 'Player', type: 'string', flex: 2, valueFormatter: (params: { value: string; }) => {
-        return shortenAddress(params.value);
-      }
+      field: 'id', headerName: 'Player', type: 'string', flex: 2, valueGetter: formatName
     },
     { field: 'numOfBets', headerName: '# of Bets', type: 'number', flex: 1 },
     { field: 'numOfMarkets', headerName: '# of Markets', type: 'number', flex: 1 },
