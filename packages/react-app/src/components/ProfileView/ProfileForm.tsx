@@ -31,18 +31,18 @@ const innerStyles: React.CSSProperties = {
   padding: '15px',
 };
 
-
-const fetchPlayerByName = async (name: string) => {
+const fetchPlayerByName = async (name: string): Promise<Player | undefined> => {
   const query = `
+    ${PLAYER_FIELDS}
     query PlayersNameQuery($playerName: String) {
         players(where: {name:$playerName}) {
-            id
+            ...PlayerFields
         }
     }
 `;
   const response = await apolloProdeQuery<{ players: Player[] }>(query, {playerName: name});
   if (!response) throw new Error("No response from TheGraph");
-  return response.data.players;
+  return response.data.players[0];
 };
 
 export default function ProfileForm({defaultName}: {defaultName: string}) {
@@ -87,9 +87,8 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
     )
   }
 
-  const isNameUnique = async (name:string) => {
-    const names = await fetchPlayerByName(name)
-    return names.length === 0
+  const isNameUnique = async (name: string) => {
+    return (await fetchPlayerByName(name)) === undefined;
   }
 
   return (
