@@ -33,6 +33,10 @@ type AnswerFormProps = {
   setShowActions: (showActions: boolean) => void
 }
 
+const isCurrentAnswer = (answer: string, event:  Event): boolean => {
+  return getAnswerText(event.answer, event.outcomes, event.templateID) !== answer
+}
+
 function getOutcomes(event: Event) {
   // outcomes
   let outcomes: {value: FormEventOutcomeValue, text: string}[] = [];
@@ -40,7 +44,7 @@ function getOutcomes(event: Event) {
   outcomes = event.outcomes
     // first map and then filter to keep the index of each outcome as value
     .map((outcome, i) => ({value: i, text: outcome}))
-    .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+    .filter((value, _) => event.answer === null ||  isCurrentAnswer(String(value.text), event));
 
   if(event.answer !== INVALID_RESULT) {
     outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
@@ -52,6 +56,7 @@ function getOutcomes(event: Event) {
 
   return outcomes;
 }
+
 
 export default function AnswerForm({event, register, errors, handleSubmit, setShowActions}: AnswerFormProps) {
   const { account, error: walletError } = useEthers();
