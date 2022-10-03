@@ -16,7 +16,13 @@ import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} 
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans, t } from "@lingui/macro";
 import {useI18nContext} from "../../lib/I18nContext";
-import {formatOutcome, REALITY_TEMPLATE_MULTIPLE_SELECT, INVALID_RESULT, ANSWERED_TOO_SOON} from "../../lib/reality";
+import {
+  formatOutcome,
+  REALITY_TEMPLATE_MULTIPLE_SELECT,
+  INVALID_RESULT,
+  ANSWERED_TOO_SOON,
+  REALITY_TEMPLATE_SINGLE_SELECT
+} from "../../lib/reality";
 
 export type FormEventOutcomeValue = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON;
 
@@ -40,7 +46,10 @@ function getOutcomes(event: Event) {
   outcomes = event.outcomes
     // first map and then filter to keep the index of each outcome as value
     .map((outcome, i) => ({value: i, text: outcome}))
-    .filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+
+  if (event.templateID === REALITY_TEMPLATE_SINGLE_SELECT) {
+    outcomes = outcomes.filter((_, i) => event.answer === null || String(i) !== BigNumber.from(event.answer).toString());
+  }
 
   if(event.answer !== INVALID_RESULT) {
     outcomes.push({value: INVALID_RESULT, text: 'Invalid result'});
