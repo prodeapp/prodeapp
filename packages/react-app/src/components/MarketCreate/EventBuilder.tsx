@@ -14,6 +14,7 @@ import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
 import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
 import {ErrorMessage} from "@hookform/error-message";
+import compareAsc from "date-fns/compareAsc";
 
 type EventBuilderProps = {
   eventIndex: number
@@ -24,7 +25,9 @@ const today = new Date();
 
 export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProps) {
 
-  const { control, setValue, formState: { errors } } = useFormContext<MarketFormStep1Values>();
+  const { control, setValue, watch, formState: { errors } } = useFormContext<MarketFormStep1Values>();
+
+  const closingTime = watch('closingTime');
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -72,10 +75,13 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
           <Controller
             control={control}
             name={`events.${eventIndex}.openingTs`}
-            rules={{required: t`This field is required`}}
+            rules={{
+              required: t`This field is required`,
+              validate: v => (v && closingTime && compareAsc(v, closingTime) === 1) || t`The event date must be after the closing time.`,
+            }}
             render={({ field }) => (
               <DateTimePicker
-                minDate={today}
+                minDate={closingTime || today}
                 onChange={field.onChange}
                 value={field.value}
                 inputFormat={DATE_FORMAT}
