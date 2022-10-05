@@ -5,11 +5,23 @@ import { getOrCreateSVGAd, getOrCreateBid } from './utils/helpers'
 
 export function handleBidUpdate(event: BidUpdate): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
+    let svgAd = getOrCreateSVGAd(bid.SVGAd);
     if (event.params._newBalance.equals(BigInt.fromI32(0))) {
         let market = Market.load(bid.market)!;
         if (market.highestBid == bid.id) {
             market.highestBid = null;
             market.save();
+        }
+        if (svgAd.bids.length === 0){
+            let tmp_markets = svgAd.markets;
+            const marketIndex = tmp_markets.indexOf(event.params._market.toHexString())
+            if (marketIndex !== -1){
+                tmp_markets.splice(marketIndex, 1);
+                svgAd.markets = tmp_markets;
+                svgAd.save()
+            } else {
+                log.warning("handleBidUpdate: we shouldn't be here...", [])
+            }
         }
         store.remove("Bid", bid.id);
         return
@@ -17,7 +29,7 @@ export function handleBidUpdate(event: BidUpdate): void {
     bid.bidPerSecond = event.params._bidPerSecond;
     bid.balance = event.params._newBalance
     
-    let svgAd = getOrCreateSVGAd(bid.SVGAd);
+    
     if (svgAd !== null) {
         log.debug("handleBidUpdate: Updating svgAd {}", [bid.SVGAd]);
         if (!svgAd.markets.includes(event.params._market.toHexString())) {

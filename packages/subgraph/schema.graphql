@@ -228,7 +228,7 @@ type SVGAd @entity {
   curateSVGAdItem: CurateSVGAdItem
   # svg: String
   "All the bids of this ad"
-  bids: [Bid!]! @derivedFrom(field: "SVGAd")
+  bids: [Bid!]!
   activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
 }
 

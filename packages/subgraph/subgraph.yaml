@@ -160,8 +160,8 @@ dataSources:
     network: xdai
     source:
       abi: SVGFactory
-      address: "0x5b584A087414Ba5d49Cc9C5C11205778d9d604B7"
-      startBlock:  24350333
+      address: "0x1f73B777d8170E9Ab4ba3d75eAEecFaF2FdE0c06"
+      startBlock:  24478893
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -183,8 +183,8 @@ dataSources:
     network: xdai
     source:
       abi: Billing
-      address: "0xF8A2d8D4B6303bCCCf0e0d7E020340baA7F843a8"
-      startBlock:  24350333
+      address: "0x00af4408200da4aA99D098515D2CEd4C73ecd89b"
+      startBlock:  24478895
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -204,8 +204,8 @@ dataSources:
     network: xdai
     source:
       abi: FirstPriceAuction
-      address: "0xfCc7fe3b04ad4720e67B5d723dABccE6B9459994"
-      startBlock:  24350336
+      address: "0x006de54b1fad871F6489E7359Eb78842a355a23A"
+      startBlock:  24478897
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -227,8 +227,8 @@ dataSources:
     network: xdai
     source:
       abi: CurateProxySVG
-      address: "0xAEE2F2B8e3e20C70070ad3816DC51F3041a184F4"
-      startBlock:  24350330
+      address: "0x726584e6b2d41F21ebc607610229E56B78e60f7d"
+      startBlock:  24478890
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

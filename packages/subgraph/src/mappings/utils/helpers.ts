@@ -208,6 +208,11 @@ export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes):
         } else {
             bid.SVGAd = curateItem.SVGAd;        
             bid.curateSVGAdItem = curateItem.id;
+            let svgAd = getOrCreateSVGAd(curateItem.SVGAd);
+            let bids = svgAd.bids;
+            bids.push(bid.id);
+            svgAd.bids = bids;
+            svgAd.save()
         }       
         bid.save()
         log.debug('getOrCreateBid: New Bid with id: {}!', [bidID]);
