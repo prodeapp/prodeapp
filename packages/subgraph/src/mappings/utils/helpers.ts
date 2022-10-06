@@ -226,6 +226,7 @@ export function getOrCreateSVGAd(address: string): SVGAd {
     if (svgAd == null){
         svgAd = new SVGAd(address);
         svgAd.markets = [];
+        svgAd.bids = [];
         svgAd.save()
     }
     return svgAd
