@@ -73,6 +73,7 @@ function AdsCreate() {
 
   const baseDeposit = useSVGAdFactoryDeposit();
 
+
   if (!account || walletError) {
     return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
   }
@@ -81,6 +82,7 @@ function AdsCreate() {
     try {
       await send(
         svg,
+        '', // TODO: Add a reference value
         {
           value: baseDeposit,
         }
