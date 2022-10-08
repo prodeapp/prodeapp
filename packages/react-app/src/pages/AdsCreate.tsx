@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {FormRow, FormLabel} from "../components"
+import {FormRow, FormLabel, FormError} from "../components"
 import Button from '@mui/material/Button';
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
@@ -10,10 +10,20 @@ import Container from "@mui/material/Container";
 import {SVGFactory__factory} from "../typechain";
 import {useSVGAdFactoryDeposit} from "../hooks/useSVGFactoryDeposit";
 import {AdImg} from "../components/ImgSvg";
+import TextField from "@mui/material/TextField";
+import {ErrorMessage} from "@hookform/error-message";
+import {useForm} from "react-hook-form";
+import {Typography} from "@mui/material";
+import {Banner} from "./MarketsCreate";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
 const IMAGE_DIMENSION = {width: 290, height: 430};
+
+interface AdCreateFormValues {
+  url: string
+}
 
 const getImageDimensions = async (file: File) => {
   const img = new Image();
@@ -62,6 +72,16 @@ const wrapSvg = async (file: File) => {
 <image width="${IMAGE_DIMENSION.width}" height="${IMAGE_DIMENSION.height}" xlink:href="${result}"></image></svg>`
 }
 
+const isValidUrl = (url: string) => {
+  try {
+    new URL(url);
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+  return true;
+};
+
 function AdsCreate() {
 
   const [svg, setSvg] = useState('');
@@ -73,16 +93,23 @@ function AdsCreate() {
 
   const baseDeposit = useSVGAdFactoryDeposit();
 
+  const {register, handleSubmit, formState} = useForm<AdCreateFormValues>({
+    mode: 'all',
+    defaultValues: {
+      url: '',
+    }});
+
+  const {errors, isValid} = formState;
 
   if (!account || walletError) {
-    return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
+    return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to create an ad.`}</Alert>
   }
 
-  const onClick = async () => {
+  const onSubmit = async (data: AdCreateFormValues) => {
     try {
       await send(
         svg,
-        '', // TODO: Add a reference value
+        data.url,
         {
           value: baseDeposit,
         }
@@ -90,10 +117,6 @@ function AdsCreate() {
     } catch (e: any) {
       alert(e?.message || t`Unexpected error`);
     }
-  }
-
-  if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>Ad created.</Trans></Alert>
   }
 
   const fileChangedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,40 +154,61 @@ function AdsCreate() {
     setSvg(_svg)
   }
 
-  return <Container>
-    <div>
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-      <FormRow>
-        <FormLabel><Trans>Image</Trans></FormLabel>
-        <div style={{width: '100%'}}>
-          <input
-            name="file"
-            id="contained-button-file"
-            type="file"
-            style={{ display: "none" }}
-            onChange={fileChangedHandler}
-          />
-          <label htmlFor="contained-button-file">
-            <Button variant="contained" color="primary" component="span">
-              Upload
-            </Button>
-          </label>
-          {error !== '' && <Alert severity="error" sx={{mt: 2}}>{error}</Alert>}
-        </div>
-      </FormRow>
+  return <div>
+    <Banner style={{backgroundImage: 'url(/banners/banner-3.jpg)', marginBottom: '50px'}}>
+      <Typography variant="h1s"><Trans>Create a new ad</Trans></Typography>
+    </Banner>
 
-      {svg && <>
+    <Container>
+
+      {state.status === 'Success' && <Alert severity="success"><Trans>Ad created.</Trans></Alert>}
+
+      {state.status === 'Mining' && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
+
+      {state.status !== 'Success' && state.status !== 'Mining' &&
+      <form onSubmit={handleSubmit(onSubmit)} style={{width: '100%', maxWidth: '675px'}}>
+        {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
         <FormRow>
-          <AdImg svg={svg} width={290} />
-        </FormRow>
-        <FormRow>
-          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button onClick={onClick}><Trans>Submit Ad</Trans></Button>
+          <FormLabel><Trans>Image</Trans></FormLabel>
+          <div style={{width: '100%'}}>
+            <input
+              name="file"
+              id="contained-button-file"
+              type="file"
+              style={{display: "none"}}
+              onChange={fileChangedHandler}
+            />
+            <label htmlFor="contained-button-file">
+              <Button variant="contained" color="primary" component="span">
+                Upload
+              </Button>
+            </label>
+            {error !== '' && <Alert severity="error" sx={{mt: 2}}>{error}</Alert>}
           </div>
         </FormRow>
-      </>}
-    </div>
-  </Container>
+
+        <FormRow>
+          <FormLabel>URL</FormLabel>
+          <div>
+            <TextField {...register('url', {
+              required: t`This field is required.`,
+              validate: v => isValidUrl(v) || t`Invalid URL`,
+            })} error={!!errors.url} style={{width: '100%'}}/>
+            <FormError><ErrorMessage errors={errors} name="url"/></FormError>
+          </div>
+        </FormRow>
+
+        {isValid && svg && <>
+          <div style={{textAlign: 'center', marginBottom: '30px'}}>
+            <AdImg svg={svg} width={290}/>
+          </div>
+          <div style={{marginBottom: '20px'}}>
+            <Button type="submit" fullWidth size="large"><Trans>Submit Ad</Trans></Button>
+          </div>
+        </>}
+      </form>}
+    </Container>
+  </div>
 }
 
 export default AdsCreate;

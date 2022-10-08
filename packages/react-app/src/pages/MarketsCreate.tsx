@@ -380,7 +380,7 @@ function SuccessStep({marketName, marketId, step1State, step2State}: SuccessStep
   </Box>
 }
 
-const Banner = styled('div')(({ theme }) => ({
+export const Banner = styled('div')(({ theme }) => ({
   height: '368px',
   padding: '50px',
   display: 'flex',
