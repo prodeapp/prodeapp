@@ -234,6 +234,10 @@ export function getMedalColor(position: number) {
 }
 
 export function getBidBalance(bid: AdBid) {
+  if (bid.startTimestamp === '0') {
+    return BigNumber.from(bid.balance);
+  }
+
   const balance = BigNumber.from(bid.balance).sub(
     BigNumber.from(bid.bidPerSecond).mul(
       Math.round(Date.now() / 1000) - Number(bid.startTimestamp)
