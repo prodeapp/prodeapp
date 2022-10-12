@@ -18,6 +18,19 @@ import {ReactComponent as MedalIcon} from "../assets/icons/medal.svg";
 import {shortenAddress, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {FirstPriceAuction__factory} from "../typechain";
+import {formatUnits} from "@ethersproject/units";
+
+export interface BidInfo {
+  market: string
+  bid: string
+  bidPerSecond: string
+}
+
+const EMPTY_BID_INFO = {
+  market: '',
+  bid: '0',
+  bidPerSecond: '0'
+}
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -52,18 +65,18 @@ function AdsView() {
   const svgAd = useSvgAd(String(id));
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
-  const [marketToBid, setMarketToBid] = useState('');
+  const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO);
   const {account} = useEthers();
 
   const { state: removeBidState, send: removeBid } = useContractFunction(firstPriceAuctionContract, 'removeBid');
 
   const handleClose = () => {
-    setMarketToBid('');
+    setBidInfo(EMPTY_BID_INFO);
     setOpenModal(false);
   }
 
-  const handleOpen = (market: string) => {
-    setMarketToBid(market);
+  const handleOpen = (market: string, bid: string, bidPerSecond: string) => {
+    setBidInfo({market, bid, bidPerSecond});
     setOpenModal(true);
   }
 
@@ -94,7 +107,7 @@ function AdsView() {
         open={openModal}
         handleClose={handleClose}
         itemId={itemId}
-        market={marketToBid}
+        bidInfo={bidInfo}
       />}
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
         <GridLeftColumn item xs={12} lg={4}>
@@ -102,7 +115,7 @@ function AdsView() {
             {svgAd && <AdImg svg={svgAd} width={290} />}
 
             <div style={{marginTop: '20px'}}>
-              <Button color="primary" onClick={() => handleOpen('')}>Place new bid</Button>
+              <Button color="primary" onClick={() => handleOpen('', '0', '0')}>Place new bid</Button>
             </div>
           </div>
         </GridLeftColumn>
@@ -117,7 +130,7 @@ function AdsView() {
                   <Typography variant="h6">{bidInfo.market.name}</Typography>
                 </div>
                 <div>
-                  <Button color="primary" size="small" onClick={() => handleOpen(bidInfo.market.id)}>Place bid</Button>
+                  <Button color="primary" size="small" onClick={() => handleOpen(bidInfo.market.id, '0', '0')}>Place bid</Button>
                 </div>
               </div>
               <TableHeader>
@@ -138,7 +151,7 @@ function AdsView() {
                     <div style={{width: '25%'}}>
                       {account?.toLowerCase() === bid.bidder.toLowerCase() && itemId && <>
                         <Button color="primary" variant="outlined" size="small" onClick={handleRemove(itemId, bid.market.id)}>Remove</Button>
-                        <Button color="primary" variant="outlined" size="small" onClick={() => handleOpen(bidInfo.market.id)}>Update</Button>
+                        <Button color="primary" variant="outlined" size="small" onClick={() => handleOpen(bidInfo.market.id, formatUnits(bid.balance, 18), formatUnits(bid.bidPerSecond, 18))}>Update</Button>
                       </>}
                     </div>
                   </TableBody>

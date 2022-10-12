@@ -16,8 +16,8 @@ import {BigNumber} from "@ethersproject/bignumber";
 
 export type PlaceBidFormValues = {
   market: string
-  bid: number
-  bidPerSecond: number
+  bid: string
+  bidPerSecond: string
 }
 
 type PlaceBidFormProps = {
@@ -49,12 +49,12 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
 
   const bid = watch('bid');
 
-  const validBid = (bidPerSecond: number) => {
+  const validBid = (bidPerSecond: string) => {
     if (!bidPerSecond || MIN_OFFER_DURATION[0].eq(0)) {
       return false;
     }
 
-    return (bid / bidPerSecond) > MIN_OFFER_DURATION[0].toNumber();
+    return (Number(bid) / Number(bidPerSecond)) > MIN_OFFER_DURATION[0].toNumber();
   }
 
   if (walletError) {
@@ -69,9 +69,9 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
     await send(
       itemId,
       data.market,
-      parseUnits(String(data.bidPerSecond), 18),
+      parseUnits(data.bidPerSecond, 18),
       {
-        value: parseUnits(String(data.bid), 18)
+        value: parseUnits(data.bid, 18)
       }
     )
   }
@@ -104,9 +104,10 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
           <div style={{width: '60%'}}>
             <TextField {...register('bid', {
                 required: t`This field is required.`,
-                valueAsNumber: true,
-                validate: v => !isNaN(Number(v)) || t`Invalid number.`,
-                min: { value: 0.000000000000000001, message: t`Price must be greater than 0` }
+                validate: {
+                  isNumber: v => !isNaN(Number(v)) || t`Invalid number.`,
+                  isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || t`Value must be greater than 0`,
+                },
               })}
               style={{width: '100%'}}
               size="small"
@@ -122,12 +123,11 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
           <div style={{width: '60%'}}>
             <TextField {...register('bidPerSecond', {
                 required: t`This field is required.`,
-                valueAsNumber: true,
                 validate: {
                   number: v => !isNaN(Number(v)) || t`Invalid number.`,
                   bid: v => validBid(v) || t`Offer too low`,
+                  isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || t`Value must be greater than 0`,
                 },
-                min: { value: 0.000000000000000001, message: t`Price must be greater than 0` }
               })}
               style={{width: '100%'}}
               size="small"

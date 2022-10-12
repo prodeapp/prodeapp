@@ -5,7 +5,7 @@ import Alert from "@mui/material/Alert";
 import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
 import {SVGAd} from "../graphql/subgraph";
-import {formatAmount, getBidBalance} from "../lib/helpers";
+import {formatAmount} from "../lib/helpers";
 import {Trans} from "@lingui/macro";
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
@@ -18,7 +18,7 @@ import {GlobalContext} from "../lib/GlobalContext";
 
 function getBidsInfo(ad: SVGAd): {max: BigNumber, min: BigNumber} {
   const bids = ad.bids.map(bid => {
-    return getBidBalance(bid)
+    return BigNumber.from(bid.bidPerSecond)
   }).sort((a, b) => {
     return a.sub(b).lt(0) ? 1 : -1
   });
