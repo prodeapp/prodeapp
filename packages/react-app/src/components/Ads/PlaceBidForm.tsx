@@ -7,6 +7,7 @@ import {FirstPriceAuction__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
+import FormHelperText from "@mui/material/FormHelperText";
 import { Trans, t } from "@lingui/macro";
 import TextField from "@mui/material/TextField";
 import {UseFormHandleSubmit, UseFormRegister, UseFormWatch} from "react-hook-form/dist/types/form";
@@ -22,6 +23,7 @@ export type PlaceBidFormValues = {
 
 type PlaceBidFormProps = {
   itemId: string
+  currentBid: string
   register: UseFormRegister<PlaceBidFormValues>
   errors: FieldErrors<PlaceBidFormValues>
   watch: UseFormWatch<PlaceBidFormValues>
@@ -31,7 +33,7 @@ type PlaceBidFormProps = {
 
 const firstPriceAuctionContract = new Contract(process.env.REACT_APP_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
 
-export default function PlaceBidForm({itemId, register, errors, watch, handleSubmit, setShowActions}: PlaceBidFormProps) {
+export default function PlaceBidForm({itemId, currentBid, register, errors, watch, handleSubmit, setShowActions}: PlaceBidFormProps) {
   const { account, error: walletError } = useEthers();
 
   const { state, send } = useContractFunction(firstPriceAuctionContract, 'placeBid');
@@ -54,7 +56,7 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
       return false;
     }
 
-    return (Number(bid) / Number(bidPerSecond)) > MIN_OFFER_DURATION[0].toNumber();
+    return ((Number(bid) + Number(currentBid)) / Number(bidPerSecond)) > MIN_OFFER_DURATION[0].toNumber();
   }
 
   if (walletError) {
@@ -75,6 +77,8 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
       }
     )
   }
+
+  const isEdit = currentBid !== '0';
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="place-bid-form">
@@ -99,26 +103,27 @@ export default function PlaceBidForm({itemId, register, errors, watch, handleSub
         </BoxRow>
         <BoxRow>
           <div style={{width: '40%'}}>
-            <Trans>Bid</Trans>
+            <Trans>Bid</Trans> (xDAI)
           </div>
           <div style={{width: '60%'}}>
             <TextField {...register('bid', {
                 required: t`This field is required.`,
                 validate: {
                   isNumber: v => !isNaN(Number(v)) || t`Invalid number.`,
-                  isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || t`Value must be greater than 0`,
+                  isGreaterThan0: v => (!isNaN(Number(v)) && (isEdit ? Number(v) >= 0 : Number(v) > 0)) || t`Value must be greater than 0`,
                 },
               })}
               style={{width: '100%'}}
               size="small"
               error={!!errors.bid}
             />
+            {isEdit && <FormHelperText><Trans>The provided value will be added to the current bid.</Trans></FormHelperText>}
             <FormError><ErrorMessage errors={errors} name={`bid`} /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
           <div style={{width: '40%'}}>
-            <Trans>Bid per second</Trans>
+            <Trans>Bid per second</Trans> (xDAI)
           </div>
           <div style={{width: '60%'}}>
             <TextField {...register('bidPerSecond', {

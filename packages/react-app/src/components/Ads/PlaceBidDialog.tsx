@@ -23,7 +23,6 @@ function PlaceBidDialog({open, handleClose, itemId, bidInfo}: PlaceBidDialogProp
 
   useEffect(() => {
     setValue('market', bidInfo.market);
-    setValue('bid', bidInfo.bid);
     setValue('bidPerSecond', bidInfo.bidPerSecond);
   }, [bidInfo, setValue]);
 
@@ -40,7 +39,7 @@ function PlaceBidDialog({open, handleClose, itemId, bidInfo}: PlaceBidDialogProp
       title={'Place bid'}
       actions={showActions && dialogActions}
     >
-      <PlaceBidForm {...{itemId, register, errors, watch, handleSubmit, setShowActions}} />
+      <PlaceBidForm {...{itemId, currentBid: bidInfo.bid, register, errors, watch, handleSubmit, setShowActions}} />
     </AppDialog>
   );
 }
