@@ -10,19 +10,27 @@ type ImgSvgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
 /**
  * Using an IMG tag is the safest way to load untrusted SVG files and prevent XSS attacks.
  */
-export default function ImgSvg({svg, alt, ...rest}: ImgSvgProps) {
+function ImgSvg({svg, alt, ...rest}: ImgSvgProps) {
   if (!svg.includes('xmlns')) {
     svg = svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
   }
 
-  return <img
-    src={`data:image/svg+xml;base64,${btoa(svg)}`}
+  return <ImgSvgBase64
+    svg={btoa(svg)}
     alt={alt || ''}
     {...rest}
   />
 }
 
-export function AdImg(props: ImgSvgProps) {
+function ImgSvgBase64({svg, alt, ...rest}: ImgSvgProps) {
+  return <img
+    src={`data:image/svg+xml;base64,${svg}`}
+    alt={alt || ''}
+    {...rest}
+  />
+}
+
+export function AdImg(props: ImgSvgProps & {type: 'svg'|'base64'}) {
   const [error, setError] = useState(false);
 
   if (error) {
@@ -31,5 +39,7 @@ export function AdImg(props: ImgSvgProps) {
 
   const onError = () => setError(true);
 
-  return <ImgSvg {...props} onError={onError} />
+  const ImgComponent = props.type === 'base64' ? ImgSvgBase64 : ImgSvg;
+
+  return <ImgComponent {...props} onError={onError} />;
 }

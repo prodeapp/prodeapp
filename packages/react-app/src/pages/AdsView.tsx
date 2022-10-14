@@ -112,7 +112,7 @@ function AdsView() {
       <Grid container spacing={0} style={{minHeight: '100%', borderTop: `1px solid ${theme.palette.black.dark}`}}>
         <GridLeftColumn item xs={12} lg={4}>
           <div style={{textAlign: 'center'}}>
-            {svgAd && <AdImg svg={svgAd} width={290} />}
+            {svgAd && <AdImg svg={svgAd} type="base64" width={290} />}
 
             <div style={{marginTop: '20px'}}>
               <Button color="primary" onClick={() => handleOpen('', '0', '0')}>Place new bid</Button>

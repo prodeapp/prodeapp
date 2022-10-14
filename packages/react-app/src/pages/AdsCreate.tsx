@@ -76,7 +76,6 @@ const isValidUrl = (url: string) => {
   try {
     new URL(url);
   } catch (e) {
-    console.error(e);
     return false;
   }
   return true;
@@ -108,7 +107,7 @@ function AdsCreate() {
   const onSubmit = async (data: AdCreateFormValues) => {
     try {
       await send(
-        svg,
+        btoa(svg),
         data.url,
         {
           value: baseDeposit,
@@ -204,7 +203,7 @@ function AdsCreate() {
 
         {isValid && svg && <>
           <div style={{textAlign: 'center', marginBottom: '30px'}}>
-            <AdImg svg={svg} width={290}/>
+            <AdImg svg={svg} type="svg" width={290}/>
           </div>
           <div style={{marginBottom: '20px'}}>
             <Button type="submit" fullWidth size="large"><Trans>Submit Ad</Trans></Button>
