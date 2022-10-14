@@ -1,7 +1,7 @@
 import { ApolloClient, gql, InMemoryCache, NormalizedCacheObject } from "@apollo/client";
 
 const prodeClient = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp-adds", // TODO: change this
+  uri: "https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp",
   cache: new InMemoryCache(),
 });
 

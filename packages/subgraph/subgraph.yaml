@@ -11,8 +11,8 @@ dataSources:
     network: xdai
     source:
       abi: MarketFactory
-      address: "0xf811C2895B4cFF1D7A63Ea7C04f60Eb11335F146"
-      startBlock: 24296648
+      address: "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b"
+      startBlock: 23172705
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -40,7 +40,7 @@ dataSources:
     source:
       abi: Realitio
       address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 24296648
+      startBlock: 23172705
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -69,7 +69,7 @@ dataSources:
     source:
       abi: GeneralizedTCR
       address: "0x86E72802D9AbBF7505a889721fD4D6947B02320E"
-      startBlock: 24296648
+      startBlock: 23165985
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -141,7 +141,7 @@ dataSources:
     source:
       abi: KeyValue
       address: "0xF230b73987024ed614AE93f8A5fdF2416aD0B835"
-      startBlock: 24296648
+      startBlock: 23769288
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
