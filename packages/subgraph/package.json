@@ -10,7 +10,6 @@
     "auth": "graph auth --product hosted-service $GRAPH_ACCESS_TOKEN",
     "build": "graph build",
     "codegen": "graph codegen --output-dir src/types/",
-    "deploy": "graph deploy --product hosted-service prodeapp/prodeapp",
-    "deploy:ads": "graph deploy --product hosted-service prodeapp/prodeapp-adds"
+    "deploy": "graph deploy --product hosted-service prodeapp/prodeapp"
   }
 }
