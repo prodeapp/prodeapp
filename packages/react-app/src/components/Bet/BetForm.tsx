@@ -182,7 +182,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
                 >
                   {events[i].outcomes.map((outcome, j) => {
                     if (data) {
-                      const relatedQuestions: Array<string> = data[1][events[i].id] ?? [];
+                      const relatedQuestions: Array<string> = data[events[i].id] ?? [];
                       const possibleOutcomes: Array<string> = [];
                       for (let k = 0; k < relatedQuestions.length; k++) {
                         const questionId = relatedQuestions[k];

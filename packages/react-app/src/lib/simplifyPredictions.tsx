@@ -6,7 +6,7 @@ import {FORMAT_SINGLE_ELIMINATION} from "./curate";
 
 export function useFormatMatches({events, itemJson}: {events: Event[] | undefined, itemJson: DecodedCurateListFields['Details'] | null}) {
   const indexedEvents = useIndexedEvents(events);
-  return Object.keys(indexedEvents).length > 0 && itemJson &&
+  const interdependenciesList = Object.keys(indexedEvents).length > 0 && itemJson &&
     itemJson.formats.map((format: any, i: number) => {
       const interdependencies: { [key: string]: Array<string> } = {};
       try {
@@ -39,4 +39,6 @@ export function useFormatMatches({events, itemJson}: {events: Event[] | undefine
         return interdependencies;
       }
     });
+
+    return interdependenciesList && Object.assign({}, ...interdependenciesList);
 }
