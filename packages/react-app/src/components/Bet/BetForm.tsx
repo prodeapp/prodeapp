@@ -28,7 +28,7 @@ import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
 
 export type BetFormValues = {
-  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', nonce: number}[]
+  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', questionId: string}[]
 }
 
 type BetFormProps = {
@@ -110,13 +110,12 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     const results = data.outcomes
       /**
        * ============================================================
-       * THE RESULTS MUST BE SORTED BY 'nonce' IN 'ascending' ORDER
+       * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
        * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
        * ============================================================
        */
-      .sort((a, b) => Number(a.nonce) > Number(b.nonce) ? 1 : -1)
+      .sort((a, b) => a.questionId > b.questionId ? 1 : -1)
       .map(outcome => formatOutcome(outcome.value));
-
     const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
 
     await placeBet(
@@ -165,7 +164,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
                 </Select>
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
-              <input type="hidden" {...register(`outcomes.${i}.nonce`, {required: t`This field is required`})} value={Number(events[i].nonce)} />
+              <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: t`This field is required`})} value={events[i].id} />
             </Grid>
           </React.Fragment>
         })}
