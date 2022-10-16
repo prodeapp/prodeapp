@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {BigAlert, FormError} from "../../components"
-import {FormControl, MenuItem, Select} from "@mui/material";
-import {useFieldArray, useForm, useWatch} from "react-hook-form";
+import {FormControl} from "@mui/material";
+import {useFieldArray, useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
@@ -10,12 +10,7 @@ import { isAddress } from "@ethersproject/address";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
-import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
-import {useFormatMatches} from "../../lib/simplifyPredictions";
-import {
-  DecodedCurateListFields,
-  fetchCurateItemsByHash,
-  getDecodedParams} from "../../lib/curate";
+import {getReferralKey, showWalletError} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
@@ -25,15 +20,18 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {FormatEvent} from "../FormatEvent";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
-import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {formatOutcome} from "../../lib/reality";
 import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 import {usePlaceBet} from "../../hooks/usePlaceBet";
 import {Market} from "../../graphql/subgraph";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
+import {BetOutcomeSelect} from "./BetOutcomeSelect";
+
+export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | '';
 
 export type BetFormValues = {
-  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', questionId: string}[]
+  outcomes: {value: BetFormOutcomeValue, questionId: string}[]
 }
 
 type BetFormProps = {
@@ -65,13 +63,12 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(market.id);
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
 
-  const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
+  const { register, control, formState: {errors}, handleSubmit, watch, setValue } = useForm<BetFormValues>({defaultValues: {
       outcomes: [],
     }});
 
-  const outcomes = useWatch({ control, name: `outcomes` });
+  const outcomes = watch('outcomes');
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -95,19 +92,6 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      const curateItems = await fetchCurateItemsByHash(market.hash);
-
-      if (curateItems.length > 0) {
-        const itemProps = await getDecodedParams(curateItems[0].id)
-        setItemJson(itemProps.Details)
-      }
-    })();
-  }, [market]);
-
-  const data = useFormatMatches({events: events, itemJson: itemJson});
 
   if (isLoading ) {
     return <div><Trans>Loading...</Trans></div>
@@ -175,34 +159,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
             <Grid item xs={12} md={6}><FormatEvent title={events[i].title} /></Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <Select
-                  defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
-                  id={`event-${i}-outcome-select`}
-                  multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-                  {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
-                  error={!!errors.outcomes?.[i]?.value}
-                >
-                  {events[i].outcomes.map((outcome, j) => {
-                    if (data) {
-                      const relatedQuestions: Array<string> = data[events[i].id] ?? [];
-                      const possibleOutcomes: Array<string> = [];
-                      for (let k = 0; k < relatedQuestions.length; k++) {
-                        const questionId = relatedQuestions[k];
-                        const questionPos = events.findIndex(event => event.id === questionId);
-                        const userSelectionIndex = outcomes[questionPos].value;
-                        if (userSelectionIndex !== "") {
-                          const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)];
-                          possibleOutcomes.push(outcomeSelected);
-                        }
-                      } 
-                      if (possibleOutcomes.length >= 2 && !possibleOutcomes.includes(outcome)) {
-                        return null;
-                      }
-                    }
-                    return <MenuItem value={j} key={j}>{transOutcome(outcome)}</MenuItem>;
-                  })}
-                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
-                </Select>
+                <BetOutcomeSelect market={market} events={events} i={i} outcomes={outcomes} register={register} errors={errors} setValue={setValue} />
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
               <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: t`This field is required`})} value={events[i].id} />
