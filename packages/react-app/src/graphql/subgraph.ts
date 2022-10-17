@@ -57,7 +57,6 @@ export type Outcome = string
 
 export interface Event {
   id: string
-  nonce: string
   arbitrator: string
   markets: [{
     id: string
@@ -79,7 +78,6 @@ export interface Event {
 export const EVENT_FIELDS = `
   fragment EventFields on Event {
     id
-    nonce
     arbitrator
     markets{id}
     category
@@ -224,7 +222,7 @@ export interface Bet {
   market: {
     id: string
     name: string
-    events: Pick<Event, 'id' | 'answer' | 'nonce' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
+    events: Pick<Event, 'id' | 'answer' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
   }
   tokenID: string
   points: BigNumberish
@@ -247,7 +245,6 @@ export const BET_FIELDS = `
       events {
         id
         answer
-        nonce
         title
         outcomes
         openingTs

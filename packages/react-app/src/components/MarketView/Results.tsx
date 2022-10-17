@@ -110,7 +110,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
           event.arbitrator,
           event.timeout,
           event.openingTs,
-          event.nonce,
+          0,
           event.minBond,
           event.id
         );
