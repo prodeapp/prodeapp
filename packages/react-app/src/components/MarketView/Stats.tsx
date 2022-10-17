@@ -32,13 +32,13 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // Add stats
     bets.forEach((bet) => {
         bet.results.forEach((result, i) => {
-            let evnt = bet.market.events[i]
-            let betText = getAnswerText(result, evnt.outcomes, evnt.templateID)
+            let event = bet.market.events[i]
+            let betText = getAnswerText(result, event.outcomes, event.templateID, 'Invalid value')
             let betStatIndex = stats[i].findIndex((evnt) => evnt.outcome===betText);
             if (betStatIndex === -1) {
                 // this bet it's a combination of outcomes, so need to be initialized
                 betStatIndex = stats[i].length
-                stats[i][betStatIndex] = { outcome: getAnswerText(result, evnt.outcomes, evnt.templateID), amountBets: 0, percentage: 0, index: stats[i].length, title: evnt.title, openingTs: evnt.openingTs }
+                stats[i][betStatIndex] = { outcome: getAnswerText(result, event.outcomes, event.templateID, 'Invalid value'), amountBets: 0, percentage: 0, index: stats[i].length, title: event.title, openingTs: event.openingTs }
             }
             stats[i][betStatIndex].amountBets = stats[i][betStatIndex].amountBets + 1
         })
