@@ -1,7 +1,6 @@
 import { BoxWrapper, BoxRow } from '../../components';
 import { Bet } from '../../graphql/subgraph';
 import {getAnswerText} from '../../lib/helpers';
-import {BigNumber} from "@ethersproject/bignumber";
 import { Trans, t } from '@lingui/macro';
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {usePhone} from "../../hooks/useResponsive";
@@ -39,7 +38,9 @@ const mobileLabelSx = {
 export default function BetDetails({bet}: {bet: Bet}) {
   const isPhone = usePhone();
   let events = [...bet.market.events];
-  events.sort((a, b) => (a.openingTs > b.openingTs) ? 1 : ((b.openingTs > a.openingTs) ? -1 : 0))
+  events.sort((a, b) => (a.openingTs > b.openingTs) ? 1 : ((b.openingTs > a.openingTs) ? -1 : 0));
+  const orderedEventIndices = Array.from(Array(events.length).keys()).sort((a, b) => events[a].id < events[b].id ? -1 : 1);
+
   return <BoxWrapper>
     {!isPhone && <BoxRow>
       <div style={{ width: '40%'}}><Trans>Event</Trans></div>
@@ -48,7 +49,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
       <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
     </BoxRow>}
     {events.map((event, i) => {
-      const eventNonce = BigNumber.from(event.nonce).toNumber();
+      const eventNonce = orderedEventIndices.indexOf(i);
       const playerBet = getAnswerText(bet.results[eventNonce], event.outcomes || [], event.templateID);
       const eventResult = getAnswerText(event.answer, event.outcomes || [], event.templateID, '');
       const betResult = getBetResult(eventResult, playerBet);
