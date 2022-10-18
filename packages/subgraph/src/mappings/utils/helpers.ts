@@ -191,7 +191,7 @@ export function getBidID(market: Address, bidder: Address, itemID: Bytes): strin
 
 }
 
-export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes): Bid {
+export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes): Bid|null {
     const bidID = getBidID(market, bidder, itemID)
     let bid = Bid.load(bidID);
     if (bid === null){
@@ -199,7 +199,13 @@ export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes):
         bid.balance = BigInt.fromI32(0);
         bid.bidPerSecond = BigInt.fromI32(0);
         bid.bidder = bidder;
-        bid.market = Market.load(market.toHexString())!.id;
+        const _market = Market.load(market.toHexString());
+
+        if (_market === null) {
+            return null;
+        }
+
+        bid.market = _market.id;
         bid.currentHighest = false;
         bid.startTimestamp = BigInt.fromI32(0);
         let curateItem = CurateSVGAdItem.load(itemID.toHexString());

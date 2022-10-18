@@ -5,6 +5,12 @@ import { getOrCreateSVGAd, getOrCreateBid } from './utils/helpers'
 
 export function handleBidUpdate(event: BidUpdate): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
+
+    if (bid === null) {
+        log.warning('getOrCreateBid: market not found {}', [event.params._market.toHexString()]);
+        return;
+    }
+
     let svgAd = getOrCreateSVGAd(bid.SVGAd);
     if (event.params._newBalance.equals(BigInt.fromI32(0))) {
         let market = Market.load(bid.market)!;
@@ -44,6 +50,12 @@ export function handleBidUpdate(event: BidUpdate): void {
 
 export function handleNewHighestBid(event: NewHighestBid): void {
     let bid = getOrCreateBid(event.params._market, event.params._bidder, event.params._itemID);
+
+    if (bid === null) {
+        log.warning('getOrCreateBid: market not found {}', [event.params._market.toHexString()]);
+        return;
+    }
+
     log.debug("handleNewHighestBid: New Highest Bid with id: {}", [bid.id]);
     bid.currentHighest = true;
     bid.startTimestamp = event.block.timestamp;
