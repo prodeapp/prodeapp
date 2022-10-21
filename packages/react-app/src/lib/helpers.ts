@@ -136,6 +136,7 @@ export const MARKET_CATEGORIES: MarketCategory[] = [
       {id: "basketball", text: t`Basketball`},
       {id: "tenis", text: t`Tennis`},
       {id: "esports", text: t`eSports`},
+      {id: "F1", text: t`F1`},
     ]
   },
   {id: "misc", text: t`Miscellaneous`},
