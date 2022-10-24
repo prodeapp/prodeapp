@@ -27,6 +27,9 @@ import MarketsFund from "./pages/MarketsFund";
 import { GlobalContextProvider } from './lib/GlobalContext';
 import WelcomeDialog from "./components/WelcomeDialog";
 import SendVouchers from "./pages/SendVouchers";
+import AdsList from "./pages/AdsList";
+import AdsCreate from "./pages/AdsCreate";
+import AdsView from "./pages/AdsView";
 
 const config = {
   readOnlyChainId: xDai.chainId,
@@ -70,6 +73,11 @@ ReactDOM.render(
                     <Route path="curate/validator" element={<CurateValidator />} />
                     <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
                     <Route path="send-vouchers" element={<SendVouchers />} />
+                    <Route path="ads">
+                      <Route index element={<AdsList />} />
+                      <Route path="create" element={<AdsCreate />} />
+                      <Route path=":id" element={<AdsView />} />
+                    </Route>
                   </Route>
                 </Routes>
               </HashRouter>

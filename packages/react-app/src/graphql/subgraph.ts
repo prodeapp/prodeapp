@@ -1,4 +1,4 @@
-import { BigNumberish } from "@ethersproject/bignumber";
+import {BigNumberish} from "@ethersproject/bignumber";
 
 export interface Market {
   id: string
@@ -304,3 +304,47 @@ export const MARKET_FACTORY_FIELDS = `
     totalVolumeFunding
   }
 `;
+
+export interface SVGAd {
+  id: string
+  curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null
+  markets: Pick<Market, 'id'>[]
+  bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'currentHighest'>[]
+  activeMarkets: Pick<Market, 'id'>[]
+}
+
+export const SVG_AD_FIELDS = `
+  fragment SVGAdsFields on SVGAd {
+    id
+    curateSVGAdItem {id}
+    markets {id}
+    bids {
+      id
+      bidPerSecond
+      market {
+        id
+        name
+      }
+      bidder
+      balance
+      startTimestamp
+      currentHighest
+    }
+    activeMarkets {id}
+  }
+`;
+
+export interface AdBid {
+  id: string
+  market: Pick<Market, 'id' | 'name'>
+  bidPerSecond: string
+  bidder: string
+  balance: string
+  startTimestamp: string
+  currentHighest: boolean
+}
+
+export interface CurateSVGAdItem {
+  id: string
+  SVGAd: Pick<SVGAd, 'id'>
+}

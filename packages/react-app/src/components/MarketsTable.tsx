@@ -18,7 +18,7 @@ type MarketsTableProps = {
   markets?: Market[]
 }
 
-const MarketsGrid = styled(Grid)(({ theme }) => ({
+export const MarketsGrid = styled(Grid)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     borderTop: `1px solid ${theme.palette.black.dark}`,
   },
@@ -45,7 +45,7 @@ const MarketsGrid = styled(Grid)(({ theme }) => ({
   },
 }));
 
-const MarketDetails = styled(Box)(({ theme }) => ({
+export const MarketDetails = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up('sm')]: {
     borderLeft: `1px solid ${theme.palette.black.dark}`,
   },

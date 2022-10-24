@@ -39,6 +39,16 @@ type Market @entity {
   marketFactory: MarketFactory!
   "Amount of the prize that was funded by sponsor"
   sponsoredAmount: BigInt!
+  "All the bids for this market"
+  bids: [Bid!]! @derivedFrom(field: "market")
+  "All Ads (active or not) that has a bid in this market"
+  ads: [SVGAd!]! @derivedFrom(field: "markets")
+  "Current Ad with highest bid, null if there is no Ad with Bid."
+  highestBidAd: SVGAd
+  "Current highest bid, null if there are not."
+  highestBid: Bid
+  "Market Billing Balance"
+  billingBalance: BigInt!
 }
 
 type MarketCuration @entity {
@@ -208,3 +218,54 @@ type _Schema_
     algorithm: rank
     include: [{ entity: "Market", fields: [{ name: "name" }] }]
   )
+
+type SVGAd @entity {
+  "address of the Smart Contract"
+  id: ID!
+  "Markets where this Ad has bids (active or not)."
+  markets: [Market!]!
+  "entity with curate information of this Ad"
+  curateSVGAdItem: CurateSVGAdItem
+  # svg: String
+  "All the bids of this ad"
+  bids: [Bid!]!
+  activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
+}
+
+type Bid @entity {
+  "market-bider-itemID"
+  id: ID!
+  market: Market!
+  bidPerSecond: BigInt!
+  "Address of the bidder."
+  bidder: Bytes!
+  "Balance of the Bid"
+  balance: BigInt!,
+  startTimestamp: BigInt!,
+  currentHighest: Boolean!
+  "Address of the ad"
+  SVGAd: SVGAd!
+  "Curate info for the Ad of this Bid"
+  curateSVGAdItem: CurateSVGAdItem
+}
+
+type CurateSVGAdItem @entity {
+  "CurateProxySVG itemID = keccack256(abi.encode(itemID, itemID))"
+  id: ID!
+  SVGAd: SVGAd!,
+  "itemID in technical list of Curate"
+  technicalItemID: Bytes!,
+  "itemID in the content list of Curate"
+  contentItemID: Bytes!,
+  "Status in the content curation list. Enum with statuses"
+  contentStatus: CurationStatus!
+  "Status in the technical curation list. Enum with statuses"
+  technicalStatus: CurationStatus!
+}
+
+type CurateAdsMapper @entity {
+  "ItemID in curate"
+  id: ID!
+  SVGAd: SVGAd!
+  ipfs: String!
+}

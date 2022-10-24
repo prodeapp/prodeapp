@@ -11,8 +11,17 @@ interface MarketFiltersProp {
   filters: UseMarketsProps
 }
 
+interface AdsFiltersProp {
+  market: string,
+  setMarket: (market: string) => void
+  filters: {
+    market: string
+  }
+}
+
 interface GlobalContextInterface {
   marketFilters: MarketFiltersProp
+  adsFilters: AdsFiltersProp
 }
 
 export const GlobalContext = React.createContext<GlobalContextInterface>({} as GlobalContextInterface);
@@ -38,11 +47,24 @@ const useMarketFilters = (): MarketFiltersProp => {
   }
 }
 
+const useAdsFilters = (): AdsFiltersProp => {
+  const [market, setMarket] = useState<string>('');
+
+  return {
+    market,
+    setMarket,
+    filters: {
+      market
+    }
+  }
+}
+
 export const GlobalContextProvider = ({ children }: {children: React.ReactNode}) => {
   const marketFilters = useMarketFilters()
+  const adsFilters = useAdsFilters()
 
   return (
-    <GlobalContext.Provider value={{ marketFilters }}>
+    <GlobalContext.Provider value={{ marketFilters, adsFilters }}>
       {children}
     </GlobalContext.Provider>
   );

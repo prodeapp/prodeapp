@@ -73,6 +73,7 @@ export default function Footer() {
           <FooterNav>
             <div><RouterLink to='/markets/new'><Trans>Create Market</Trans></RouterLink></div>
             <div><a href={BRIDGE_URL} target="_blank" rel="noreferrer"><Trans>Bridge</Trans></a></div>
+            <div><RouterLink to='/ads'><Trans>Ads</Trans></RouterLink></div>
             <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
           </FooterNav>
           <div style={{color: '#7d7d7d'}}>

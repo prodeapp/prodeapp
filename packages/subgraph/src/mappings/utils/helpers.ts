@@ -1,6 +1,7 @@
-import { Address, BigInt, ByteArray, Bytes, log } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, Bytes, log, ethereum, crypto } from "@graphprotocol/graph-ts";
 import { Realitio } from "../../types/RealitioV3/Realitio";
-import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral, Market} from "../../types/schema";
+import {Player, Manager, Bet, Registry, MarketCuration, Event, MarketFactory, Attribution, MarketReferral,
+        Market, Bid, CurateSVGAdItem, SVGAd, CurateAdsMapper} from "../../types/schema";
 import { RealitioAddress } from "./constants";
 
 export function getBetID(market: ByteArray, tokenID: BigInt): string {
@@ -94,7 +95,7 @@ export function getOrCreateMarketReferral(market:string, provider:string, manage
 }
 
 export function getCurrentRanking(market: ByteArray): Bet[] {
-    let bets: Bet[];
+    let bets: Bet[] = [];
     let tokenID = BigInt.fromI32(0);
     let _bet: Bet | null;
     while (true) {
@@ -183,4 +184,66 @@ export function getOrCreateEvent(questionID:Bytes, marketAddress:Address, nonce:
     }
     event.save()
     return event
+}
+
+export function getBidID(market: Address, bidder: Address, itemID: Bytes): string {
+    return market.toHexString() + '-' + bidder.toHexString() + '-' + itemID.toHexString();
+
+}
+
+export function getOrCreateBid(market: Address, bidder: Address, itemID: Bytes): Bid|null {
+    const bidID = getBidID(market, bidder, itemID)
+    let bid = Bid.load(bidID);
+    if (bid === null){
+        bid = new Bid(bidID);
+        bid.balance = BigInt.fromI32(0);
+        bid.bidPerSecond = BigInt.fromI32(0);
+        bid.bidder = bidder;
+        const _market = Market.load(market.toHexString());
+
+        if (_market === null) {
+            return null;
+        }
+
+        bid.market = _market.id;
+        bid.currentHighest = false;
+        bid.startTimestamp = BigInt.fromI32(0);
+        let curateItem = CurateSVGAdItem.load(itemID.toHexString());
+        if (curateItem === null) {
+            log.warning('getOrCreateBid: CurateItem not found when creating Bid for itemID {}', [itemID.toHexString()])
+        } else {
+            bid.SVGAd = curateItem.SVGAd;        
+            bid.curateSVGAdItem = curateItem.id;
+            let svgAd = getOrCreateSVGAd(curateItem.SVGAd);
+            let bids = svgAd.bids;
+            bids.push(bid.id);
+            svgAd.bids = bids;
+            svgAd.save()
+        }       
+        bid.save()
+        log.debug('getOrCreateBid: New Bid with id: {}!', [bidID]);
+        return bid
+    }
+    return bid;
+}
+
+export function getOrCreateSVGAd(address: string): SVGAd {
+    let svgAd = SVGAd.load(address);
+    if (svgAd == null){
+        svgAd = new SVGAd(address);
+        svgAd.markets = [];
+        svgAd.bids = [];
+        svgAd.save()
+    }
+    return svgAd
+}
+
+export function getCurateProxyIDFromItemID(_itemID: Bytes): string | null {
+    let curateMapper = CurateAdsMapper.load(_itemID.toHexString())!;
+
+    let svgAd = SVGAd.load(curateMapper.SVGAd)
+    if (svgAd !== null){
+        return svgAd.curateSVGAdItem;
+    }
+    return null
 }

@@ -90,6 +90,52 @@ dataSources:
       file: ./src/mappings/GeneralizedTCR.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
+    name: ContentCurate
+    network: xdai
+    source:
+      abi: GeneralizedTCR
+      address: "0x76D159faDCDE966d68885b7267Ce42F4F655238D"
+      startBlock: 24296648
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - SVGAd
+        - CurateSVGAdItem
+      eventHandlers:
+        - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
+          handler: handleItemStatusChange
+        - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
+          handler: handleItemSubmitted
+      file: ./src/mappings/ContentCurate.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: TechnicalCurate
+    network: xdai
+    source:
+      abi: GeneralizedTCR
+      address: "0x6E6Bc2032d5A19728Aeb30f06507e7Cb43e4bBFD"
+      startBlock: 24350145
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - SVGAd
+        - CurateSVGAdItem
+      eventHandlers:
+        - event: ItemStatusChange(indexed bytes32,indexed uint256,indexed uint256,bool,bool)
+          handler: handleItemStatusChange
+        - event: ItemSubmitted(indexed bytes32,indexed address,indexed uint256,bytes)
+          handler: handleItemSubmitted
+      file: ./src/mappings/TechnicalCurate.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
     name: KeyValue
     network: xdai
     source:
@@ -108,6 +154,95 @@ dataSources:
         - event: SetValue(string,string)
           handler: handleSetValue
       file: ./src/mappings/KeyValue.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: SVGFactory
+    network: xdai
+    source:
+      abi: SVGFactory
+      address: "0x24C93b506768110A45Fd1a221eCd8Bd6B93Dc15c"
+      startBlock:  24489790
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: SVGFactory
+          file: ./contracts/abis/SVGFactory.json
+      entities:
+        - SVGAd
+      eventHandlers:
+        - event: NewAd(indexed address)
+          handler: handleNewAd
+      # callHandlers:
+      #   - function: createAd(string,string)
+      #     handler: handleCreateAd
+      file: ./src/mappings/SVGFactory.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: Billing
+    network: xdai
+    source:
+      abi: Billing
+      address: "0x9444245c2c7Ac2C1D25798478f700d26a2d244a0"
+      startBlock:  24534094
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: Billing
+          file: ./contracts/abis/Billing.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BalanceChanged(indexed address,uint256)
+          handler: handleBalanceChanged
+      file: ./src/mappings/Billing.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: FirstPriceAuction
+    network: xdai
+    source:
+      abi: FirstPriceAuction
+      address: "0xDcdB82E595B3c80e569EbB52C08B05f053Ad7478"
+      startBlock:  24534096
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: FirstPriceAuction
+          file: ./contracts/abis/FirstPriceAuction.json
+      entities:
+        - Bid
+        - Market
+      eventHandlers:
+        - event: BidUpdate(indexed address,indexed address,bytes32,indexed uint256,uint256)
+          handler: handleBidUpdate
+        - event: NewHighestBid(indexed address,address,bytes32)
+          handler: handleNewHighestBid
+      file: ./src/mappings/FirstPriceAuction.ts
+      language: wasm/assemblyscript
+  - kind: ethereum/contract
+    name: CurateProxySVG
+    network: xdai
+    source:
+      abi: CurateProxySVG
+      address: "0x8167f4bF6f39C178bE68536C290E44E49925ce5f"
+      startBlock:  24489788
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      abis:
+        - name: CurateProxySVG
+          file: ./contracts/abis/CurateProxySVG.json
+        - name: GeneralizedTCR
+          file: ./contracts/abis/GeneralizedTCR.json
+      entities:
+        - CurateSVGAdItem
+      eventHandlers:
+        - event: newItemMapped(indexed address,indexed bytes32,bytes32,bytes32)
+          handler: handleNewItemMapped
+      file: ./src/mappings/CurateProxySVG.ts
       language: wasm/assemblyscript
 templates:
   - name: Market
