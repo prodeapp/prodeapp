@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {BigAlert, FormError} from "../../components"
-import {FormControl, MenuItem, Select} from "@mui/material";
-import {useFieldArray, useForm} from "react-hook-form";
+import {FormControl} from "@mui/material";
+import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
@@ -10,7 +10,7 @@ import { isAddress } from "@ethersproject/address";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans, t } from "@lingui/macro";
-import {getReferralKey, showWalletError, transOutcome} from "../../lib/helpers";
+import {getReferralKey, showWalletError} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
@@ -20,15 +20,20 @@ import CircularProgress from "@mui/material/CircularProgress";
 import {FormatEvent} from "../FormatEvent";
 import {ReactComponent as TriangleIcon} from "../../assets/icons/triangle-right.svg";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
-import {formatOutcome, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
+import {formatOutcome} from "../../lib/reality";
 import {FormEventOutcomeValue} from "../Answer/AnswerForm";
 import {usePlaceBet} from "../../hooks/usePlaceBet";
 import {Market} from "../../graphql/subgraph";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
+import {BetOutcomeSelect} from "./BetOutcomeSelect";
+import {useCurateItemJson} from "../../hooks/useCurateItems";
+import {useMatchesInterdependencies} from "../../hooks/useMatchesInterdependencies";
+
+export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | '';
 
 export type BetFormValues = {
-  outcomes: {value: FormEventOutcomeValue | FormEventOutcomeValue[] | '', questionId: string}[]
+  outcomes: {value: BetFormOutcomeValue, questionId: string}[]
 }
 
 type BetFormProps = {
@@ -46,9 +51,11 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
   return <div style={{textAlign: 'center', margin: '10px 0'}}>
     <div>
       <p><Trans>Your betting position is represented by the following NFT.</Trans></p>
-      <p><Trans>You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.</Trans></p>
     </div>
     <img src={image} style={{margin: '20px 0'}} alt="Bet NFT" />
+    <div>
+      <p><Trans>You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.</Trans></p>
+    </div>
     <div>
       <Button component={Link} size="large" href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
     </div>
@@ -59,9 +66,13 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(market.id);
 
-  const { register, control, formState: {errors}, handleSubmit } = useForm<BetFormValues>({defaultValues: {
+  const { register, control, formState: {errors}, handleSubmit, setValue } = useForm<BetFormValues>({
+    mode: 'all',
+    defaultValues: {
       outcomes: [],
     }});
+
+  const outcomes = useWatch({control, name: 'outcomes'});
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -85,6 +96,9 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
+
+  const itemJson = useCurateItemJson(market.hash);
+  const matchesInterdependencies = useMatchesInterdependencies(events, itemJson);
 
   if (isLoading ) {
     return <div><Trans>Loading...</Trans></div>
@@ -152,16 +166,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
             <Grid item xs={12} md={6}><FormatEvent title={events[i].title} /></Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <Select
-                  defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
-                  id={`event-${i}-outcome-select`}
-                  multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-                  {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
-                  error={!!errors.outcomes?.[i]?.value}
-                >
-                  {events[i].outcomes.map((outcome, i) => <MenuItem value={i} key={i}>{transOutcome(outcome)}</MenuItem>)}
-                  <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
-                </Select>
+                <BetOutcomeSelect key={events[i].id} matchesInterdependencies={matchesInterdependencies} events={events} i={i} outcomes={outcomes} control={control} errors={errors} setValue={setValue} />
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
               <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: t`This field is required`})} value={events[i].id} />

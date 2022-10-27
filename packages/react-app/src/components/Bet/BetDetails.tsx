@@ -50,7 +50,7 @@ export default function BetDetails({bet}: {bet: Bet}) {
     </BoxRow>}
     {events.map((event, i) => {
       const eventNonce = orderedEventIndices.indexOf(i);
-      const playerBet = getAnswerText(bet.results[eventNonce], event.outcomes || [], event.templateID, 'Invalid value')   ;
+      const playerBet = getAnswerText(bet.results[eventNonce], event.outcomes || [], event.templateID, 'Invalid value');
       const eventResult = getAnswerText(event.answer, event.outcomes || [], event.templateID, '');
       const betResult = getBetResult(eventResult, playerBet);
       const backgroundColor = betResult === 0 ? undefined : (betResult === 1 ? 'rgba(0, 128, 0, 0.15)' : 'rgba(255, 0, 0, 0.15)')

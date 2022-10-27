@@ -1,34 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useParams} from "react-router-dom";
 import {useEvents} from "../hooks/useEvents";
-import {
-  DecodedCurateListFields,
-  fetchCurateItemsByHash,
-  getDecodedParams
-} from "../lib/curate";
 import {useMarket} from "../hooks/useMarket";
 import Alert from "@mui/material/Alert";
 import {RenderTournament} from "../components/Tournament/RenderTournament";
+import {useCurateItemJson} from "../hooks/useCurateItems";
 
 function Tournament() {
   const { id } = useParams();
   const { isLoading: isLoadingMarket, data: market } = useMarket(String(id))
   const { isLoading: isLoadingEvents, data: events } = useEvents(String(id));
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
-
-  useEffect(() => {
-    if (!market) {
-      return;
-    }
-    (async () => {
-      const curateItems = await fetchCurateItemsByHash(market.hash);
-
-      if (curateItems.length > 0) {
-        const itemProps = await getDecodedParams(curateItems[0].id)
-        setItemJson(itemProps.Details)
-      }
-    })();
-  }, [market])
+  const itemJson = useCurateItemJson(market?.hash || '');
 
   if (isLoadingMarket || isLoadingEvents) {
     return <div>Loading...</div>
