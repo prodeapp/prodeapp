@@ -5,7 +5,7 @@ import {useIndexedEvents} from "./useEvents";
 
 export type MatchesInterdependencies = Record<string, string[]>;
 
-export function useMatchesInterdependencies({events, itemJson}: {events: Event[] | undefined, itemJson: DecodedCurateListFields['Details'] | null}): MatchesInterdependencies {
+export function useMatchesInterdependencies(events: Event[] | undefined, itemJson: DecodedCurateListFields['Details'] | null): MatchesInterdependencies {
   const indexedEvents = useIndexedEvents(events);
 
   if (Object.keys(indexedEvents).length === 0 || itemJson === null) {

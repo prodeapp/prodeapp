@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {BigAlert, FormError} from "../../components"
 import {FormControl} from "@mui/material";
-import {useFieldArray, useForm} from "react-hook-form";
+import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
 import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
@@ -27,6 +27,8 @@ import {Market} from "../../graphql/subgraph";
 import Box from "@mui/material/Box";
 import AlertTitle from "@mui/material/AlertTitle";
 import {BetOutcomeSelect} from "./BetOutcomeSelect";
+import {useCurateItemJson} from "../../hooks/useCurateItems";
+import {useMatchesInterdependencies} from "../../hooks/useMatchesInterdependencies";
 
 export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | '';
 
@@ -64,11 +66,13 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   const { account, error: walletError } = useEthers();
   const { isLoading, error, data: events } = useEvents(market.id);
 
-  const { register, control, formState: {errors}, handleSubmit, watch, setValue } = useForm<BetFormValues>({defaultValues: {
+  const { register, control, formState: {errors}, handleSubmit, setValue } = useForm<BetFormValues>({
+    mode: 'all',
+    defaultValues: {
       outcomes: [],
     }});
 
-  const outcomes = watch('outcomes');
+  const outcomes = useWatch({control, name: 'outcomes'});
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -92,6 +96,9 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, []);
+
+  const itemJson = useCurateItemJson(market.hash);
+  const matchesInterdependencies = useMatchesInterdependencies(events, itemJson);
 
   if (isLoading ) {
     return <div><Trans>Loading...</Trans></div>
@@ -159,7 +166,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
             <Grid item xs={12} md={6}><FormatEvent title={events[i].title} /></Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <BetOutcomeSelect market={market} events={events} i={i} outcomes={outcomes} register={register} errors={errors} setValue={setValue} />
+                <BetOutcomeSelect key={events[i].id} matchesInterdependencies={matchesInterdependencies} events={events} i={i} outcomes={outcomes} control={control} errors={errors} setValue={setValue} />
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
               <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: t`This field is required`})} value={events[i].id} />

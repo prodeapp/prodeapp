@@ -2,16 +2,15 @@ import {INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/realit
 import {t, Trans} from "@lingui/macro";
 import {MenuItem, Select} from "@mui/material";
 import {transOutcome} from "../../lib/helpers";
-import React, {useEffect, useState} from "react";
-import {Market, Event} from "../../graphql/subgraph";
+import React from "react";
+import { Event} from "../../graphql/subgraph";
 import {
   getInverseInterdependencies,
   MatchesInterdependencies,
-  useMatchesInterdependencies
 } from "../../hooks/useMatchesInterdependencies";
 import {BetFormValues} from "./BetForm";
-import {DecodedCurateListFields, fetchCurateItemsByHash, getDecodedParams} from "../../lib/curate";
-import {UseFormSetValue, UseFormRegister} from "react-hook-form/dist/types/form";
+import {Controller} from "react-hook-form";
+import {UseFormSetValue, Control} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 
 type BetOutcomeValue = number | typeof INVALID_RESULT;
@@ -49,51 +48,61 @@ function filterOutcomesInterdependencies(outcomes: IndexedBetOutcome[], event: E
 }
 
 interface Props {
-  market: Market
+  matchesInterdependencies: MatchesInterdependencies
   events: Event[]
   i: number
   outcomes: BetFormValues['outcomes']
-  register: UseFormRegister<BetFormValues>
+  control: Control<BetFormValues>
   errors: FieldErrors<BetFormValues>
   setValue: UseFormSetValue<BetFormValues>
 }
 
-export function BetOutcomeSelect({market, events, i, outcomes, register, errors, setValue}: Props) {
-
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
-
-  const matchesInterdependencies = useMatchesInterdependencies({events: events, itemJson: itemJson});
+export function BetOutcomeSelect({matchesInterdependencies, events, i, outcomes, control, errors, setValue}: Props) {
   const inverseInterdependencies = getInverseInterdependencies(matchesInterdependencies);
 
-  useEffect(() => {
-    (async () => {
-      const curateItems = await fetchCurateItemsByHash(market.hash);
-
-      if (curateItems.length > 0) {
-        const itemProps = await getDecodedParams(curateItems[0].id)
-        setItemJson(itemProps.Details)
-      }
-    })();
-  }, [market]);
+  const event = events[i];
 
   const onOutcomeChange = () => {
-    inverseInterdependencies[events[i].id].forEach(matchDependencyId => {
+    if (!inverseInterdependencies[event.id]) {
+      return;
+    }
+
+    inverseInterdependencies[event.id].forEach(matchDependencyId => {
       const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId);
       if (outcomes[matchDependencyIndex].value !== '') {
-        setValue(`outcomes.${matchDependencyIndex}.value`, '', {shouldTouch: true});
+        setValue(`outcomes.${matchDependencyIndex}.value`, '', {shouldValidate: true});
       }
     })
   }
 
-  return <Select
-    defaultValue={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
-    id={`event-${i}-outcome-select`}
-    multiple={events[i].templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-    {...register(`outcomes.${i}.value`, {required: t`This field is required`})}
-    error={!!errors.outcomes?.[i]?.value}
-    onChange={onOutcomeChange}
-  >
-    {getOutcomes(events[i], events, outcomes, matchesInterdependencies).map(outcome => <MenuItem value={outcome.value} key={outcome.value}>{transOutcome(outcome.text)}</MenuItem>)}
-    <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
-  </Select>
+  return <>
+    <Controller
+      name={`outcomes.${i}.value`}
+      control={control}
+      rules={{
+        required: t`This field is required`,
+      }}
+      defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
+      render={({ field: { onChange, value } }) => (
+        <Select
+          id={`event-${i}-outcome-select`}
+          multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
+          error={!!errors.outcomes?.[i]?.value}
+          value={value}
+          onChange={(...event: any[]) => {
+            onChange(...event);
+            onOutcomeChange();
+          }}
+        >
+          {
+            getOutcomes(event, events, outcomes, matchesInterdependencies)
+            .map(
+              outcome => <MenuItem value={outcome.value} key={outcome.value}>{transOutcome(outcome.text)}</MenuItem>
+            )
+          }
+          <MenuItem value={INVALID_RESULT}><Trans>Invalid result</Trans></MenuItem>
+        </Select>
+      )}
+    />
+  </>
 }
