@@ -29,9 +29,11 @@ interface ClaimableItem {
 export const getUseClaimArgsKey = (account: string) => ["useClaimArgs", account];
 
 export const useClaimArgs = (account: string) => {
+  // TODO: if the user has more than 1000 claims it will fail
+  //  we need to paginate and return all the existing claims
   const claimsQuery = `
   query ClaimsQuery($user: Bytes!) {
-    claims(where: {
+    claims(first: 1000, where: {
       user: $user
     }) {
       question {
