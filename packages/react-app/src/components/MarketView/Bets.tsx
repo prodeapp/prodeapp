@@ -63,7 +63,7 @@ export default function Bets({marketId, onlyMyBets}: {marketId: string, onlyMyBe
         return <TableBody key={i}>
           <div style={{width: '10%', display: 'flex'}}>
             <div>{i+1}</div>
-            {marketWinners[rank.tokenID] && marketWinners[rank.tokenID].prizes.map(prize => <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(prize)}} />)}
+            {marketWinners[rank.tokenID] && marketWinners[rank.tokenID].prizes.map((prize, i) => <MedalIcon style={{marginLeft: '10px', fill: getMedalColor(prize)}} key={i}/>)}
           </div>
           <div style={{width: '40%'}}><Link to={`/profile/${rank.player.id}`}>{(account && rank.player.id.toLowerCase() === account.toLowerCase()) ? t`You` : formatPlayerName(rank.player.name, rank.player.id)}</Link></div>
           <Box sx={{width: '40%', textAlign: {xs: 'center', sm: 'left'}, fontWeight: 'bold'}}>{rank.points.toString()}</Box>
