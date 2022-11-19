@@ -42,7 +42,7 @@
     "@types/react-blockies": "^1.4.1",
     "@types/react-dom": "^17.0.14",
     "@types/styled-components": "^5.1.24",
-    "@usedapp/core": "^1.1.6-dev.4046acf",
+    "@usedapp/core": "^1.2.2",
     "@walletconnect/web3-provider": "^1.7.8",
     "ajv": "^8.11.0",
     "date-fns": "^2.28.0",
