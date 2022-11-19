@@ -50,7 +50,7 @@ const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish
     'placeBet'
   );
 
-  const { value: voucherBalance } = useCall({ contract, method: 'balance', args: [account] }) || {value: [BigNumber.from(0)]}
+  const { value: voucherBalance } = useCall(account && { contract, method: 'balance', args: [account] }) || {value: [BigNumber.from(0)]}
   const { value: marketWhitelisted } = useCall({ contract, method: 'marketsWhitelist', args: [marketId] }) || {value: [false]}
 
   const tokenId: BigNumber|false = events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false;
