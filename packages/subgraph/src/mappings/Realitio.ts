@@ -1,4 +1,4 @@
-import { BigInt, ByteArray, Bytes, log, store } from "@graphprotocol/graph-ts";
+import { Address, BigInt, ByteArray, Bytes, log, store } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
 import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Bet, Event, Market } from "../types/schema";
@@ -34,7 +34,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
         // log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
         
         if (i > 0) {
-            const marketSC = MarketSC.bind(marketId);
+            const marketSC = MarketSC.bind(Address.fromBytesArray(Address.fromHexString(event.markets[i])));
             let aux_nonce = 0;
             while (true) {
                 let questionID = marketSC.try_questionIDs(BigInt.fromI32(aux_nonce));
