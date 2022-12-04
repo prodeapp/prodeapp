@@ -1,5 +1,6 @@
 import { BigInt, ByteArray, Bytes, log, store } from "@graphprotocol/graph-ts";
 import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
+import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Bet, Event, Market } from "../types/schema";
 import { correctAnswerPoints } from "./utils/constants";
 import { getBetID, duplicateEvent } from "./utils/helpers";
@@ -27,10 +28,29 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
 
     // update points with this answer.
     let tokenID = BigInt.fromI32(0);
-    const questionNonce = event.nonce;
+    let questionNonce = event.nonce;
     for (let i = 0; i < event.markets.length; i++) {
         let marketId = ByteArray.fromHexString(event.markets[i]);
         // log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
+        
+        if (i > 0) {
+            const marketSC = MarketSC.bind(marketId);
+            let aux_nonce = 0;
+            while (true) {
+                let questionID = marketSC.try_questionIDs(BigInt.fromI32(aux_nonce));
+                if (questionID.reverted) {
+                    // log.warning("handleCreateMarket: questionID ask reverted. Breaking while", [])
+                    break;
+                };
+                if (questionID.value == evt.params.question_id) {
+                    questionNonce = BigInt.fromI32(aux_nonce);
+                    break;
+                }
+                // log.debug("handleCreateMarket: event {} for nonce {} created", [questionID.value.toHexString(), nonce.toString()]);
+                aux_nonce++;
+            }
+        }
+        
         let betID = getBetID(marketId, tokenID);
         let bet = Bet.load(betID);
         while (bet !== null) {
