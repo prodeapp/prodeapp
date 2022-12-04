@@ -5,6 +5,7 @@ schema:
   file: ./schema.graphql
 features:
   - fullTextSearch
+  - grafting
 dataSources:
   - kind: ethereum/contract
     name: MarketFactory
@@ -47,6 +48,8 @@ dataSources:
       abis:
         - name: Realitio
           file: ./contracts/abis/Realitio.json
+        - name: Market
+          file: ./contracts/abis/Market.json
       entities:
         - Event
         - Bet
