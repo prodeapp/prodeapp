@@ -88,7 +88,7 @@ export function BetOutcomeSelect({matchesInterdependencies, events, i, outcomes,
           id={`event-${i}-outcome-select`}
           multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
           error={!!errors.outcomes?.[i]?.value}
-          value={value}
+          value={value === "" && event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT? [] : value}
           onChange={(...event: any[]) => {
             onChange(...event);
             onOutcomeChange();
