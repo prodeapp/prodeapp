@@ -19,6 +19,12 @@ msgstr "Un mercado debe tener al menos tres eventos."
 msgid "Accepting bets"
 msgstr "Aceptando Apuestas"
 
+msgid "Ad created."
+msgstr ""
+
+msgid "Ad not found"
+msgstr ""
+
 msgid "Add answer"
 msgstr "Agregar respuesta"
 
@@ -40,6 +46,9 @@ msgstr "Agregar un premio"
 msgid "Address to send management fees to."
 msgstr "Billetera donde se enviará la comisión del creador"
 
+msgid "Ads"
+msgstr ""
+
 msgid "All"
 msgstr "Todos"
 
@@ -48,6 +57,9 @@ msgstr "Ya reclamado"
 
 msgid "Answer accepted"
 msgstr "Respuesta aceptada"
+
+msgid "Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
+msgstr "Respondé todas las preguntas. Por cada predicción correcta recibirás un punto. Quienes sumen más puntos ganan el pozo del mercado!"
 
 msgid "Answer closes in {answerCountdown}"
 msgstr "Respuesta se acepta en {answerCountdown}"
@@ -106,6 +118,18 @@ msgstr "Apostando"
 msgid "Betting Deadline (UTC)"
 msgstr "Fecha límite de apuesta (UTC)"
 
+msgid "Bid"
+msgstr ""
+
+msgid "Bid per second"
+msgstr ""
+
+msgid "Bid placed."
+msgstr ""
+
+msgid "Bid removed."
+msgstr ""
+
 msgid "Bridge"
 msgstr "Bridge"
 
@@ -120,6 +144,9 @@ msgstr "Categoría"
 
 msgid "Change result"
 msgstr "Cambiar resultado"
+
+msgid "Change username"
+msgstr ""
 
 msgid "Check this market on @prode_eth: {0} {1}"
 msgstr "Mirá este mercado en @prode_eth: {0} {1}"
@@ -163,6 +190,9 @@ msgstr "Connecte su billetera para contestar"
 msgid "Connect your wallet to create a market."
 msgstr "Conecte su billetera para crear un mercado"
 
+msgid "Connect your wallet to create an ad."
+msgstr ""
+
 msgid "Connect your wallet to fund a market."
 msgstr "Conecte su billetera para financiar un mercado"
 
@@ -184,8 +214,14 @@ msgstr "Crear Mercado"
 msgid "Create a market and earn fees on each bet."
 msgstr "Cree un mercado y gane comisiones de cada apuesta"
 
+msgid "Create a new ad"
+msgstr ""
+
 msgid "Create a new market<0/>in 3 simple steps"
 msgstr "Crea un nuevo mercado<0/>en 3 simples pasos"
+
+msgid "Current Bid"
+msgstr ""
 
 msgid "Current result"
 msgstr "Resultado actual"
@@ -228,6 +264,12 @@ msgstr "Resultado del evento está en disputa."
 
 msgid "Events"
 msgstr "Eventos"
+
+msgid "F1"
+msgstr ""
+
+msgid "Failed to load image."
+msgstr ""
 
 msgid "Fee"
 msgstr "Comisiones"
@@ -277,17 +319,26 @@ msgstr "Grupos"
 msgid "Hey! Welcome to Prode"
 msgstr "¡Hola! Bienvenido a Prode"
 
+msgid "Highest Bid"
+msgstr ""
+
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "He creado un nuevo mercado en @prode_eth: {marketName} {0}"
 
 msgid "If first you want to take a look around, you can access the bridge later from the link in the main menu."
 msgstr "Si primero quieres revisar la app, puedes acceder al bridge luego desde el enlace en el menu principal."
 
+msgid "Image"
+msgstr ""
+
 msgid "In process"
 msgstr "En proceso"
 
 msgid "Invalid JSON"
 msgstr "JSON inválido"
+
+msgid "Invalid URL"
+msgstr ""
 
 msgid "Invalid market hash"
 msgstr "Market hash inválido"
@@ -309,6 +360,9 @@ msgstr "Item id no encontrado"
 
 msgid "Loading..."
 msgstr "Cargando..."
+
+msgid "Lower Bid"
+msgstr ""
 
 msgid "Management Fee"
 msgstr "Comisión del Creador"
@@ -370,6 +424,9 @@ msgstr "Siguiente"
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
 
+msgid "No bids found."
+msgstr ""
+
 msgid "No markets found."
 msgstr "No se encontraron mercados"
 
@@ -385,11 +442,20 @@ msgstr "Todavía no"
 msgid "Number of questions"
 msgstr "Número de preguntas"
 
+msgid "Offer too low"
+msgstr ""
+
 msgid "Only verified markets"
 msgstr "Solo mercados verificados"
 
 msgid "Open to answers in {openingTimeLeft}"
 msgstr "Disponible para responder en {openingTimeLeft}"
+
+msgid "Opening Time"
+msgstr ""
+
+msgid "Opening Time (UTC)"
+msgstr ""
 
 msgid "Participants"
 msgstr "Participantes"
@@ -402,6 +468,9 @@ msgstr "Pendiente de arbitraje"
 
 msgid "Place Bet"
 msgstr "Apostar"
+
+msgid "Place Bid"
+msgstr ""
 
 msgid "Place your bet"
 msgstr "Enviar apuesta"
@@ -496,6 +565,9 @@ msgstr "Scan con WalletConnect para conectar"
 msgid "Second prize"
 msgstr "Segundo premio"
 
+msgid "See ad"
+msgstr ""
+
 msgid "See details"
 msgstr "Ver detalles"
 
@@ -535,6 +607,9 @@ msgstr "Paso {0}"
 msgid "Submit"
 msgstr "Enviar"
 
+msgid "Submit Ad"
+msgstr ""
+
 msgid "Submit answer"
 msgstr "Enviar resultado"
 
@@ -543,6 +618,9 @@ msgstr "Tenis"
 
 msgid "The closing time is before the start of the first event."
 msgstr "La fecha de cierre es anterior al comienzo del primer evento."
+
+msgid "The event date must be after the closing time."
+msgstr ""
 
 msgid "The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
 msgstr "El nombre del evento debe ser una pregunta en inglés, por ejemplo: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
@@ -558,6 +636,12 @@ msgstr "El mercado fue creado correctamente y no tiene errores."
 
 msgid "The market was successfully created and is ready to take bets."
 msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
+
+msgid "The provided value will be added to the current bid."
+msgstr ""
+
+msgid "The results of this event will be available to be answered at this time."
+msgstr ""
 
 msgid "The sum of prize weights must be 100."
 msgstr "La suma de los premios debe ser igual a 100."
@@ -595,6 +679,9 @@ msgstr "Total apostado: {0}"
 msgid "Total Bets"
 msgstr "Total de Apuestas"
 
+msgid "Total Bids"
+msgstr ""
+
 msgid "Total Markets: {0}"
 msgstr "Total de Mercados: {0}"
 
@@ -616,6 +703,9 @@ msgstr "Desconocido"
 msgid "Unsupported chain, please switch to Gnosis Chain."
 msgstr "Red no soportada, por favor conéctese a Gnosis Chain."
 
+msgid "Username updated"
+msgstr ""
+
 msgid "Valid JSON"
 msgstr "JSON válido"
 
@@ -627,6 +717,9 @@ msgstr "Tiempo de inicio válido"
 
 msgid "Validate"
 msgstr "Validar"
+
+msgid "Value must be greater than 0"
+msgstr ""
 
 msgid "Value must be greater than 0."
 msgstr "El valor debe ser mayor que 0."
@@ -642,6 +735,9 @@ msgstr "Verificar mercado"
 
 msgid "Verify your market"
 msgstr "Verifique su mercado"
+
+msgid "Vouchers sent"
+msgstr ""
 
 msgid "Waiting for prize distribution"
 msgstr "Esperando distribución de premios"
@@ -678,6 +774,9 @@ msgstr "Tu mercado"
 
 msgid "Your questions are well formulated."
 msgstr "Tus preguntas están bien formuladas."
+
+msgid "Your username"
+msgstr ""
 
 msgid "draw"
 msgstr "empate"

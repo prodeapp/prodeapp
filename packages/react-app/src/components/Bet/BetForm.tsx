@@ -144,7 +144,8 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h2 style={{margin: '35px 0', fontSize: '33.18px', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans>Place your bet</Trans></h2>
+      <h2 style={{margin: '35px 0', fontSize: '33.18px'}}><Trans>Place your bet</Trans></h2>
+      <h4 style={{margin: '35px 0', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans>Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!</Trans></h4>
 
       {hasVoucher && <BigAlert severity="info" sx={{mb: 4}}>
         <Box sx={{display: {md: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
