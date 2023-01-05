@@ -77,7 +77,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const outcomes = getOutcomes(event);
 
   useEffect(() => {
-    if (!account || walletError) {
+    if (!account || showWalletError(walletError)) {
       setShowActions(false);
       return;
     }
@@ -85,8 +85,9 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
     setShowActions(state.status !== 'Success');
   }, [state, account, walletError, setShowActions]);
 
-  if (!account || walletError) {
-    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to answer</Trans>}</Alert>
+  const showError = showWalletError(walletError)
+  if (!account || showError) {
+    return <Alert severity="error">{showError || <Trans>Connect your wallet to answer</Trans>}</Alert>
   }
 
   if (state.status === 'Success') {

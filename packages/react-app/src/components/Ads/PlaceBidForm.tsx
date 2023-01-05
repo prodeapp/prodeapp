@@ -41,7 +41,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   const { value: MIN_OFFER_DURATION } = useCall({ contract: firstPriceAuctionContract, method: 'MIN_OFFER_DURATION', args: [] }) || {value: [BigNumber.from(0)]}
 
   useEffect(() => {
-    if (!account || walletError) {
+    if (!account || showWalletError(walletError)) {
       setShowActions(false);
       return;
     }
@@ -59,8 +59,9 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
     return ((Number(bid) + Number(currentBid)) / Number(bidPerSecond)) > MIN_OFFER_DURATION[0].toNumber();
   }
 
-  if (walletError) {
-    return <Alert severity="error">{showWalletError(walletError)}</Alert>
+  const showError = showWalletError(walletError)
+  if (showError) {
+    return <Alert severity="error">{showError}</Alert>
   }
 
   if (state.status === 'Success') {

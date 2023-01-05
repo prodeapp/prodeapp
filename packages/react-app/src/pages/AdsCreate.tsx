@@ -100,8 +100,9 @@ function AdsCreate() {
 
   const {errors, isValid} = formState;
 
-  if (!account || walletError) {
-    return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to create an ad.`}</Alert>
+  const showError = showWalletError(walletError)
+  if (!account || showError) {
+    return <Alert severity="error">{showError || t`Connect your wallet to create an ad.`}</Alert>
   }
 
   const onSubmit = async (data: AdCreateFormValues) => {

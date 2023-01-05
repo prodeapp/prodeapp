@@ -21,8 +21,9 @@ export default function Profile() {
   const { data: player } = usePlayer(String(playerId));
 
   if (!id) {
-    if (!account || walletError) {
-      return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
+    const showError = showWalletError(walletError)
+    if (!account || showError) {
+      return <Alert severity="error">{showError || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
     }
   }
 

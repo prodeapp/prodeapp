@@ -44,8 +44,9 @@ function MarketsFund() {
     );
   }
 
-  if (!account || walletError) {
-    return <Alert severity="error">{showWalletError(walletError) || <Trans>Connect your wallet to fund a market.</Trans>}</Alert>
+  const showError = showWalletError(walletError)
+  if (!account || showError) {
+    return <Alert severity="error">{showError || <Trans>Connect your wallet to fund a market.</Trans>}</Alert>
   }
 
   return <>

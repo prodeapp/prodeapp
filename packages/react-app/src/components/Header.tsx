@@ -242,13 +242,15 @@ function WalletDialog({open, handleClose}: DialogProps) {
     }
   }, [error, walletError, switchNetwork, hasWindowFocus, askSwitchNetwork])
 
+  const showError = showWalletError(walletError)
+
   return (
     <AppDialog
       open={open}
       handleClose={handleClose}
     >
 
-      {walletError && <Alert severity="error">{showWalletError(walletError)}</Alert>}
+      {showError && <Alert severity="error">{showError}</Alert>}
 
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>

@@ -137,8 +137,9 @@ function CurateSubmit() {
     }
   }, [market, setValue])
 
-  if (!account || walletError) {
-    return <Alert severity="error">{showWalletError(walletError) || t`Connect your wallet to verify a market.`}</Alert>
+  const showError = showWalletError(walletError)
+  if (!account || showError) {
+    return <Alert severity="error">{showError || t`Connect your wallet to verify a market.`}</Alert>
   }
 
   if (isLoading) {

@@ -61,10 +61,11 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
     return null;
   }
 
-  if (walletError) {
+  const showError = showWalletError(walletError)
+  if (showError) {
     return <div style={wrapperStyles}>
       <div style={innerStyles}>
-        <Alert severity="error">{showWalletError(walletError)}</Alert>
+        <Alert severity="error">{showError}</Alert>
       </div>
     </div>
   }
