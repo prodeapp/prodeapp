@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from "react";
 import {useParams} from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import {Trans} from "@lingui/macro";
+import {Trans} from "../components/Trans";
 import {styled, useTheme} from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -56,7 +56,7 @@ export function useIndexedBids(bids?: AdBid[]) {
   }, [bids])
 }
 
-const firstPriceAuctionContract = new Contract(process.env.REACT_APP_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
+const firstPriceAuctionContract = new Contract(import.meta.env.VITE_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
 
 function AdsView() {
   const { id } = useParams();

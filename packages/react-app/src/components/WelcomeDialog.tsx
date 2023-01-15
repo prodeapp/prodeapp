@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Button from '@mui/material/Button';
 import AppDialog from "../components/Dialog";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "./Trans";
 import {useEtherBalance, useEthers} from "@usedapp/core";
 import Link from "@mui/material/Link";
 import {BRIDGE_URL} from "../lib/helpers";

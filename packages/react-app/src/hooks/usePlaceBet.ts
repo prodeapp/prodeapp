@@ -43,7 +43,7 @@ const useMarketPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish)
 const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish) => {
   const { account } = useEthers();
 
-  const contract = new Contract(process.env.REACT_APP_VOUCHER_MANAGER as string, VoucherManager__factory.createInterface());
+  const contract = new Contract(import.meta.env.VITE_VOUCHER_MANAGER as string, VoucherManager__factory.createInterface());
 
   const { state, send, events } = useContractFunction(
     contract,

@@ -8,7 +8,7 @@ import {Bet} from "../../graphql/subgraph";
 import BetDetails from "../Bet/BetDetails";
 import Alert from "@mui/material/Alert";
 import {Link} from "react-router-dom";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import { Skeleton } from "@mui/material";
 import {useIndexedMarketWinners} from "../../hooks/useMarketWinners";
 import {ReactComponent as EyeIcon} from "../../assets/icons/eye.svg";

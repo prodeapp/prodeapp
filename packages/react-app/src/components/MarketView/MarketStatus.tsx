@@ -1,4 +1,4 @@
-import {t} from "@lingui/macro";
+import {t} from "../Trans";
 import { Skeleton } from "@mui/material";
 import React from "react";
 import {useMarketStatus} from "../../hooks/useMarketStatus";

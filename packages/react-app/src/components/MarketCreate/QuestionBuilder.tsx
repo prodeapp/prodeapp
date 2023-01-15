@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import {FormError} from "../index";
 import {ErrorMessage} from "@hookform/error-message";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
-import {t} from "@lingui/macro";
+import {t} from "../Trans";
 
 type QuestionBuilderProps = {
   eventIndex: number

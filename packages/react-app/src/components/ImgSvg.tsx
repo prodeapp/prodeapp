@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState} from "react";
 import Alert from "@mui/material/Alert";
-import {Trans} from "@lingui/macro";
+import {Trans} from "./Trans";
 
 type ImgSvgProps = React.ImgHTMLAttributes<HTMLImageElement> & {
   svg: string

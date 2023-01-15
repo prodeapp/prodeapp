@@ -1,6 +1,6 @@
 import React from "react";
 import Alert from "@mui/material/Alert";
-import { Trans } from "@lingui/macro";
+import {Trans} from "../Trans";
 import { Grid, Skeleton } from "@mui/material";
 import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";

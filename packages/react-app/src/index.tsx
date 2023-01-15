@@ -21,7 +21,6 @@ import Leaderboard from "./pages/Leaderboard";
 import Profile from "./pages/Profile";
 import CurateValidator from "./pages/CurateValidator";
 import CurateSubmit from "./pages/CurateSubmit";
-import { I18nProvider } from "./lib/I18nProvider";
 import TokenView from "./pages/TokenView";
 import MarketsFund from "./pages/MarketsFund";
 import { GlobalContextProvider } from './lib/GlobalContext';
@@ -49,7 +48,7 @@ ReactDOM.render(
       <ReactQueryProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <I18nProvider>
+          <>
             <GlobalContextProvider>
               <WelcomeDialog />
               <HashRouter>
@@ -82,7 +81,7 @@ ReactDOM.render(
                 </Routes>
               </HashRouter>
             </GlobalContextProvider>
-          </I18nProvider>
+          </>
         </ThemeProvider>
       </ReactQueryProvider>
     </DAppProvider>

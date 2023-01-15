@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from "@mui/material/Alert";
-import {Trans} from "@lingui/macro";
+import {Trans} from "../components/Trans";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import { parseEther } from "@ethersproject/units";
@@ -47,7 +47,7 @@ const VOUCHER_MANAGER_ABI = [
 function SendVouchers() {
   const { state, send } = useContractFunction(new Contract(TRANSACTION_BATCHER, BATCHER_ABI), 'batchSend');
 
-  const voucherContract = new Contract(process.env.REACT_APP_VOUCHER_MANAGER as string, VOUCHER_MANAGER_ABI);
+  const voucherContract = new Contract(import.meta.env.VITE_VOUCHER_MANAGER as string, VOUCHER_MANAGER_ABI);
 
   const [vouchers, setVouchers] = useState<VoucherData[]>([]);
 
@@ -63,7 +63,7 @@ function SendVouchers() {
     const values: BigNumber[] = vouchers.map(voucher => parseEther(voucher.value));
 
     await send(
-      Array(vouchers.length).fill(process.env.REACT_APP_VOUCHER_MANAGER),
+      Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
       values,
       vouchers.map(async (voucher) => (await voucherContract.populateTransaction.fundAddress(voucher.address)).data),
       {

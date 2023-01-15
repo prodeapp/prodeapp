@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {betsClosingSoon, formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
-import { Trans, Plural } from "@lingui/macro";
+import { Trans, Plural } from "../Trans";
 import {useI18nContext} from "../../lib/I18nContext";
 import { ReactComponent as CurrencyIcon } from "../../assets/icons/currency.svg";
 import {Alert, Typography} from "@mui/material";

@@ -7,7 +7,7 @@ import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {AdBid, Event, Outcome} from "../graphql/subgraph";
-import {t} from "@lingui/macro";
+import {t} from "../components/Trans";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
 import { shortenAddress } from '@usedapp/core'

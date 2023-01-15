@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import Box from '@mui/material/Box';
-import {Trans} from '@lingui/macro';
+import {Trans} from './Trans';
 import {GlobalContext} from "../lib/GlobalContext";
 import Button from "@mui/material/Button";
 import FiltersWrapper from "./FiltersWrapper";

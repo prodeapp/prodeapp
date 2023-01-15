@@ -12,7 +12,7 @@ import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import {PLACEHOLDER_REGEX} from "../hooks/useMarketForm";
 import {marketsTemplates} from "../lib/templates";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "./Trans";
 
 type QuestionParams = {value: string}[];
 

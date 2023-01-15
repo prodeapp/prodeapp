@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import {formatAmount, getMedalColor} from "../../lib/helpers";
 import {DIVISOR} from "../../hooks/useMarketForm";
 import {shortenAddress} from "@usedapp/core";
-import {Trans} from "@lingui/macro";
+import {Trans} from "../Trans";
 import {styled} from "@mui/material/styles";
 import {Market} from "../../graphql/subgraph";
 import {Typography} from "@mui/material";

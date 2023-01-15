@@ -1,5 +1,5 @@
 import {INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT} from "../../lib/reality";
-import {t, Trans} from "@lingui/macro";
+import {t, Trans} from "../Trans";
 import {MenuItem, Select} from "@mui/material";
 import {transOutcome} from "../../lib/helpers";
 import React from "react";

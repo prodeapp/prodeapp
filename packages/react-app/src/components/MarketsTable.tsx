@@ -7,7 +7,7 @@ import {Link as RouterLink, Link} from "react-router-dom";
 import { Market } from "../graphql/subgraph";
 import {betsClosingSoon, formatAmount, getTimeLeft} from "../lib/helpers";
 import Alert from "@mui/material/Alert";
-import {Plural, t, Trans} from '@lingui/macro'
+import {Plural, t, Trans} from "./Trans"
 import {useI18nContext} from "../lib/I18nContext";
 import {styled} from "@mui/material/styles";
 import {usePhone} from "../hooks/useResponsive";

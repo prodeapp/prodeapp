@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import PlaceBidForm, {PlaceBidFormValues} from "./PlaceBidForm";
-import { Trans } from "@lingui/macro";
+import {Trans} from "../Trans";
 import {BidInfo} from "../../pages/AdsView";
 
 type PlaceBidDialogProps = DialogProps & {

@@ -7,7 +7,7 @@ import AnswersBuilder from "./AnswersBuilder";
 import {DATE_FORMAT, formatAnswers} from "../../pages/MarketsCreate";
 import TemplateDialog from "../TemplateDialog";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
-import {t, Trans} from "@lingui/macro";
+import {t, Trans} from "../Trans";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";

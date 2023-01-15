@@ -1,4 +1,4 @@
-import {t, Trans} from "@lingui/macro";
+import {t, Trans} from "../Trans";
 import React, {useState} from "react";
 import {getMarketUrl} from "../../lib/helpers";
 import {useEthers} from "@usedapp/core";

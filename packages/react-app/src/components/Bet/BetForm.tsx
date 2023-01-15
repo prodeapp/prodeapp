@@ -9,7 +9,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import {getReferralKey, showWalletError} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";

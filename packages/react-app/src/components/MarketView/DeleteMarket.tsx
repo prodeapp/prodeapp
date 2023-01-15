@@ -4,11 +4,11 @@ import Alert from "@mui/material/Alert";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {KeyValue__factory} from "../../typechain";
-import {Trans} from "@lingui/macro";
+import {Trans} from "../Trans";
 
 function DeleteMarket({marketId}: {marketId: string}) {
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_KEY_VALUE as string, KeyValue__factory.createInterface()),
+    new Contract(import.meta.env.VITE_KEY_VALUE as string, KeyValue__factory.createInterface()),
     'setValue'
   );
 

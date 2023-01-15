@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {useContractFunction} from "@usedapp/core";
@@ -91,7 +91,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
+    new Contract(import.meta.env.VITE_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
     'reopenQuestion'
   );
 
@@ -156,7 +156,7 @@ export default function Results({marketId}: {marketId: string}) {
     if (currentEvent) {
       // refetch events and question just in case the user has provided an answer
       queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id]);
-      queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentEvent.id]);
+      queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as string, currentEvent.id]);
     }
   }
 

@@ -8,11 +8,10 @@ import AppDialog from "./Dialog";
 import { ReactComponent as MetamaskIcon } from "../assets/metamask.svg";
 import { ReactComponent as WalletConnectIcon } from "../assets/wallet-connect.svg";
 import { xDai } from "@usedapp/core";
-import WalletConnectProvider from '@walletconnect/web3-provider'
 import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
-import { Trans } from "@lingui/macro";
+import {Trans} from "./Trans";
 import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 import {styled} from "@mui/material/styles";
@@ -206,21 +205,6 @@ function WalletDialog({open, handleClose}: DialogProps) {
   const [walletError, setWalletError] = useState<Error | undefined>();
   const hasWindowFocus = useWindowFocus();
   const [askSwitchNetwork, setAskSwitchNetwork] = useState(true);
-  
-
-  async function activateWalletConnect() {
-    try {
-      const provider = new WalletConnectProvider({
-        rpc: {
-          [xDai.chainId]: readOnlyUrls![xDai.chainId] as string,
-        },
-      })
-      await provider.enable()
-      await activate(provider)
-    } catch (error) {
-      setWalletError(error as Error)
-    }
-  }
 
   useEffect(() => {
     if (account) {
@@ -257,10 +241,6 @@ function WalletDialog({open, handleClose}: DialogProps) {
           <MetamaskIcon width={100} />
           <div style={{ marginTop: 10 }}><Trans>Connect with your MetaMask Wallet</Trans></div>
         </div>
-        <div onClick={activateWalletConnect} style={{ cursor: 'pointer' }}>
-          <WalletConnectIcon width={100} />
-          <div style={{ marginTop: 10 }}><Trans>Scan with WalletConnect to connect</Trans></div>
-        </div>
       </div>
     </AppDialog>
   );
@@ -294,7 +274,7 @@ function WalletMenu() {
   };
 
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
+    new Contract(import.meta.env.VITE_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
     'claimMultipleAndWithdrawBalance'
   );
 

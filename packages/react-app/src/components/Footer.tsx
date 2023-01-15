@@ -4,7 +4,7 @@ import {Container, Typography} from "@mui/material";
 import {Link as RouterLink, Link} from "react-router-dom";
 import {BRIDGE_URL, getDocsUrl} from "../lib/helpers";
 import {useI18nContext} from "../lib/I18nContext";
-import {Trans} from "@lingui/macro";
+import {Trans} from "./Trans";
 import {ReactComponent as Logo} from "../assets/logo.svg";
 
 const FooterNav = styled('div', {

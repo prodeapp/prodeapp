@@ -8,7 +8,7 @@ import Alert from "@mui/material/Alert";
 import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import FormHelperText from "@mui/material/FormHelperText";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import TextField from "@mui/material/TextField";
 import {UseFormHandleSubmit, UseFormRegister, UseFormWatch} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
@@ -31,7 +31,7 @@ type PlaceBidFormProps = {
   setShowActions: (showActions: boolean) => void
 }
 
-const firstPriceAuctionContract = new Contract(process.env.REACT_APP_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
+const firstPriceAuctionContract = new Contract(import.meta.env.VITE_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
 
 export default function PlaceBidForm({itemId, currentBid, register, errors, watch, handleSubmit, setShowActions}: PlaceBidFormProps) {
   const { account, error: walletError } = useEthers();

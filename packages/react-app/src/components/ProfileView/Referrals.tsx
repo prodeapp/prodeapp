@@ -1,6 +1,6 @@
 import React from "react";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Skeleton, Typography, useTheme } from "@mui/material";
 import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";

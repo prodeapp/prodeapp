@@ -55,7 +55,7 @@ const curateItemQuery = `
 `
 
 async function getRegistryColumns(): Promise<any[]> {
-  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: (process.env.REACT_APP_CURATE_REGISTRY as string).toLowerCase()})
+  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: (import.meta.env.VITE_CURATE_REGISTRY as string).toLowerCase()})
 
   if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
     throw new Error('Missing registry meta evidence URI');

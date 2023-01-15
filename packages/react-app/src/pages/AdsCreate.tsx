@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../components/Trans";
 import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
 import {SVGFactory__factory} from "../typechain";
@@ -88,7 +88,7 @@ function AdsCreate() {
 
   const { account, error: walletError } = useEthers();
 
-  const { state, send } = useContractFunction(new Contract(process.env.REACT_APP_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface()), 'createAd');
+  const { state, send } = useContractFunction(new Contract(import.meta.env.VITE_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface()), 'createAd');
 
   const baseDeposit = useSVGAdFactoryDeposit();
 

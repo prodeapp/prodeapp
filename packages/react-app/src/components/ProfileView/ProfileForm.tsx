@@ -9,7 +9,7 @@ import {KeyValue__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Player, PLAYER_FIELDS } from "../../graphql/subgraph";
@@ -53,7 +53,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
     }});
 
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_KEY_VALUE as string, KeyValue__factory.createInterface()),
+    new Contract(import.meta.env.VITE_KEY_VALUE as string, KeyValue__factory.createInterface()),
     'setValue'
   );
 

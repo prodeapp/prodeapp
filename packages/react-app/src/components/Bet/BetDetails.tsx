@@ -1,7 +1,7 @@
 import { BoxWrapper, BoxRow } from '../../components';
 import { Bet } from '../../graphql/subgraph';
 import {getAnswerText} from '../../lib/helpers';
-import { Trans, t } from '@lingui/macro';
+import { Trans, t } from "../Trans";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {usePhone} from "../../hooks/useResponsive";
 import Box from '@mui/material/Box';

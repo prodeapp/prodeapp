@@ -4,7 +4,7 @@ import { BoxWrapper, BoxRow } from "../../components"
 import Box from '@mui/material/Box';
 import { Bet } from "../../graphql/subgraph";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import { Skeleton, useTheme } from "@mui/material";
 import { transOutcome, getAnswerText } from "../../lib/helpers";
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts";

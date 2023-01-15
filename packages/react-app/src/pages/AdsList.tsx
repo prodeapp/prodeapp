@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
 import {SVGAd} from "../graphql/subgraph";
 import {formatAmount} from "../lib/helpers";
-import {Trans} from "@lingui/macro";
+import {Trans} from "../components/Trans";
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
 import {useSvgAd} from "../hooks/useSvgAd";

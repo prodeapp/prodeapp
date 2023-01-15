@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import {MarketStatus} from "../hooks/useMarkets";
 import {getCategoryText, getFlattenedCategories} from "../lib/helpers";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
-import {Trans} from '@lingui/macro';
+import {Trans} from './Trans';
 import {styled} from "@mui/material/styles";
 import {Radio} from "./Radio";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";

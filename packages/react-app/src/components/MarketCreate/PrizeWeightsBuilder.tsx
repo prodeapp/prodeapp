@@ -7,7 +7,7 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { ErrorMessage } from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import { MarketFormStep2Values } from "../../hooks/useMarketForm";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 
 export default function PrizeWeightsBuilder() {

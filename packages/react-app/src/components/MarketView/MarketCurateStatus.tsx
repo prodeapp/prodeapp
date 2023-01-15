@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/macro";
+import {Trans} from "../Trans";
 import { Skeleton } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useCurateItems } from "../../hooks/useCurateItems";
@@ -54,7 +54,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
   return <div style={{display: 'flex'}}>
     {(activeItem === null || activeItem.status === 'Absent')
       ? <div><Trans>Not verified yet</Trans></div>
-      : <a href={"https://curate.kleros.io/tcr/100/" + process.env.REACT_APP_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
+      : <a href={"https://curate.kleros.io/tcr/100/" + import.meta.env.VITE_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
         <Trans>In process</Trans>
       </a>}
     <div style={{borderLeft: '1px solid #303030', paddingLeft: '10px', marginLeft: '10px'}}>

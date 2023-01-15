@@ -5,7 +5,7 @@ import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import AnswerForm, {AnswerFormValues} from "./AnswerForm";
 import {Event} from "../../graphql/subgraph";
-import { Trans } from "@lingui/macro";
+import {Trans} from "../Trans";
 
 type AnswerDialogProps = DialogProps & {
   event: Event

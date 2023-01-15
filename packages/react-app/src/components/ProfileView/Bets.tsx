@@ -2,7 +2,7 @@ import { ExpandMoreOutlined } from "@mui/icons-material"
 import {Accordion, AccordionDetails, AccordionSummary, Alert, Button, Skeleton} from "@mui/material"
 import { formatAmount } from "../../lib/helpers"
 import BetDetails from "../Bet/BetDetails"
-import { Trans } from '@lingui/macro';
+import { Trans } from "../Trans";
 import {useBets} from "../../hooks/useBets";
 import {Link as RouterLink} from "react-router-dom";
 import React from "react";

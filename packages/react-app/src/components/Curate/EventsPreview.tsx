@@ -7,7 +7,7 @@ import {CurateSubmitFormValues} from "./index";
 import {useIndexedEvents} from "../../hooks/useEvents";
 import Brackets from "../Tournament/Brackets";
 import {Groups} from "../Tournament/Groups";
-import { Trans } from "@lingui/macro";
+import {Trans} from "../Trans";
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>

@@ -57,7 +57,7 @@ function orderByQuestionId(questionsData: MarketFactory.RealitioQuestionStruct[]
     .map(qd => qd.questionData)
 }
 
-const marketFactoryContract = new Contract(process.env.REACT_APP_MARKET_FACTORY as string, MarketFactory__factory.createInterface())
+const marketFactoryContract = new Contract(import.meta.env.VITE_MARKET_FACTORY as string, MarketFactory__factory.createInterface())
 
 export default function useMarketForm() {
   const { state, send, events } = useContractFunction(marketFactoryContract, 'createMarket');
@@ -79,7 +79,7 @@ export default function useMarketForm() {
       }
     })
 
-    const minBond = parseUnits(process.env.REACT_APP_MIN_BOND || '0.5', 18);
+    const minBond = parseUnits(import.meta.env.VITE_MIN_BOND || '0.5', 18);
 
     await send(
       step1State.market,
@@ -89,7 +89,7 @@ export default function useMarketForm() {
       closingTime - 1,
       parseUnits(String(step2State.price), 18),
       minBond,
-      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), process.env.REACT_APP_MARKET_FACTORY as string),
+      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), import.meta.env.VITE_MARKET_FACTORY as string),
       step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
     );
   }

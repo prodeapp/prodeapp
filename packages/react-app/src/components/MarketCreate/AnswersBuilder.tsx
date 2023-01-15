@@ -5,7 +5,7 @@ import {ErrorMessage} from "@hookform/error-message";
 import Grid from '@mui/material/Grid';
 import React from "react";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 
 type AnswersBuilderProps = {

@@ -14,7 +14,7 @@ import {Event} from "../../graphql/subgraph";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans, t } from "@lingui/macro";
+import { Trans, t } from "../Trans";
 import {useI18nContext} from "../../lib/I18nContext";
 import {
   formatOutcome,
@@ -67,7 +67,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const { locale } = useI18nContext();
 
   const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
+    new Contract(import.meta.env.VITE_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
     'submitAnswer'
   );
 
