@@ -1,4 +1,4 @@
-import {Trans} from "../Trans";
+import { Trans } from '@lingui/react';
 import { Skeleton } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useCurateItems } from "../../hooks/useCurateItems";
@@ -46,19 +46,19 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string, mark
 
   if (activeItem !== null && activeItem.status === 'Registered') {
     return <div style={{display: 'flex', alignItems: 'center'}}>
-      <div><Trans>Verified</Trans></div>
+      <div><Trans id="Verified" /></div>
       <ShieldCheckIcon width="12" height="13" style={{marginLeft: 5}} />
     </div>
   }
 
   return <div style={{display: 'flex'}}>
     {(activeItem === null || activeItem.status === 'Absent')
-      ? <div><Trans>Not verified yet</Trans></div>
+      ? <div><Trans id="Not verified yet" /></div>
       : <a href={"https://curate.kleros.io/tcr/100/" + import.meta.env.VITE_CURATE_REGISTRY + "/" + activeItem.id} target="_blank" rel="noreferrer">
-        <Trans>In process</Trans>
+        <Trans id="In process" />
       </a>}
     <div style={{borderLeft: '1px solid #303030', paddingLeft: '10px', marginLeft: '10px'}}>
-      <RouterLink to={`/curate/submit/${marketId}`}><Trans>Verify</Trans> <TriangleIcon style={{marginLeft: 5, fill: 'currentColor', color: theme.palette.primary.main}} /></RouterLink>
+      <RouterLink to={`/curate/submit/${marketId}`}><Trans id="Verify" /> <TriangleIcon style={{marginLeft: 5, fill: 'currentColor', color: theme.palette.primary.main}} /></RouterLink>
     </div>
   </div>
 }

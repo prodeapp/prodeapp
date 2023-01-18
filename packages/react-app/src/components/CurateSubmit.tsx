@@ -17,7 +17,8 @@ import {useSubmissionDeposit} from "../hooks/useSubmissionDeposit";
 import {useMarket} from "../hooks/useMarket";
 import EventsPreview from "../components/Curate/EventsPreview";
 import {CurateSubmitFormValues} from "../components/Curate";
-import { Trans, t } from "../components/Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import {showWalletError} from "../lib/helpers";
 
 function GroupsForm() {
@@ -40,19 +41,19 @@ function GroupsForm() {
   return <>
   <BoxWrapper>
     <BoxRow>
-      <BoxLabelCell><Trans>Groups</Trans></BoxLabelCell>
+      <BoxLabelCell><Trans id="Groups" /></BoxLabelCell>
     </BoxRow>
     {groupsFields.length > 0 &&
     groupsFields.map((groupField, i) => {
         return <BoxRow key={groupField.id} style={{flexDirection: 'column'}}>
           <div style={{width: '100%', display: 'flex', padding: '5px 0'}}>
-            <BoxLabelCell><Trans>Number of questions</Trans></BoxLabelCell>
+            <BoxLabelCell><Trans id="Number of questions" /></BoxLabelCell>
             <div style={{width: '100%', display: 'flex'}}>
               <TextField {...register(`extraDataGroups.groups.${i}.size`, {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
                 valueAsNumber: true,
                 validate: v => !isNaN(Number(v)) || 'Invalid number.',
-                min: {value: 1, message: t`Value must be greater than 0.`},
+                min: {value: 1, message: i18n._("Value must be greater than 0.")},
               })} style={{width: '100%'}} />
               <FormError><ErrorMessage errors={errors} name={`extraDataGroups.groups.${i}.size`} /></FormError>
             </div>
@@ -61,26 +62,26 @@ function GroupsForm() {
             <BoxLabelCell>Name</BoxLabelCell>
             <div style={{width: '100%', display: 'flex'}}>
               <TextField {...register(`extraDataGroups.groups.${i}.name`, {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
               })} style={{width: '100%'}} />
               <FormError><ErrorMessage errors={errors} name={`extraDataGroups.groups.${i}.name`} /></FormError>
             </div>
           </div>
-          <div style={{width: '100%', textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeGroup(i)}>- <Trans>Remove group</Trans></Button></div>
+          <div style={{width: '100%', textAlign: 'center', marginTop: '20px'}}><Button onClick={() => removeGroup(i)}>- <Trans id="Remove group" /></Button></div>
         </BoxRow>
       })}
     <BoxRow>
-      <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addGroup}>+ <Trans>Add group</Trans></Button></div>
+      <div style={{textAlign: 'center', width: '100%'}}><Button onClick={addGroup}>+ <Trans id="Add group" /></Button></div>
     </BoxRow>
 
     <BoxRow>
       <BoxLabelCell>Rounds</BoxLabelCell>
       <div style={{width: '100%'}}>
         <TextField {...register(`extraDataGroups.rounds`, {
-          required: t`This field is required.`,
+          required: i18n._("This field is required."),
           valueAsNumber: true,
-          validate: v => !isNaN(Number(v)) || t`Invalid number.`,
-          min: {value: 1, message: t`Value must be greater than 0.`},
+          validate: v => !isNaN(Number(v)) || i18n._("Invalid number."),
+          min: {value: 1, message: i18n._("Value must be greater than 0.")},
         })} />
         <FormError><ErrorMessage errors={errors} name={`extraDataGroups.rounds`} /></FormError>
       </div>
@@ -139,15 +140,15 @@ function CurateSubmit() {
 
   const showError = showWalletError(walletError)
   if (!account || showError) {
-    return <Alert severity="error">{showError || t`Connect your wallet to verify a market.`}</Alert>
+    return <Alert severity="error">{showError || i18n._("Connect your wallet to verify a market.")}</Alert>
   }
 
   if (isLoading) {
-    return <div><Trans>Loading...</Trans></div>
+    return <div><Trans id="Loading..." /></div>
   }
 
   if (!events) {
-    return <Alert severity="error"><Trans>Market not found.</Trans></Alert>
+    return <Alert severity="error"><Trans id="Market not found." /></Alert>
   }
 
   const onSubmit = async (data: CurateSubmitFormValues) => {
@@ -166,12 +167,12 @@ function CurateSubmit() {
         }
       );
     } catch (e: any) {
-      alert(e?.message || t`Unexpected error`);
+      alert(e?.message || i18n._("Unexpected error"));
     }
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>Market sent to Kleros Curate</Trans></Alert>
+    return <Alert severity="success"><Trans id="Market sent to Kleros Curate" /></Alert>
   }
 
   return <FormProvider {...useFormReturn}>
@@ -179,38 +180,38 @@ function CurateSubmit() {
       {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell><Trans>Market name</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans id="Market name" /></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('name', {
-              required: t`This field is required.`
+              required: i18n._("This field is required.")
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="name" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell><Trans>Description</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans id="Description" /></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('description')} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="description" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell><Trans>Starting timestamp</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans id="Starting timestamp" /></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('startingTimestamp', {
-              required: t`This field is required.`
+              required: i18n._("This field is required.")
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="startingTimestamp" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
-          <BoxLabelCell><Trans>Format</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans id="Format" /></BoxLabelCell>
           <div style={{width: 200}}>
             <FormControl fullWidth>
               <Select
                 defaultValue=""
                 id={`market-format`}
-                {...register(`format`, {required: t`This field is required.`})}
+                {...register(`format`, {required: i18n._("This field is required.")})}
               >
                 {Object.keys(TOURNAMENT_FORMATS).map((format, i) => <MenuItem value={format} key={i}>{TOURNAMENT_FORMATS[format]}</MenuItem>)}
               </Select>
@@ -230,7 +231,7 @@ function CurateSubmit() {
         </BoxRow>}
         <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit"><Trans>Submit</Trans></Button>
+            <Button type="submit"><Trans id="Submit" /></Button>
           </div>
         </BoxRow>
       </BoxWrapper>

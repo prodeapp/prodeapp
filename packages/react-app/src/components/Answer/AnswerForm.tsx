@@ -14,7 +14,8 @@ import {Event} from "../../graphql/subgraph";
 import FormHelperText from "@mui/material/FormHelperText";
 import {formatAmount, getAnswerText, getTimeLeft, isFinalized, showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import {useI18nContext} from "../../lib/I18nContext";
 import {
   formatOutcome,
@@ -87,11 +88,11 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
 
   const showError = showWalletError(walletError)
   if (!account || showError) {
-    return <Alert severity="error">{showError || <Trans>Connect your wallet to answer</Trans>}</Alert>
+    return <Alert severity="error">{showError || <Trans id="Connect your wallet to answer" />}</Alert>
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>Answer sent</Trans>!</Alert>
+    return <Alert severity="success"><Trans id="Answer sent" />!</Alert>
   }
 
   const onSubmit = async (data: AnswerFormValues) => {
@@ -109,11 +110,11 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const openingTimeLeft = getTimeLeft(event.openingTs, false, locale);
 
   if (openingTimeLeft !== false) {
-    return <div><Trans>Open to answers in {openingTimeLeft}</Trans></div>
+    return <div><Trans id="Open to answers in {openingTimeLeft}" values={{openingTimeLeft}} /></div>
   }
 
   if (event.isPendingArbitration) {
-    return <div><Trans>Event result is pending arbitration.</Trans></div>
+    return <div><Trans id="Event result is pending arbitration." /></div>
   }
 
   return (
@@ -123,7 +124,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
       <BoxWrapper>
         <BoxRow>
           <div style={{width: '40%'}}>
-          <Trans>Current result</Trans>
+          <Trans id="Current result" />
           </div>
           <div style={{width: '60%'}}>
             {getAnswerText(event.answer, event.outcomes || [], event.templateID)}
@@ -131,7 +132,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
         </BoxRow>
         {event.bounty !== '0' && <BoxRow>
           <div style={{width: '40%'}}>
-          <Trans>Reward</Trans>
+          <Trans id="Reward" />
           </div>
           <div style={{width: '60%'}}>
             {formatAmount(event.bounty)}
@@ -140,7 +141,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
         {!finalized && <>
           <BoxRow>
             <div style={{width: '40%'}}>
-            <Trans>New result</Trans>
+            <Trans id="New result" />
             </div>
             <div style={{width: '60%'}}>
               <FormControl fullWidth>
@@ -148,7 +149,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
                   defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ""}
                   multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
                   id={`question-outcome-select`}
-                  {...register(`outcome`, {required: t`This field is required.`})}
+                  {...register(`outcome`, {required: i18n._("This field is required.")})}
                   error={!!errors.outcome}
                 >
                   {outcomes.map((outcome, i) => <MenuItem value={outcome.value} key={i}><Trans id={outcome.text} /></MenuItem>)}
@@ -158,7 +159,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
             </div>
           </BoxRow>
           <BoxRow>
-            <FormHelperText><Trans>To submit the answer you need to deposit a bond of {formatAmount(currentBond)} that will be returned if the answer is correct.</Trans></FormHelperText>
+            <FormHelperText><Trans id="To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct." values={{0: formatAmount(currentBond)}}/></FormHelperText>
           </BoxRow>
         </>}
       </BoxWrapper>

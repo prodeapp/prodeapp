@@ -7,7 +7,8 @@ import AnswersBuilder from "./AnswersBuilder";
 import {DATE_FORMAT, formatAnswers} from "../../pages/MarketsCreate";
 import TemplateDialog from "../TemplateDialog";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
-import {t, Trans} from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DateTimePicker} from "@mui/x-date-pickers/DateTimePicker";
@@ -62,22 +63,22 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
       onTemplateChange={onTemplateChange}
     />
     <FormRow>
-      <FormLabel><Trans>Question</Trans> #{eventIndex+1}</FormLabel>
+      <FormLabel><Trans id="Question" /> #{eventIndex+1}</FormLabel>
       <div>
         <QuestionBuilder {...{eventIndex}} />
-        <Button onClick={() => setOpenModal(true)} variant="outlined"><Trans>Choose Question</Trans></Button>
+        <Button onClick={() => setOpenModal(true)} variant="outlined"><Trans id="Choose Question" /></Button>
       </div>
     </FormRow>
     <FormRow>
-      <FormLabel><Trans>Opening Time (UTC)</Trans></FormLabel>
+      <FormLabel><Trans id="Opening Time (UTC)" /></FormLabel>
       <div>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Controller
             control={control}
             name={`events.${eventIndex}.openingTs`}
             rules={{
-              required: t`This field is required`,
-              validate: v => (v && closingTime && compareAsc(v, closingTime) === 1) || t`The event date must be after the closing time.`,
+              required: i18n._("This field is required"),
+              validate: v => (v && closingTime && compareAsc(v, closingTime) === 1) || i18n._("The event date must be after the closing time."),
             }}
             render={({ field }) => (
               <DateTimePicker
@@ -90,18 +91,18 @@ export default function EventBuilder({eventIndex, removeEvent}: EventBuilderProp
             )}
           />
         </LocalizationProvider>
-        <FormHelperText><Trans>The results of this event will be available to be answered at this time.</Trans></FormHelperText>
+        <FormHelperText><Trans id="The results of this event will be available to be answered at this time." /></FormHelperText>
         <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.openingTs`} /></FormError>
       </div>
     </FormRow>
     <FormRow>
-      <FormLabel><Trans>Answers</Trans></FormLabel>
+      <FormLabel><Trans id="Answers" /></FormLabel>
       <AnswersBuilder {...{eventIndex, answersFields, addAnswer, deleteAnswer}} />
     </FormRow>
 
     <FormRow>
-      <Button onClick={addAnswer} variant="outlined"><Trans>Add answer</Trans> +</Button>
-      <Button onClick={() => removeEvent(eventIndex)} color="error" sx={{ml: 2}}><Trans>Remove event</Trans> -</Button>
+      <Button onClick={addAnswer} variant="outlined"><Trans id="Add answer" /> +</Button>
+      <Button onClick={() => removeEvent(eventIndex)} color="error" sx={{ml: 2}}><Trans id="Remove event" /> -</Button>
     </FormRow>
   </div>
 }

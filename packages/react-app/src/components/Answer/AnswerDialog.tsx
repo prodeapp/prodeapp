@@ -5,7 +5,7 @@ import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import AnswerForm, {AnswerFormValues} from "./AnswerForm";
 import {Event} from "../../graphql/subgraph";
-import {Trans} from "../Trans";
+import { Trans } from '@lingui/react';
 
 type AnswerDialogProps = DialogProps & {
   event: Event
@@ -20,7 +20,7 @@ function AnswerDialog({open, handleClose, event}: AnswerDialogProps) {
 
   const dialogActions = <DialogActions>
     <Button autoFocus color="primary" type="submit" form="answer-form">
-    <Trans>Submit answer</Trans>
+    <Trans id="Submit answer" />
     </Button>
   </DialogActions>
 

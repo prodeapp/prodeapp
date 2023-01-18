@@ -1,3 +1,5 @@
+
+import { expect, test } from 'vitest'
 import validate from "../schema";
 
 const buildQuestions = (length: number) => [...Array(length).keys()].map(k => `question ${k+1} ID`);
@@ -190,7 +192,7 @@ const COMPLEX_2 = {
   ]
 }
 
-it('test example schemas', () => {
+test('test example schemas', () => {
   const tests = [
     SINGLE_ELIMINATION_1,
     GSL_1,

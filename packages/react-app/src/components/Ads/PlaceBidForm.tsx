@@ -8,7 +8,8 @@ import Alert from "@mui/material/Alert";
 import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import FormHelperText from "@mui/material/FormHelperText";
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import TextField from "@mui/material/TextField";
 import {UseFormHandleSubmit, UseFormRegister, UseFormWatch} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
@@ -65,7 +66,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>Bid placed.</Trans></Alert>
+    return <Alert severity="success"><Trans id="Bid placed." /></Alert>
   }
 
   const onSubmit = async (data: PlaceBidFormValues) => {
@@ -89,11 +90,11 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
       <BoxWrapper>
         <BoxRow>
           <div style={{width: '40%'}}>
-            <Trans>Market</Trans>
+            <Trans id="Market" />
           </div>
           <div style={{width: '60%'}}>
             <TextField {...register('market', {
-                required: t`This field is required.`
+                required: i18n._("This field is required.")
               })}
               style={{width: '100%'}}
               size="small"
@@ -104,35 +105,35 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
         </BoxRow>
         <BoxRow>
           <div style={{width: '40%'}}>
-            <Trans>Bid</Trans> (xDAI)
+            <Trans id="Bid" /> (xDAI)
           </div>
           <div style={{width: '60%'}}>
             <TextField {...register('bid', {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
                 validate: {
-                  isNumber: v => !isNaN(Number(v)) || t`Invalid number.`,
-                  isGreaterThan0: v => (!isNaN(Number(v)) && (isEdit ? Number(v) >= 0 : Number(v) > 0)) || t`Value must be greater than 0`,
+                  isNumber: v => !isNaN(Number(v)) || i18n._("Invalid number."),
+                  isGreaterThan0: v => (!isNaN(Number(v)) && (isEdit ? Number(v) >= 0 : Number(v) > 0)) || i18n._("Value must be greater than 0"),
                 },
               })}
               style={{width: '100%'}}
               size="small"
               error={!!errors.bid}
             />
-            {isEdit && <FormHelperText><Trans>The provided value will be added to the current bid.</Trans></FormHelperText>}
+            {isEdit && <FormHelperText><Trans id="The provided value will be added to the current bid." /></FormHelperText>}
             <FormError><ErrorMessage errors={errors} name={`bid`} /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
           <div style={{width: '40%'}}>
-            <Trans>Bid per second</Trans> (xDAI)
+            <Trans id="Bid per second" /> (xDAI)
           </div>
           <div style={{width: '60%'}}>
             <TextField {...register('bidPerSecond', {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
                 validate: {
-                  number: v => !isNaN(Number(v)) || t`Invalid number.`,
-                  bid: v => validBid(v) || t`Offer too low`,
-                  isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || t`Value must be greater than 0`,
+                  number: v => !isNaN(Number(v)) || i18n._("Invalid number."),
+                  bid: v => validBid(v) || i18n._("Offer too low"),
+                  isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || i18n._("Value must be greater than 0"),
                 },
               })}
               style={{width: '100%'}}

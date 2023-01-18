@@ -1,10 +1,10 @@
+import { expect, test } from 'vitest'
 import {Outcome, Event} from "../../graphql/subgraph";
 import {getDoubleEliminationMatches} from "../brackets";
 
 function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
   return {
     id: id,
-    nonce: 0,
     markets: [{
       id: '1',
     }],
@@ -24,7 +24,7 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
   }
 }
 
-it('builds a 4 team double elimination bracket', () => {
+test('builds a 4 team double elimination bracket', () => {
 
   const events: Event[] = [
     getMockEvent('1', 'Who will win the match between Argentina and Brazil?', ['Argentina', 'Brazil']),

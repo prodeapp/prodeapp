@@ -1,7 +1,8 @@
 import { BoxWrapper, BoxRow } from '../../components';
 import { Bet } from '../../graphql/subgraph';
 import {getAnswerText} from '../../lib/helpers';
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {usePhone} from "../../hooks/useResponsive";
 import Box from '@mui/material/Box';
@@ -43,10 +44,10 @@ export default function BetDetails({bet}: {bet: Bet}) {
 
   return <BoxWrapper>
     {!isPhone && <BoxRow>
-      <div style={{ width: '40%'}}><Trans>Event</Trans></div>
-      <div style={{ width: '20%'}}><Trans>Bet</Trans></div>
-      <div style={{ width: '20%'}}><Trans>Result</Trans></div>
-      <div style={{ width: '20%' }}><Trans>Points Earned</Trans></div>
+      <div style={{ width: '40%'}}><Trans id="Event" /></div>
+      <div style={{ width: '20%'}}><Trans id="Bet" /></div>
+      <div style={{ width: '20%'}}><Trans id="Result" /></div>
+      <div style={{ width: '20%' }}><Trans id="Points Earned" /></div>
     </BoxRow>}
     {events.map((event, i) => {
       const eventNonce = orderedEventIndices.indexOf(i);
@@ -59,16 +60,16 @@ export default function BetDetails({bet}: {bet: Bet}) {
         <Box sx={{display: {md: 'flex'}, width: '100%', fontWeight: 'normal'}}>
           <Box sx={bigColumnSx}><FormatEvent title={event.title} /></Box>
           <Box sx={smallColumnsSx}>
-            {isPhone && <div style={mobileLabelSx}><Trans>Bet</Trans></div>}
+            {isPhone && <div style={mobileLabelSx}><Trans id="Bet" /></div>}
             <FormatOutcome name={playerBet} title={event.title} />
           </Box>
           <Box sx={smallColumnsSx}>
-            {isPhone && <div style={mobileLabelSx}><Trans>Result</Trans></div>}
-            <FormatOutcome name={eventResult || t`Unknown`} title={event.title} />
+            {isPhone && <div style={mobileLabelSx}><Trans id="Result" /></div>}
+            <FormatOutcome name={eventResult || i18n._("Unknown")} title={event.title} />
           </Box>
           <Box sx={smallColumnsSx}>
-            {isPhone && <div style={mobileLabelSx}><Trans>Points Earned</Trans></div>}
-            {betResult === 0 && <span><Trans>Waiting result</Trans></span>}
+            {isPhone && <div style={mobileLabelSx}><Trans id="Points Earned" /></div>}
+            {betResult === 0 && <span><Trans id="Waiting result" /></span>}
             {betResult === 1 && <span style={{color: 'green'}}>1</span>}
             {betResult === 2 && <span style={{color: 'red'}}>0</span>}
           </Box>

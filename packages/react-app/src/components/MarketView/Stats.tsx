@@ -4,7 +4,8 @@ import { BoxWrapper, BoxRow } from "../../components"
 import Box from '@mui/material/Box';
 import { Bet } from "../../graphql/subgraph";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import { Skeleton, useTheme } from "@mui/material";
 import { transOutcome, getAnswerText } from "../../lib/helpers";
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts";
@@ -25,7 +26,7 @@ function bets2Stats(bets: Bet[]): Stat[][] {
         let stat = event.outcomes.map((outcome, index) => {
             return { outcome: transOutcome(outcome), amountBets: 0, percentage: 0, index: index, title: event.title, openingTs: event.openingTs }
         })
-        stat.push({ outcome: t`Invalid result`, amountBets: 0, percentage: 0, index: -1, title: event.title, openingTs: event.openingTs })
+        stat.push({ outcome: i18n._("Invalid result"), amountBets: 0, percentage: 0, index: -1, title: event.title, openingTs: event.openingTs })
         return stat
     })
     if (stats.length === 0) return [];
@@ -60,10 +61,10 @@ function bets2Stats(bets: Bet[]): Stat[][] {
     // return stats
     if (bets[0].market.events[0].outcomes.length > 4) {
         // filter zero values for clarity in the graphs
-        stats = stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.amountBets !== 0 || stat.outcome.toLowerCase() === t`draw` }) })
+        stats = stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._("draw") }) })
     }
     // filter invalid if has 0 bets.
-    return stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.outcome === t`Invalid result` ? stat.amountBets !== 0 : true }) })
+    return stats.map((evntstat) => { return evntstat.filter((stat) => { return stat.outcome === i18n._("Invalid result") ? stat.amountBets !== 0 : true }) })
 }
 
 export function Stats({ marketId }: { marketId: string }) {
@@ -82,7 +83,7 @@ export function Stats({ marketId }: { marketId: string }) {
 
     return <>
         <BoxWrapper>
-            {stats.length === 0 && <Alert severity="info"><Trans>No bets found.</Trans></Alert>}
+            {stats.length === 0 && <Alert severity="info"><Trans id="No bets found." /></Alert>}
             {stats.length > 0 && stats.map((event, i) => {
                 return (
                     <Box key={i} sx={{ padding: '20px', borderBottom: '1px' }}>

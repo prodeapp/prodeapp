@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import {MarketStatus} from "../hooks/useMarkets";
 import {getCategoryText, getFlattenedCategories} from "../lib/helpers";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
-import {Trans} from './Trans';
+import { Trans } from '@lingui/react';
 import {styled} from "@mui/material/styles";
 import {Radio} from "./Radio";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
@@ -99,15 +99,15 @@ function MarketsFilter() {
       <FiltersWrapper>
         <div className="filter-columns">
           <div>
-            <div className="filter-label"><Trans>Status</Trans>:</div>
+            <div className="filter-label"><Trans id="Status" />:</div>
             <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <div><UnderlineButton onClick={() => changeStatus('active')} selected={status === 'active'}><Trans>Betting</Trans></UnderlineButton></div>
-              <div><UnderlineButton onClick={() => changeStatus('pending')} selected={status === 'pending'}><Trans>Playing</Trans></UnderlineButton></div>
-              <div><UnderlineButton onClick={() => changeStatus('closed')} selected={status === 'closed'}><Trans>Closed</Trans></UnderlineButton></div>
+              <div><UnderlineButton onClick={() => changeStatus('active')} selected={status === 'active'}><Trans id="Betting" /></UnderlineButton></div>
+              <div><UnderlineButton onClick={() => changeStatus('pending')} selected={status === 'pending'}><Trans id="Playing" /></UnderlineButton></div>
+              <div><UnderlineButton onClick={() => changeStatus('closed')} selected={status === 'closed'}><Trans id="Closed" /></UnderlineButton></div>
             </Box>
           </div>
           <div>
-            <div className="filter-label"><Trans>Category</Trans>:</div>
+            <div className="filter-label"><Trans id="Category" />:</div>
             <FilterDropdown isOpen={activeSection === 'category'} onClick={() => setActiveSection(activeSection === 'category' ? '' : 'category')}>{category === 'All' ? 'All' : getCategoryText(category)}</FilterDropdown>
           </div>
         </div>
@@ -121,7 +121,7 @@ function MarketsFilter() {
                     checked={curated}
                     onClick={() => setCurated(!curated)}
                   />}
-                label={<span style={{fontSize: '14px'}}><Trans>Only verified markets</Trans></span>}/>
+                label={<span style={{fontSize: '14px'}}><Trans id="Only verified markets" /></span>}/>
             </FormGroup>
           </Box>
         </div>
@@ -129,7 +129,7 @@ function MarketsFilter() {
       {activeSection === 'category' && <FilterSection>
         <Grid container spacing={0}>
           <Grid item xs={6} sm={3} >
-            <Radio active={category === 'All'} onClick={() => setCategory('All')}><Trans>All</Trans></Radio>
+            <Radio active={category === 'All'} onClick={() => setCategory('All')}><Trans id="All" /></Radio>
           </Grid>
           {getFlattenedCategories().map(cat => <Grid item xs={6} sm={3} key={cat.id}>
             <Radio active={category === cat.id} onClick={() => setCategory(cat.id)}>{cat.text}</Radio>

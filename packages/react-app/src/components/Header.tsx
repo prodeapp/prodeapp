@@ -11,7 +11,7 @@ import { xDai } from "@usedapp/core";
 import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
-import {Trans} from "./Trans";
+import { Trans } from '@lingui/react';
 import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, showWalletError} from "../lib/helpers";
 import useWindowFocus from "../hooks/useWindowFocus";
 import {styled} from "@mui/material/styles";
@@ -169,16 +169,16 @@ export default function Header() {
             </RouterLink>
             <MenuBar className={mobileOpen ? 'mobile-open' : ''}>
               <RouterLink to='/markets/new'>
-                <Trans>Create Market</Trans>
+                <Trans id="Create Market" />
               </RouterLink>
               <a href={BRIDGE_URL} target="_blank" rel="noreferrer">
-                <Trans>Bridge</Trans>
+                <Trans id="Bridge" />
               </a>
               <RouterLink to='/ads'>
-                <Trans>Ads</Trans>
+                <Trans id="Ads" />
               </RouterLink>
               <a href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
-                <Trans>Documentation</Trans>
+                <Trans id="Documentation" />
               </a>
               <DropdownMenu text={languages[locale]}>
                 {Object.keys(languages).map(lang => {
@@ -239,7 +239,7 @@ function WalletDialog({open, handleClose}: DialogProps) {
       <div style={{ textAlign: 'center' }}>
         <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>
           <MetamaskIcon width={100} />
-          <div style={{ marginTop: 10 }}><Trans>Connect with your MetaMask Wallet</Trans></div>
+          <div style={{ marginTop: 10 }}><Trans id="Connect with your MetaMask Wallet" /></div>
         </div>
       </div>
     </AppDialog>
@@ -294,9 +294,9 @@ function WalletMenu() {
       handleClose={handleCloseWalletModal}
     />
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {!account && <Button onClick={handleOpenWalletModal} color="primary" size="large"><Trans>Connect Wallet</Trans> <ArrowRight style={{marginLeft: 10}}/></Button>}
+      {!account && <Button onClick={handleOpenWalletModal} color="primary" size="large"><Trans id="Connect Wallet" /> <ArrowRight style={{marginLeft: 10}}/></Button>}
 
-      {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans>Claim</Trans> {formatAmount(claimArgs.total)}</Button>}
+      {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
 
       {account && <>
         <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>

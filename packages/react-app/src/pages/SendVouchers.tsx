@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from "@mui/material/Alert";
-import {Trans} from "../components/Trans";
+import { Trans } from '@lingui/react';
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import { parseEther } from "@ethersproject/units";
@@ -75,7 +75,7 @@ function SendVouchers() {
   return (
     <Container sx={{mt: 10}}>
 
-      {state.status === 'Success' && <Alert severity="success"><Trans>Vouchers sent</Trans></Alert>}
+      {state.status === 'Success' && <Alert severity="success"><Trans id="Vouchers sent" /></Alert>}
 
       {state.status !== 'Success' && <div style={{maxWidth: '700px', margin: '0 auto'}}>
         <FormRow>
@@ -105,7 +105,7 @@ function SendVouchers() {
           </div>
           <FormRow>
             <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-              <Button type="button" onClick={sendVouchers}><Trans>Submit</Trans></Button>
+              <Button type="button" onClick={sendVouchers}><Trans id="Submit" /></Button>
             </div>
           </FormRow>
         </>}

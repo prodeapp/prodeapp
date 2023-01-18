@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {useContractFunction} from "@usedapp/core";
@@ -58,7 +58,9 @@ function AnswerColumn(event: Event, finalized: boolean) {
 
     return <div>
       <StatusBadge color="green"><FormatOutcome name={answerText} title={event.title}/></StatusBadge>
-      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer accepted`}</div>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+        <Trans id="Answer accepted" />
+      </div>
     </div>
   }
 
@@ -66,24 +68,28 @@ function AnswerColumn(event: Event, finalized: boolean) {
 
   if (openingTimeLeft !== false) {
     return <div>
-      <StatusBadge color="red"><Trans>Pending</Trans></StatusBadge>
-      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Open to answers in ${openingTimeLeft}`}</div>
+      <StatusBadge color="red"><Trans id="Pending" /></StatusBadge>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+        <Trans id="Open to answers in {openingTimeLeft}" values={{openingTimeLeft}} />
+      </div>
     </div>
   }
 
   if (event.isPendingArbitration) {
-    return <StatusBadge color="yellow"><Trans>Pending arbitration</Trans></StatusBadge>
+    return <StatusBadge color="yellow"><Trans id="Pending arbitration" /></StatusBadge>
   }
 
   const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale);
 
   if (!answerCountdown) {
-    return <StatusBadge color="yellow"><Trans>Pending</Trans></StatusBadge>;
+    return <StatusBadge color="yellow"><Trans id="Pending" /></StatusBadge>;
   }
 
   return <div>
     <StatusBadge color="yellow">{answerText}</StatusBadge>
-    <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
+    <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+      <Trans id="Answer closes in {answerCountdown}" values={{answerCountdown}}/>
+    </div>
   </div>
 }
 
@@ -118,13 +124,13 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 
       if (state.status === 'Success') {
         // TODO: update event in cache to allow to answer instantly
-        return <div><Trans>Question reopened!</Trans></div>
+        return <div><Trans id="Question reopened!" /></div>
       }
 
       return <Button
         color="primary" size="small"
         onClick={reopenQuestion}>
-        <Trans>Reopen question</Trans>
+        <Trans id="Reopen question" />
       </Button>
     }
 
@@ -140,7 +146,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
   return <span
     className="js-link"
     onClick={clickHandler}>
-    {event.answer === null ? <Trans>Answer result</Trans> : <Trans>Change result</Trans>}
+    {event.answer === null ? <Trans id="Answer result" /> : <Trans id="Change result" />}
     <ArrowRightIcon style={{marginLeft: '10px'}} />
   </span>
 }
@@ -168,8 +174,8 @@ export default function Results({marketId}: {marketId: string}) {
     />}
   <div>
     {!isPhone && <TableHeader>
-      <div style={{width: '40%'}}><Trans>Event</Trans></div>
-      <div style={{width: '30%'}}><Trans>Result</Trans></div>
+      <div style={{width: '40%'}}><Trans id="Event" /></div>
+      <div style={{width: '30%'}}><Trans id="Result" /></div>
       <div style={{width: '30%'}}></div>
     </TableHeader>}
     {events && events.map((event, i) => {

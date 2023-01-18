@@ -4,7 +4,7 @@ import {useForm} from "react-hook-form";
 import AppDialog, {DialogProps} from "../../components/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import PlaceBidForm, {PlaceBidFormValues} from "./PlaceBidForm";
-import {Trans} from "../Trans";
+import { Trans } from '@lingui/react';
 import {BidInfo} from "../../pages/AdsView";
 
 type PlaceBidDialogProps = DialogProps & {
@@ -28,7 +28,7 @@ function PlaceBidDialog({open, handleClose, itemId, bidInfo}: PlaceBidDialogProp
 
   const dialogActions = <DialogActions>
     <Button autoFocus color="primary" type="submit" form="place-bid-form">
-    <Trans>Place Bid</Trans>
+    <Trans id="Place Bid" />
     </Button>
   </DialogActions>
 

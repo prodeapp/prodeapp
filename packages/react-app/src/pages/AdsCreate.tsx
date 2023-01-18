@@ -4,7 +4,8 @@ import Button from '@mui/material/Button';
 import {useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "../components/Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
 import {SVGFactory__factory} from "../typechain";
@@ -102,7 +103,7 @@ function AdsCreate() {
 
   const showError = showWalletError(walletError)
   if (!account || showError) {
-    return <Alert severity="error">{showError || t`Connect your wallet to create an ad.`}</Alert>
+    return <Alert severity="error">{showError || i18n._("Connect your wallet to create an ad.")}</Alert>
   }
 
   const onSubmit = async (data: AdCreateFormValues) => {
@@ -115,7 +116,7 @@ function AdsCreate() {
         }
       );
     } catch (e: any) {
-      alert(e?.message || t`Unexpected error`);
+      alert(e?.message || i18n._("Unexpected error"));
     }
   }
 
@@ -156,12 +157,12 @@ function AdsCreate() {
 
   return <div>
     <Banner style={{backgroundImage: 'url(/banners/banner-3.jpg)', marginBottom: '50px'}}>
-      <Typography variant="h1s"><Trans>Create a new ad</Trans></Typography>
+      <Typography variant="h1s"><Trans id="Create a new ad" /></Typography>
     </Banner>
 
     <Container>
 
-      {state.status === 'Success' && <Alert severity="success"><Trans>Ad created.</Trans></Alert>}
+      {state.status === 'Success' && <Alert severity="success"><Trans id="Ad created." /></Alert>}
 
       {state.status === 'Mining' && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
 
@@ -169,7 +170,7 @@ function AdsCreate() {
       <form onSubmit={handleSubmit(onSubmit)} style={{width: '100%', maxWidth: '675px'}}>
         {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
         <FormRow>
-          <FormLabel><Trans>Image</Trans></FormLabel>
+          <FormLabel><Trans id="Image" /></FormLabel>
           <div style={{width: '100%'}}>
             <input
               name="file"
@@ -191,8 +192,8 @@ function AdsCreate() {
           <FormLabel>URL</FormLabel>
           <div>
             <TextField {...register('url', {
-              required: t`This field is required.`,
-              validate: v => isValidUrl(v) || t`Invalid URL`,
+              required: i18n._("This field is required."),
+              validate: v => isValidUrl(v) || i18n._("Invalid URL"),
             })} error={!!errors.url} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="url"/></FormError>
           </div>
@@ -207,7 +208,7 @@ function AdsCreate() {
             <AdImg svg={svg} type="svg" width={290}/>
           </div>
           <div style={{marginBottom: '20px'}}>
-            <Button type="submit" fullWidth size="large"><Trans>Submit Ad</Trans></Button>
+            <Button type="submit" fullWidth size="large"><Trans id="Submit Ad" /></Button>
           </div>
         </>}
       </form>}

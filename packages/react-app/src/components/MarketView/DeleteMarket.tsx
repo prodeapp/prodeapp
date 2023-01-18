@@ -4,7 +4,7 @@ import Alert from "@mui/material/Alert";
 import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import {KeyValue__factory} from "../../typechain";
-import {Trans} from "../Trans";
+import { Trans } from '@lingui/react';
 
 function DeleteMarket({marketId}: {marketId: string}) {
   const { state, send } = useContractFunction(
@@ -20,10 +20,10 @@ function DeleteMarket({marketId}: {marketId: string}) {
   }
 
   if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>This market has been deleted.</Trans></Alert>
+    return <Alert severity="success"><Trans id="This market has been deleted." /></Alert>
   }
 
-  return <Button variant="text" size="small" color="error" onClick={deleteMarket}><Trans>Delete market</Trans></Button>
+  return <Button variant="text" size="small" color="error" onClick={deleteMarket}><Trans id="Delete market" /></Button>
 }
 
 export default DeleteMarket;

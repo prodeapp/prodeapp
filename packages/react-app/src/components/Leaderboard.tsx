@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useLeaderboard } from '../hooks/useLeaderboard';
 import { formatAmount, formatAmountDecimalPlaces, formatPlayerName } from '../lib/helpers';
 import { BoxWrapper, BoxRow } from '../components';
-import { Trans } from "../components/Trans";
+import { Trans } from '@lingui/react';
 import { useMarketFactory } from '../hooks/useMarketFactory';
 
 function formatName(params: {row: { id: string, name:string; }}){
@@ -39,27 +39,27 @@ export default function Leaderboard() {
 
   return (
     <Container style={{ width: '100%', marginTop: '20px' }}>
-      <Typography variant="h5"><Trans>Global Metrics:</Trans></Typography>
+      <Typography variant="h5"><Trans id="Global Metrics:" /></Typography>
       <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
 
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h6'><Trans>Total Bets</Trans>: {marketFactory ? formatAmount(marketFactory.totalVolumeBets) : <Skeleton />}</Typography>
+            <Typography variant='h6'><Trans id="Total Bets" />: {marketFactory ? formatAmount(marketFactory.totalVolumeBets) : <Skeleton />}</Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h6'><Trans>Total Bets</Trans> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}</Typography>
+            <Typography variant='h6'><Trans id="Total Bets" /> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}</Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h6'><Trans>Total Players: {marketFactory ? marketFactory.numOfPlayers : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans id="Total Players: {0}" values={{0: marketFactory ? marketFactory.numOfPlayers : <Skeleton />}}/></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h6'><Trans>Total Markets: {marketFactory ? marketFactory.numOfMarkets : <Skeleton />}</Trans></Typography>
+            <Typography variant='h6'><Trans id="Total Markets: {0}" values={{0: marketFactory ? marketFactory.numOfMarkets : <Skeleton />}}/></Typography>
           </BoxWrapper>
         </Grid>
       </Grid>

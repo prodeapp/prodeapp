@@ -9,7 +9,8 @@ import {KeyValue__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
 import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Player, PLAYER_FIELDS } from "../../graphql/subgraph";
@@ -73,7 +74,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
   if (state.status === 'Success') {
     return <div style={wrapperStyles}>
       <div style={innerStyles}>
-        <Alert severity="success"><Trans>Username updated</Trans>!</Alert>
+        <Alert severity="success"><Trans id="Username updated" />!</Alert>
       </div>
     </div>
   }
@@ -105,15 +106,15 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
           <div style={{width: '410px', marginRight: '20px'}}>
             <FormControl fullWidth>
               <TextField {...register('name', {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
                 validate: async (value) => await isNameUnique(value) || 'Name already in use, please select another name'
-              })} placeholder={t`Your username`} error={!!errors.name} style={{width: '100%'}}/>
+              })} placeholder={i18n._("Your username")} error={!!errors.name} style={{width: '100%'}}/>
               <FormError><ErrorMessage errors={errors} name={`name`} /></FormError>
             </FormControl>
           </div>
           <div>
             <Button color="primary" type="submit">
-              <Trans>Change username</Trans>
+              <Trans id="Change username" />
             </Button>
           </div>
         </div>

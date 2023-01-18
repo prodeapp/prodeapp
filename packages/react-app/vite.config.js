@@ -5,6 +5,7 @@ import polyfillNode from "rollup-plugin-polyfill-node";
 import { defineConfig } from "vite";
 import svgrPlugin from "vite-plugin-svgr";
 import viteTsconfigPaths from "vite-tsconfig-paths";
+import checker from 'vite-plugin-checker'
 
 export default ({ mode }) => {
   return defineConfig({
@@ -15,6 +16,7 @@ export default ({ mode }) => {
       viteTsconfigPaths(),
       svgrPlugin(),
       { ...polyfillNode({ fs: true }), enforce: "post" },
+      checker({ typescript: true }),
     ],
     resolve: {
       alias: {
@@ -28,7 +30,7 @@ export default ({ mode }) => {
       outDir: "./build",
     },
     test: {
-      setupFiles: "src/setupTests.tsx",
+      //setupFiles: "src/setupTests.tsx",
       environment: "jsdom", // or 'jsdom', 'node'
       globals: true,
       exclude: [

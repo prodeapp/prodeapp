@@ -1,4 +1,5 @@
-import {t, Trans} from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import React, {useState} from "react";
 import {getMarketUrl} from "../../lib/helpers";
 import {useEthers} from "@usedapp/core";
@@ -24,7 +25,7 @@ function ReferralLink({marketId}: {marketId: string}) {
   const clickHandler = async () => {
     if (!account) {
       // open
-      alert(t`Connect your wallet`);
+      alert(i18n._("Connect your wallet"));
       return;
     }
 
@@ -34,11 +35,11 @@ function ReferralLink({marketId}: {marketId: string}) {
   }
 
   if (textCopied) {
-    return <Trans>Referral link copied!</Trans>
+    return <Trans id="Referral link copied!" />
   }
 
   return <span className="js-link" onClick={clickHandler}>
-    <LinkIcon /> <Trans>Copy referral link</Trans>
+    <LinkIcon /> <Trans id="Copy referral link" />
   </span>
 }
 

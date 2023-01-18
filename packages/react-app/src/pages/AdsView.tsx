@@ -1,7 +1,7 @@
 import React, {useMemo, useState} from "react";
 import {useParams} from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import {Trans} from "../components/Trans";
+import { Trans } from '@lingui/react';
 import {styled, useTheme} from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -81,11 +81,11 @@ function AdsView() {
   }
 
   if (isLoading) {
-    return <div><Trans>Loading...</Trans></div>
+    return <div><Trans id="Loading..." /></div>
   }
 
   if (!ad) {
-    return <div><Trans>Ad not found</Trans></div>
+    return <div><Trans id="Ad not found" /></div>
   }
 
   const itemId = ad?.curateSVGAdItem?.id;
@@ -120,9 +120,9 @@ function AdsView() {
           </div>
         </GridLeftColumn>
         <Grid item xs={12} lg={8} sx={{p: 3}}>
-          {removeBidState.status === 'Success' && <Alert severity="success"><Trans>Bid removed.</Trans></Alert>}
+          {removeBidState.status === 'Success' && <Alert severity="success"><Trans id="Bid removed." /></Alert>}
           {removeBidState.errorMessage && <Alert severity="error">{removeBidState.errorMessage}</Alert>}
-          {groupedBids.length === 0 && <Alert severity="info"><Trans>No bids found.</Trans></Alert>}
+          {groupedBids.length === 0 && <Alert severity="info"><Trans id="No bids found." /></Alert>}
           {groupedBids.map((bidInfo, i) => {
             return <Box key={i} sx={{my: 3}}>
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>

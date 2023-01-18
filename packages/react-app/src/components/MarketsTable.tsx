@@ -7,7 +7,8 @@ import {Link as RouterLink, Link} from "react-router-dom";
 import { Market } from "../graphql/subgraph";
 import {betsClosingSoon, formatAmount, getTimeLeft} from "../lib/helpers";
 import Alert from "@mui/material/Alert";
-import {Plural, t, Trans} from "./Trans"
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import {useI18nContext} from "../lib/I18nContext";
 import {styled} from "@mui/material/styles";
 import {usePhone} from "../hooks/useResponsive";
@@ -64,13 +65,13 @@ function MarketBox({market}: {market: Market}) {
   const closingTimeLeft = getTimeLeft(market.closingTime, false, locale);
   const submissionPeriodEnd = useSubmissionPeriodEnd(market.id);
   const distributionTimeLeft = getTimeLeft(submissionPeriodEnd, false, locale);
-  let status = <Chip label={t`Closed`} color="error" />;
+  let status = <Chip label={i18n._("Closed")} color="error" />;
 
   if (market.resultSubmissionPeriodStart === '0') {
     if (closingTimeLeft !== false) {
-      status = <Chip label={t`Betting`} color="success" />;
+      status = <Chip label={i18n._("Betting")} color="success" />;
     } else {
-      status = <Chip label={t`Playing`} color="warning" />;
+      status = <Chip label={i18n._("Playing")} color="warning" />;
     }
   }
 
@@ -85,46 +86,46 @@ function MarketBox({market}: {market: Market}) {
 
           {market.hasPendingAnswers && <>
             <div style={{marginBottom: 10, fontWeight: 700}}>
-              <Plural
-                value={Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer)}
-                one="# result left to answer"
-                other="# results left to answer"></Plural>
+              <Trans
+                id="{0, plural, one {# result left to answer} other {# results left to answer}}"
+                values={{0: Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer)}}
+              />
             </div>
-            <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'primary'} fullWidth size="large"><Trans>Answer results</Trans></Button>
+            <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'primary'} fullWidth size="large"><Trans id="Answer results" /></Button>
           </>}
 
           {distributionTimeLeft !== false && <div>
-            <div style={{marginBottom: 10, fontWeight: 700}}>{t`Prize distribution:`+' '+distributionTimeLeft}</div>
+            <div style={{marginBottom: 10, fontWeight: 700}}>{i18n._("Prize distribution:")+' '+distributionTimeLeft}</div>
           </div>}
         </div>}
         {closingTimeLeft !== false && <div style={{textAlign: 'center'}}>
-          {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>}
+          {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans id="There's not much time left, hurry!"/></Typography>}
           <div style={{marginBottom: 10, fontWeight: 700}}>{closingTimeLeft}</div>
-          <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'primary'} fullWidth size="large"><Trans>Place Bet</Trans></Button>
+          <Button component={RouterLink} to={`/markets/${market.id.toString()}`} color={'primary'} fullWidth size="large"><Trans id="Place Bet" /></Button>
         </div>}
       </div>
     </Box>
     <MarketDetails sx={{minWidth: {md: '245px'}}}>
       <div>
-        <div><Trans>Bet price</Trans></div>
+        <div><Trans id="Bet price" /></div>
         <div style={{fontWeight: 'bold'}}>{formatAmount(market.price)}</div>
       </div>
 
       <div>
-        <div><Trans>Pool prize</Trans></div>
+        <div><Trans id="Pool prize" /></div>
         <div style={{fontWeight: 'bold'}}>{formatAmount(market.pool)}</div>
       </div>
 
       <div>
-        <div><Trans>Participants</Trans></div>
+        <div><Trans id="Participants" /></div>
         <div style={{fontWeight: 'bold'}}>{market.numOfBets}</div>
       </div>
 
       <div>
-        <div><Trans>Verified</Trans></div>
+        <div><Trans id="Verified" /></div>
         <div style={{fontWeight: 'bold', color: market.curated ? theme.palette.success.dark : theme.palette.error.dark}}>
-          {market.curated && <Trans>Yes</Trans>}
-          {!market.curated && <Trans>Not yet</Trans>}
+          {market.curated && <Trans id="Yes" />}
+          {!market.curated && <Trans id="Not yet" />}
         </div>
       </div>
     </MarketDetails>
@@ -135,7 +136,7 @@ function MarketsTable({ markets }: MarketsTableProps) {
   const isPhone = usePhone();
 
   if (!markets || markets.length === 0) {
-    return <Alert severity="info"><Trans>No markets found.</Trans></Alert>
+    return <Alert severity="info"><Trans id="No markets found." /></Alert>
   }
 
   return <MarketsGrid container spacing={0}>

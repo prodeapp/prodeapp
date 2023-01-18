@@ -7,7 +7,7 @@ import Alert from "@mui/material/Alert";
 import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
-import { Trans } from "../components/Trans";
+import { Trans } from '@lingui/react';
 import { Bets } from '../components/ProfileView/Bets';
 import { Referrals } from '../components/ProfileView/Referrals';
 import { Markets } from '../components/ProfileView/Markets';
@@ -23,7 +23,7 @@ export default function Profile() {
   if (!id) {
     const showError = showWalletError(walletError)
     if (!account || showError) {
-      return <Alert severity="error">{showError || <Trans>Connect your wallet to view your profile.</Trans>}</Alert>
+      return <Alert severity="error">{showError || <Trans id="Connect your wallet to view your profile." />}</Alert>
     }
   }
 
@@ -32,17 +32,17 @@ export default function Profile() {
       <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>  
-            <Typography variant='h5'><Trans>Total Bet: {player? formatAmount(player?.amountBet) : <Skeleton />}</Trans></Typography>
+            <Typography variant='h5'><Trans id="Total Bet: {0}" values={{0: player? formatAmount(player?.amountBet) : <Skeleton />}}/></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Total Rewards: {player? formatAmount(player?.pricesReceived): <Skeleton />}</Trans></Typography>
+            <Typography variant='h5'><Trans id="Total Rewards: {0}" values={{0: player? formatAmount(player?.pricesReceived): <Skeleton />}}/></Typography>
           </BoxWrapper>
         </Grid>
         <Grid item sm={12} md={4} sx={{ alignItems: 'center', justifyContent: 'center' }}>
           <BoxWrapper sx={{ padding: 2 }}>
-            <Typography variant='h5'><Trans>Referrals Earnings: {player? formatAmount(player?.totalAttributions): <Skeleton />}</Trans></Typography>
+            <Typography variant='h5'><Trans id="Referrals Earnings: {0}" values={{0: player? formatAmount(player?.totalAttributions): <Skeleton />}}/></Typography>
           </BoxWrapper>
         </Grid>
       </Grid>
@@ -51,9 +51,9 @@ export default function Profile() {
 
       <BoxWrapper>
         <BoxRow style={{ justifyContent: 'center' }}>
-          <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans>Bets</Trans></Button></div>
-          <div><Button onClick={() => setSection('referrals')} color={section === 'referrals' ? 'secondary' : 'primary'}><Trans>Referrals</Trans></Button></div>
-          <div><Button onClick={() => setSection('markets')} color={section === 'markets' ? 'secondary' : 'primary'}><Trans>Markets</Trans></Button></div>
+          <div><Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}><Trans id="Bets" /></Button></div>
+          <div><Button onClick={() => setSection('referrals')} color={section === 'referrals' ? 'secondary' : 'primary'}><Trans id="Referrals" /></Button></div>
+          <div><Button onClick={() => setSection('markets')} color={section === 'markets' ? 'secondary' : 'primary'}><Trans id="Markets" /></Button></div>
         </BoxRow>
       </BoxWrapper>
 

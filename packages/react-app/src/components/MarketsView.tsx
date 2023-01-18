@@ -8,7 +8,8 @@ import Bets from "../components/MarketView/Bets";
 import Results from "../components/MarketView/Results";
 import PlaceBet from "../components/MarketView/PlaceBet";
 import MarketStatus from "../components/MarketView/MarketStatus";
-import {t, Trans} from "../components/Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import BetForm from "../components/Bet/BetForm";
 import ReferralLink from "../components/MarketView/ReferralLink";
 import { Stats } from "../components/MarketView/Stats";
@@ -56,16 +57,16 @@ function MarketsView() {
   }, [searchParams, id]);
 
   if (isLoading) {
-    return <div><Trans>Loading...</Trans></div>
+    return <div><Trans id="Loading..." /></div>
   }
 
   if (!market) {
     return searchParams.get('new') === '1'
-            ? <div><Trans>This market was just created, please wait a few seconds for it to be indexed.</Trans></div>
-            : <div><Trans>Market not found</Trans></div>
+            ? <div><Trans id="This market was just created, please wait a few seconds for it to be indexed." /></div>
+            : <div><Trans id="Market not found" /></div>
   }
 
-  const shareUrl = getTwitterShareUrl(t`Check this market on @prode_eth: ${market.name} ${getMarketUrl(market.id)}`)
+  const shareUrl = getTwitterShareUrl(i18n._(`Check this market on @prode_eth: {0} {1}`, {0: market.name, 1: getMarketUrl(market.id)}))
 
   const handleChange = (event: React.SyntheticEvent, newValue: MarketSections) => {
     setSection(newValue);
@@ -85,11 +86,11 @@ function MarketsView() {
 
             <Grid container spacing={0} style={{borderBottom: `1px solid ${theme.palette.black.dark}`, fontSize: '14px', paddingBottom: '20px'}}>
               <Grid item xs={6} md={6} sx={{pr: 2}} style={{borderRight: `1px solid ${theme.palette.black.dark}`}}>
-                <div style={{fontWeight: 600, marginBottom: 5}}><Trans>Market verification</Trans>:</div>
+                <div style={{fontWeight: 600, marginBottom: 5}}><Trans id="Market verification" />:</div>
                 <MarketCurateStatus marketHash={market.hash} marketId={market.id}/>
               </Grid>
               <Grid item xs={6} md={6} sx={{pl: 2}}>
-                <div style={{marginBottom: 5}}><a href={shareUrl} target="_blank" rel="noreferrer"><TwitterIcon /> <Trans>Share on Twitter</Trans></a></div>
+                <div style={{marginBottom: 5}}><a href={shareUrl} target="_blank" rel="noreferrer"><TwitterIcon /> <Trans id="Share on Twitter" /></a></div>
                 <div>
                   <ReferralLink marketId={market.id}/>
                 </div>
@@ -105,9 +106,9 @@ function MarketsView() {
 
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
               <Tabs value={section} onChange={handleChange} aria-label="Market sections" sx={{marginLeft: '20px'}}>
-                <Tab label={t`Bets`} value="bets" {...a11yProps(0)} />
-                <Tab label={t`Results`} value="results" {...a11yProps(1)} />
-                <Tab label={t`Statistics`} value="stats" {...a11yProps(2)} />
+                <Tab label={i18n._("Bets")} value="bets" {...a11yProps(0)} />
+                <Tab label={i18n._("Results")} value="results" {...a11yProps(1)} />
+                <Tab label={i18n._("Statistics")} value="stats" {...a11yProps(2)} />
               </Tabs>
               {account && section === 'bets' && <div>
                 <FormGroup>
@@ -117,7 +118,7 @@ function MarketsView() {
                         checked={onlyMyBets}
                         onClick={() => setOnlyMyBets(!onlyMyBets)}
                       />}
-                    label={<span style={{fontSize: '14px'}}><Trans>See only my bets</Trans></span>}/>
+                    label={<span style={{fontSize: '14px'}}><Trans id="See only my bets" /></span>}/>
                 </FormGroup>
               </div>}
             </div>

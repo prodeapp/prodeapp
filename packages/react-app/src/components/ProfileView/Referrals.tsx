@@ -1,6 +1,7 @@
 import React from "react";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "../Trans";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Skeleton, Typography, useTheme } from "@mui/material";
 import { formatAmount } from "../../lib/helpers";
 import { BoxRow } from "..";
@@ -21,11 +22,11 @@ function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     };
 
     if (marketReferral.claimed || state.status === 'Success') {
-        return <>{t`Already Claimed` + '!'}</>;
+        return <>{i18n._("Already Claimed") + '!'}</>;
     }
 
     if (marketReferral.market.resultSubmissionPeriodStart === '0') {
-        return <div><Trans>Waiting for prize distribution</Trans></div>;
+        return <div><Trans id="Waiting for prize distribution" /></div>;
     }
 
     if (state.status === 'Mining') {
@@ -33,8 +34,8 @@ function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     }
 
     return <div style={{display:'flex'}}>
-        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans>Claim</Trans></Button>
-        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans>Error</Trans></Typography> : null}
+        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans id="Claim" /></Button>
+        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans id="Error" /></Typography> : null}
     </div>
 }
 
@@ -75,15 +76,15 @@ export function Referrals({ provider }: { provider: string }) {
     }
 
     if (!marketsReferrals || marketsReferrals.length === 0) {
-        return <Alert severity="info"><Trans>Start referring into markets and earn part of the fees that your referred pays.</Trans></Alert>
+        return <Alert severity="info"><Trans id="Start referring into markets and earn part of the fees that your referred pays." /></Alert>
     }
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', marginBottom: '30px'}}>
             <Grid item sm={12} md={12}>
                 <BoxRow key='header'>
-                    <div style={{ width: '60%' }}><Trans>Market</Trans></div>
-                    <div style={{ width: '15%' }}><Trans>Earn</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Claim</Trans></div>
+                    <div style={{ width: '60%' }}><Trans id="Market" /></div>
+                    <div style={{ width: '15%' }}><Trans id="Earn" /></div>
+                    <div style={{ width: '20%' }}><Trans id="Claim" /></div>
                     <div style={{ width: '5%' }}></div>
                 </BoxRow>
 

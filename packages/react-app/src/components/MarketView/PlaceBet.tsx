@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import {betsClosingSoon, formatAmount, getTimeLeft} from "../../lib/helpers";
 import {Market} from "../../graphql/subgraph";
-import { Trans, Plural } from "../Trans";
+import { Trans } from '@lingui/react'
 import {useI18nContext} from "../../lib/I18nContext";
 import { ReactComponent as CurrencyIcon } from "../../assets/icons/currency.svg";
 import {Alert, Typography} from "@mui/material";
@@ -28,25 +28,25 @@ export default function PlaceBet({market, onBetClick, onResultsClick}: {market: 
   return <div style={{textAlign: 'center', margin: '0 auto'}}>
     <Box sx={{marginTop: '50px', marginBottom: {xs: '50px', md: '100px'}}}>
       <CurrencyIcon />
-      <Typography variant="p3" component="div"><Trans>Bet Price:</Trans></Typography>
+      <Typography variant="p3" component="div"><Trans id="Bet Price:" /></Typography>
       <div style={{fontWeight: 'bold'}}>{formatAmount(market.price)}</div>
     </Box>
 
     {timeLeft !== false && <>
-      {hasVoucher && <Alert severity={"info"} sx={{mb: 2, fontWeight: 700, justifyContent: 'center'}}><Trans>You have a voucher available to place a bet for free!</Trans></Alert>}
-      {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans>There's not much time left, hurry!</Trans></Typography>}
+      {hasVoucher && <Alert severity={"info"} sx={{mb: 2, fontWeight: 700, justifyContent: 'center'}}><Trans id="You have a voucher available to place a bet for free!" /></Alert>}
+      {betsClosingSoon(Number(market.closingTime)) && <Typography variant="p3" component="div"><Trans id="There's not much time left, hurry!"/></Typography>}
       <div style={{fontWeight: 'bold', marginBottom: '15px'}}>{timeLeft}</div>
-      <Button color="primary" size="large" fullWidth onClick={onBetClick}><Trans>Place Bet</Trans> - {formatAmount(market.price)} <ArrowRight style={{marginLeft: 10}}/></Button>
+      <Button color="primary" size="large" fullWidth onClick={onBetClick}><Trans id="Place Bet" /> - {formatAmount(market.price)} <ArrowRight style={{marginLeft: 10}}/></Button>
     </>}
 
     {timeLeft === false && market.hasPendingAnswers && <>
         <div style={{fontWeight: 'bold', marginBottom: '15px'}}>
-          <Plural
-            value={Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer)}
-            one="# result left to answer"
-            other="# results left to answer"></Plural>
+          <Trans
+            id="{0, plural, one {# result left to answer} other {# results left to answer}}"
+            values={{0: Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer)}}
+          />
         </div>
-      <Button color="primary" size="large" fullWidth onClick={onResultsClick}><Trans>Answer results</Trans> <ArrowRight style={{marginLeft: 10}}/></Button>
+      <Button color="primary" size="large" fullWidth onClick={onResultsClick}><Trans id="Answer results" /> <ArrowRight style={{marginLeft: 10}}/></Button>
     </>}
   </div>
 }

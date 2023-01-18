@@ -2,7 +2,7 @@ import { ExpandMoreOutlined } from "@mui/icons-material"
 import {Accordion, AccordionDetails, AccordionSummary, Alert, Button, Skeleton} from "@mui/material"
 import { formatAmount } from "../../lib/helpers"
 import BetDetails from "../Bet/BetDetails"
-import { Trans } from "../Trans";
+import { Trans } from '@lingui/react'
 import {useBets} from "../../hooks/useBets";
 import {Link as RouterLink} from "react-router-dom";
 import React from "react";
@@ -20,7 +20,7 @@ export function Bets({playerId}: {playerId: string}) {
     }
 
     if (!bets || bets.length === 0) {
-        return <Alert severity="error"><Trans>No bets found.</Trans></Alert>
+        return <Alert severity="error"><Trans id="No bets found." /></Alert>
     }
 
     return (
@@ -32,15 +32,15 @@ export function Bets({playerId}: {playerId: string}) {
                         <div style={{width: '100%'}}>
                             <div style={{width: '100%', fontSize: '20px', marginBottom: '10px', fontWeight: '600'}}>{bet.market.name}</div>
                             <div style={{width: '100%', display: 'flex'}}>
-                                <div style={{marginRight: '50px'}}><Trans>Points</Trans>: {bet.points}</div>
-                                <div><Trans>Reward</Trans>: {formatAmount(bet.reward)}</div>
+                                <div style={{marginRight: '50px'}}><Trans id="Points" />: {bet.points}</div>
+                                <div><Trans id="Reward" />: {formatAmount(bet.reward)}</div>
                             </div>
                         </div>
                     </AccordionSummary>
                     <AccordionDetails>
                         <div style={{marginBottom: '20px'}}>
-                            <Button component={RouterLink} to={`/markets/${bet.market.id}`}><Trans>Go to market</Trans></Button>
-                            <Button component={Link} href={`https://epor.io/tokens/${bet.market.id}/${bet.tokenID}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
+                            <Button component={RouterLink} to={`/markets/${bet.market.id}`}><Trans id="Go to market" /></Button>
+                            <Button component={Link} href={`https://epor.io/tokens/${bet.market.id}/${bet.tokenID}?network=xDai`} target="_blank" rel="noopener"><Trans id="Trade NFT in Eporio" /></Button>
                         </div>
 
                         <BetDetails bet={bet} />
