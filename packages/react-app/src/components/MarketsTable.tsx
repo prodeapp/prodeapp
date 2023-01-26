@@ -63,7 +63,7 @@ function MarketBox({market}: {market: Market}) {
   const { locale } = useI18nContext();
   const theme = useTheme();
   const closingTimeLeft = getTimeLeft(market.closingTime, false, locale);
-  const submissionPeriodEnd = useSubmissionPeriodEnd(market.id);
+  const {data: submissionPeriodEnd = 0} = useSubmissionPeriodEnd(market.id);
   const distributionTimeLeft = getTimeLeft(submissionPeriodEnd, false, locale);
   let status = <Chip label={i18n._("Closed")} color="error" />;
 

@@ -2,10 +2,9 @@ import React from "react";
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react';
 import { Grid, Skeleton } from "@mui/material";
-import { formatAmount } from "../../lib/helpers";
+import {formatAmount, shortenAddress} from "../../lib/helpers";
 import { BoxRow } from "..";
 import { useMarkets } from "../../hooks/useMarkets";
-import { shortenAddress } from "@usedapp/core";
 
 export function Markets({ creatorId }: { creatorId: string }) {
     const { data: markets, error, isLoading } = useMarkets({creatorId: creatorId});

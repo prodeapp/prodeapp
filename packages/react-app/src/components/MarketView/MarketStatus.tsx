@@ -9,10 +9,10 @@ import Chip from "@mui/material/Chip";
 
 function MarketStatus({marketId}: {marketId: string}) {
   const { data: marketStatus} = useMarketStatus(marketId);
-  const submissionPeriodEnd = useSubmissionPeriodEnd(marketId);
+  const {data: submissionPeriodEnd = 0} = useSubmissionPeriodEnd(marketId);
   const { locale } = useI18nContext();
 
-  if (marketStatus === '') {
+  if (!marketStatus) {
     return <Skeleton />;
   }
 

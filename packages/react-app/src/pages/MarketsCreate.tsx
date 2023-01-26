@@ -17,7 +17,6 @@ import EventBuilder from "../components/MarketCreate/EventBuilder";
 import useMarketForm, {getEventData, MarketFormStep1Values, MarketFormStep2Values} from "../hooks/useMarketForm";
 import dateAdd from 'date-fns/add'
 import { isAddress } from "@ethersproject/address";
-import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import {UseFormReturn} from "react-hook-form/dist/types";
@@ -27,7 +26,6 @@ import {
   getFlattenedCategories,
   getCategoryText,
   getMarketUrl,
-  showWalletError,
   getTwitterShareUrl,
   localTimeToUtc
 } from "../lib/helpers";
@@ -38,6 +36,9 @@ import {styled, useTheme} from "@mui/material/styles";
 import {ReactComponent as TriangleIcon} from "../assets/icons/triangle-right.svg";
 import {ReactComponent as ShieldCheckIcon} from "../assets/icons/shield-check.svg";
 import {ReactComponent as TwitterIcon} from "../assets/icons/twitter-2.svg";
+import {FieldValues} from "react-hook-form/dist/types/fields";
+import {getAccount} from "@wagmi/core";
+import {useNetwork} from "wagmi";
 
 export const formatAnswers = (answers: string[]) => {
   return answers.map(a => ({value: a}))
@@ -49,7 +50,7 @@ const today = new Date();
 
 const wrapperStyle = {width: '100%', maxWidth: '675px'};
 
-interface FormStepProps<T> {
+interface FormStepProps<T extends FieldValues> {
   useFormReturn: UseFormReturn<T>
   setActiveStep: (step: number) => void
 }
@@ -440,7 +441,8 @@ function BigStepper({steps, activeStep}: {steps: string[], activeStep: number}) 
 }
 
 function MarketsCreate() {
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
   const [activeStep, setActiveStep] = useState(0);
 
   const defaultClosingTime = dateAdd(today, {days: 5});
@@ -533,7 +535,7 @@ function MarketsCreate() {
     }
   }, [searchParams, useForm1Return, useForm2Return]);
 
-  const {state, createMarket, marketId} = useMarketForm();
+  const {isSuccess, error, createMarket, marketId} = useMarketForm();
 
   const onSubmit = async () => {
     if (step1State && step2State) {
@@ -542,21 +544,24 @@ function MarketsCreate() {
   }
 
   useEffect(() => {
-    if (state.status === 'Success') {
+    if (isSuccess) {
       setActiveStep(3)
     }
-  }, [state]);
+  }, [isSuccess]);
 
   useEffect(() => {
-    if (step2State.manager === '' && account) {
-      useForm2Return.setValue('manager', account || '');
+    if (step2State.manager === '' && address) {
+      useForm2Return.setValue('manager', address || '');
     }
   // eslint-disable-next-line
-  }, [account]);
+  }, [address]);
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || <Trans id="Connect your wallet to create a market." />}</Alert>
+  if (!address) {
+    return <Alert severity="error"><Trans id="Connect your wallet to create a market." /></Alert>
+  }
+
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
   }
 
   return <div>
@@ -571,7 +576,7 @@ function MarketsCreate() {
 
     <Container>
 
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+      {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
 
       {activeStep === 0 && <Step1Form useFormReturn={useForm1Return} setActiveStep={setActiveStep} />}
 

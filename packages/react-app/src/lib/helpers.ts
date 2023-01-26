@@ -5,12 +5,12 @@ import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
 import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
+import {getAddress} from "@ethersproject/address";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {AdBid, Event, Outcome} from "../graphql/subgraph";
 import { i18n } from "@lingui/core";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
-import { shortenAddress } from '@usedapp/core'
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -197,29 +197,6 @@ export function getDocsUrl(locale: I18nContextProps['locale']) {
   return documentationUrls[locale];
 }
 
-export function showWalletError(error: any) {
-  if (error?.message) {
-
-    if (error?.message.includes("Unsupported chain id")) {
-      return i18n._("Unsupported chain, please switch to Gnosis Chain.");
-    }
-
-    // we use this function to return early when connected to a unsupported chain,
-    // but we don't want to return early for every error that can occur (random RPC errors, etc)
-    /*if (error?.message.startsWith('{')) {
-      try {
-        const _error = JSON.parse(error?.message);
-
-        return _error?.message;
-      } catch (e: any) {
-
-      }
-    } else {
-      return error?.message;
-    }*/
-  }
-}
-
 export function getTwitterShareUrl(message: string): string {
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
 }
@@ -253,4 +230,13 @@ export function formatPlayerName(name:string, address:string){
     return shortenAddress(address);
   }
   return name;
+}
+
+export function shortenAddress(address: string): string {
+  try {
+    const formattedAddress = getAddress(address)
+    return formattedAddress.substring(0, 6) + '...' + formattedAddress.substring(formattedAddress.length - 4)
+  } catch {
+    throw new TypeError("Invalid input, address can't be parsed")
+  }
 }

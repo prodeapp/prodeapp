@@ -1,94 +1,112 @@
-import {TransactionStatus, useCall, useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {Market__factory, VoucherManager__factory} from "../typechain";
-import {BytesLike} from "ethers";
+import {getAccount, prepareWriteContract, writeContract} from '@wagmi/core'
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
-import {TransactionReceipt} from "@ethersproject/providers";
+import {Interface} from "@ethersproject/abi";
+import {MarketAbi} from "../abi/Market";
+import {useState} from "react";
+import {VoucherManagerAbi} from "../abi/VoucherManager";
+import {useContractReads} from "wagmi";
+import {Address} from "@wagmi/core"
+import {Bytes} from "../abi/types";
 
 interface UsePlaceBetReturn {
-  state: TransactionStatus
+  isLoading: boolean
+  error: Error | null
   tokenId: BigNumber|false
-  placeBet: (_attribution: string, _results: BytesLike[]) => Promise<TransactionReceipt | undefined>
+  placeBet: (_attribution: Address, _results: Bytes[]) => void/*Promise<TransactionReceipt | undefined>*/
   hasVoucher: boolean
 }
 
-type UsePlaceBetFn = (marketId: string, price: BigNumberish) => UsePlaceBetReturn;
+type UsePlaceBetFn = (marketId: Address, price: BigNumberish) => UsePlaceBetReturn;
 
-const useMarketPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish) => {
-  const { state, send, events } = useContractFunction(
-    new Contract(marketId, Market__factory.createInterface()),
-    'placeBet'
-  );
-
-  const tokenId: BigNumber|false = events ? (events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false) : false;
-
-  const placeBet = async (_attribution: string, _results: BytesLike[]) => {
-    return await send(
+const placeBetWithMarket = async (marketId: Address, price: BigNumber, _attribution: Address, _results: Bytes[]): Promise<BigNumber> => {
+  const config = await prepareWriteContract({
+    address: marketId,
+    abi: MarketAbi,
+    functionName: 'placeBet',
+    args: [
       _attribution,
       _results,
-      {
-        value: price
-      }
-    );
-  }
+    ],
+    overrides: {
+      value: price
+    }
+  })
+  const data = await writeContract(config)
+  const receipt = await data.wait()
 
-  return {
-    state,
-    tokenId,
-    placeBet,
-    hasVoucher: false
-  }
+  const ethersInterface = new Interface(MarketAbi);
+  const events = receipt.logs.map(i => ethersInterface.parseLog(i))
+  return events ? (events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false) : false
 }
 
-const useVoucherPlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish) => {
-  const { account } = useEthers();
-
-  const contract = new Contract(import.meta.env.VITE_VOUCHER_MANAGER as string, VoucherManager__factory.createInterface());
-
-  const { state, send, events } = useContractFunction(
-    contract,
-    'placeBet'
-  );
-
-  const { value: voucherBalance } = useCall(account && { contract, method: 'balance', args: [account] }) || {value: [BigNumber.from(0)]}
-  const { value: marketWhitelisted } = useCall({ contract, method: 'marketsWhitelist', args: [marketId] }) || {value: [false]}
-
-  const tokenId: BigNumber|false = events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false;
-
-  const placeBet = async (_attribution: string, _results: BytesLike[]) => {
-    return await send(
+const placeBetWithVoucher = async (marketId: string, _attribution: Address, _results: Bytes[]): Promise<BigNumber> => {
+  const config = await prepareWriteContract({
+    address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+    abi: VoucherManagerAbi,
+    functionName: 'placeBet',
+    args: [
       marketId,
       _attribution,
       _results
-    );
-  }
+    ],
+  })
+  const data = await writeContract(config)
+  const receipt = await data.wait()
 
-  return {
-    state,
-    tokenId,
-    placeBet,
-    hasVoucher: voucherBalance[0].gte(price) && marketWhitelisted[0],
-  }
+  const ethersInterface = new Interface(VoucherManagerAbi);
+  const events = receipt.logs.map(i => ethersInterface.parseLog(i))
+  return events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false
 }
 
-export const usePlaceBet: UsePlaceBetFn = (marketId: string, price: BigNumberish) => {
-  const marketPlaceBet = useMarketPlaceBet(marketId, price);
-  const voucherPlaceBet = useVoucherPlaceBet(marketId, price);
+export const usePlaceBet: UsePlaceBetFn = (marketId: Address, price: BigNumberish) => {
+  const {address} = getAccount()
 
-  // we need to keep track of the tokenId once a bet is placed using a voucher
-  // because hookReturn changes to marketPlaceBet and the previous tokenId is lost
-  let tokenId: BigNumber|false = false;
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [tokenId, setTokenId] = useState<BigNumber|false>(false)
 
-  if (marketPlaceBet.tokenId !== false) {
-    tokenId = marketPlaceBet.tokenId;
-  } else if (voucherPlaceBet.tokenId  !== false) {
-    tokenId = voucherPlaceBet.tokenId;
+  const {data} = useContractReads({
+    contracts: [
+      {
+        address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+        abi: VoucherManagerAbi,
+        functionName: 'balance',
+        args: [address],
+      },
+      {
+        address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+        abi: VoucherManagerAbi,
+        functionName: 'marketsWhitelist',
+        args: [marketId],
+      },
+    ]
+  })
+
+  const [voucherBalance, marketWhitelisted] = [data?.[0] || BigNumber.from(0), data?.[1] || false] as [BigNumber, boolean]
+
+  const hasVoucher = voucherBalance.gte(price) && marketWhitelisted
+
+  const placeBet = async (_attribution: Address, _results: Bytes[]) => {
+    setIsLoading(true)
+
+    try {
+      if (hasVoucher) {
+        setTokenId(await placeBetWithVoucher(marketId, _attribution, _results))
+      } else {
+        setTokenId(await placeBetWithMarket(marketId, BigNumber.from(price), _attribution, _results))
+      }
+    } catch (e: any) {
+      setError(e)
+    }
+
+    setIsLoading(false)
   }
 
   return {
-    state: voucherPlaceBet.hasVoucher ? voucherPlaceBet.state : marketPlaceBet.state,
-    hasVoucher: voucherPlaceBet.hasVoucher,
-    placeBet: voucherPlaceBet.hasVoucher ? voucherPlaceBet.placeBet : marketPlaceBet.placeBet,
+    isLoading,
+    error,
+    hasVoucher,
+    placeBet,
     tokenId
   };
 };

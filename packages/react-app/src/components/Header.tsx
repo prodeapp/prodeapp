@@ -1,30 +1,23 @@
-import {shortenAddress, useConfig, useContractFunction, useEthers, useLookupAddress} from "@usedapp/core";
+import { getAccount } from '@wagmi/core'
 import React, { useEffect, useState } from "react";
 import { Toolbar, Container, Button, Box, AppBar, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
-import Alert from "@mui/material/Alert";
 import { Link as RouterLink } from "react-router-dom";
-import AppDialog from "./Dialog";
-import { ReactComponent as MetamaskIcon } from "../assets/metamask.svg";
-import { ReactComponent as WalletConnectIcon } from "../assets/wallet-connect.svg";
-import { xDai } from "@usedapp/core";
-import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from '@lingui/react';
-import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, showWalletError} from "../lib/helpers";
-import useWindowFocus from "../hooks/useWindowFocus";
+import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, shortenAddress} from "../lib/helpers";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
 import {ReactComponent as Logo} from "../assets/logo.svg";
-import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
-import {ReactComponent as ArrowRight} from "../assets/icons/arrow-right-2.svg";
 import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
-import {Contract} from "@ethersproject/contracts";
-import {RealityETH_v3_0__factory} from "../typechain";
 import { usePlayer } from "../hooks/usePlayer";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import {useContractWrite} from "wagmi";
+import {RealityAbi} from "../abi/RealityETH_v3_0";
+import {Address} from "@wagmi/core"
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -194,117 +187,51 @@ export default function Header() {
     );
 };
 
-export interface DialogProps {
-  open: boolean;
-  handleClose: () => void;
-}
-
-function WalletDialog({open, handleClose}: DialogProps) {
-  const { account, activate, activateBrowserWallet, error, switchNetwork } = useEthers();
-  const { readOnlyUrls } = useConfig();
-  const [walletError, setWalletError] = useState<Error | undefined>();
-  const hasWindowFocus = useWindowFocus();
-  const [askSwitchNetwork, setAskSwitchNetwork] = useState(true);
-
-  useEffect(() => {
-    if (account) {
-      handleClose();
-    }
-  }, [account, handleClose])
-
-  useEffect(() => {
-    if (error && error.message !== walletError?.message) {
-      if (error.message.includes('Unsupported chain id')) {
-        if (hasWindowFocus && askSwitchNetwork) {
-          // Ask to change the network in the wallet.
-          switchNetwork(100)
-          setAskSwitchNetwork(false)
-        }
-      } else {
-        setWalletError(error)
-      }
-    }
-  }, [error, walletError, switchNetwork, hasWindowFocus, askSwitchNetwork])
-
-  const showError = showWalletError(walletError)
-
-  return (
-    <AppDialog
-      open={open}
-      handleClose={handleClose}
-    >
-
-      {showError && <Alert severity="error">{showError}</Alert>}
-
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>
-          <MetamaskIcon width={100} />
-          <div style={{ marginTop: 10 }}><Trans id="Connect with your MetaMask Wallet" /></div>
-        </div>
-      </div>
-    </AppDialog>
-  );
-}
-
 function WalletMenu() {
-  const [openWalletModal, setOpenWalletModal] = useState(false);
+  const {address} = getAccount();
+  const {data: player} = usePlayer(address || "")
 
-  const { account, deactivate } = useEthers();
-  const {ens} = useLookupAddress(account);
-  const {data: player} = usePlayer(account || "")
-
-  const {data: claimArgs} = useClaimArgs(account || '');
+  const {data: claimArgs} = useClaimArgs(address || '');
 
   let accountName = '';
 
-  if (ens) {
-    accountName = ens;
-  } else if (player) {
+  if (player) {
     accountName = formatPlayerName(player.name, player.id);
-  } else if (account) {
-    accountName = shortenAddress(account);
+  } else if (address) {
+    accountName = shortenAddress(address);
   }
 
-  const handleOpenWalletModal = () => {
-    setOpenWalletModal(true);
-  };
+  const { isSuccess, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_REALITIO as Address,
+    abi: RealityAbi,
+    functionName: 'claimMultipleAndWithdrawBalance',
+  })
 
-  const handleCloseWalletModal = () => {
-    setOpenWalletModal(false);
-  };
-
-  const { state, send } = useContractFunction(
-    new Contract(import.meta.env.VITE_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
-    'claimMultipleAndWithdrawBalance'
-  );
 
   const claimReality = async () => {
     if (!claimArgs) {
       return;
     }
 
-    await send(
-      claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
-    );
+    await write!({
+      recklesslySetUnpreparedArgs: [
+        claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
+      ]
+    });
   }
 
   return <>
-    <WalletDialog
-      open={openWalletModal}
-      handleClose={handleCloseWalletModal}
-    />
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {!account && <Button onClick={handleOpenWalletModal} color="primary" size="large"><Trans id="Connect Wallet" /> <ArrowRight style={{marginLeft: 10}}/></Button>}
+      {!isSuccess && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
 
-      {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
-
-      {account && <>
+      {address && <>
         <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>
-          <Blockies seed={account} size={7} scale={4} />
-          <Box ml={1} sx={{display: {xs: 'none', md: 'block'}}}>{accountName}</Box>
+          <Box ml={1} sx={{display: {xs: 'none', md: 'block'}}}>Profile</Box>
         </RouterLink>
-        <LogoutIcon onClick={deactivate} style={{cursor: 'pointer'}} />
       </>}
+
+      <ConnectButton accountStatus="address" showBalance={{smallScreen: false, largeScreen: false}} />
     </Box>
   </>
 }

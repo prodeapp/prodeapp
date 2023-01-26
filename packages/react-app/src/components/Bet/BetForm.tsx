@@ -3,7 +3,6 @@ import {BigAlert, FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
@@ -11,7 +10,7 @@ import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core";
-import {getReferralKey, showWalletError} from "../../lib/helpers";
+import {getReferralKey} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
@@ -30,6 +29,8 @@ import AlertTitle from "@mui/material/AlertTitle";
 import {BetOutcomeSelect} from "./BetOutcomeSelect";
 import {useCurateItemJson} from "../../hooks/useCurateItems";
 import {useMatchesInterdependencies} from "../../hooks/useMatchesInterdependencies";
+import {getAccount} from "@wagmi/core";
+import {useNetwork} from "wagmi";
 
 export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | '';
 
@@ -43,7 +44,7 @@ type BetFormProps = {
 }
 
 function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
-  const image = useBetToken(marketId, tokenId);
+  const {data: image = ''} = useBetToken(marketId, tokenId);
 
   if (!image) {
     return null
@@ -64,8 +65,9 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 }
 
 export default function BetForm({market, cancelHandler}: BetFormProps) {
-  const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(market.id);
+  const {address} = getAccount();
+  const { chain } = useNetwork()
+  const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id);
 
   const { register, control, formState: {errors}, handleSubmit, setValue } = useForm<BetFormValues>({
     mode: 'all',
@@ -82,10 +84,10 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
 
   useEffect(()=> {
     remove();
-    events && events.forEach(() => append({value: ''}))
+    events && events.forEach(() => append({value: '', questionId: ''}))
   }, [events, append, remove]);
 
-  const { state, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
+  const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
 
   useEffect(() => {
     if (tokenId !== false) {
@@ -101,7 +103,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   const itemJson = useCurateItemJson(market.hash);
   const matchesInterdependencies = useMatchesInterdependencies(events, itemJson);
 
-  if (isLoading ) {
+  if (isLoadingEvents ) {
     return <div><Trans id="Loading..." /></div>
   }
 
@@ -113,12 +115,15 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     </>
   }
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || <Trans id="Connect your wallet to place a bet." />}</Alert>
+  if (!address) {
+    return <Alert severity="error"><Trans id="Connect your wallet to place a bet." /></Alert>
   }
 
-  if (error) {
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
+  }
+
+  if (eventsError) {
     return <Alert severity="error"><Trans id="Error loading events" />.</Alert>
   }
 
@@ -140,7 +145,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     )
   }
 
-  if (state.status === 'Mining') {
+  if (isLoading) {
     return <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>
   }
 
@@ -158,7 +163,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
         </Box>
       </BigAlert>}
 
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+      {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
       <Grid container spacing={3}>
         {fields.map((field, i) => {
 

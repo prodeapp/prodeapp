@@ -1,4 +1,4 @@
-[
+export const GeneralizedTCRAbi = [
     {
         "inputs": [
             {
@@ -1215,4 +1215,4 @@
         "stateMutability": "nonpayable",
         "type": "function"
     }
-]
+] as const

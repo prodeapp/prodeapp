@@ -1,8 +1,9 @@
 import { expect, test } from 'vitest'
 import {Outcome, Event} from "../../graphql/subgraph";
 import {getDoubleEliminationMatches} from "../brackets";
+import {Address} from "@wagmi/core";
 
-function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
+function getMockEvent(id: Address, title: string, outcomes: Outcome[]): Event {
   return {
     id: id,
     markets: [{
@@ -17,7 +18,7 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
     minBond: '0',
     lastBond: '0',
     bounty: '0',
-    arbitrator: '',
+    arbitrator: '0x0',
     category: '',
     timeout: '0',
     templateID: '2',
@@ -27,12 +28,12 @@ function getMockEvent(id: string, title: string, outcomes: Outcome[]): Event {
 test('builds a 4 team double elimination bracket', () => {
 
   const events: Event[] = [
-    getMockEvent('1', 'Who will win the match between Argentina and Brazil?', ['Argentina', 'Brazil']),
-    getMockEvent('2', 'Who will win the match between Italy and Spain?', ['Italy', 'Spain']),
-    getMockEvent('3', 'Who will win the match between Argentina and Italy?', ['Argentina', 'Italy']),
-    getMockEvent('4', 'Who will win the match between Argentina and Brazil?', ['Argentina', 'Brazil']),
-    getMockEvent('5', 'Who will win the match between Brazil and Spain?', ['Brazil', 'Spain']),
-    getMockEvent('6', 'Who will win the match between Italy and Brazil?', ['Brazil', 'Italy']),
+    getMockEvent('0x1', 'Who will win the match between Argentina and Brazil?', ['Argentina', 'Brazil']),
+    getMockEvent('0x2', 'Who will win the match between Italy and Spain?', ['Italy', 'Spain']),
+    getMockEvent('0x3', 'Who will win the match between Argentina and Italy?', ['Argentina', 'Italy']),
+    getMockEvent('0x4', 'Who will win the match between Argentina and Brazil?', ['Argentina', 'Brazil']),
+    getMockEvent('0x5', 'Who will win the match between Brazil and Spain?', ['Brazil', 'Spain']),
+    getMockEvent('0x6', 'Who will win the match between Italy and Brazil?', ['Brazil', 'Italy']),
   ];
 
   const matches = {

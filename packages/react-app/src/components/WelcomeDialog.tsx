@@ -3,19 +3,20 @@ import Button from '@mui/material/Button';
 import AppDialog from "../components/Dialog";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core"
-import {useEtherBalance, useEthers} from "@usedapp/core";
+import { getAccount } from '@wagmi/core'
 import Link from "@mui/material/Link";
 import {BRIDGE_URL} from "../lib/helpers";
+import {useBalance} from "wagmi";
 
 function WelcomeDialog() {
-  const {account} = useEthers();
-  const balance = useEtherBalance(account);
+  const {address} = getAccount();
+  const {data: balance} = useBalance({address});
 
   const [alreadyOpened, setAlreadyOpened] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(balance === undefined ? false : balance.eq(0));
+    setOpen(balance?.value === undefined ? false : balance.value.eq(0));
   }, [balance])
 
   const handleClose = () => {

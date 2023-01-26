@@ -1,8 +1,7 @@
 import React from "react";
 import Grid from '@mui/material/Grid';
-import {formatAmount, getMedalColor} from "../../lib/helpers";
+import {formatAmount, getMedalColor, shortenAddress} from "../../lib/helpers";
 import {DIVISOR} from "../../hooks/useMarketForm";
-import {shortenAddress} from "@usedapp/core";
 import { Trans } from '@lingui/react';
 import {styled} from "@mui/material/styles";
 import {Market} from "../../graphql/subgraph";

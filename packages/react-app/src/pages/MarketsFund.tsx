@@ -4,15 +4,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useForm} from "react-hook-form";
 import { ErrorMessage } from '@hookform/error-message';
-import {useContractFunction, useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import {useParams} from "react-router-dom";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core"
-import {Contract} from "@ethersproject/contracts";
-import {Market__factory} from "../typechain";
 import {parseUnits} from "@ethersproject/units";
-import {showWalletError} from "../lib/helpers";
+import {Address, getAccount} from "@wagmi/core";
+import {useNetwork} from "wagmi";
+import {useContractWrite} from "wagmi";
+import {MarketAbi} from "../abi/Market";
 
 export type FundMarketFormData = {
   value: string
@@ -21,7 +21,8 @@ export type FundMarketFormData = {
 
 function MarketsFund() {
   const { id: marketId } = useParams();
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
 
   const {register, handleSubmit, formState: { errors, isValid }} = useForm<FundMarketFormData>({
     mode: 'all',
@@ -31,28 +32,33 @@ function MarketsFund() {
     }
   });
 
-  const { state, send } = useContractFunction(
-    new Contract(String(marketId), Market__factory.createInterface()),
-    'fundMarket'
-  );
+  const { isSuccess, error, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: String(marketId) as Address,
+    abi: MarketAbi,
+    functionName: 'fundMarket',
+  })
 
   const onSubmit = async (data: FundMarketFormData) => {
-    await send(
-      data.message,
-      {
+    await write!({
+      recklesslySetUnpreparedArgs: [data.message],
+      recklesslySetUnpreparedOverrides: {
         value: parseUnits(String(data.value), 18),
       }
-    );
+    });
   }
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || <Trans id="Connect your wallet to fund a market." />}</Alert>
+  if (!address) {
+    return <Alert severity="error"><Trans id="Connect your wallet to fund a market." /></Alert>
+  }
+
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
   }
 
   return <>
-    {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
-    {state.status === 'Success' && <Alert severity="success" sx={{mb: 2}}><Trans id="Market funded successfully!" /></Alert>}
+    {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
+    {isSuccess && <Alert severity="success" sx={{mb: 2}}><Trans id="Market funded successfully!" /></Alert>}
 
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>

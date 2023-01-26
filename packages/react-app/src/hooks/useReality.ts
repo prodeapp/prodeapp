@@ -1,29 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
 import {apolloRealityQuery} from "../lib/apolloClient";
 import {BigNumber} from "@ethersproject/bignumber";
+import {Bytes} from "../abi/types";
+import {Address} from "@wagmi/core";
 
 interface ClaimQuestion {
-  questionId: string
+  questionId: Bytes
   historyHash: string
   currentAnswer: string
   bounty: string
   responses: {
-    commitmentId: string
-    answer: string
-    user: string
+    commitmentId: Bytes
+    answer: Bytes
+    user: Address
     bond: string
-    historyHash: string
+    historyHash: Bytes
   }[]
 }
 
 interface ClaimableItem {
   total: BigNumber,
-  question_ids: string[],
-  answer_lengths: number[],
-  answers: string[],
-  answerers: string[],
+  question_ids: Bytes[],
+  answer_lengths: BigNumber[],
+  answers: Bytes[],
+  answerers: Address[],
   bonds: BigNumber[],
-  history_hashes: string[]
+  history_hashes: Bytes[]
 }
 
 export const getUseClaimArgsKey = (account: string) => ["useClaimArgs", account];
@@ -143,12 +145,12 @@ function mergeClaimableItems(claimableItems: ClaimableItem[]): ClaimableItem {
 function possibleClaimableItems(question_detail: ClaimQuestion, account: string): ClaimableItem | false {
   let ttl = BigNumber.from(0);
 
-  let question_ids = [];
-  let answer_lengths = [];
+  let question_ids: Bytes[] = [];
+  let answer_lengths: BigNumber[] = [];
   let claimable_bonds = [];
-  let claimable_answers = [];
-  let claimable_answerers = [];
-  let claimable_history_hashes = [];
+  let claimable_answers: Bytes[] = [];
+  let claimable_answerers: Address[] = [];
+  let claimable_history_hashes: Bytes[] = [];
 
   let is_first = true;
   let is_yours = false;
@@ -204,7 +206,7 @@ function possibleClaimableItems(question_detail: ClaimQuestion, account: string)
   }
 
   question_ids.push(question_detail.questionId);
-  answer_lengths.push(claimable_bonds.length);
+  answer_lengths.push(BigNumber.from(claimable_bonds.length));
 
   // For the history hash, each time we need to provide the previous hash in the history
   // So delete the first item, and add 0x0 to the end.

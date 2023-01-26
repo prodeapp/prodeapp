@@ -5,11 +5,12 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react';
-import {useContractFunction} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
 import { parseEther } from "@ethersproject/units";
 import {BigNumber} from "@ethersproject/bignumber";
-
+import {useContractWrite} from "wagmi";
+import {Address, getContract} from "@wagmi/core"
+import {Bytes} from "../abi/types";
 
 interface VoucherData {
   address: string
@@ -32,7 +33,7 @@ const BATCHER_ABI = [
     stateMutability: 'payable',
     type: 'function'
   }
-]
+] as const
 
 const VOUCHER_MANAGER_ABI = [
   {
@@ -45,9 +46,17 @@ const VOUCHER_MANAGER_ABI = [
 ]
 
 function SendVouchers() {
-  const { state, send } = useContractFunction(new Contract(TRANSACTION_BATCHER, BATCHER_ABI), 'batchSend');
+  const { isSuccess, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: TRANSACTION_BATCHER,
+    abi: BATCHER_ABI,
+    functionName: 'batchSend',
+  })
 
-  const voucherContract = new Contract(import.meta.env.VITE_VOUCHER_MANAGER as string, VOUCHER_MANAGER_ABI);
+  const voucherContract = getContract({
+    address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+    abi: VOUCHER_MANAGER_ABI,
+  });
 
   const [vouchers, setVouchers] = useState<VoucherData[]>([]);
 
@@ -62,22 +71,26 @@ function SendVouchers() {
   const sendVouchers = async () => {
     const values: BigNumber[] = vouchers.map(voucher => parseEther(voucher.value));
 
-    await send(
-      Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
-      values,
-      vouchers.map(async (voucher) => (await voucherContract.populateTransaction.fundAddress(voucher.address)).data),
-      {
+    await write!({
+      recklesslySetUnpreparedArgs: [
+        Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
+        values,
+        await Promise.all(
+          vouchers.map(async (voucher) => ((await voucherContract.populateTransaction.fundAddress(voucher.address)).data! as Bytes))
+        ),
+      ],
+      recklesslySetUnpreparedOverrides: {
         value: values.reduce((partialSum, a) => partialSum.add(a), BigNumber.from(0))
       }
-    );
+    });
   }
 
   return (
     <Container sx={{mt: 10}}>
 
-      {state.status === 'Success' && <Alert severity="success"><Trans id="Vouchers sent" /></Alert>}
+      {isSuccess && <Alert severity="success"><Trans id="Vouchers sent" /></Alert>}
 
-      {state.status !== 'Success' && <div style={{maxWidth: '700px', margin: '0 auto'}}>
+      {!isSuccess && <div style={{maxWidth: '700px', margin: '0 auto'}}>
         <FormRow>
           <FormLabel>Enter one address and amount in xDAI on each line.</FormLabel>
           <div style={{width: '100%'}}>

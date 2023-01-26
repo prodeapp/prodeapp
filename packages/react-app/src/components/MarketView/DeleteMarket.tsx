@@ -1,25 +1,29 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import {useContractFunction} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {KeyValue__factory} from "../../typechain";
 import { Trans } from '@lingui/react';
+import {useContractWrite} from "wagmi";
+import {KeyValueAbi} from "../../abi/KeyValue";
+import {Address} from "@wagmi/core"
 
 function DeleteMarket({marketId}: {marketId: string}) {
-  const { state, send } = useContractFunction(
-    new Contract(import.meta.env.VITE_KEY_VALUE as string, KeyValue__factory.createInterface()),
-    'setValue'
-  );
+  const { isSuccess, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_KEY_VALUE as Address,
+    abi: KeyValueAbi,
+    functionName: 'setValue',
+  })
 
   const deleteMarket = async () => {
-    await send(
-      'deleteMarket',
-      marketId
-    );
+    await write!({
+      recklesslySetUnpreparedArgs: [
+        'deleteMarket',
+        marketId
+      ]
+    });
   }
 
-  if (state.status === 'Success') {
+  if (isSuccess) {
     return <Alert severity="success"><Trans id="This market has been deleted." /></Alert>
   }
 

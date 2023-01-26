@@ -1,4 +1,4 @@
-[
+export const ArbitratorAbi = [
   {
     "type": "function",
     "stateMutability": "view",
@@ -18,4 +18,4 @@
     ],
     "constant": true
   }
-]
+] as const

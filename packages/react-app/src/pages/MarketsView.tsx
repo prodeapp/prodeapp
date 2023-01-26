@@ -22,8 +22,8 @@ import {ReactComponent as TwitterIcon} from "../assets/icons/twitter.svg";
 import Button from "@mui/material/Button";
 import {ReactComponent as ArrowRightIcon} from "../assets/icons/arrow-right.svg";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
-import { useEthers} from "@usedapp/core";
 import DeleteMarket from "../components/MarketView/DeleteMarket";
+import {getAccount} from "@wagmi/core";
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
   background: theme.palette.secondary.main,
@@ -46,7 +46,7 @@ function MarketsView() {
   const [searchParams] = useSearchParams();
   const [onlyMyBets, setOnlyMyBets] = useState(false);
   const theme = useTheme();
-  const {account} = useEthers();
+  const {address} = getAccount();
 
   useEffect(() => {
     const referralId = searchParams.get('referralId');
@@ -80,7 +80,7 @@ function MarketsView() {
             <MarketStatus marketId={market.id} />
             <h2 style={{fontSize: '27.65px', marginTop: '10px'}}>{market.name}</h2>
 
-            {account?.toLowerCase() === market.creator && market.pool === '0' && <div style={{marginBottom: '20px'}}>
+            {address?.toLowerCase() === market.creator && market.pool === '0' && <div style={{marginBottom: '20px'}}>
               <DeleteMarket marketId={market.id} />
             </div>}
 
@@ -110,7 +110,7 @@ function MarketsView() {
                 <Tab label={i18n._("Results")} value="results" {...a11yProps(1)} />
                 <Tab label={i18n._("Statistics")} value="stats" {...a11yProps(2)} />
               </Tabs>
-              {account && section === 'bets' && <div>
+              {address && section === 'bets' && <div>
                 <FormGroup>
                   <FormControlLabel
                     control={

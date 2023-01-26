@@ -3,25 +3,30 @@ import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core";
 import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Skeleton, Typography, useTheme } from "@mui/material";
-import { formatAmount } from "../../lib/helpers";
+import {formatAmount, shortenAddress} from "../../lib/helpers";
 import { BoxRow } from "..";
 import { useMarketReferrals } from "../../hooks/useMarketReferrals";
 import { MarketReferral } from "../../graphql/subgraph";
 import { ExpandMoreOutlined } from "@mui/icons-material";
-import { shortenAddress, useContractFunction } from "@usedapp/core";
-import { Contract } from "@ethersproject/contracts";
-import { Manager__factory } from "../../typechain";
+import {useContractWrite} from "wagmi";
+import {ManagerAbi} from "../../abi/Manager";
+import {Address} from "@wagmi/core";
 
 function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     const theme = useTheme();
 
-    const { send, state } = useContractFunction(new Contract(marketReferral.manager, Manager__factory.createInterface()), 'claimReferralReward');
+    const { isLoading, isSuccess, isError, write } = useContractWrite({
+        mode: 'recklesslyUnprepared',
+        address: marketReferral.manager,
+        abi: ManagerAbi,
+        functionName: 'claimReferralReward',
+    })
 
-    const handleClaimOnClick = async (manager: string) => {
-        await send(manager);
+    const handleClaimOnClick = async (manager: Address) => {
+        await write!({recklesslySetUnpreparedArgs: [manager]});
     };
 
-    if (marketReferral.claimed || state.status === 'Success') {
+    if (marketReferral.claimed || isSuccess) {
         return <>{i18n._("Already Claimed") + '!'}</>;
     }
 
@@ -29,13 +34,13 @@ function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
         return <div><Trans id="Waiting for prize distribution" /></div>;
     }
 
-    if (state.status === 'Mining') {
+    if (isLoading) {
         return <CircularProgress />;
     }
 
     return <div style={{display:'flex'}}>
         <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans id="Claim" /></Button>
-        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans id="Error" /></Typography> : null}
+        {isError ? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans id="Error" /></Typography> : null}
     </div>
 }
 

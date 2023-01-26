@@ -6,9 +6,6 @@ import { ErrorMessage } from '@hookform/error-message';
 import {FormControl, MenuItem, Select} from "@mui/material";
 import {FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS} from "../lib/curate";
 import {getQuestionsHash} from "../lib/reality";
-import {useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {GeneralizedTCR__factory} from "../typechain";
 import TextField from '@mui/material/TextField';
 import {useParams} from "react-router-dom";
 import Alert from "@mui/material/Alert";
@@ -19,7 +16,10 @@ import EventsPreview from "../components/Curate/EventsPreview";
 import {CurateSubmitFormValues} from "../components/Curate";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core"
-import {showWalletError} from "../lib/helpers";
+import {getAccount} from "@wagmi/core";
+import {useContractWrite, useNetwork} from "wagmi";
+import {GeneralizedTCRAbi} from "../abi/GeneralizedTCR";
+import {Address} from "@wagmi/core"
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -96,9 +96,10 @@ function CurateSubmit() {
   const { data: market } = useMarket(String(marketId));
   const { isLoading, data: events } = useEvents(String(marketId));
 
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
 
-  const submissionDeposit = useSubmissionDeposit(import.meta.env.VITE_CURATE_REGISTRY as string);
+  const {data: submissionDeposit} = useSubmissionDeposit(import.meta.env.VITE_CURATE_REGISTRY as Address);
 
   const useFormReturn = useForm<CurateSubmitFormValues>({defaultValues: {
     name: '',
@@ -118,7 +119,12 @@ function CurateSubmit() {
 
   const format = useWatch({control, name: 'format'});
 
-  const { state, send } = useContractFunction(new Contract(import.meta.env.VITE_CURATE_REGISTRY as string, GeneralizedTCR__factory.createInterface()), 'addItem');
+  const { isSuccess, error, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_CURATE_REGISTRY as Address,
+    abi: GeneralizedTCRAbi,
+    functionName: 'addItem',
+  })
 
   useEffect(() => {
     if (questionsUseFieldArrayReturn.fields.length > 0 || !events) {
@@ -138,9 +144,12 @@ function CurateSubmit() {
     }
   }, [market, setValue])
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || i18n._("Connect your wallet to verify a market.")}</Alert>
+  if (!address) {
+    return <Alert severity="error">{i18n._("Connect your wallet to verify a market.")}</Alert>
+  }
+
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
   }
 
   if (isLoading) {
@@ -160,24 +169,26 @@ function CurateSubmit() {
         data.questions.map(question => question.value)
       )
 
-      await send(
-        encodedParams,
-        {
+      await write!({
+        recklesslySetUnpreparedArgs: [
+          encodedParams,
+        ],
+        recklesslySetUnpreparedOverrides: {
           value: submissionDeposit
         }
-      );
+      });
     } catch (e: any) {
       alert(e?.message || i18n._("Unexpected error"));
     }
   }
 
-  if (state.status === 'Success') {
+  if (isSuccess) {
     return <Alert severity="success"><Trans id="Market sent to Kleros Curate" /></Alert>
   }
 
   return <FormProvider {...useFormReturn}>
     <form onSubmit={handleSubmit(onSubmit)}>
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+      {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
       <BoxWrapper>
         <BoxRow>
           <BoxLabelCell><Trans id="Market name" /></BoxLabelCell>

@@ -1,15 +1,28 @@
-import {useCall} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
 import {BigNumber} from "@ethersproject/bignumber";
-import {Market__factory} from "../typechain";
+import {useQuery} from "@tanstack/react-query";
+import {getContract, getProvider} from "@wagmi/core";
+import {MarketAbi} from "../abi/Market";
 
 export const useBetToken = (marketId: string, tokenId: BigNumber) => {
-  const { value: tokenUri } = useCall({ contract: new Contract(marketId, Market__factory.createInterface()), method: 'tokenURI', args: [tokenId] }) || {}
+  return useQuery<string, Error>(
+    ["useBetToken", marketId, tokenId],
+    async () => {
+      const contract = getContract({
+        address: marketId,
+        abi: MarketAbi,
+        signerOrProvider: getProvider(),
+      })
 
-  if (tokenUri !== undefined) {
-    const data = JSON.parse(atob(tokenUri[0].split(',')[1]));
-    return data.image
-  }
+      const tokenUri = await contract.tokenURI(tokenId)
 
-  return '';
+      if (tokenUri !== undefined) {
+        const data = JSON.parse(atob(tokenUri.split(',')[1]));
+        return data.image
+      }
+
+      return ''
+    }, {
+      enabled: !!marketId && !!tokenId
+    }
+  );
 };

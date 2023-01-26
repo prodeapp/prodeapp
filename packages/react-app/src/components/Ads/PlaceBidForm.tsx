@@ -1,11 +1,8 @@
 import React, {useEffect} from "react";
 import {FormError, BoxWrapper, BoxRow} from "../../components"
 import {ErrorMessage} from "@hookform/error-message";
-import {useCall, useContractFunction, useEthers} from "@usedapp/core";
 import {Contract} from "@ethersproject/contracts";
-import {FirstPriceAuction__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
-import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
 import FormHelperText from "@mui/material/FormHelperText";
 import { Trans } from '@lingui/react'
@@ -15,15 +12,21 @@ import {UseFormHandleSubmit, UseFormRegister, UseFormWatch} from "react-hook-for
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {parseUnits} from "@ethersproject/units";
 import {BigNumber} from "@ethersproject/bignumber";
+import {getAccount} from "@wagmi/core";
+import {useContractRead, useContractWrite, useNetwork} from "wagmi";
+import {RealityAbi} from "../../abi/RealityETH_v3_0";
+import {FirstPriceAuctionAbi} from "../../abi/FirstPriceAuction";
+import {Address} from "@wagmi/core"
+import {Bytes} from "../../abi/types";
 
 export type PlaceBidFormValues = {
-  market: string
+  market: Address | ''
   bid: string
   bidPerSecond: string
 }
 
 type PlaceBidFormProps = {
-  itemId: string
+  itemId: Bytes
   currentBid: string
   register: UseFormRegister<PlaceBidFormValues>
   errors: FieldErrors<PlaceBidFormValues>
@@ -32,60 +35,69 @@ type PlaceBidFormProps = {
   setShowActions: (showActions: boolean) => void
 }
 
-const firstPriceAuctionContract = new Contract(import.meta.env.VITE_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
-
 export default function PlaceBidForm({itemId, currentBid, register, errors, watch, handleSubmit, setShowActions}: PlaceBidFormProps) {
-  const { account, error: walletError } = useEthers();
+  const { chain } = useNetwork()
+  const {address} = getAccount();
 
-  const { state, send } = useContractFunction(firstPriceAuctionContract, 'placeBid');
+  const { isLoading, isSuccess, error, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+    abi: FirstPriceAuctionAbi,
+    functionName: 'placeBid',
+  })
 
-  const { value: MIN_OFFER_DURATION } = useCall({ contract: firstPriceAuctionContract, method: 'MIN_OFFER_DURATION', args: [] }) || {value: [BigNumber.from(0)]}
+  const {data: MIN_OFFER_DURATION} = useContractRead({
+    address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+    abi: FirstPriceAuctionAbi,
+    functionName: 'MIN_OFFER_DURATION',
+  })
 
   useEffect(() => {
-    if (!account || showWalletError(walletError)) {
+    if (!address || !chain || chain.unsupported) {
       setShowActions(false);
       return;
     }
 
-    setShowActions(state.status !== 'Success');
-  }, [state, account, walletError, setShowActions]);
+    setShowActions(!isSuccess);
+  }, [isSuccess, address, chain, setShowActions]);
 
   const bid = watch('bid');
 
   const validBid = (bidPerSecond: string) => {
-    if (!bidPerSecond || MIN_OFFER_DURATION[0].eq(0)) {
+    if (!bidPerSecond || !MIN_OFFER_DURATION || MIN_OFFER_DURATION.eq(0)) {
       return false;
     }
 
-    return ((Number(bid) + Number(currentBid)) / Number(bidPerSecond)) > MIN_OFFER_DURATION[0].toNumber();
+    return ((Number(bid) + Number(currentBid)) / Number(bidPerSecond)) > MIN_OFFER_DURATION.toNumber();
   }
 
-  const showError = showWalletError(walletError)
-  if (showError) {
-    return <Alert severity="error">{showError}</Alert>
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
   }
 
-  if (state.status === 'Success') {
+  if (isSuccess) {
     return <Alert severity="success"><Trans id="Bid placed." /></Alert>
   }
 
   const onSubmit = async (data: PlaceBidFormValues) => {
-    await send(
-      itemId,
-      data.market,
-      parseUnits(data.bidPerSecond, 18),
-      {
+    await write!({
+      recklesslySetUnpreparedArgs: [
+        itemId,
+        data.market as Address,
+        parseUnits(data.bidPerSecond, 18),
+      ],
+      recklesslySetUnpreparedOverrides: {
         value: parseUnits(data.bid, 18)
       }
-    )
+    })
   }
 
   const isEdit = currentBid !== '0';
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="place-bid-form">
-      {state.status === 'Mining' && <div style={{textAlign: 'center', margin: '15px 0'}}><CircularProgress /></div>}
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+      {isLoading && <div style={{textAlign: 'center', margin: '15px 0'}}><CircularProgress /></div>}
+      {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
 
       <BoxWrapper>
         <BoxRow>

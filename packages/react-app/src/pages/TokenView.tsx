@@ -12,7 +12,7 @@ function TokenView() {
   const { id, tokenId } = useParams();
   const { isLoading, data: bet } = useBet(String(id), String(tokenId));
 
-  const image = useBetToken(String(id), BigNumber.from(tokenId));
+  const {data: image = ''} = useBetToken(String(id), BigNumber.from(tokenId));
 
   if (isLoading) {
     return <div><Trans id="Loading..." /></div>

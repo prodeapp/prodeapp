@@ -10,12 +10,13 @@ import {queryClient} from "../../lib/react-query";
 import { Trans } from '@lingui/react'
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
-import {useContractFunction} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {RealityETH_v3_0__factory} from "../../typechain";
 import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
+import {useContractWrite} from "wagmi";
+import {RealityAbi} from "../../abi/RealityETH_v3_0";
+import {Address} from "@wagmi/core"
+import {BigNumber} from "@ethersproject/bignumber";
 
 const bigColumnSx = {
   width: {xs: '100%', md: '40%'},
@@ -96,33 +97,37 @@ function AnswerColumn(event: Event, finalized: boolean) {
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
   const { locale } = useI18nContext();
 
-  const { state, send } = useContractFunction(
-    new Contract(import.meta.env.VITE_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
-    'reopenQuestion'
-  );
+  const { isSuccess, write, error } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_REALITIO as Address,
+    abi: RealityAbi,
+    functionName: 'reopenQuestion',
+  })
 
   useEffect(() => {
-    if (state.errorMessage) {
-      alert(state.errorMessage);
+    if (error) {
+      alert(error.message);
     }
-  }, [state]);
+  }, [error]);
 
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
-        await send(
-          event.templateID,
-          encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
-          event.arbitrator,
-          event.timeout,
-          event.openingTs,
-          0,
-          event.minBond,
-          event.id
-        );
+        await write!({
+          recklesslySetUnpreparedArgs: [
+            BigNumber.from(event.templateID),
+            encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
+            event.arbitrator,
+            Number(event.timeout),
+            Number(event.openingTs),
+            BigNumber.from(0),
+            BigNumber.from(event.minBond),
+            event.id
+          ]
+        });
       }
 
-      if (state.status === 'Success') {
+      if (isSuccess) {
         // TODO: update event in cache to allow to answer instantly
         return <div><Trans id="Question reopened!" /></div>
       }
@@ -162,7 +167,7 @@ export default function Results({marketId}: {marketId: string}) {
     if (currentEvent) {
       // refetch events and question just in case the user has provided an answer
       queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id]);
-      queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as string, currentEvent.id]);
+      queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as Address, currentEvent.id]);
     }
   }
 

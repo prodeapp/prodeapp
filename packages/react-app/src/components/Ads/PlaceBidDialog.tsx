@@ -6,9 +6,10 @@ import DialogActions from "@mui/material/DialogActions";
 import PlaceBidForm, {PlaceBidFormValues} from "./PlaceBidForm";
 import { Trans } from '@lingui/react';
 import {BidInfo} from "../../pages/AdsView";
+import {Bytes} from "../../abi/types";
 
 type PlaceBidDialogProps = DialogProps & {
-  itemId: string
+  itemId: Bytes
   bidInfo: BidInfo
 }
 

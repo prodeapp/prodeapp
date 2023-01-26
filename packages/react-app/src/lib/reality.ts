@@ -1,15 +1,21 @@
 // https://github.com/RealityETH/reality-eth-monorepo/blob/d95a9f4ee5c96f88b07651a63b3b6bf5f0e0074d/packages/reality-eth-lib/formatters/question.js#L221
-import {MarketFactory} from "../typechain";
 import {keccak256} from "@ethersproject/solidity";
 import {BigNumber} from "@ethersproject/bignumber";
 import {hexlify, hexZeroPad} from "@ethersproject/bytes";
 import {FormEventOutcomeValue} from "../components/Answer/AnswerForm";
+import {Bytes} from "../abi/types";
 
 export const REALITY_TEMPLATE_SINGLE_SELECT = '2';
 export const REALITY_TEMPLATE_MULTIPLE_SELECT = '3';
 
 export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
 export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
+
+export interface MarketFactoryRealityQuestionStruct {
+  templateID: BigNumber
+  question: string
+  openingTS: number
+}
 
 export function encodeQuestionText(
   qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
@@ -34,7 +40,7 @@ export function encodeQuestionText(
   return qText;
 }
 
-export function getQuestionId(questionData: MarketFactory.RealitioQuestionStruct, arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, msgSender: string) {
+export function getQuestionId(questionData: MarketFactoryRealityQuestionStruct, arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, msgSender: string) {
   const contentHash = keccak256(
     ['uint256', 'uint32', 'string'],
     [questionData.templateID, questionData.openingTS, questionData.question]
@@ -53,7 +59,7 @@ export function getQuestionsHash(questionIDs: string[]) {
   );
 }
 
-export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | '') {
+export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | ''): Bytes {
   if (outcome === '') {
     // it should never happen because this function is called within a form so the form validation should prevent it
     // we add this check anyway to simplify the usage of this function
@@ -73,9 +79,9 @@ export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeV
     }
 
     const answerChoice = (outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0);
-    return hexZeroPad(hexlify(answerChoice), 32);
+    return hexZeroPad(hexlify(answerChoice), 32) as Bytes;
   }
 
   // single-select
-  return hexZeroPad(hexlify(outcome), 32);
+  return hexZeroPad(hexlify(outcome), 32) as Bytes;
 }

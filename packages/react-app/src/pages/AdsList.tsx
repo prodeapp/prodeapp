@@ -31,7 +31,7 @@ function getBidsInfo(ad: SVGAd): {max: BigNumber, min: BigNumber} {
 }
 
 function AdBox({ad}: {ad: SVGAd}) {
-  const svgAd = useSvgAd(ad.id);
+  const {data: svgAd} = useSvgAd(ad.id);
 
   const {max: maxBid, min: minBid} = getBidsInfo(ad);
 

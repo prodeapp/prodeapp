@@ -10,23 +10,24 @@ import {TableHeader, TableBody} from "../components"
 import {useAd} from "../hooks/useAd";
 import {useSvgAd} from "../hooks/useSvgAd";
 import {AdBid} from "../graphql/subgraph";
-import {formatAmount, getBidBalance, getMedalColor} from "../lib/helpers";
+import {formatAmount, getBidBalance, getMedalColor, shortenAddress} from "../lib/helpers";
 import Typography from "@mui/material/Typography";
 import PlaceBidDialog from "../components/Ads/PlaceBidDialog";
 import {AdImg} from "../components/ImgSvg";
 import {ReactComponent as MedalIcon} from "../assets/icons/medal.svg";
-import {shortenAddress, useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {FirstPriceAuction__factory} from "../typechain";
+import { getAccount } from '@wagmi/core'
 import {formatUnits} from "@ethersproject/units";
+import {useContractWrite} from "wagmi";
+import {FirstPriceAuctionAbi} from "../abi/FirstPriceAuction";
+import {Address} from "@wagmi/core"
 
 export interface BidInfo {
-  market: string
+  market: Address | ''
   bid: string
   bidPerSecond: string
 }
 
-const EMPTY_BID_INFO = {
+const EMPTY_BID_INFO: BidInfo = {
   market: '',
   bid: '0',
   bidPerSecond: '0'
@@ -56,26 +57,29 @@ export function useIndexedBids(bids?: AdBid[]) {
   }, [bids])
 }
 
-const firstPriceAuctionContract = new Contract(import.meta.env.VITE_FIRST_PRICE_AUCTION as string, FirstPriceAuction__factory.createInterface());
-
 function AdsView() {
   const { id } = useParams();
   const { isLoading, data: ad } = useAd(String(id));
   const groupedBids = useIndexedBids(ad?.bids);
-  const svgAd = useSvgAd(String(id));
+  const {data: svgAd} = useSvgAd(String(id) as Address);
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO);
-  const {account} = useEthers();
+  const {address} = getAccount();
 
-  const { state: removeBidState, send: removeBid } = useContractFunction(firstPriceAuctionContract, 'removeBid');
+  const { isSuccess, error, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+    abi: FirstPriceAuctionAbi,
+    functionName: 'removeBid',
+  })
 
   const handleClose = () => {
     setBidInfo(EMPTY_BID_INFO);
     setOpenModal(false);
   }
 
-  const handleOpen = (market: string, bid: string, bidPerSecond: string) => {
+  const handleOpen = (market: Address | '', bid: string, bidPerSecond: string) => {
     setBidInfo({market, bid, bidPerSecond});
     setOpenModal(true);
   }
@@ -90,12 +94,14 @@ function AdsView() {
 
   const itemId = ad?.curateSVGAdItem?.id;
 
-  const handleRemove = (itemId: string, marketId: string) => {
+  const handleRemove = (itemId: Address, marketId: Address) => {
     return async () => {
-      await removeBid(
-        itemId,
-        marketId
-      )
+      await write!({
+        recklesslySetUnpreparedArgs: [
+          itemId,
+          marketId
+        ]
+      })
 
       // TODO: remove bid from react-query cache
     }
@@ -120,8 +126,8 @@ function AdsView() {
           </div>
         </GridLeftColumn>
         <Grid item xs={12} lg={8} sx={{p: 3}}>
-          {removeBidState.status === 'Success' && <Alert severity="success"><Trans id="Bid removed." /></Alert>}
-          {removeBidState.errorMessage && <Alert severity="error">{removeBidState.errorMessage}</Alert>}
+          {isSuccess && <Alert severity="success"><Trans id="Bid removed." /></Alert>}
+          {error && <Alert severity="error">{error.message}</Alert>}
           {groupedBids.length === 0 && <Alert severity="info"><Trans id="No bids found." /></Alert>}
           {groupedBids.map((bidInfo, i) => {
             return <Box key={i} sx={{my: 3}}>
@@ -149,7 +155,7 @@ function AdsView() {
                     </div>
                     <div style={{width: '25%'}}>{formatAmount(getBidBalance(bid))}</div>
                     <div style={{width: '25%'}}>
-                      {account?.toLowerCase() === bid.bidder.toLowerCase() && itemId && <>
+                      {address?.toLowerCase() === bid.bidder.toLowerCase() && itemId && <>
                         <Button color="primary" variant="outlined" size="small" onClick={handleRemove(itemId, bid.market.id)}>Remove</Button>
                         <Button color="primary" variant="outlined" size="small" onClick={() => handleOpen(bidInfo.market.id, formatUnits(bid.balance, 18), formatUnits(bid.bidPerSecond, 18))}>Update</Button>
                       </>}

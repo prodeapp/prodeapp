@@ -1,10 +1,18 @@
-import {encodeQuestionText, getQuestionId, REALITY_TEMPLATE_SINGLE_SELECT} from "../lib/reality";
+import {
+  encodeQuestionText,
+  getQuestionId,
+  MarketFactoryRealityQuestionStruct,
+  REALITY_TEMPLATE_SINGLE_SELECT
+} from "../lib/reality";
 import {parseUnits} from "@ethersproject/units";
-import {useCall, useContractFunction} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {MarketFactory, MarketFactory__factory} from "../typechain";
 import {BigNumber} from "@ethersproject/bignumber";
 import {zonedTimeToUtc} from "date-fns-tz";
+import {Address} from "@wagmi/core";
+import {useContractReads, useContractWrite} from "wagmi";
+import {MarketFactoryAbi} from "../abi/MarketFactory";
+import {useState} from "react";
+import {Interface} from "@ethersproject/abi";
+import {MarketAbi} from "../abi/Market";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -24,7 +32,7 @@ export type MarketFormStep2Values = {
   prizeWeights: PrizeWeight[]
   prizeDivisor: number
   price: number
-  manager: string
+  manager: Address | ''
   managementFee: number
 }
 
@@ -44,7 +52,7 @@ export function getEventData(
   }
 }
 
-function orderByQuestionId(questionsData: MarketFactory.RealitioQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, marketFactory: string): MarketFactory.RealitioQuestionStruct[] {
+function orderByQuestionId(questionsData: MarketFactoryRealityQuestionStruct[], arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, marketFactory: string): MarketFactoryRealityQuestionStruct[] {
   const questionsDataWithQuestionId = questionsData.map(questionData => {
     return {
       questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, marketFactory),
@@ -57,14 +65,45 @@ function orderByQuestionId(questionsData: MarketFactory.RealitioQuestionStruct[]
     .map(qd => qd.questionData)
 }
 
-const marketFactoryContract = new Contract(import.meta.env.VITE_MARKET_FACTORY as string, MarketFactory__factory.createInterface())
+interface UseMarketFormReturn {
+  isLoading: boolean
+  isSuccess: boolean
+  error: Error | null
+  createMarket: (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => Promise<void>
+  marketId: string
+}
 
-export default function useMarketForm() {
-  const { state, send, events } = useContractFunction(marketFactoryContract, 'createMarket');
+export default function useMarketForm(): UseMarketFormReturn {
+  const [marketId, setMarketId] = useState<Address | ''>('')
 
-  const { value: arbitrator } = useCall({ contract: marketFactoryContract, method: 'arbitrator', args: [] }) || {}
-  const { value: realitio } = useCall({ contract: marketFactoryContract, method: 'realitio', args: [] }) || {}
-  const { value: timeout } = useCall({ contract: marketFactoryContract, method: 'QUESTION_TIMEOUT', args: [] }) || {}
+  const { isSuccess, error, writeAsync } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_MARKET_FACTORY as Address,
+    abi: MarketFactoryAbi,
+    functionName: 'createMarket',
+  })
+
+  const {data} = useContractReads({
+    contracts: [
+      {
+        address: import.meta.env.VITE_MARKET_FACTORY as Address,
+        abi: MarketFactoryAbi,
+        functionName: 'arbitrator',
+      },
+      {
+        address: import.meta.env.VITE_MARKET_FACTORY as Address,
+        abi: MarketFactoryAbi,
+        functionName: 'realitio',
+      },
+      {
+        address: import.meta.env.VITE_MARKET_FACTORY as Address,
+        abi: MarketFactoryAbi,
+        functionName: 'QUESTION_TIMEOUT',
+      },
+    ]
+  })
+
+  const [arbitrator, realitio, timeout] = [data || '', data || '', data || 0]
 
   const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
     const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC');
@@ -73,7 +112,7 @@ export default function useMarketForm() {
     const questionsData = step1State.events.map((event, i) => {
       const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market);
       return {
-        templateID: REALITY_TEMPLATE_SINGLE_SELECT,
+        templateID: BigNumber.from(REALITY_TEMPLATE_SINGLE_SELECT),
         question: encodeQuestionText('single-select', eventData.question, eventData.answers, step1State.category, 'en_US'),
         openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
       }
@@ -81,23 +120,31 @@ export default function useMarketForm() {
 
     const minBond = parseUnits(import.meta.env.VITE_MIN_BOND || '0.5', 18);
 
-    await send(
-      step1State.market,
-      'PRODE',
-      step2State.manager,
-      Math.round(step2State.managementFee * DIVISOR / 100),
-      closingTime - 1,
-      parseUnits(String(step2State.price), 18),
-      minBond,
-      orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), import.meta.env.VITE_MARKET_FACTORY as string),
-      step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
-    );
+    const data = await writeAsync!({
+      recklesslySetUnpreparedArgs: [
+        step1State.market,
+        'PRODE',
+        step2State.manager as Address,
+        BigNumber.from(Math.round(step2State.managementFee * DIVISOR / 100)),
+        BigNumber.from(closingTime - 1),
+        parseUnits(String(step2State.price), 18),
+        minBond,
+        orderByQuestionId(questionsData, String(arbitrator), Number(timeout), minBond, String(realitio), import.meta.env.VITE_MARKET_FACTORY as Address),
+        step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
+      ]
+    });
+    const receipt = await data.wait()
+
+    const ethersInterface = new Interface(MarketFactoryAbi);
+    const events = receipt.logs.map(i => ethersInterface.parseLog(i))
+    setMarketId(events?.[0].args?.market?.toLowerCase() || '')
   }
 
   return {
     isLoading: !arbitrator || !realitio || !timeout,
-    state,
+    isSuccess,
+    error,
     createMarket,
-    marketId: events?.[0].args?.market?.toLowerCase() || '',
+    marketId,
   }
 }

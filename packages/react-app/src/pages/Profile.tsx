@@ -1,7 +1,6 @@
 import { Typography, Container, Grid, Button, Skeleton } from '@mui/material';
 import { BoxRow, BoxWrapper } from '../components';
-import {formatAmount, showWalletError} from '../lib/helpers';
-import { useEthers } from "@usedapp/core";
+import {formatAmount} from '../lib/helpers';
 import { usePlayer } from "../hooks/usePlayer";
 import Alert from "@mui/material/Alert";
 import * as React from "react";
@@ -12,18 +11,23 @@ import { Bets } from '../components/ProfileView/Bets';
 import { Referrals } from '../components/ProfileView/Referrals';
 import { Markets } from '../components/ProfileView/Markets';
 import ProfileForm from "../components/ProfileView/ProfileForm";
+import {getAccount} from "@wagmi/core";
+import {useNetwork} from "wagmi";
 
 export default function Profile() {
   const { id } = useParams();
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
   const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets');
-  const playerId = id || account || '';
+  const playerId = id || address || '';
   const { data: player } = usePlayer(String(playerId));
 
   if (!id) {
-    const showError = showWalletError(walletError)
-    if (!account || showError) {
-      return <Alert severity="error">{showError || <Trans id="Connect your wallet to view your profile." />}</Alert>
+    if (!address) {
+      return <Alert severity="error"><Trans id="Connect your wallet to view your profile." /></Alert>
+    }
+    if (!chain || chain.unsupported) {
+      return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
     }
   }
 
@@ -47,7 +51,7 @@ export default function Profile() {
         </Grid>
       </Grid>
 
-      {player && account && player.id.toLowerCase() === account.toLowerCase() && <ProfileForm defaultName={player.name} />}
+      {player && address && player.id.toLowerCase() === address.toLowerCase() && <ProfileForm defaultName={player.name} />}
 
       <BoxWrapper>
         <BoxRow style={{ justifyContent: 'center' }}>

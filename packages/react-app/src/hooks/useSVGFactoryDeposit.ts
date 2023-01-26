@@ -1,15 +1,31 @@
-import {useCall} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {SVGFactory__factory} from "../typechain";
-import {useSubmissionDeposit} from "./useSubmissionDeposit";
-
-const svgFactory = new Contract(import.meta.env.VITE_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface());
+import {getSubmissionDeposit} from "./useSubmissionDeposit";
+import {useQuery} from "@tanstack/react-query";
+import {getContract, getProvider} from "@wagmi/core";
+import {SVGFactoryAbi} from "../abi/SVGFactory";
+import {Address} from "@wagmi/core"
+import {BigNumber} from "@ethersproject/bignumber";
 
 export const useSVGAdFactoryDeposit = () => {
-  const { value: technicalCurate } = useCall({ contract: svgFactory, method: 'technicalCurate', args: [] }) || {value: ['']}
-  const { value: contentCurate } = useCall({ contract: svgFactory, method: 'contentCurate', args: [] }) || {value: ['']}
-  const technicalCurateDeposit = useSubmissionDeposit(technicalCurate[0]);
-  const contentCurateDeposit = useSubmissionDeposit(contentCurate[0]);
+  return useQuery<BigNumber, Error>(
+    ["useSVGAdFactoryDeposit"],
+    async () => {
+      const contract = getContract({
+        address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
+        abi: SVGFactoryAbi,
+        signerOrProvider: getProvider(),
+      })
 
-  return technicalCurateDeposit.add(contentCurateDeposit);
+      const [technicalCurate, contentCurate] = await Promise.all([
+        contract.technicalCurate(),
+        contract.contentCurate()
+      ])
+
+      const [technicalCurateDeposit, contentCurateDeposit] = await Promise.all([
+        getSubmissionDeposit(technicalCurate),
+        getSubmissionDeposit(contentCurate)
+      ])
+
+      return technicalCurateDeposit.add(contentCurateDeposit);
+    }
+  );
 };

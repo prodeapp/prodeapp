@@ -1,14 +1,10 @@
 import React, {useState} from "react";
 import {FormRow, FormLabel, FormError} from "../components"
 import Button from '@mui/material/Button';
-import {useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core"
-import {showWalletError} from "../lib/helpers";
 import Container from "@mui/material/Container";
-import {SVGFactory__factory} from "../typechain";
 import {useSVGAdFactoryDeposit} from "../hooks/useSVGFactoryDeposit";
 import {AdImg} from "../components/ImgSvg";
 import TextField from "@mui/material/TextField";
@@ -17,6 +13,10 @@ import {useForm} from "react-hook-form";
 import {Typography} from "@mui/material";
 import {Banner} from "./MarketsCreate";
 import CircularProgress from "@mui/material/CircularProgress";
+import {getAccount} from "@wagmi/core";
+import {useContractWrite, useNetwork} from "wagmi";
+import {SVGFactoryAbi} from "../abi/SVGFactory";
+import {Address} from "@wagmi/core"
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
@@ -85,13 +85,19 @@ const isValidUrl = (url: string) => {
 function AdsCreate() {
 
   const [svg, setSvg] = useState('');
-  const [error, setError] = useState('');
+  const [svgError, setSvgError] = useState('');
 
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
 
-  const { state, send } = useContractFunction(new Contract(import.meta.env.VITE_SVG_AD_FACTORY as string, SVGFactory__factory.createInterface()), 'createAd');
+  const { isSuccess, isLoading, error, write } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
+    abi: SVGFactoryAbi,
+    functionName: 'createAd',
+  })
 
-  const baseDeposit = useSVGAdFactoryDeposit();
+  const {data: baseDeposit} = useSVGAdFactoryDeposit();
 
   const {register, handleSubmit, formState} = useForm<AdCreateFormValues>({
     mode: 'all',
@@ -101,20 +107,22 @@ function AdsCreate() {
 
   const {errors, isValid} = formState;
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || i18n._("Connect your wallet to create an ad.")}</Alert>
+  if (!address) {
+    return <Alert severity="error">{i18n._("Connect your wallet to create an ad.")}</Alert>
+  }
+
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error">{i18n._("UNSUPPORTED_CHAIN")}</Alert>
   }
 
   const onSubmit = async (data: AdCreateFormValues) => {
     try {
-      await send(
-        btoa(svg),
-        data.url,
-        {
+      await write!({
+        recklesslySetUnpreparedArgs: [btoa(svg), data.url],
+        recklesslySetUnpreparedOverrides: {
           value: baseDeposit,
         }
-      );
+      });
     } catch (e: any) {
       alert(e?.message || i18n._("Unexpected error"));
     }
@@ -122,7 +130,7 @@ function AdsCreate() {
 
   const fileChangedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) {
-      setError("Empty file");
+      setSvgError("Empty file");
       setSvg('');
       return false;
     }
@@ -130,7 +138,7 @@ function AdsCreate() {
     let file = event.target.files[0];
 
     if (!Object.values(VALID_EXTENSIONS).includes(file.type)) {
-      setError("File type not supported. Must be svg, png or jpg.");
+      setSvgError("File type not supported. Must be svg, png or jpg.");
       setSvg('');
       return false;
     }
@@ -138,7 +146,7 @@ function AdsCreate() {
     const {height, width} = await getImageDimensions(file);
 
     if (height !== IMAGE_DIMENSION.height || width !== IMAGE_DIMENSION.width) {
-      setError("Image dimension must be 290x430");
+      setSvgError("Image dimension must be 290x430");
       setSvg('');
       return false;
     }
@@ -146,12 +154,12 @@ function AdsCreate() {
     const _svg = await wrapSvg(file);
 
     if (_svg.length > (1024 * 10)) {
-      setError("SVG size must be lower than 10 KB");
+      setSvgError("SVG size must be lower than 10 KB");
       setSvg('');
       return false;
     }
 
-    setError('');
+    setSvgError('');
     setSvg(_svg)
   }
 
@@ -162,13 +170,13 @@ function AdsCreate() {
 
     <Container>
 
-      {state.status === 'Success' && <Alert severity="success"><Trans id="Ad created." /></Alert>}
+      {isSuccess && <Alert severity="success"><Trans id="Ad created." /></Alert>}
 
-      {state.status === 'Mining' && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
+      {isLoading && <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>}
 
-      {state.status !== 'Success' && state.status !== 'Mining' &&
+      {!isSuccess && !isLoading &&
       <form onSubmit={handleSubmit(onSubmit)} style={{width: '100%', maxWidth: '675px'}}>
-        {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+        {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
         <FormRow>
           <FormLabel><Trans id="Image" /></FormLabel>
           <div style={{width: '100%'}}>
@@ -184,7 +192,7 @@ function AdsCreate() {
                 Upload
               </Button>
             </label>
-            {error !== '' && <Alert severity="error" sx={{mt: 2}}>{error}</Alert>}
+            {svgError !== '' && <Alert severity="error" sx={{mt: 2}}>{svgError}</Alert>}
           </div>
         </FormRow>
 

@@ -1,18 +1,25 @@
-import {useCall} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {Market__factory} from "../typechain";
+import {MarketAbi} from "../abi/Market";
+import {useQuery} from "@tanstack/react-query";
+import { getContract, getProvider } from '@wagmi/core'
 
 export const useSubmissionPeriodEnd = (marketId: string) => {
-  const market = new Contract(marketId, Market__factory.createInterface());
+  return useQuery<number, Error>(
+    ["useSubmissionPeriodEnd", marketId],
+    async () => {
+      const contract = getContract({
+        address: marketId,
+        abi: MarketAbi,
+        signerOrProvider: getProvider(),
+      })
 
-  const { value: resultSubmissionPeriodStart } = useCall({ contract: market, method: 'resultSubmissionPeriodStart', args: [] }) || {}
-  const { value: submissionTimeout } = useCall({ contract: market, method: 'submissionTimeout', args: [] }) || {}
+      const [resultSubmissionPeriodStart, submissionTimeout] = await Promise.all([
+        contract.resultSubmissionPeriodStart(),
+        contract.submissionTimeout(),
+      ])
 
-  if (
-    !resultSubmissionPeriodStart || resultSubmissionPeriodStart[0].eq(0) || !submissionTimeout
-  ) {
-    return 0
-  }
-
-  return resultSubmissionPeriodStart[0].add(submissionTimeout[0]).toNumber();
+      return resultSubmissionPeriodStart.add(submissionTimeout).toNumber();
+    }, {
+      enabled: !!marketId
+    }
+  );
 }
