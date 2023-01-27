@@ -13,10 +13,17 @@ import { gnosis } from '@wagmi/core/chains'
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
-export const { chains, provider, webSocketProvider } = configureChains(
+gnosis.contracts = {
+  multicall3: {
+    address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 21022491,
+  },
+}
+
+export const { chains, provider } = configureChains(
   [gnosis],
   [
-    jsonRpcProvider({ rpc: chain => ({ http: gnosis.rpcUrls.default.http[0] }) }),
+    jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default.http[0] }) }),
     publicProvider(),
   ],
 );
