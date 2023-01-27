@@ -6,18 +6,17 @@ import { Link as RouterLink } from "react-router-dom";
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
 import { Trans } from '@lingui/react';
-import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, shortenAddress} from "../lib/helpers";
+import {BRIDGE_URL, formatAmount, getDocsUrl} from "../lib/helpers";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
 import {ReactComponent as Logo} from "../assets/logo.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
 import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
-import { usePlayer } from "../hooks/usePlayer";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import {useContractWrite} from "wagmi";
+import {useContractWrite, useNetwork} from "wagmi";
 import {RealityAbi} from "../abi/RealityETH_v3_0";
 import {Address} from "@wagmi/core"
+import {ConnectButton} from "./ConnectButton";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -188,18 +187,10 @@ export default function Header() {
 };
 
 function WalletMenu() {
+  const { chain } = useNetwork()
   const {address} = getAccount();
-  const {data: player} = usePlayer(address || "")
 
   const {data: claimArgs} = useClaimArgs(address || '');
-
-  let accountName = '';
-
-  if (player) {
-    accountName = formatPlayerName(player.name, player.id);
-  } else if (address) {
-    accountName = shortenAddress(address);
-  }
 
   const { isSuccess, write } = useContractWrite({
     mode: 'recklesslyUnprepared',
@@ -223,15 +214,9 @@ function WalletMenu() {
 
   return <>
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {!isSuccess && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
+      {chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
 
-      {address && <>
-        <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>
-          <Box ml={1} sx={{display: {xs: 'none', md: 'block'}}}>Profile</Box>
-        </RouterLink>
-      </>}
-
-      <ConnectButton accountStatus="address" showBalance={{smallScreen: false, largeScreen: false}} />
+      <ConnectButton />
     </Box>
   </>
 }
