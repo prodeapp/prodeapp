@@ -69,7 +69,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const { chain } = useNetwork()
   const { locale } = useI18nContext();
 
-  const { isLoading, isSuccess, error, write } = useContractWrite({
+  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
@@ -103,7 +103,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   }
 
   const onSubmit = async (data: AnswerFormValues) => {
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         event.id,
         formatOutcome(data.outcome),

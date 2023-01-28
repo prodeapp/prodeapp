@@ -56,7 +56,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
       name: defaultName,
     }});
 
-  const { isLoading, isSuccess, error, write } = useContractWrite({
+  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_KEY_VALUE as Address,
     abi: KeyValueAbi,
@@ -84,7 +84,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
   }
 
   const onSubmit = async (data: ProfileFormValues) => {
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         'setName',
         data.name

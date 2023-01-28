@@ -32,7 +32,7 @@ function MarketsFund() {
     }
   });
 
-  const { isSuccess, error, write } = useContractWrite({
+  const { isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: String(marketId) as Address,
     abi: MarketAbi,
@@ -40,7 +40,7 @@ function MarketsFund() {
   })
 
   const onSubmit = async (data: FundMarketFormData) => {
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [data.message],
       recklesslySetUnpreparedOverrides: {
         value: parseUnits(String(data.value), 18),

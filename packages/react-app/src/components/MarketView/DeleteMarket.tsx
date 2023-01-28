@@ -7,7 +7,7 @@ import {KeyValueAbi} from "../../abi/KeyValue";
 import {Address} from "@wagmi/core"
 
 function DeleteMarket({marketId}: {marketId: string}) {
-  const { isSuccess, write } = useContractWrite({
+  const { isSuccess, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_KEY_VALUE as Address,
     abi: KeyValueAbi,
@@ -15,7 +15,7 @@ function DeleteMarket({marketId}: {marketId: string}) {
   })
 
   const deleteMarket = async () => {
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         'deleteMarket',
         marketId

@@ -192,7 +192,7 @@ function WalletMenu() {
 
   const {data: claimArgs} = useClaimArgs(address || '');
 
-  const { isSuccess, write } = useContractWrite({
+  const { isSuccess, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
@@ -205,7 +205,7 @@ function WalletMenu() {
       return;
     }
 
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
       ]

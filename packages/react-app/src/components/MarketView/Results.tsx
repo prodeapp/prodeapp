@@ -97,7 +97,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
   const { locale } = useI18nContext();
 
-  const { isSuccess, write, error } = useContractWrite({
+  const { isSuccess, writeAsync, error } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
@@ -113,7 +113,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
-        await write!({
+        await writeAsync!({
           recklesslySetUnpreparedArgs: [
             BigNumber.from(event.templateID),
             encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),

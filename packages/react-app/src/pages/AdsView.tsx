@@ -67,7 +67,7 @@ function AdsView() {
   const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO);
   const {address} = getAccount();
 
-  const { isSuccess, error, write } = useContractWrite({
+  const { isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
     abi: FirstPriceAuctionAbi,
@@ -96,7 +96,7 @@ function AdsView() {
 
   const handleRemove = (itemId: Address, marketId: Address) => {
     return async () => {
-      await write!({
+      await writeAsync!({
         recklesslySetUnpreparedArgs: [
           itemId,
           marketId

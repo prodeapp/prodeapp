@@ -15,7 +15,7 @@ import {Address} from "@wagmi/core";
 function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     const theme = useTheme();
 
-    const { isLoading, isSuccess, isError, write } = useContractWrite({
+    const { isLoading, isSuccess, isError, writeAsync } = useContractWrite({
         mode: 'recklesslyUnprepared',
         address: marketReferral.manager,
         abi: ManagerAbi,
@@ -23,7 +23,7 @@ function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     })
 
     const handleClaimOnClick = async (manager: Address) => {
-        await write!({recklesslySetUnpreparedArgs: [manager]});
+        await writeAsync!({recklesslySetUnpreparedArgs: [manager]});
     };
 
     if (marketReferral.claimed || isSuccess) {

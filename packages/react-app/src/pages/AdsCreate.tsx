@@ -90,7 +90,7 @@ function AdsCreate() {
   const {address} = getAccount();
   const { chain } = useNetwork()
 
-  const { isSuccess, isLoading, error, write } = useContractWrite({
+  const { isSuccess, isLoading, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
     abi: SVGFactoryAbi,
@@ -117,7 +117,7 @@ function AdsCreate() {
 
   const onSubmit = async (data: AdCreateFormValues) => {
     try {
-      await write!({
+      await writeAsync!({
         recklesslySetUnpreparedArgs: [btoa(svg), data.url],
         recklesslySetUnpreparedOverrides: {
           value: baseDeposit,

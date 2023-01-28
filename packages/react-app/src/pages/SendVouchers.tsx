@@ -46,7 +46,7 @@ const VOUCHER_MANAGER_ABI = [
 ]
 
 function SendVouchers() {
-  const { isSuccess, write } = useContractWrite({
+  const { isSuccess, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: TRANSACTION_BATCHER,
     abi: BATCHER_ABI,
@@ -71,7 +71,7 @@ function SendVouchers() {
   const sendVouchers = async () => {
     const values: BigNumber[] = vouchers.map(voucher => parseEther(voucher.value));
 
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
         values,

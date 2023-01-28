@@ -39,7 +39,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   const { chain } = useNetwork()
   const {address} = getAccount();
 
-  const { isLoading, isSuccess, error, write } = useContractWrite({
+  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
     abi: FirstPriceAuctionAbi,
@@ -80,7 +80,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   }
 
   const onSubmit = async (data: PlaceBidFormValues) => {
-    await write!({
+    await writeAsync!({
       recklesslySetUnpreparedArgs: [
         itemId,
         data.market as Address,

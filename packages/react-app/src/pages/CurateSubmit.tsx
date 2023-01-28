@@ -119,7 +119,7 @@ function CurateSubmit() {
 
   const format = useWatch({control, name: 'format'});
 
-  const { isSuccess, error, write } = useContractWrite({
+  const { isSuccess, error, writeAsync } = useContractWrite({
     mode: 'recklesslyUnprepared',
     address: import.meta.env.VITE_CURATE_REGISTRY as Address,
     abi: GeneralizedTCRAbi,
@@ -169,7 +169,7 @@ function CurateSubmit() {
         data.questions.map(question => question.value)
       )
 
-      await write!({
+      await writeAsync!({
         recklesslySetUnpreparedArgs: [
           encodedParams,
         ],
