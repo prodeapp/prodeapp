@@ -103,7 +103,7 @@ export default function useMarketForm(): UseMarketFormReturn {
     ]
   })
 
-  const [arbitrator, realitio, timeout] = [data || '', data || '', data || 0]
+  const [arbitrator, realitio, timeout] = [data?.[0] || '', data?.[1] || '', data?.[2] || 0]
 
   const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
     const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC');

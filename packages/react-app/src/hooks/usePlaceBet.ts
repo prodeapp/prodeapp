@@ -12,7 +12,7 @@ interface UsePlaceBetReturn {
   isLoading: boolean
   error: Error | null
   tokenId: BigNumber|false
-  placeBet: (_attribution: Address, _results: Bytes[]) => void/*Promise<TransactionReceipt | undefined>*/
+  placeBet: (_attribution: Address, _results: Bytes[]) => void
   hasVoucher: boolean
 }
 

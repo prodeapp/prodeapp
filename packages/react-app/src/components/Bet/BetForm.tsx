@@ -84,7 +84,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
 
   useEffect(()=> {
     remove();
-    events && events.forEach(() => append({value: '', questionId: ''}))
+    events && events.forEach(event => append({value: '', questionId: event.id}))
   }, [events, append, remove]);
 
   const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
@@ -177,7 +177,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
                 <BetOutcomeSelect key={events[i].id} matchesInterdependencies={matchesInterdependencies} events={events} i={i} outcomes={outcomes} control={control} errors={errors} setValue={setValue} />
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
-              <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: i18n._("This field is required")})} value={events[i].id} />
+              <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: i18n._("This field is required")})} />
             </Grid>
           </React.Fragment>
         })}

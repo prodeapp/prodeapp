@@ -567,7 +567,7 @@ function MarketsCreate() {
   return <div>
 
     {activeStep < 3 && <Banner style={{backgroundImage: 'url(/banners/banner-3.jpg)'}}>
-      <Typography variant="h1s"><Trans id="Create a new market<br />in 3 simple steps" /></Typography>
+      <Typography variant="h1s" dangerouslySetInnerHTML={{__html: i18n._('Create a new market<br />in 3 simple steps')}}></Typography>
     </Banner>}
 
     {activeStep < 3 && <div style={{marginBottom: 50}}>
