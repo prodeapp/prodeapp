@@ -700,7 +700,7 @@ msgstr "Error inesperado"
 msgid "Unknown"
 msgstr "Desconocido"
 
-msgid "Unsupported chain, please switch to Gnosis Chain."
+msgid "UNSUPPORTED_CHAIN"
 msgstr "Red no soportada, por favor conéctese a Gnosis Chain."
 
 msgid "Username updated"

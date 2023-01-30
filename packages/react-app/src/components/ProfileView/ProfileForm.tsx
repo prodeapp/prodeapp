@@ -3,17 +3,19 @@ import {FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {useContractFunction, useEthers} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {KeyValue__factory} from "../../typechain";
 import Alert from "@mui/material/Alert";
-import {showWalletError} from "../../lib/helpers";
 import CircularProgress from '@mui/material/CircularProgress';
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Player, PLAYER_FIELDS } from "../../graphql/subgraph";
 import { apolloProdeQuery } from "../../lib/apolloClient";
+import {getAccount} from "@wagmi/core";
+import { useNetwork} from "wagmi";
+import {KeyValueAbi} from "../../abi/KeyValue";
+import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 export type ProfileFormValues = {
   name: string
@@ -46,46 +48,46 @@ const fetchPlayerByName = async (name: string): Promise<Player | undefined> => {
 };
 
 export default function ProfileForm({defaultName}: {defaultName: string}) {
-  const { account, error: walletError } = useEthers();
+  const {address} = getAccount();
+  const { chain } = useNetwork()
 
   const { register, formState: {errors}, handleSubmit } = useForm<ProfileFormValues>({defaultValues: {
       name: defaultName,
     }});
 
-  const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_KEY_VALUE as string, KeyValue__factory.createInterface()),
-    'setValue'
-  );
+  const { isLoading, isSuccess, error, write } = useSendRecklessTx({
+    address: import.meta.env.VITE_KEY_VALUE as Address,
+    abi: KeyValueAbi,
+    functionName: 'setValue',
+  })
 
-  if (!account) {
+  if (!address) {
     return null;
   }
 
-  const showError = showWalletError(walletError)
-  if (showError) {
+  if (!chain || chain.unsupported) {
     return <div style={wrapperStyles}>
       <div style={innerStyles}>
-        <Alert severity="error">{showError}</Alert>
+        <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
       </div>
     </div>
   }
 
-  if (state.status === 'Success') {
+  if (isSuccess) {
     return <div style={wrapperStyles}>
       <div style={innerStyles}>
-        <Alert severity="success"><Trans>Username updated</Trans>!</Alert>
+        <Alert severity="success"><Trans id="Username updated" />!</Alert>
       </div>
     </div>
   }
-
-
-  
 
   const onSubmit = async (data: ProfileFormValues) => {
-    await send(
-      'setName',
-      data.name
-    )
+    write!({
+      recklesslySetUnpreparedArgs: [
+        'setName',
+        data.name
+      ]
+    })
   }
 
   const isNameUnique = async (name: string) => {
@@ -95,25 +97,25 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={wrapperStyles}>
 
-      {state.status === 'Mining' && <div style={{textAlign: 'center', margin: '15px 0'}}><CircularProgress /></div>}
+      {isLoading && <div style={{textAlign: 'center', margin: '15px 0'}}><CircularProgress /></div>}
 
-      {state.status !== 'Mining' && <div style={innerStyles}>
+      {!isLoading && <div style={innerStyles}>
 
-        {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+        {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
 
         <div style={{display: 'inline-flex', alignItems: 'center', margin: '0 auto'}}>
           <div style={{width: '410px', marginRight: '20px'}}>
             <FormControl fullWidth>
               <TextField {...register('name', {
-                required: t`This field is required.`,
+                required: i18n._("This field is required."),
                 validate: async (value) => await isNameUnique(value) || 'Name already in use, please select another name'
-              })} placeholder={t`Your username`} error={!!errors.name} style={{width: '100%'}}/>
+              })} placeholder={i18n._("Your username")} error={!!errors.name} style={{width: '100%'}}/>
               <FormError><ErrorMessage errors={errors} name={`name`} /></FormError>
             </FormControl>
           </div>
           <div>
             <Button color="primary" type="submit">
-              <Trans>Change username</Trans>
+              <Trans id="Change username" />
             </Button>
           </div>
         </div>

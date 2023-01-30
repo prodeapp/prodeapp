@@ -7,7 +7,7 @@ import {CurateSubmitFormValues} from "./index";
 import {useIndexedEvents} from "../../hooks/useEvents";
 import Brackets from "../Tournament/Brackets";
 import {Groups} from "../Tournament/Groups";
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/react';
 
 export interface Props {
   useFieldArrayReturn: UseFieldArrayReturn<CurateSubmitFormValues, 'questions'>
@@ -39,7 +39,7 @@ export default function EventsPreview({useFieldArrayReturn, events}: Props) {
 
   return <div>
     <div style={{marginBottom: '20px'}}>
-      <h3 style={{marginBottom: '30px'}}><Trans>Drag and drop each question to the correct position</Trans></h3>
+      <h3 style={{marginBottom: '30px'}}><Trans id="Drag and drop each question to the correct position" /></h3>
       <DragDropContext onDragEnd={handleFieldDragEnd}>
         <Droppable droppableId="panel-dropzone">
           {provided => (

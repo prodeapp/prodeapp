@@ -1,6 +1,6 @@
 import React, {useContext} from "react";
 import Box from '@mui/material/Box';
-import {Trans} from '@lingui/macro';
+import { Trans } from '@lingui/react';
 import {GlobalContext} from "../lib/GlobalContext";
 import Button from "@mui/material/Button";
 import FiltersWrapper from "./FiltersWrapper";
@@ -19,7 +19,7 @@ function AdsFilter() {
       <FiltersWrapper>
         <div className="filter-columns">
           <div>
-            <div className="filter-label"><Trans>Market</Trans>:</div>
+            <div className="filter-label"><Trans id="Market" />:</div>
             <Box sx={{ display:'flex', justifyContent: 'center', alignItems: 'center'}}>
               <TextField
                 onChange={onChange}

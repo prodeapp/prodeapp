@@ -1,4 +1,4 @@
-[
+export const VoucherManagerAbi = [
   {
     "type": "constructor",
     "inputs": []
@@ -223,4 +223,4 @@
     ],
     "anonymous": false
   }
-]
+] as const

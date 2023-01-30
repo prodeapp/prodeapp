@@ -1,9 +1,8 @@
 import React from "react";
 import Grid from '@mui/material/Grid';
-import {formatAmount, getMedalColor} from "../../lib/helpers";
+import {formatAmount, getMedalColor, shortenAddress} from "../../lib/helpers";
 import {DIVISOR} from "../../hooks/useMarketForm";
-import {shortenAddress} from "@usedapp/core";
-import {Trans} from "@lingui/macro";
+import { Trans } from '@lingui/react';
 import {styled} from "@mui/material/styles";
 import {Market} from "../../graphql/subgraph";
 import {Typography} from "@mui/material";
@@ -37,11 +36,11 @@ function MarketInfo({market}: {market: Market}) {
 
   return <GridStyled container spacing={0}>
     <Grid item xs={6} md={3}>
-      <Typography variant="p3" component="div"><Trans>Prize Pool</Trans></Typography>
+      <Typography variant="p3" component="div"><Trans id="Prize Pool" /></Typography>
       <Typography variant="h3" component="h3">{formatAmount(market.pool)}</Typography>
     </Grid>
     <Grid item xs={6} md={3}>
-      <Typography variant="p3" component="div"><Trans>Prize Distribution</Trans></Typography>
+      <Typography variant="p3" component="div"><Trans id="Prize Distribution" /></Typography>
       <div>
         {market.prizes.map((value, index) => {
           return <div style={{display: 'flex', alignItems: 'center'}} key={index}>
@@ -52,12 +51,12 @@ function MarketInfo({market}: {market: Market}) {
       </div>
     </Grid>
     <Grid item xs={6} md={3}>
-      <Typography variant="p3" component="div"><Trans>Fee</Trans></Typography>
+      <Typography variant="p3" component="div"><Trans id="Fee" /></Typography>
       <Typography variant="h6s" component="h6">{(Number(market.managementFee) + Number(market.protocolFee)) * 100 / DIVISOR}%</Typography>
       <div style={{fontSize: '11.11px'}}>{Number(market.protocolFee) * 100 / DIVISOR}% protocol + {Number(market.managementFee) * 100 / DIVISOR}% manager</div>
     </Grid>
     <Grid item xs={6} md={3}>
-      <Typography variant="p3" component="div"><Trans>Manager</Trans></Typography>
+      <Typography variant="p3" component="div"><Trans id="Manager" /></Typography>
       <Typography variant="h6s" component="h6">
         <a href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`} target="_blank" rel="noreferrer">
           {MANAGER_ADDRESS[market.manager.id.toLowerCase()] || shortenAddress(market.manager.id)}

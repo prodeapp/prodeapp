@@ -5,12 +5,15 @@ import formatDuration from 'date-fns/formatDuration'
 import compareAsc from 'date-fns/compareAsc'
 import { es, enGB } from 'date-fns/locale';
 import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
+import {getAddress} from "@ethersproject/address";
 import {DecimalBigNumber} from "./DecimalBigNumber";
 import {AdBid, Event, Outcome} from "../graphql/subgraph";
-import {t} from "@lingui/macro";
+import { i18n } from "@lingui/core";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
-import { shortenAddress } from '@usedapp/core'
+import {TransactionReceipt} from "@ethersproject/abstract-provider";
+import {Address} from "@wagmi/core";
+import {Interface, LogDescription} from "@ethersproject/abi";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -89,17 +92,17 @@ function getMultiSelectAnswers(value: number): number[] {
   return indexes;
 }
 
-export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: BigNumberish, noAnswerText = t`Not answered yet`): string {
+export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[], templateID: BigNumberish, noAnswerText = i18n._("Not answered yet")): string {
 
   if (currentAnswer === null) {
     return noAnswerText;
   }
   if (currentAnswer === INVALID_RESULT) {
-    return t`Invalid result`;
+    return i18n._("Invalid result");
   }
 
   if (currentAnswer === ANSWERED_TOO_SOON) {
-    return t`Answered too soon`;
+    return i18n._("Answered too soon");
   }
 
   if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
@@ -112,7 +115,7 @@ export function getAnswerText(currentAnswer: string | null, outcomes: Outcome[],
 }
 
 export function transOutcome(outcome: string) {
-  return outcome === 'Draw' ? t`Draw` : outcome;
+  return outcome === 'Draw' ? i18n._("Draw") : outcome;
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490
@@ -130,16 +133,16 @@ type MarketCategory = {id: string, text: string, children?: MarketCategory[]}
 export const MARKET_CATEGORIES: MarketCategory[] = [
   {
     id: "sports",
-    text: t`Sports`,
+    text: i18n._("Sports"),
     children: [
-      {id: "football", text: t`Football`},
-      {id: "basketball", text: t`Basketball`},
-      {id: "tenis", text: t`Tennis`},
-      {id: "esports", text: t`eSports`},
-      {id: "F1", text: t`F1`},
+      {id: "football", text: i18n._("Football")},
+      {id: "basketball", text: i18n._("Basketball")},
+      {id: "tenis", text: i18n._("Tennis")},
+      {id: "esports", text: i18n._("eSports")},
+      {id: "F1", text: i18n._("F1")},
     ]
   },
-  {id: "misc", text: t`Miscellaneous`},
+  {id: "misc", text: i18n._("Miscellaneous")},
 ]
 
 type FlattenedCategory = {id: string, text: string, isChild: boolean};
@@ -197,29 +200,6 @@ export function getDocsUrl(locale: I18nContextProps['locale']) {
   return documentationUrls[locale];
 }
 
-export function showWalletError(error: any) {
-  if (error?.message) {
-
-    if (error?.message.includes("Unsupported chain id")) {
-      return t`Unsupported chain, please switch to Gnosis Chain.`;
-    }
-
-    // we use this function to return early when connected to a unsupported chain,
-    // but we don't want to return early for every error that can occur (random RPC errors, etc)
-    /*if (error?.message.startsWith('{')) {
-      try {
-        const _error = JSON.parse(error?.message);
-
-        return _error?.message;
-      } catch (e: any) {
-
-      }
-    } else {
-      return error?.message;
-    }*/
-  }
-}
-
 export function getTwitterShareUrl(message: string): string {
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`;
 }
@@ -253,4 +233,25 @@ export function formatPlayerName(name:string, address:string){
     return shortenAddress(address);
   }
   return name;
+}
+
+export function shortenAddress(address: string): string {
+  try {
+    const formattedAddress = getAddress(address)
+    return formattedAddress.substring(0, 6) + '...' + formattedAddress.substring(formattedAddress.length - 4)
+  } catch {
+    throw new TypeError("Invalid input, address can't be parsed")
+  }
+}
+
+export function parseEvents(receipt: TransactionReceipt | undefined, contractAddress: Address, contractInterface: Interface): LogDescription[] {
+  return (receipt?.logs || []).reduce((accumulatedLogs, log) => {
+    try {
+      return log.address.toLowerCase() === contractAddress.toLowerCase()
+        ? [...accumulatedLogs, contractInterface.parseLog(log)]
+        : accumulatedLogs
+    } catch (_err) {
+      return accumulatedLogs
+    }
+  }, [] as LogDescription[])
 }

@@ -3,14 +3,14 @@ import {BigAlert, FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useFieldArray, useForm, useWatch} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {useEthers} from "@usedapp/core";
 import Alert from "@mui/material/Alert";
 import { AddressZero } from "@ethersproject/constants";
 import { isAddress } from "@ethersproject/address";
 import {useEvents} from "../../hooks/useEvents";
 import {queryClient} from "../../lib/react-query";
-import { Trans, t } from "@lingui/macro";
-import {getReferralKey, showWalletError} from "../../lib/helpers";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
+import {getReferralKey} from "../../lib/helpers";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Grid from '@mui/material/Grid';
@@ -29,6 +29,8 @@ import AlertTitle from "@mui/material/AlertTitle";
 import {BetOutcomeSelect} from "./BetOutcomeSelect";
 import {useCurateItemJson} from "../../hooks/useCurateItems";
 import {useMatchesInterdependencies} from "../../hooks/useMatchesInterdependencies";
+import {getAccount} from "@wagmi/core";
+import {useNetwork} from "wagmi";
 
 export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | '';
 
@@ -42,7 +44,7 @@ type BetFormProps = {
 }
 
 function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
-  const image = useBetToken(marketId, tokenId);
+  const {data: image = ''} = useBetToken(marketId, tokenId);
 
   if (!image) {
     return null
@@ -50,21 +52,22 @@ function BetNFT({marketId, tokenId}: {marketId: string, tokenId: BigNumber}) {
 
   return <div style={{textAlign: 'center', margin: '10px 0'}}>
     <div>
-      <p><Trans>Your betting position is represented by the following NFT.</Trans></p>
+      <p><Trans id="Your betting position is represented by the following NFT." /></p>
     </div>
     <img src={image} style={{margin: '20px 0'}} alt="Bet NFT" />
     <div>
-      <p><Trans>You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.</Trans></p>
+      <p><Trans id="You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins." /></p>
     </div>
     <div>
-      <Button component={Link} size="large" href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans>Trade NFT in Eporio</Trans></Button>
+      <Button component={Link} size="large" href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`} target="_blank" rel="noopener"><Trans id="Trade NFT in Eporio" /></Button>
     </div>
   </div>
 }
 
 export default function BetForm({market, cancelHandler}: BetFormProps) {
-  const { account, error: walletError } = useEthers();
-  const { isLoading, error, data: events } = useEvents(market.id);
+  const {address} = getAccount();
+  const { chain } = useNetwork()
+  const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id);
 
   const { register, control, formState: {errors}, handleSubmit, setValue } = useForm<BetFormValues>({
     mode: 'all',
@@ -81,10 +84,13 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
 
   useEffect(()=> {
     remove();
-    events && events.forEach(() => append({value: ''}))
+    events && events.forEach(event => append({value: '', questionId: event.id}))
   }, [events, append, remove]);
 
-  const { state, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
+  const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
+  const attribution = isAddress(referral) ? referral : AddressZero
+
+  const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, BigNumber.from(market.price), attribution, outcomes);
 
   useEffect(() => {
     if (tokenId !== false) {
@@ -100,64 +106,53 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
   const itemJson = useCurateItemJson(market.hash);
   const matchesInterdependencies = useMatchesInterdependencies(events, itemJson);
 
-  if (isLoading ) {
-    return <div><Trans>Loading...</Trans></div>
+  if (isLoadingEvents ) {
+    return <div><Trans id="Loading..." /></div>
   }
 
   if (tokenId !== false) {
     return <>
-      <Alert severity="success" sx={{mb: 3}}><Trans>Bet placed!</Trans></Alert>
+      <Alert severity="success" sx={{mb: 3}}><Trans id="Bet placed!" /></Alert>
 
       <BetNFT marketId={market.id} tokenId={tokenId} />
     </>
   }
 
-  const showError = showWalletError(walletError)
-  if (!account || showError) {
-    return <Alert severity="error">{showError || <Trans>Connect your wallet to place a bet.</Trans>}</Alert>
+  if (!address) {
+    return <Alert severity="error"><Trans id="Connect your wallet to place a bet." /></Alert>
   }
 
-  if (error) {
-    return <Alert severity="error"><Trans>Error loading events</Trans>.</Alert>
+  if (!chain || chain.unsupported) {
+    return <Alert severity="error"><Trans id="UNSUPPORTED_CHAIN" /></Alert>
+  }
+
+  if (eventsError) {
+    return <Alert severity="error"><Trans id="Error loading events" />.</Alert>
+  }
+
+  if (isLoading) {
+    return <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>
   }
 
   const onSubmit = async (data: BetFormValues) => {
-    const results = data.outcomes
-      /**
-       * ============================================================
-       * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
-       * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
-       * ============================================================
-       */
-      .sort((a, b) => a.questionId > b.questionId ? 1 : -1)
-      .map(outcome => formatOutcome(outcome.value));
-    const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
-
-    await placeBet(
-      isAddress(referral) ? referral : AddressZero,
-      results
-    )
-  }
-
-  if (state.status === 'Mining') {
-    return <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>
+    placeBet!()
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <h2 style={{margin: '35px 0', fontSize: '33.18px'}}><Trans>Place your bet</Trans></h2>
-      <h4 style={{margin: '35px 0', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans>Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!</Trans></h4>
+      <h2 style={{margin: '35px 0', fontSize: '33.18px'}}><Trans id="Place your bet" /></h2>
+      <h4 style={{margin: '35px 0', borderBottom: '1px solid #303030', paddingBottom: '20px'}}><Trans id="Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!" /></h4>
 
       {hasVoucher && <BigAlert severity="info" sx={{mb: 4}}>
         <Box sx={{display: {md: 'flex'}, justifyContent: 'space-between', alignItems: 'center'}}>
           <div>
-            <div><AlertTitle><Trans>Congratulations!</Trans></AlertTitle></div>
-            <div><Trans>You have a voucher available to place a bet for free!</Trans></div>
+            <div><AlertTitle><Trans id="Congratulations!" /></AlertTitle></div>
+            <div><Trans id="You have a voucher available to place a bet for free!" /></div>
           </div>
         </Box>
       </BigAlert>}
 
-      {state.errorMessage && <Alert severity="error" sx={{mb: 2}}>{state.errorMessage}</Alert>}
+      {error && <Alert severity="error" sx={{mb: 2}}>{error.message}</Alert>}
       <Grid container spacing={3}>
         {fields.map((field, i) => {
 
@@ -171,18 +166,18 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
                 <BetOutcomeSelect key={events[i].id} matchesInterdependencies={matchesInterdependencies} events={events} i={i} outcomes={outcomes} control={control} errors={errors} setValue={setValue} />
                 <FormError><ErrorMessage errors={errors} name={`outcomes.${i}.value`} /></FormError>
               </FormControl>
-              <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: t`This field is required`})} value={events[i].id} />
+              <input type="hidden" {...register(`outcomes.${i}.questionId`, {required: i18n._("This field is required")})} />
             </Grid>
           </React.Fragment>
         })}
         <Grid item xs={6}>
           <Button type="button" color="primary" size="large" variant="outlined" fullWidth onClick={cancelHandler}>
-            <Trans>Cancel</Trans> <CrossIcon style={{marginLeft: 10}} width={10} height={10} />
+            <Trans id="Cancel" /> <CrossIcon style={{marginLeft: 10}} width={10} height={10} />
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button type="submit" color="primary" size="large" fullWidth>
-            <Trans>Place Bet</Trans> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
+          <Button type="submit" disabled={!placeBet} color="primary" size="large" fullWidth>
+            <Trans id="Place Bet" /> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
           </Button>
         </Grid>
       </Grid>

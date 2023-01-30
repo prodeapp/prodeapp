@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import AdsFilter from "../components/AdsFilter";
 import {SVGAd} from "../graphql/subgraph";
 import {formatAmount} from "../lib/helpers";
-import {Trans} from "@lingui/macro";
+import { Trans } from '@lingui/react';
 import Box from "@mui/material/Box";
 import {MarketDetails, MarketsGrid} from "../components/MarketsTable";
 import {useSvgAd} from "../hooks/useSvgAd";
@@ -31,7 +31,7 @@ function getBidsInfo(ad: SVGAd): {max: BigNumber, min: BigNumber} {
 }
 
 function AdBox({ad}: {ad: SVGAd}) {
-  const svgAd = useSvgAd(ad.id);
+  const {data: svgAd} = useSvgAd(ad.id);
 
   const {max: maxBid, min: minBid} = getBidsInfo(ad);
 
@@ -45,29 +45,29 @@ function AdBox({ad}: {ad: SVGAd}) {
     </Box>
     <MarketDetails sx={{minWidth: {md: '245px'}}}>
       <div>
-        <div><Trans>Total Bids</Trans></div>
+        <div><Trans id="Total Bids" /></div>
         <div style={{fontWeight: 'bold'}}>{ad.bids.length}</div>
       </div>
 
       {ad.bids.length === 1 && <div>
-        <div><Trans>Current Bid</Trans></div>
+        <div><Trans id="Current Bid" /></div>
         <div style={{fontWeight: 'bold'}}>{formatAmount(maxBid)}</div>
       </div>}
 
       {ad.bids.length > 1 && <>
         <div>
-          <div><Trans>Highest Bid</Trans></div>
+          <div><Trans id="Highest Bid" /></div>
           <div style={{fontWeight: 'bold'}}>{formatAmount(maxBid)}</div>
         </div>
 
         <div>
-          <div><Trans>Lower Bid</Trans></div>
+          <div><Trans id="Lower Bid" /></div>
           <div style={{fontWeight: 'bold'}}>{formatAmount(minBid)}</div>
         </div>
       </>}
 
       <div>
-        <Button component={RouterLink} to={`/ads/${ad.id}`} color={'primary'} fullWidth><Trans>See ad</Trans></Button>
+        <Button component={RouterLink} to={`/ads/${ad.id}`} color={'primary'} fullWidth><Trans id="See ad" /></Button>
       </div>
     </MarketDetails>
   </Box>

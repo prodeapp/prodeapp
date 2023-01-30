@@ -4,7 +4,7 @@ import {Container, Typography} from "@mui/material";
 import {Link as RouterLink, Link} from "react-router-dom";
 import {BRIDGE_URL, getDocsUrl} from "../lib/helpers";
 import {useI18nContext} from "../lib/I18nContext";
-import {Trans} from "@lingui/macro";
+import { Trans } from '@lingui/react';
 import {ReactComponent as Logo} from "../assets/logo.svg";
 
 const FooterNav = styled('div', {
@@ -61,7 +61,7 @@ export default function Footer() {
         <FooterContainer>
           <div style={{fontWeight: 500}}><Link to="/"><Logo /></Link></div>
           <FooterNav ml={2}>
-            <div style={{fontWeight: 700}}><Trans>Follow us</Trans>:</div>
+            <div style={{fontWeight: 700}}><Trans id="Follow us" />:</div>
             <div><a href="http://twitter.com/prode_eth" target="_blank" rel="noreferrer">Twitter</a></div>
             <div><a href="https://t.me/prode_eth" target="_blank" rel="noreferrer">Telegram</a></div>
             <div><a href="http://github.com/prodeapp" target="_blank" rel="noreferrer">Github</a></div>
@@ -71,10 +71,10 @@ export default function Footer() {
       <Typography component="div" variant="p3">
         <FooterContainer>
           <FooterNav>
-            <div><RouterLink to='/markets/new'><Trans>Create Market</Trans></RouterLink></div>
-            <div><a href={BRIDGE_URL} target="_blank" rel="noreferrer"><Trans>Bridge</Trans></a></div>
-            <div><RouterLink to='/ads'><Trans>Ads</Trans></RouterLink></div>
-            <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans>Documentation</Trans></a></div>
+            <div><RouterLink to='/markets/new'><Trans id="Create Market" /></RouterLink></div>
+            <div><a href={BRIDGE_URL} target="_blank" rel="noreferrer"><Trans id="Bridge" /></a></div>
+            <div><RouterLink to='/ads'><Trans id="Ads" /></RouterLink></div>
+            <div><a href={getDocsUrl(locale)} target="_blank" rel="noreferrer"><Trans id="Documentation" /></a></div>
           </FooterNav>
           <div style={{color: '#7d7d7d'}}>
             Copyright &copy; {year} Prode.

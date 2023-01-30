@@ -1,11 +1,10 @@
 import React from "react";
 import Alert from "@mui/material/Alert";
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/react';
 import { Grid, Skeleton } from "@mui/material";
-import { formatAmount } from "../../lib/helpers";
+import {formatAmount, shortenAddress} from "../../lib/helpers";
 import { BoxRow } from "..";
 import { useMarkets } from "../../hooks/useMarkets";
-import { shortenAddress } from "@usedapp/core";
 
 export function Markets({ creatorId }: { creatorId: string }) {
     const { data: markets, error, isLoading } = useMarkets({creatorId: creatorId});
@@ -19,17 +18,17 @@ export function Markets({ creatorId }: { creatorId: string }) {
     }
 
     if (!markets || markets.length === 0) {
-        return <Alert severity="info"><Trans>Create a market and earn fees on each bet.</Trans></Alert>
+        return <Alert severity="info"><Trans id="Create a market and earn fees on each bet." /></Alert>
     }
 
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px' }}>
             <Grid item sm={12} md={12}>
                 <BoxRow>
-                    <div style={{ width: '40%' }}><Trans>Market</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Pool</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Rewards receiver</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Management Rewards Earned</Trans></div>
+                    <div style={{ width: '40%' }}><Trans id="Market" /></div>
+                    <div style={{ width: '20%' }}><Trans id="Pool" /></div>
+                    <div style={{ width: '20%' }}><Trans id="Rewards receiver" /></div>
+                    <div style={{ width: '20%' }}><Trans id="Management Rewards Earned" /></div>
                 </BoxRow>
 
                 {markets && markets.map(market => {

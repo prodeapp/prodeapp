@@ -1,40 +1,45 @@
 import React from "react";
 import Alert from "@mui/material/Alert";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import { Accordion, AccordionDetails, AccordionSummary, Button, CircularProgress, Grid, Skeleton, Typography, useTheme } from "@mui/material";
-import { formatAmount } from "../../lib/helpers";
+import {formatAmount, shortenAddress} from "../../lib/helpers";
 import { BoxRow } from "..";
 import { useMarketReferrals } from "../../hooks/useMarketReferrals";
 import { MarketReferral } from "../../graphql/subgraph";
 import { ExpandMoreOutlined } from "@mui/icons-material";
-import { shortenAddress, useContractFunction } from "@usedapp/core";
-import { Contract } from "@ethersproject/contracts";
-import { Manager__factory } from "../../typechain";
+import {ManagerAbi} from "../../abi/Manager";
+import {Address} from "@wagmi/core";
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     const theme = useTheme();
 
-    const { send, state } = useContractFunction(new Contract(marketReferral.manager, Manager__factory.createInterface()), 'claimReferralReward');
+    const { isLoading, isSuccess, isError, write } = useSendRecklessTx({
+        address: marketReferral.manager,
+        abi: ManagerAbi,
+        functionName: 'claimReferralReward',
+    })
 
-    const handleClaimOnClick = async (manager: string) => {
-        await send(manager);
+    const handleClaimOnClick = async (manager: Address) => {
+        write!({recklesslySetUnpreparedArgs: [manager]});
     };
 
-    if (marketReferral.claimed || state.status === 'Success') {
-        return <>{t`Already Claimed` + '!'}</>;
+    if (marketReferral.claimed || isSuccess) {
+        return <>{i18n._("Already Claimed") + '!'}</>;
     }
 
     if (marketReferral.market.resultSubmissionPeriodStart === '0') {
-        return <div><Trans>Waiting for prize distribution</Trans></div>;
+        return <div><Trans id="Waiting for prize distribution" /></div>;
     }
 
-    if (state.status === 'Mining') {
+    if (isLoading) {
         return <CircularProgress />;
     }
 
     return <div style={{display:'flex'}}>
-        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans>Claim</Trans></Button>
-        {state.status === 'Exception'? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans>Error</Trans></Typography> : null}
+        <Button onClick={() => handleClaimOnClick(marketReferral.manager)}><Trans id="Claim" /></Button>
+        {isError ? <Typography sx={{color: theme.palette.error.main, marginLeft: '10px'}}><Trans id="Error" /></Typography> : null}
     </div>
 }
 
@@ -75,15 +80,15 @@ export function Referrals({ provider }: { provider: string }) {
     }
 
     if (!marketsReferrals || marketsReferrals.length === 0) {
-        return <Alert severity="info"><Trans>Start referring into markets and earn part of the fees that your referred pays.</Trans></Alert>
+        return <Alert severity="info"><Trans id="Start referring into markets and earn part of the fees that your referred pays." /></Alert>
     }
     return (
         <Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', marginBottom: '30px'}}>
             <Grid item sm={12} md={12}>
                 <BoxRow key='header'>
-                    <div style={{ width: '60%' }}><Trans>Market</Trans></div>
-                    <div style={{ width: '15%' }}><Trans>Earn</Trans></div>
-                    <div style={{ width: '20%' }}><Trans>Claim</Trans></div>
+                    <div style={{ width: '60%' }}><Trans id="Market" /></div>
+                    <div style={{ width: '15%' }}><Trans id="Earn" /></div>
+                    <div style={{ width: '20%' }}><Trans id="Claim" /></div>
                     <div style={{ width: '5%' }}></div>
                 </BoxRow>
 

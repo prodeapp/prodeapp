@@ -1,4 +1,4 @@
-[
+export const RealityAbi = [
   {
     "type": "constructor",
     "stateMutability": "nonpayable",
@@ -1473,4 +1473,4 @@
     "name": "withdraw",
     "inputs": []
   }
-]
+] as const

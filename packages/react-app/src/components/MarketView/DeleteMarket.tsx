@@ -1,29 +1,32 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import {useContractFunction} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {KeyValue__factory} from "../../typechain";
-import {Trans} from "@lingui/macro";
+import { Trans } from '@lingui/react';
+import {KeyValueAbi} from "../../abi/KeyValue";
+import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 function DeleteMarket({marketId}: {marketId: string}) {
-  const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_KEY_VALUE as string, KeyValue__factory.createInterface()),
-    'setValue'
-  );
+  const { isSuccess, write } = useSendRecklessTx({
+    address: import.meta.env.VITE_KEY_VALUE as Address,
+    abi: KeyValueAbi,
+    functionName: 'setValue',
+  })
 
   const deleteMarket = async () => {
-    await send(
-      'deleteMarket',
-      marketId
-    );
+    write!({
+      recklesslySetUnpreparedArgs: [
+        'deleteMarket',
+        marketId
+      ]
+    });
   }
 
-  if (state.status === 'Success') {
-    return <Alert severity="success"><Trans>This market has been deleted.</Trans></Alert>
+  if (isSuccess) {
+    return <Alert severity="success"><Trans id="This market has been deleted." /></Alert>
   }
 
-  return <Button variant="text" size="small" color="error" onClick={deleteMarket}><Trans>Delete market</Trans></Button>
+  return <Button variant="text" size="small" color="error" onClick={deleteMarket}><Trans id="Delete market" /></Button>
 }
 
 export default DeleteMarket;

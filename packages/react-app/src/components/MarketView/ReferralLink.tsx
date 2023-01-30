@@ -1,8 +1,9 @@
-import {t, Trans} from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import React, {useState} from "react";
 import {getMarketUrl} from "../../lib/helpers";
-import {useEthers} from "@usedapp/core";
 import {ReactComponent as LinkIcon} from "../../assets/icons/link.svg";
+import {getAccount} from "@wagmi/core";
 
 const copyReferralLink = async (marketId: string, account: string) => {
   try {
@@ -13,7 +14,7 @@ const copyReferralLink = async (marketId: string, account: string) => {
 }
 
 function ReferralLink({marketId}: {marketId: string}) {
-  const {account} = useEthers();
+  const {address} = getAccount();
 
   const [textCopied, setTextCopied] = useState(false);
 
@@ -22,23 +23,23 @@ function ReferralLink({marketId}: {marketId: string}) {
   }
 
   const clickHandler = async () => {
-    if (!account) {
+    if (!address) {
       // open
-      alert(t`Connect your wallet`);
+      alert(i18n._("Connect your wallet"));
       return;
     }
 
     setTextCopied(true);
-    await copyReferralLink(marketId, account);
+    await copyReferralLink(marketId, address);
     setTimeout(() => setTextCopied(false), 3000);
   }
 
   if (textCopied) {
-    return <Trans>Referral link copied!</Trans>
+    return <Trans id="Referral link copied!" />
   }
 
   return <span className="js-link" onClick={clickHandler}>
-    <LinkIcon /> <Trans>Copy referral link</Trans>
+    <LinkIcon /> <Trans id="Copy referral link" />
   </span>
 }
 

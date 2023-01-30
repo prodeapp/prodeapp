@@ -1,31 +1,23 @@
-import {shortenAddress, useConfig, useContractFunction, useEthers, useLookupAddress} from "@usedapp/core";
+import { getAccount } from '@wagmi/core'
 import React, { useEffect, useState } from "react";
 import { Toolbar, Container, Button, Box, AppBar, IconButton } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
-import Alert from "@mui/material/Alert";
 import { Link as RouterLink } from "react-router-dom";
-import AppDialog from "./Dialog";
-import { ReactComponent as MetamaskIcon } from "../assets/metamask.svg";
-import { ReactComponent as WalletConnectIcon } from "../assets/wallet-connect.svg";
-import { xDai } from "@usedapp/core";
-import WalletConnectProvider from '@walletconnect/web3-provider'
-import Blockies from 'react-blockies';
 import { LocaleEnum } from "../lib/types";
 import { useI18nContext } from "../lib/I18nContext";
-import { Trans } from "@lingui/macro";
-import {BRIDGE_URL, formatAmount, formatPlayerName, getDocsUrl, showWalletError} from "../lib/helpers";
-import useWindowFocus from "../hooks/useWindowFocus";
+import { Trans } from '@lingui/react';
+import {BRIDGE_URL, formatAmount, getDocsUrl} from "../lib/helpers";
 import {styled} from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
 import {ReactComponent as Logo} from "../assets/logo.svg";
-import {ReactComponent as LogoutIcon} from "../assets/icons/logout.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
-import {ReactComponent as ArrowRight} from "../assets/icons/arrow-right-2.svg";
 import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
-import {Contract} from "@ethersproject/contracts";
-import {RealityETH_v3_0__factory} from "../typechain";
-import { usePlayer } from "../hooks/usePlayer";
+import {useNetwork} from "wagmi";
+import {RealityAbi} from "../abi/RealityETH_v3_0";
+import {Address} from "@wagmi/core"
+import {ConnectButton} from "./ConnectButton";
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -170,16 +162,16 @@ export default function Header() {
             </RouterLink>
             <MenuBar className={mobileOpen ? 'mobile-open' : ''}>
               <RouterLink to='/markets/new'>
-                <Trans>Create Market</Trans>
+                <Trans id="Create Market" />
               </RouterLink>
               <a href={BRIDGE_URL} target="_blank" rel="noreferrer">
-                <Trans>Bridge</Trans>
+                <Trans id="Bridge" />
               </a>
               <RouterLink to='/ads'>
-                <Trans>Ads</Trans>
+                <Trans id="Ads" />
               </RouterLink>
               <a href={getDocsUrl(locale)} target="_blank" rel="noreferrer">
-                <Trans>Documentation</Trans>
+                <Trans id="Documentation" />
               </a>
               <DropdownMenu text={languages[locale]}>
                 {Object.keys(languages).map(lang => {
@@ -195,136 +187,36 @@ export default function Header() {
     );
 };
 
-export interface DialogProps {
-  open: boolean;
-  handleClose: () => void;
-}
-
-function WalletDialog({open, handleClose}: DialogProps) {
-  const { account, activate, activateBrowserWallet, error, switchNetwork } = useEthers();
-  const { readOnlyUrls } = useConfig();
-  const [walletError, setWalletError] = useState<Error | undefined>();
-  const hasWindowFocus = useWindowFocus();
-  const [askSwitchNetwork, setAskSwitchNetwork] = useState(true);
-  
-
-  async function activateWalletConnect() {
-    try {
-      const provider = new WalletConnectProvider({
-        rpc: {
-          [xDai.chainId]: readOnlyUrls![xDai.chainId] as string,
-        },
-      })
-      await provider.enable()
-      await activate(provider)
-    } catch (error) {
-      setWalletError(error as Error)
-    }
-  }
-
-  useEffect(() => {
-    if (account) {
-      handleClose();
-    }
-  }, [account, handleClose])
-
-  useEffect(() => {
-    if (error && error.message !== walletError?.message) {
-      if (error.message.includes('Unsupported chain id')) {
-        if (hasWindowFocus && askSwitchNetwork) {
-          // Ask to change the network in the wallet.
-          switchNetwork(100)
-          setAskSwitchNetwork(false)
-        }
-      } else {
-        setWalletError(error)
-      }
-    }
-  }, [error, walletError, switchNetwork, hasWindowFocus, askSwitchNetwork])
-
-  const showError = showWalletError(walletError)
-
-  return (
-    <AppDialog
-      open={open}
-      handleClose={handleClose}
-    >
-
-      {showError && <Alert severity="error">{showError}</Alert>}
-
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ marginBottom: 50, cursor: 'pointer' }} onClick={activateBrowserWallet}>
-          <MetamaskIcon width={100} />
-          <div style={{ marginTop: 10 }}><Trans>Connect with your MetaMask Wallet</Trans></div>
-        </div>
-        <div onClick={activateWalletConnect} style={{ cursor: 'pointer' }}>
-          <WalletConnectIcon width={100} />
-          <div style={{ marginTop: 10 }}><Trans>Scan with WalletConnect to connect</Trans></div>
-        </div>
-      </div>
-    </AppDialog>
-  );
-}
-
 function WalletMenu() {
-  const [openWalletModal, setOpenWalletModal] = useState(false);
+  const { chain } = useNetwork()
+  const {address} = getAccount();
 
-  const { account, deactivate } = useEthers();
-  const {ens} = useLookupAddress(account);
-  const {data: player} = usePlayer(account || "")
+  const {data: claimArgs} = useClaimArgs(address || '');
 
-  const {data: claimArgs} = useClaimArgs(account || '');
+  const { isSuccess, write } = useSendRecklessTx({
+    address: import.meta.env.VITE_REALITIO as Address,
+    abi: RealityAbi,
+    functionName: 'claimMultipleAndWithdrawBalance',
+  })
 
-  let accountName = '';
-
-  if (ens) {
-    accountName = ens;
-  } else if (player) {
-    accountName = formatPlayerName(player.name, player.id);
-  } else if (account) {
-    accountName = shortenAddress(account);
-  }
-
-  const handleOpenWalletModal = () => {
-    setOpenWalletModal(true);
-  };
-
-  const handleCloseWalletModal = () => {
-    setOpenWalletModal(false);
-  };
-
-  const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
-    'claimMultipleAndWithdrawBalance'
-  );
 
   const claimReality = async () => {
     if (!claimArgs) {
       return;
     }
 
-    await send(
-      claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
-    );
+    write!({
+      recklesslySetUnpreparedArgs: [
+        claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
+      ]
+    });
   }
 
   return <>
-    <WalletDialog
-      open={openWalletModal}
-      handleClose={handleCloseWalletModal}
-    />
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-      {!account && <Button onClick={handleOpenWalletModal} color="primary" size="large"><Trans>Connect Wallet</Trans> <ArrowRight style={{marginLeft: 10}}/></Button>}
+      {chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans id="Claim" /> {formatAmount(claimArgs.total)}</Button>}
 
-      {state.status !== 'Success' && claimArgs && claimArgs.total.gt(0) && <Button onClick={claimReality} color="primary" style={{marginRight: 10}}><Trans>Claim</Trans> {formatAmount(claimArgs.total)}</Button>}
-
-      {account && <>
-        <RouterLink to={"/profile"} style={{display: 'flex', alignItems: 'center', marginRight: 10}}>
-          <Blockies seed={account} size={7} scale={4} />
-          <Box ml={1} sx={{display: {xs: 'none', md: 'block'}}}>{accountName}</Box>
-        </RouterLink>
-        <LogoutIcon onClick={deactivate} style={{cursor: 'pointer'}} />
-      </>}
+      <ConnectButton />
     </Box>
   </>
 }

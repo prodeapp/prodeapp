@@ -12,7 +12,8 @@ import TextField from '@mui/material/TextField';
 import {ErrorMessage} from "@hookform/error-message";
 import {PLACEHOLDER_REGEX} from "../hooks/useMarketForm";
 import {marketsTemplates} from "../lib/templates";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 
 type QuestionParams = {value: string}[];
 
@@ -98,7 +99,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
 
   const dialogActions = <DialogActions>
     <Button autoFocus onClick={clickSubmit} color="primary">
-      <Trans>Set question</Trans>
+      <Trans id="Set question" />
     </Button>
   </DialogActions>
 
@@ -106,19 +107,19 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
     <AppDialog
       open={open}
       handleClose={handleClose}
-      title={t`Choose question`}
+      title={i18n._("Choose question")}
       actions={dialogActions}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl fullWidth sx={{marginBottom: '20px'}}>
-          <InputLabel id="market-template-label"><Trans>Choose template</Trans></InputLabel>
+          <InputLabel id="market-template-label"><Trans id="Choose template" /></InputLabel>
           <Select
             labelId="market-template-label"
             id="market-template-select"
             defaultValue={-1}
-            {...register('template', {required: t`This field is required.`})}
+            {...register('template', {required: i18n._("This field is required.")})}
           >
-            <MenuItem value={-1} key={-1}><Trans>Choose question format</Trans></MenuItem>
+            <MenuItem value={-1} key={-1}><Trans id="Choose question format" /></MenuItem>
             {marketsTemplates.map((template, i) => <MenuItem value={i} key={i}>{template.q}</MenuItem>)}
           </Select>
         </FormControl>
@@ -126,7 +127,7 @@ function TemplateDialog({open, handleClose, onTemplateChange}: TemplateDialogPro
           <div style={{display: 'flex'}}>
             {questionParamsFields.map((questionParamField, i) => {
               return <div key={i} style={{margin: '0 5px 0 0'}}>
-                <TextField {...register(`questionParams.${i}.value`, {required: t`This field is required.`})} placeholder={`$${i+1}`} />
+                <TextField {...register(`questionParams.${i}.value`, {required: i18n._("This field is required.")})} placeholder={`$${i+1}`} />
                 <FormError><ErrorMessage errors={errors} name={`questionParams.${i}.value`} /></FormError>
               </div>
             })}

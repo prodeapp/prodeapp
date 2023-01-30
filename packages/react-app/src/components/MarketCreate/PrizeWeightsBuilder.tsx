@@ -7,7 +7,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { ErrorMessage } from "@hookform/error-message";
 import Button from "@mui/material/Button";
 import { MarketFormStep2Values } from "../../hooks/useMarketForm";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core";
 import {ReactComponent as CrossIcon} from "../../assets/icons/cross.svg";
 
 export default function PrizeWeightsBuilder() {
@@ -28,13 +29,13 @@ export default function PrizeWeightsBuilder() {
   const addPrizeWeight = () => appendPrizesField({ value: 0 });
 
   return <div>
-    {prizesFields.length === 0 && <FormError style={{ marginBottom: '5px' }}><Trans>Add at least one prize weight.</Trans></FormError>}
+    {prizesFields.length === 0 && <FormError style={{ marginBottom: '5px' }}><Trans id="Add at least one prize weight." /></FormError>}
     <Grid container spacing={2}>
       {prizesFields.map((answerField, i) => {
         return <Grid item xs={6} md={4} key={answerField.id}>
           <div>
             <TextField
-              {...register(`prizeWeights.${i}.value`, { required: t`This field is required.` })}
+              {...register(`prizeWeights.${i}.value`, { required: i18n._("This field is required.") })}
               error={!!errors.prizeWeights?.[i]?.value}
               type="number"
               fullWidth
@@ -47,8 +48,8 @@ export default function PrizeWeightsBuilder() {
         </Grid>
       })}
     </Grid>
-    <FormHelperText><Trans>What % of the pool will win the player ranked at position #X.</Trans></FormHelperText>
+    <FormHelperText><Trans id="What % of the pool will win the player ranked at position #X."/></FormHelperText>
     <FormError><ErrorMessage errors={errors} name={`prizeDivisor`} /></FormError>
-    {prizesFields.length < 3 && <Button onClick={addPrizeWeight} variant="outlined"><Trans>Add prize weight</Trans></Button>}
+    {prizesFields.length < 3 && <Button onClick={addPrizeWeight} variant="outlined"><Trans id="Add prize weight" /></Button>}
   </div>
 }

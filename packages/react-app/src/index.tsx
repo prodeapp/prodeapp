@@ -1,6 +1,8 @@
 import "./index.css";
 
-import { DAppProvider, xDai, Localhost } from "@usedapp/core";
+import { wagmiClient, chains } from "./lib/wagmi";
+import { WagmiConfig } from "wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import React from "react";
 import ReactDOM from "react-dom";
 import {
@@ -31,61 +33,51 @@ import AdsList from "./pages/AdsList";
 import AdsCreate from "./pages/AdsCreate";
 import AdsView from "./pages/AdsView";
 
-const config = {
-  readOnlyChainId: xDai.chainId,
-  readOnlyUrls: {
-    [xDai.chainId]: "https://rpc.gnosischain.com",
-  },
-  networks: [xDai, Localhost],
-  multicallAddresses: {
-    [Localhost.chainId]: '0x998abeb3E57409262aE5b751f60747921B33613E',
-  },
-  noMetamaskDeactivate: true,
-}
-
 ReactDOM.render(
   <React.StrictMode>
-    <DAppProvider config={config}>
-      <ReactQueryProvider>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <I18nProvider>
-            <GlobalContextProvider>
-              <WelcomeDialog />
-              <HashRouter>
-                <Routes>
-                  <Route element={<Layout />}>
-                    <Route index element={<Home />} />
-                    <Route path="markets">
-                      <Route path=":id">
-                        <Route index element={<MarketsView />} />
-                        <Route path="tournament" element={<Tournament />} />
-                        <Route path="fund" element={<MarketsFund />} />
-                        <Route path=":tokenId" element={<TokenView />} />
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        <ReactQueryProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <I18nProvider>
+              <GlobalContextProvider>
+                <WelcomeDialog />
+                <HashRouter>
+                  <Routes>
+                    <Route element={<Layout />}>
+                      <Route index element={<Home />} />
+                      <Route path="markets">
+                        <Route path=":id">
+                          <Route index element={<MarketsView />} />
+                          <Route path="tournament" element={<Tournament />} />
+                          <Route path="fund" element={<MarketsFund />} />
+                          <Route path=":tokenId" element={<TokenView />} />
+                        </Route>
+                        <Route path="new" element={<MarketsCreate />} />
                       </Route>
-                      <Route path="new" element={<MarketsCreate />} />
+                      <Route path="leaderboard" element={<Leaderboard />} />
+                      <Route path="profile">
+                        <Route index element={<Profile />} />
+                        <Route path=":id" element={<Profile />} />
+                      </Route>
+                      <Route path="curate/validator" element={<CurateValidator />} />
+                      <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
+                      <Route path="send-vouchers" element={<SendVouchers />} />
+                      <Route path="ads">
+                        <Route index element={<AdsList />} />
+                        <Route path="create" element={<AdsCreate />} />
+                        <Route path=":id" element={<AdsView />} />
+                      </Route>
                     </Route>
-                    <Route path="leaderboard" element={<Leaderboard />} />
-                    <Route path="profile">
-                      <Route index element={<Profile />} />
-                      <Route path=":id" element={<Profile />} />
-                    </Route>
-                    <Route path="curate/validator" element={<CurateValidator />} />
-                    <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
-                    <Route path="send-vouchers" element={<SendVouchers />} />
-                    <Route path="ads">
-                      <Route index element={<AdsList />} />
-                      <Route path="create" element={<AdsCreate />} />
-                      <Route path=":id" element={<AdsView />} />
-                    </Route>
-                  </Route>
-                </Routes>
-              </HashRouter>
-            </GlobalContextProvider>
-          </I18nProvider>
-        </ThemeProvider>
-      </ReactQueryProvider>
-    </DAppProvider>
+                  </Routes>
+                </HashRouter>
+              </GlobalContextProvider>
+            </I18nProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
+      </RainbowKitProvider>
+    </WagmiConfig>
   </React.StrictMode>,
   document.getElementById("root"),
 );

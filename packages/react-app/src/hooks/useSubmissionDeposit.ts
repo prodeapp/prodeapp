@@ -1,14 +1,40 @@
-import {useCall} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {Arbitrator__factory, GeneralizedTCR__factory} from "../typechain";
 import {BigNumber} from "@ethersproject/bignumber";
+import {useQuery} from "@tanstack/react-query";
+import {getContract, getProvider, readContract} from "@wagmi/core";
+import {GeneralizedTCRAbi} from "../abi/GeneralizedTCR";
+import {ArbitratorAbi} from "../abi/Arbitrator";
 
 export const useSubmissionDeposit = (tcrAddress: string) => {
-  const generalizedTCR = tcrAddress !== '' ? new Contract(tcrAddress, GeneralizedTCR__factory.createInterface()) : false;
-  const { value: arbitrator } = useCall(generalizedTCR && { contract: generalizedTCR, method: 'arbitrator', args: [] }) || {}
-  const { value: arbitratorExtraData } = useCall(generalizedTCR &&{ contract: generalizedTCR, method: 'arbitratorExtraData', args: [] }) || {}
-  const { value: submissionBaseDeposit } = useCall(generalizedTCR && { contract: generalizedTCR, method: 'submissionBaseDeposit', args: [] }) || {value: [BigNumber.from(0)]}
-  const { value: arbitrationCost } = useCall(arbitrator && arbitratorExtraData && { contract: new Contract(arbitrator[0], Arbitrator__factory.createInterface()), method: 'arbitrationCost', args: [arbitratorExtraData[0]] }) || {value: [BigNumber.from(0)]}
-
-  return submissionBaseDeposit[0].add(arbitrationCost[0]);
+  return useQuery<BigNumber, Error>(
+    ["useSubmissionDeposit", tcrAddress],
+    async () => {
+      return getSubmissionDeposit(tcrAddress)
+    },
+    {
+      enabled: !!tcrAddress
+    }
+  );
 };
+
+export const getSubmissionDeposit = async (tcrAddress: string) => {
+  const generalizedTCR = getContract({
+    address: tcrAddress,
+    abi: GeneralizedTCRAbi,
+    signerOrProvider: getProvider(),
+  })
+
+  const [arbitrator, arbitratorExtraData, submissionBaseDeposit] = await Promise.all([
+    generalizedTCR.arbitrator(),
+    generalizedTCR.arbitratorExtraData(),
+    generalizedTCR.submissionBaseDeposit()
+  ])
+
+  const arbitrationCost = await readContract({
+    address: arbitrator,
+    abi: ArbitratorAbi,
+    functionName: 'arbitrationCost',
+    args: [arbitratorExtraData]
+  })
+
+  return submissionBaseDeposit.add(arbitrationCost);
+}

@@ -4,6 +4,8 @@ import ipfsPublish from "./ipfs-publish";
 import {CurateSubmitFormValues} from "../components/Curate";
 import validate from "../components/Curate/schema";
 import {CURATE_ITEM_FIELDS, CurateItem} from "../graphql/subgraph";
+import {Address} from "@wagmi/core"
+import {Bytes} from "../abi/types";
 
 export const FORMAT_SINGLE_ELIMINATION = 'single-elimination';
 export const FORMAT_DOUBLE_ELIMINATION = 'double-elimination';
@@ -55,7 +57,7 @@ const curateItemQuery = `
 `
 
 async function getRegistryColumns(): Promise<any[]> {
-  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: (process.env.REACT_APP_CURATE_REGISTRY as string).toLowerCase()})
+  const result = await apolloProdeQuery<{ registry: {clearingMetaEvidence: {URI: string}} }>(registryQuery, {registryId: (import.meta.env.VITE_CURATE_REGISTRY as Address).toLowerCase()})
 
   if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
     throw new Error('Missing registry meta evidence URI');
@@ -70,7 +72,7 @@ async function getRegistryColumns(): Promise<any[]> {
   }
 }
 
-export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]) {
+export async function getEncodedParams(data: CurateSubmitFormValues, questionsHash: string, questionsIds: string[]): Promise<Bytes> {
   const json = {
     description: data.description,
     formats: [getTournamentFormat(data, questionsIds)]
@@ -89,7 +91,7 @@ export async function getEncodedParams(data: CurateSubmitFormValues, questionsHa
     Details: await ipfsPublish('market.json', JSON.stringify(json)),
   }
 
-  return gtcrEncode({ columns: await getRegistryColumns(), values })
+  return gtcrEncode({ columns: await getRegistryColumns(), values }) as Bytes
 }
 
 export async function getDecodedParams(itemId: string): Promise<DecodedCurateListFields> {

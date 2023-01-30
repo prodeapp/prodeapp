@@ -7,15 +7,16 @@ import Box from '@mui/material/Box';
 import AnswerDialog from "../Answer/AnswerDialog";
 import {Event} from "../../graphql/subgraph";
 import {queryClient} from "../../lib/react-query";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
 import {useI18nContext} from "../../lib/I18nContext";
 import {FormatEvent, FormatOutcome} from "../FormatEvent";
-import {useContractFunction} from "@usedapp/core";
-import {Contract} from "@ethersproject/contracts";
-import {RealityETH_v3_0__factory} from "../../typechain";
 import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
+import {RealityAbi} from "../../abi/RealityETH_v3_0";
+import {Address} from "@wagmi/core"
+import {BigNumber} from "@ethersproject/bignumber";
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 const bigColumnSx = {
   width: {xs: '100%', md: '40%'},
@@ -58,7 +59,9 @@ function AnswerColumn(event: Event, finalized: boolean) {
 
     return <div>
       <StatusBadge color="green"><FormatOutcome name={answerText} title={event.title}/></StatusBadge>
-      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer accepted`}</div>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+        <Trans id="Answer accepted" />
+      </div>
     </div>
   }
 
@@ -66,65 +69,72 @@ function AnswerColumn(event: Event, finalized: boolean) {
 
   if (openingTimeLeft !== false) {
     return <div>
-      <StatusBadge color="red"><Trans>Pending</Trans></StatusBadge>
-      <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Open to answers in ${openingTimeLeft}`}</div>
+      <StatusBadge color="red"><Trans id="Pending" /></StatusBadge>
+      <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+        <Trans id="Open to answers in {openingTimeLeft}" values={{openingTimeLeft}} />
+      </div>
     </div>
   }
 
   if (event.isPendingArbitration) {
-    return <StatusBadge color="yellow"><Trans>Pending arbitration</Trans></StatusBadge>
+    return <StatusBadge color="yellow"><Trans id="Pending arbitration" /></StatusBadge>
   }
 
   const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale);
 
   if (!answerCountdown) {
-    return <StatusBadge color="yellow"><Trans>Pending</Trans></StatusBadge>;
+    return <StatusBadge color="yellow"><Trans id="Pending" /></StatusBadge>;
   }
 
   return <div>
     <StatusBadge color="yellow">{answerText}</StatusBadge>
-    <div style={{fontSize: '11.11px', marginTop: '5px'}}>{t`Answer closes in ${answerCountdown}`}</div>
+    <div style={{fontSize: '11.11px', marginTop: '5px'}}>
+      <Trans id="Answer closes in {answerCountdown}" values={{answerCountdown}}/>
+    </div>
   </div>
 }
 
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
   const { locale } = useI18nContext();
 
-  const { state, send } = useContractFunction(
-    new Contract(process.env.REACT_APP_REALITIO as string, RealityETH_v3_0__factory.createInterface()),
-    'reopenQuestion'
-  );
+  const { isSuccess, write, error } = useSendRecklessTx({
+    address: import.meta.env.VITE_REALITIO as Address,
+    abi: RealityAbi,
+    functionName: 'reopenQuestion',
+  })
 
   useEffect(() => {
-    if (state.errorMessage) {
-      alert(state.errorMessage);
+    if (error) {
+      alert(error.message);
     }
-  }, [state]);
+  }, [error]);
 
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
-        await send(
-          event.templateID,
-          encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
-          event.arbitrator,
-          event.timeout,
-          event.openingTs,
-          0,
-          event.minBond,
-          event.id
-        );
+        write!({
+          recklesslySetUnpreparedArgs: [
+            BigNumber.from(event.templateID),
+            encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),
+            event.arbitrator,
+            Number(event.timeout),
+            Number(event.openingTs),
+            BigNumber.from(0),
+            BigNumber.from(event.minBond),
+            event.id
+          ]
+        });
       }
 
-      if (state.status === 'Success') {
+      if (isSuccess) {
         // TODO: update event in cache to allow to answer instantly
-        return <div><Trans>Question reopened!</Trans></div>
+        return <div><Trans id="Question reopened!" /></div>
       }
 
       return <Button
         color="primary" size="small"
         onClick={reopenQuestion}>
-        <Trans>Reopen question</Trans>
+        <Trans id="Reopen question" />
       </Button>
     }
 
@@ -140,7 +150,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
   return <span
     className="js-link"
     onClick={clickHandler}>
-    {event.answer === null ? <Trans>Answer result</Trans> : <Trans>Change result</Trans>}
+    {event.answer === null ? <Trans id="Answer result" /> : <Trans id="Change result" />}
     <ArrowRightIcon style={{marginLeft: '10px'}} />
   </span>
 }
@@ -156,7 +166,7 @@ export default function Results({marketId}: {marketId: string}) {
     if (currentEvent) {
       // refetch events and question just in case the user has provided an answer
       queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id]);
-      queryClient.invalidateQueries(['useQuestion', process.env.REACT_APP_REALITIO as string, currentEvent.id]);
+      queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as Address, currentEvent.id]);
     }
   }
 
@@ -168,8 +178,8 @@ export default function Results({marketId}: {marketId: string}) {
     />}
   <div>
     {!isPhone && <TableHeader>
-      <div style={{width: '40%'}}><Trans>Event</Trans></div>
-      <div style={{width: '30%'}}><Trans>Result</Trans></div>
+      <div style={{width: '40%'}}><Trans id="Event" /></div>
+      <div style={{width: '30%'}}><Trans id="Result" /></div>
       <div style={{width: '30%'}}></div>
     </TableHeader>}
     {events && events.map((event, i) => {

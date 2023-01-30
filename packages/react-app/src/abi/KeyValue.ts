@@ -1,6 +1,7 @@
-[
+export const KeyValueAbi = [
   {
     "type": "constructor",
+    "stateMutability": "nonpayable",
     "inputs": []
   },
   {
@@ -38,4 +39,4 @@
     ],
     "anonymous": false
   }
-]
+] as const

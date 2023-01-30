@@ -1,7 +1,7 @@
 import React from "react";
 import {Link as RouterLink, useParams} from "react-router-dom";
 import Grid from '@mui/material/Grid';
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/react';
 import {useBetToken} from "../hooks/useBetToken";
 import {BigNumber} from "@ethersproject/bignumber";
 import {useBet} from "../hooks/useBet";
@@ -12,14 +12,14 @@ function TokenView() {
   const { id, tokenId } = useParams();
   const { isLoading, data: bet } = useBet(String(id), String(tokenId));
 
-  const image = useBetToken(String(id), BigNumber.from(tokenId));
+  const {data: image = ''} = useBetToken(String(id), BigNumber.from(tokenId));
 
   if (isLoading) {
-    return <div><Trans>Loading...</Trans></div>
+    return <div><Trans id="Loading..." /></div>
   }
 
   if (!bet) {
-    return <Trans>Bet not found</Trans>
+    return <Trans id="Bet not found" />
   }
 
   return (
@@ -32,7 +32,7 @@ function TokenView() {
           </div>}
 
           <div style={{textAlign: 'center', margin: '20px 0'}}>
-            <Button component={RouterLink} to={`/markets/${id}`}><Trans>Go to market</Trans></Button>
+            <Button component={RouterLink} to={`/markets/${id}`}><Trans id="Go to market" /></Button>
           </div>
 
           <BetDetails bet={bet} />

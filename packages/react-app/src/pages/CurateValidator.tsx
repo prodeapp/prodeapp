@@ -18,7 +18,8 @@ import Alert from "@mui/material/Alert";
 import {getQuestionsHash} from "../lib/reality";
 import {fetchEvents, useEvents} from "../hooks/useEvents";
 import validate from "../components/Curate/schema";
-import { Trans, t } from "@lingui/macro";
+import { Trans } from '@lingui/react'
+import { i18n } from "@lingui/core"
 import {RenderTournament} from "../components/Tournament/RenderTournament";
 
 type FormValues = {
@@ -73,31 +74,31 @@ function CurateValidator() {
       itemProps = await getDecodedParams(data.itemId.toLowerCase());
       setItemJson(itemProps.Details);
     } catch (e) {
-      setResults([{type: 'error', message: t`Item id not found`}]);
+      setResults([{type: 'error', message: i18n._("Item id not found")}]);
       return;
     }
 
     const isValid = validate(itemProps.Details);
 
     _results.push(
-      !isValid ? {type: 'error', message: t`Invalid JSON`} : {type: 'success', message: t`Valid JSON`}
+      !isValid ? {type: 'error', message: i18n._("Invalid JSON")} : {type: 'success', message: i18n._("Valid JSON")}
     );
 
     // validate hash
     const market = await fetchMarketByHash(itemProps.Hash);
 
     if (!market) {
-      _results.push({type: 'error', message: t`Market hash not found`});
+      _results.push({type: 'error', message: i18n._("Market hash not found")});
     } else {
-      _results.push({type: 'success', message: t`Market hash found`});
+      _results.push({type: 'success', message: i18n._("Market hash found")});
 
       const events = await fetchEvents(market.id);
 
       // validate hash
       _results.push(
         getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
-          ? {type: 'error', message: t`Invalid market hash`}
-          : {type: 'success', message: t`Valid market hash`}
+          ? {type: 'error', message: i18n._("Invalid market hash")}
+          : {type: 'success', message: i18n._("Valid market hash")}
       );
 
       // validate hash is not already registered
@@ -105,15 +106,15 @@ function CurateValidator() {
 
       _results.push(
         marketCurations.length > 1
-          ? {type: 'error', message: t`This market has more than 1 submissions. ItemId's: ${marketCurations.map(tc => tc.id).join(', ')}`}
-          : {type: 'success', message: t`This is the first submission for this market`}
+          ? {type: 'error', message: i18n._("This market has more than 1 submissions. ItemId's: {0}", {0: marketCurations.map(tc => tc.id).join(', ')})}
+          : {type: 'success', message: i18n._("This is the first submission for this market")}
       );
 
       // validate timestamp
       _results.push(
         Number(market.closingTime) <= Number(itemProps['Starting timestmap'])
-          ? {type: 'success', message: t`Valid starting timestamp`}
-          : {type: 'error', message: t`Starting timestamp is earlier than the betting deadline`}
+          ? {type: 'success', message: i18n._("Valid starting timestamp")}
+          : {type: 'error', message: i18n._("Starting timestamp is earlier than the betting deadline")}
       );
 
       setMarketId(market.id)
@@ -126,17 +127,17 @@ function CurateValidator() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <BoxWrapper>
         <BoxRow>
-          <BoxLabelCell><Trans>Item Id</Trans></BoxLabelCell>
+          <BoxLabelCell><Trans id="Item Id" /></BoxLabelCell>
           <div style={{width: '100%'}}>
             <TextField {...register('itemId', {
-              required: t`This field is required.`
+              required: i18n._("This field is required.")
             })} style={{width: '100%'}}/>
             <FormError><ErrorMessage errors={errors} name="itemId" /></FormError>
           </div>
         </BoxRow>
         <BoxRow>
           <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit"><Trans>Validate</Trans></Button>
+            <Button type="submit"><Trans id="Validate" /></Button>
           </div>
         </BoxRow>
       </BoxWrapper>

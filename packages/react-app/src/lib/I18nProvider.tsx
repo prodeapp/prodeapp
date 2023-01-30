@@ -4,7 +4,6 @@ import { i18n } from "@lingui/core";
 import { I18nContext } from './I18nContext';
 import { LocaleEnum } from "./types";
 import { detect, fromStorage } from "@lingui/detect-locale"
-
 // import plural rules for all locales
 import { en, es } from "make-plural";
 
@@ -58,7 +57,7 @@ export const I18nProvider: React.FC = ({ children }) => {
 
     useEffect(() => {
         // Dynamically load the catalogs
-        import(`../locales/${locale}/messages`).then(module => {
+        import(`../locales/${locale}/messages.mjs`).then(module => {
             const messages = module.messages;
             i18n.load(locale, messages)
             i18n.activate(locale)

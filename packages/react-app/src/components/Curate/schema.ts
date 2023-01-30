@@ -1,4 +1,4 @@
-const Ajv = require("ajv")
+import Ajv from "ajv"
 
 const CURATE_SCHEMA = {
   type: "object",

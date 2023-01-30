@@ -1,7 +1,8 @@
+import { expect, test } from 'vitest'
 import {MarketPoint} from "../useMarketPoints";
 import {getMarketWinners, RankedWinners} from "../useMarketWinners";
 
-it('first place tie', () => {
+test('first place tie', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},
@@ -20,7 +21,7 @@ it('first place tie', () => {
   expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
 });
 
-it('first place tie + second place', () => {
+test('first place tie + second place', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},
@@ -40,7 +41,7 @@ it('first place tie + second place', () => {
   expect(getMarketWinners(marketPoints, 4)).toEqual(rankedWinners);
 });
 
-it('first place + second place + third place', () => {
+test('first place + second place + third place', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '7'},
@@ -59,7 +60,7 @@ it('first place + second place + third place', () => {
   expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
 });
 
-it('first place tie + second place tie + third place', () => {
+test('first place tie + second place tie + third place', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},
@@ -77,7 +78,7 @@ it('first place tie + second place tie + third place', () => {
   expect(getMarketWinners(marketPoints, 2)).toEqual(rankedWinners);
 });
 
-it('first place tie + second place tie', () => {
+test('first place tie + second place tie', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},
@@ -97,7 +98,7 @@ it('first place tie + second place tie', () => {
   expect(getMarketWinners(marketPoints, 3)).toEqual(rankedWinners);
 });
 
-it('first place tie + second place tie + third place', () => {
+test('first place tie + second place tie + third place', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},
@@ -117,7 +118,7 @@ it('first place tie + second place tie + third place', () => {
   expect(getMarketWinners(marketPoints, 4)).toEqual(rankedWinners);
 });
 
-it('first place tie + second place tie + third place', () => {
+test('first place tie + second place tie + third place', () => {
   const marketPoints: MarketPoint[] = [
     {tokenID: '1', points: '8'},
     {tokenID: '2', points: '8'},

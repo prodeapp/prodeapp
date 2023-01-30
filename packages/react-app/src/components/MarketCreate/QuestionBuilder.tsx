@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import {FormError} from "../index";
 import {ErrorMessage} from "@hookform/error-message";
 import {MarketFormStep1Values} from "../../hooks/useMarketForm";
-import {t} from "@lingui/macro";
+import { i18n } from "@lingui/core"
 
 type QuestionBuilderProps = {
   eventIndex: number
@@ -16,8 +16,8 @@ export default function QuestionBuilder({eventIndex}: QuestionBuilderProps) {
   return <div style={{flexGrow: 1}}>
     <div style={{display: 'flex'}}>
       <TextField {...register(`events.${eventIndex}.questionPlaceholder`, {
-        required: t`This field is required.`,
-        validate: v => v.includes('?') || t`The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'`,
+        required: i18n._("This field is required."),
+        validate: v => v.includes('?') || i18n._("The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"),
       })} error={!!errors.events?.[eventIndex]?.questionPlaceholder} style={{flexGrow: 1}}/>
     </div>
     <FormError><ErrorMessage errors={errors} name={`events.${eventIndex}.questionPlaceholder`} /></FormError>

@@ -1,7 +1,8 @@
 import {BigNumberish} from "@ethersproject/bignumber";
+import {Address} from "@wagmi/core"
 
 export interface Market {
-  id: string
+  id: Address
   hash: string
   name: string
   nonce: string
@@ -56,8 +57,8 @@ export const MARKET_FIELDS = `
 export type Outcome = string
 
 export interface Event {
-  id: string
-  arbitrator: string
+  id: Address
+  arbitrator: Address
   markets: [{
     id: string
   }]
@@ -72,7 +73,7 @@ export interface Event {
   minBond: string
   lastBond: string
   bounty: string
-  templateID: BigNumberish
+  templateID: string
 }
 
 export const EVENT_FIELDS = `
@@ -149,7 +150,7 @@ export interface MarketReferral {
   }
   totalAmount: BigNumberish
   claimed: boolean
-  manager: string
+  manager: Address
   attributions: [{
     id: string
     attributor: { id: string }
@@ -306,7 +307,7 @@ export const MARKET_FACTORY_FIELDS = `
 `;
 
 export interface SVGAd {
-  id: string
+  id: Address
   curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null
   markets: Pick<Market, 'id'>[]
   bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'currentHighest'>[]
@@ -345,6 +346,6 @@ export interface AdBid {
 }
 
 export interface CurateSVGAdItem {
-  id: string
+  id: Address
   SVGAd: Pick<SVGAd, 'id'>
 }
