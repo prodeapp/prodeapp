@@ -11,8 +11,8 @@ import { i18n } from "@lingui/core"
 import {parseUnits} from "@ethersproject/units";
 import {Address, getAccount} from "@wagmi/core";
 import {useNetwork} from "wagmi";
-import {useContractWrite} from "wagmi";
 import {MarketAbi} from "../abi/Market";
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 export type FundMarketFormData = {
   value: string
@@ -32,15 +32,14 @@ function MarketsFund() {
     }
   });
 
-  const { isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, error, write } = useSendRecklessTx({
     address: String(marketId) as Address,
     abi: MarketAbi,
     functionName: 'fundMarket',
   })
 
   const onSubmit = async (data: FundMarketFormData) => {
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [data.message],
       recklesslySetUnpreparedOverrides: {
         value: parseUnits(String(data.value), 18),

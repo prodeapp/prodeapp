@@ -3,7 +3,6 @@ import {FormError} from "../../components"
 import {FormControl} from "@mui/material";
 import {useForm} from "react-hook-form";
 import {ErrorMessage} from "@hookform/error-message";
-import {Contract} from "@ethersproject/contracts";
 import Alert from "@mui/material/Alert";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Trans } from '@lingui/react'
@@ -13,10 +12,10 @@ import Button from "@mui/material/Button";
 import { Player, PLAYER_FIELDS } from "../../graphql/subgraph";
 import { apolloProdeQuery } from "../../lib/apolloClient";
 import {getAccount} from "@wagmi/core";
-import {useContractWrite, useNetwork} from "wagmi";
-import {ManagerAbi} from "../../abi/Manager";
+import { useNetwork} from "wagmi";
 import {KeyValueAbi} from "../../abi/KeyValue";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 export type ProfileFormValues = {
   name: string
@@ -56,8 +55,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
       name: defaultName,
     }});
 
-  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isLoading, isSuccess, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_KEY_VALUE as Address,
     abi: KeyValueAbi,
     functionName: 'setValue',
@@ -84,7 +82,7 @@ export default function ProfileForm({defaultName}: {defaultName: string}) {
   }
 
   const onSubmit = async (data: ProfileFormValues) => {
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         'setName',
         data.name

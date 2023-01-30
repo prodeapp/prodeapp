@@ -87,7 +87,10 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     events && events.forEach(event => append({value: '', questionId: event.id}))
   }, [events, append, remove]);
 
-  const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, market.price);
+  const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
+  const attribution = isAddress(referral) ? referral : AddressZero
+
+  const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(market.id, BigNumber.from(market.price), attribution, outcomes);
 
   useEffect(() => {
     if (tokenId !== false) {
@@ -127,26 +130,12 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
     return <Alert severity="error"><Trans id="Error loading events" />.</Alert>
   }
 
-  const onSubmit = async (data: BetFormValues) => {
-    const results = data.outcomes
-      /**
-       * ============================================================
-       * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
-       * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
-       * ============================================================
-       */
-      .sort((a, b) => a.questionId > b.questionId ? 1 : -1)
-      .map(outcome => formatOutcome(outcome.value));
-    const referral = window.localStorage.getItem(getReferralKey(market.id)) || '';
-
-    await placeBet(
-      isAddress(referral) ? referral : AddressZero,
-      results
-    )
-  }
-
   if (isLoading) {
     return <div style={{textAlign: 'center', marginBottom: 15}}><CircularProgress /></div>
+  }
+
+  const onSubmit = async (data: BetFormValues) => {
+    placeBet!()
   }
 
   return (
@@ -187,7 +176,7 @@ export default function BetForm({market, cancelHandler}: BetFormProps) {
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button type="submit" color="primary" size="large" fullWidth>
+          <Button type="submit" disabled={!placeBet} color="primary" size="large" fullWidth>
             <Trans id="Place Bet" /> <TriangleIcon style={{marginLeft: 10, fill: 'currentColor', color: 'white'}} />
           </Button>
         </Grid>

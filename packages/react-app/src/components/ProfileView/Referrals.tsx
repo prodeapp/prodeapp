@@ -8,22 +8,21 @@ import { BoxRow } from "..";
 import { useMarketReferrals } from "../../hooks/useMarketReferrals";
 import { MarketReferral } from "../../graphql/subgraph";
 import { ExpandMoreOutlined } from "@mui/icons-material";
-import {useContractWrite} from "wagmi";
 import {ManagerAbi} from "../../abi/Manager";
 import {Address} from "@wagmi/core";
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 function ClaimAction({marketReferral}: {marketReferral: MarketReferral}) {
     const theme = useTheme();
 
-    const { isLoading, isSuccess, isError, writeAsync } = useContractWrite({
-        mode: 'recklesslyUnprepared',
+    const { isLoading, isSuccess, isError, write } = useSendRecklessTx({
         address: marketReferral.manager,
         abi: ManagerAbi,
         functionName: 'claimReferralReward',
     })
 
     const handleClaimOnClick = async (manager: Address) => {
-        await writeAsync!({recklesslySetUnpreparedArgs: [manager]});
+        write!({recklesslySetUnpreparedArgs: [manager]});
     };
 
     if (marketReferral.claimed || isSuccess) {

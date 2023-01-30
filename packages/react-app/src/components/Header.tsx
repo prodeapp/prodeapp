@@ -13,10 +13,11 @@ import {ReactComponent as Logo} from "../assets/logo.svg";
 import {ReactComponent as DropdownArrow} from "../assets/icons/dropdown-down.svg";
 import {Radio} from "./Radio";
 import {useClaimArgs} from "../hooks/useReality";
-import {useContractWrite, useNetwork} from "wagmi";
+import {useNetwork} from "wagmi";
 import {RealityAbi} from "../abi/RealityETH_v3_0";
 import {Address} from "@wagmi/core"
 import {ConnectButton} from "./ConnectButton";
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 const MenuBar = styled(Box)(({ theme }) => ({
   flexGrow: 1,
@@ -192,8 +193,7 @@ function WalletMenu() {
 
   const {data: claimArgs} = useClaimArgs(address || '');
 
-  const { isSuccess, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, write } = useSendRecklessTx({
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
     functionName: 'claimMultipleAndWithdrawBalance',
@@ -205,7 +205,7 @@ function WalletMenu() {
       return;
     }
 
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         claimArgs.question_ids, claimArgs.answer_lengths, claimArgs.history_hashes, claimArgs.answerers, claimArgs.bonds, claimArgs.answers
       ]

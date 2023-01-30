@@ -22,9 +22,10 @@ import {
   REALITY_TEMPLATE_SINGLE_SELECT
 } from "../../lib/reality";
 import {getAccount} from "@wagmi/core";
-import {useContractWrite, useNetwork} from "wagmi";
+import {useNetwork} from "wagmi";
 import {RealityAbi} from "../../abi/RealityETH_v3_0";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 export type FormEventOutcomeValue = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON;
 
@@ -69,8 +70,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   const { chain } = useNetwork()
   const { locale } = useI18nContext();
 
-  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isLoading, isSuccess, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
     functionName: 'submitAnswer',
@@ -103,7 +103,7 @@ export default function AnswerForm({event, register, errors, handleSubmit, setSh
   }
 
   const onSubmit = async (data: AnswerFormValues) => {
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         event.id,
         formatOutcome(data.outcome),

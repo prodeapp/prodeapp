@@ -11,13 +11,12 @@ import TextField from "@mui/material/TextField";
 import {UseFormHandleSubmit, UseFormRegister, UseFormWatch} from "react-hook-form/dist/types/form";
 import {FieldErrors} from "react-hook-form/dist/types/errors";
 import {parseUnits} from "@ethersproject/units";
-import {BigNumber} from "@ethersproject/bignumber";
 import {getAccount} from "@wagmi/core";
-import {useContractRead, useContractWrite, useNetwork} from "wagmi";
-import {RealityAbi} from "../../abi/RealityETH_v3_0";
+import {useContractRead, useNetwork} from "wagmi";
 import {FirstPriceAuctionAbi} from "../../abi/FirstPriceAuction";
 import {Address} from "@wagmi/core"
 import {Bytes} from "../../abi/types";
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 export type PlaceBidFormValues = {
   market: Address | ''
@@ -39,8 +38,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   const { chain } = useNetwork()
   const {address} = getAccount();
 
-  const { isLoading, isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isLoading, isSuccess, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
     abi: FirstPriceAuctionAbi,
     functionName: 'placeBid',
@@ -80,7 +78,7 @@ export default function PlaceBidForm({itemId, currentBid, register, errors, watc
   }
 
   const onSubmit = async (data: PlaceBidFormValues) => {
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         itemId,
         data.market as Address,

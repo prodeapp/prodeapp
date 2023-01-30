@@ -8,10 +8,13 @@ import {useI18nContext} from "../../lib/I18nContext";
 import { ReactComponent as CurrencyIcon } from "../../assets/icons/currency.svg";
 import {Alert, Typography} from "@mui/material";
 import {ReactComponent as ArrowRight} from "../../assets/icons/arrow-right-2.svg";
-import {usePlaceBet} from "../../hooks/usePlaceBet";
+import {useHasVoucher, usePlaceBet} from "../../hooks/usePlaceBet";
+import {getAccount} from "@wagmi/core";
+import {BigNumber} from "@ethersproject/bignumber";
 
 export default function PlaceBet({market, onBetClick, onResultsClick}: {market: Market, onBetClick: () => void, onResultsClick: () => void}) {
-  const { hasVoucher } = usePlaceBet(market.id, market.price);
+  const {address} = getAccount()
+  const hasVoucher = useHasVoucher(address, market.id, BigNumber.from(market.price));
   const [timeLeft, setTimeLeft] = useState<string | false>(false);
   const { locale } = useI18nContext();
 

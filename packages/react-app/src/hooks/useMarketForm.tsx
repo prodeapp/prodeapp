@@ -8,11 +8,11 @@ import {parseUnits} from "@ethersproject/units";
 import {BigNumber} from "@ethersproject/bignumber";
 import {zonedTimeToUtc} from "date-fns-tz";
 import {Address} from "@wagmi/core";
-import {useContractReads, useContractWrite} from "wagmi";
+import {useContractReads} from "wagmi";
 import {MarketFactoryAbi} from "../abi/MarketFactory";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Interface} from "@ethersproject/abi";
-import {MarketAbi} from "../abi/Market";
+import {useSendRecklessTx} from "./useSendTx";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -76,12 +76,19 @@ interface UseMarketFormReturn {
 export default function useMarketForm(): UseMarketFormReturn {
   const [marketId, setMarketId] = useState<Address | ''>('')
 
-  const { isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, error, write, receipt } = useSendRecklessTx({
     address: import.meta.env.VITE_MARKET_FACTORY as Address,
     abi: MarketFactoryAbi,
     functionName: 'createMarket',
   })
+
+  useEffect(() => {
+    if (receipt) {
+      const ethersInterface = new Interface(MarketFactoryAbi);
+      const events = receipt.logs.map(i => ethersInterface.parseLog(i))
+      setMarketId(events?.[0].args?.market?.toLowerCase() || '')
+    }
+  }, [receipt])
 
   const {data} = useContractReads({
     contracts: [
@@ -120,7 +127,7 @@ export default function useMarketForm(): UseMarketFormReturn {
 
     const minBond = parseUnits(import.meta.env.VITE_MIN_BOND || '0.5', 18);
 
-    const data = await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         step1State.market,
         'PRODE',
@@ -133,11 +140,6 @@ export default function useMarketForm(): UseMarketFormReturn {
         step2State.prizeWeights.map(pw => Math.round(pw.value * DIVISOR / 100))
       ]
     });
-    const receipt = await data.wait()
-
-    const ethersInterface = new Interface(MarketFactoryAbi);
-    const events = receipt.logs.map(i => ethersInterface.parseLog(i))
-    setMarketId(events?.[0].args?.market?.toLowerCase() || '')
   }
 
   return {

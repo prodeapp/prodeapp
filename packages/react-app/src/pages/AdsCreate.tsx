@@ -14,9 +14,10 @@ import {Typography} from "@mui/material";
 import {Banner} from "./MarketsCreate";
 import CircularProgress from "@mui/material/CircularProgress";
 import {getAccount} from "@wagmi/core";
-import {useContractWrite, useNetwork} from "wagmi";
+import {useNetwork} from "wagmi";
 import {SVGFactoryAbi} from "../abi/SVGFactory";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 const VALID_EXTENSIONS = {svg: "image/svg+xml", png: "image/png", jpeg: "image/jpeg"};
 
@@ -90,8 +91,7 @@ function AdsCreate() {
   const {address} = getAccount();
   const { chain } = useNetwork()
 
-  const { isSuccess, isLoading, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, isLoading, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
     abi: SVGFactoryAbi,
     functionName: 'createAd',
@@ -116,16 +116,12 @@ function AdsCreate() {
   }
 
   const onSubmit = async (data: AdCreateFormValues) => {
-    try {
-      await writeAsync!({
-        recklesslySetUnpreparedArgs: [btoa(svg), data.url],
-        recklesslySetUnpreparedOverrides: {
-          value: baseDeposit,
-        }
-      });
-    } catch (e: any) {
-      alert(e?.message || i18n._("Unexpected error"));
-    }
+    write!({
+      recklesslySetUnpreparedArgs: [btoa(svg), data.url],
+      recklesslySetUnpreparedOverrides: {
+        value: baseDeposit,
+      }
+    });
   }
 
   const fileChangedHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {

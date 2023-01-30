@@ -5,12 +5,12 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react';
-import {Contract} from "@ethersproject/contracts";
 import { parseEther } from "@ethersproject/units";
 import {BigNumber} from "@ethersproject/bignumber";
-import {useContractWrite} from "wagmi";
 import {Address, getContract} from "@wagmi/core"
 import {Bytes} from "../abi/types";
+import {useSendRecklessTx} from "../hooks/useSendTx";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface VoucherData {
   address: string
@@ -46,8 +46,7 @@ const VOUCHER_MANAGER_ABI = [
 ]
 
 function SendVouchers() {
-  const { isSuccess, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isLoading, isSuccess, write } = useSendRecklessTx({
     address: TRANSACTION_BATCHER,
     abi: BATCHER_ABI,
     functionName: 'batchSend',
@@ -71,7 +70,7 @@ function SendVouchers() {
   const sendVouchers = async () => {
     const values: BigNumber[] = vouchers.map(voucher => parseEther(voucher.value));
 
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
         values,
@@ -88,9 +87,11 @@ function SendVouchers() {
   return (
     <Container sx={{mt: 10}}>
 
+      {isLoading && <div style={{textAlign: 'center', margin: '15px 0'}}><CircularProgress /></div>}
+
       {isSuccess && <Alert severity="success"><Trans id="Vouchers sent" /></Alert>}
 
-      {!isSuccess && <div style={{maxWidth: '700px', margin: '0 auto'}}>
+      {!isSuccess && !isLoading && <div style={{maxWidth: '700px', margin: '0 auto'}}>
         <FormRow>
           <FormLabel>Enter one address and amount in xDAI on each line.</FormLabel>
           <div style={{width: '100%'}}>

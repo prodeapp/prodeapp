@@ -13,10 +13,10 @@ import {FormatEvent, FormatOutcome} from "../FormatEvent";
 import {encodeQuestionText, REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON} from "../../lib/reality";
 import {usePhone} from "../../hooks/useResponsive";
 import {ReactComponent as ArrowRightIcon} from "../../assets/icons/arrow-right.svg";
-import {useContractWrite} from "wagmi";
 import {RealityAbi} from "../../abi/RealityETH_v3_0";
 import {Address} from "@wagmi/core"
 import {BigNumber} from "@ethersproject/bignumber";
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 const bigColumnSx = {
   width: {xs: '100%', md: '40%'},
@@ -97,8 +97,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
   const { locale } = useI18nContext();
 
-  const { isSuccess, writeAsync, error } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, write, error } = useSendRecklessTx({
     address: import.meta.env.VITE_REALITIO as Address,
     abi: RealityAbi,
     functionName: 'reopenQuestion',
@@ -113,7 +112,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
   if (finalized) {
     if (event.answer === ANSWERED_TOO_SOON) {
       const reopenQuestion = async () => {
-        await writeAsync!({
+        write!({
           recklesslySetUnpreparedArgs: [
             BigNumber.from(event.templateID),
             encodeQuestionText(event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? 'multiple-select' : 'single-select', event.title, event.outcomes, event.category, 'en_US'),

@@ -1,70 +1,82 @@
-import {getAccount, prepareWriteContract, writeContract} from '@wagmi/core'
-import {BigNumber, BigNumberish} from "@ethersproject/bignumber";
+import {getAccount} from '@wagmi/core'
+import {BigNumber} from "@ethersproject/bignumber";
 import {Interface} from "@ethersproject/abi";
 import {MarketAbi} from "../abi/Market";
-import {useState} from "react";
 import {VoucherManagerAbi} from "../abi/VoucherManager";
 import {useContractReads} from "wagmi";
 import {Address} from "@wagmi/core"
 import {Bytes} from "../abi/types";
+import {useSendTx} from "./useSendTx";
+import {formatOutcome} from "../lib/reality";
+import {BetFormValues} from "../components/Bet/BetForm";
+import {TransactionReceipt} from "@ethersproject/abstract-provider";
+import {LogDescription} from "@ethersproject/abi"
 
 interface UsePlaceBetReturn {
   isLoading: boolean
   error: Error | null
   tokenId: BigNumber|false
-  placeBet: (_attribution: Address, _results: Bytes[]) => void
-  hasVoucher: boolean
+  placeBet: ReturnType<typeof useSendTx>['write']
 }
 
-type UsePlaceBetFn = (marketId: Address, price: BigNumberish) => UsePlaceBetReturn;
+type UsePreparePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, results: Bytes[] | false) => UsePlaceBetReturn;
+type UsePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, outcomes: BetFormValues['outcomes']) => UsePlaceBetReturn & {hasVoucher: boolean};
 
-const placeBetWithMarket = async (marketId: Address, price: BigNumber, _attribution: Address, _results: Bytes[]): Promise<BigNumber> => {
-  const config = await prepareWriteContract({
+function parseEvents(receipt: TransactionReceipt | undefined, contractAddress: Address, contractInterface: Interface): LogDescription[] {
+  return (receipt?.logs || []).reduce((accumulatedLogs, log) => {
+    try {
+      return log.address.toLowerCase() === contractAddress.toLowerCase()
+        ? [...accumulatedLogs, contractInterface.parseLog(log)]
+        : accumulatedLogs
+    } catch (_err) {
+      return accumulatedLogs
+    }
+  }, [] as LogDescription[])
+}
+
+const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, results: Bytes[] | false) => {
+  const {isLoading, isSuccess, isError, error, write, receipt} = useSendTx({
     address: marketId,
     abi: MarketAbi,
     functionName: 'placeBet',
     args: [
-      _attribution,
-      _results,
+      attribution,
+      results ? results : [],
     ],
     overrides: {
       value: price
-    }
+    },
+    enabled: results !== false
   })
-  const data = await writeContract(config)
-  const receipt = await data.wait()
 
   const ethersInterface = new Interface(MarketAbi);
-  const events = receipt.logs.map(i => ethersInterface.parseLog(i))
-  return events ? (events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false) : false
+  const events = parseEvents(receipt, marketId, ethersInterface)
+  const tokenId = events ? (events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false) : false
+
+  return {isLoading, isSuccess, isError, error, placeBet: write, tokenId}
 }
 
-const placeBetWithVoucher = async (marketId: string, _attribution: Address, _results: Bytes[]): Promise<BigNumber> => {
-  const config = await prepareWriteContract({
+const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, results: Bytes[] | false) => {
+  const {isLoading, isSuccess, isError, error, write, receipt} = useSendTx({
     address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
     abi: VoucherManagerAbi,
     functionName: 'placeBet',
     args: [
       marketId,
-      _attribution,
-      _results
+      attribution,
+      results
     ],
+    enabled: results !== false
   })
-  const data = await writeContract(config)
-  const receipt = await data.wait()
 
   const ethersInterface = new Interface(VoucherManagerAbi);
-  const events = receipt.logs.map(i => ethersInterface.parseLog(i))
-  return events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false
+  const events = parseEvents(receipt, import.meta.env.VITE_VOUCHER_MANAGER as Address, ethersInterface)
+  const tokenId = events ? (events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false) : false
+
+  return {isLoading, isSuccess, isError, error, placeBet: write, tokenId}
 }
 
-export const usePlaceBet: UsePlaceBetFn = (marketId: Address, price: BigNumberish) => {
-  const {address} = getAccount()
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-  const [tokenId, setTokenId] = useState<BigNumber|false>(false)
-
+export const useHasVoucher = (address: Address | undefined, marketId: Address, price: BigNumber) => {
   const {data} = useContractReads({
     contracts: [
       {
@@ -84,29 +96,49 @@ export const usePlaceBet: UsePlaceBetFn = (marketId: Address, price: BigNumberis
 
   const [voucherBalance, marketWhitelisted] = [data?.[0] || BigNumber.from(0), data?.[1] || false] as [BigNumber, boolean]
 
-  const hasVoucher = voucherBalance.gte(price) && marketWhitelisted
+  return voucherBalance.gte(price) && marketWhitelisted
+}
 
-  const placeBet = async (_attribution: Address, _results: Bytes[]) => {
-    setIsLoading(true)
+function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
+  if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
+    // false if there are missing predictions
+    return false
+  }
 
-    try {
-      if (hasVoucher) {
-        setTokenId(await placeBetWithVoucher(marketId, _attribution, _results))
-      } else {
-        setTokenId(await placeBetWithMarket(marketId, BigNumber.from(price), _attribution, _results))
-      }
-    } catch (e: any) {
-      setError(e)
-    }
+  return outcomes
+    /**
+     * ============================================================
+     * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
+     * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
+     * ============================================================
+     */
+    .sort((a, b) => a.questionId > b.questionId ? 1 : -1)
+    .map(outcome => formatOutcome(outcome.value));
+}
 
-    setIsLoading(false)
+export const usePlaceBet: UsePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, outcomes: BetFormValues['outcomes']) => {
+  const results = getResults(outcomes)
+
+  const {address} = getAccount()
+  const hasVoucher = useHasVoucher(address, marketId, price)
+  const marketPlaceBet = usePlaceBetWithMarket(marketId, price, attribution, results);
+  const voucherPlaceBet = usePlaceBetWithVoucher(marketId, price, attribution, results);
+
+  // we need to keep track of the tokenId once a bet is placed using a voucher
+  // because hookReturn changes to marketPlaceBet and the previous tokenId is lost
+  let tokenId: BigNumber|false = false;
+
+  if (marketPlaceBet.tokenId !== false) {
+    tokenId = marketPlaceBet.tokenId;
+  } else if (voucherPlaceBet.tokenId  !== false) {
+    tokenId = voucherPlaceBet.tokenId;
   }
 
   return {
-    isLoading,
-    error,
-    hasVoucher,
-    placeBet,
+    isLoading: hasVoucher ? voucherPlaceBet.isLoading : marketPlaceBet.isLoading,
+    error: hasVoucher ? voucherPlaceBet.error : marketPlaceBet.error,
+    hasVoucher: hasVoucher,
+    placeBet: hasVoucher ? voucherPlaceBet.placeBet : marketPlaceBet.placeBet,
     tokenId
   };
 };

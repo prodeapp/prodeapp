@@ -2,20 +2,19 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
 import { Trans } from '@lingui/react';
-import {useContractWrite} from "wagmi";
 import {KeyValueAbi} from "../../abi/KeyValue";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../../hooks/useSendTx";
 
 function DeleteMarket({marketId}: {marketId: string}) {
-  const { isSuccess, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, write } = useSendRecklessTx({
     address: import.meta.env.VITE_KEY_VALUE as Address,
     abi: KeyValueAbi,
     functionName: 'setValue',
   })
 
   const deleteMarket = async () => {
-    await writeAsync!({
+    write!({
       recklesslySetUnpreparedArgs: [
         'deleteMarket',
         marketId

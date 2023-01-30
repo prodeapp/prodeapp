@@ -17,9 +17,9 @@ import {AdImg} from "../components/ImgSvg";
 import {ReactComponent as MedalIcon} from "../assets/icons/medal.svg";
 import { getAccount } from '@wagmi/core'
 import {formatUnits} from "@ethersproject/units";
-import {useContractWrite} from "wagmi";
 import {FirstPriceAuctionAbi} from "../abi/FirstPriceAuction";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 export interface BidInfo {
   market: Address | ''
@@ -67,8 +67,7 @@ function AdsView() {
   const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO);
   const {address} = getAccount();
 
-  const { isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
     abi: FirstPriceAuctionAbi,
     functionName: 'removeBid',
@@ -96,7 +95,7 @@ function AdsView() {
 
   const handleRemove = (itemId: Address, marketId: Address) => {
     return async () => {
-      await writeAsync!({
+      write!({
         recklesslySetUnpreparedArgs: [
           itemId,
           marketId

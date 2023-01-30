@@ -17,9 +17,10 @@ import {CurateSubmitFormValues} from "../components/Curate";
 import { Trans } from '@lingui/react'
 import { i18n } from "@lingui/core"
 import {getAccount} from "@wagmi/core";
-import {useContractWrite, useNetwork} from "wagmi";
+import {useNetwork} from "wagmi";
 import {GeneralizedTCRAbi} from "../abi/GeneralizedTCR";
 import {Address} from "@wagmi/core"
+import {useSendRecklessTx} from "../hooks/useSendTx";
 
 function GroupsForm() {
   const { register, control, formState: { errors } } = useFormContext<CurateSubmitFormValues>();
@@ -119,8 +120,7 @@ function CurateSubmit() {
 
   const format = useWatch({control, name: 'format'});
 
-  const { isSuccess, error, writeAsync } = useContractWrite({
-    mode: 'recklesslyUnprepared',
+  const { isSuccess, error, write } = useSendRecklessTx({
     address: import.meta.env.VITE_CURATE_REGISTRY as Address,
     abi: GeneralizedTCRAbi,
     functionName: 'addItem',
@@ -169,7 +169,7 @@ function CurateSubmit() {
         data.questions.map(question => question.value)
       )
 
-      await writeAsync!({
+      write!({
         recklesslySetUnpreparedArgs: [
           encodedParams,
         ],
