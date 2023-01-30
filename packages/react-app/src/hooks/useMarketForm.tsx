@@ -13,6 +13,7 @@ import {MarketFactoryAbi} from "../abi/MarketFactory";
 import {useEffect, useState} from "react";
 import {Interface} from "@ethersproject/abi";
 import {useSendRecklessTx} from "./useSendTx";
+import {parseEvents} from "../lib/helpers";
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -85,7 +86,7 @@ export default function useMarketForm(): UseMarketFormReturn {
   useEffect(() => {
     if (receipt) {
       const ethersInterface = new Interface(MarketFactoryAbi);
-      const events = receipt.logs.map(i => ethersInterface.parseLog(i))
+      const events = parseEvents(receipt, import.meta.env.VITE_MARKET_FACTORY as Address, ethersInterface)
       setMarketId(events?.[0].args?.market?.toLowerCase() || '')
     }
   }, [receipt])

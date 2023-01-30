@@ -11,6 +11,9 @@ import {AdBid, Event, Outcome} from "../graphql/subgraph";
 import { i18n } from "@lingui/core";
 import {I18nContextProps} from "./types";
 import {REALITY_TEMPLATE_MULTIPLE_SELECT, ANSWERED_TOO_SOON, INVALID_RESULT} from "./reality";
+import {TransactionReceipt} from "@ethersproject/abstract-provider";
+import {Address} from "@wagmi/core";
+import {Interface, LogDescription} from "@ethersproject/abi";
 
 export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100';
 
@@ -239,4 +242,16 @@ export function shortenAddress(address: string): string {
   } catch {
     throw new TypeError("Invalid input, address can't be parsed")
   }
+}
+
+export function parseEvents(receipt: TransactionReceipt | undefined, contractAddress: Address, contractInterface: Interface): LogDescription[] {
+  return (receipt?.logs || []).reduce((accumulatedLogs, log) => {
+    try {
+      return log.address.toLowerCase() === contractAddress.toLowerCase()
+        ? [...accumulatedLogs, contractInterface.parseLog(log)]
+        : accumulatedLogs
+    } catch (_err) {
+      return accumulatedLogs
+    }
+  }, [] as LogDescription[])
 }

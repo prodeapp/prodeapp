@@ -9,8 +9,7 @@ import {Bytes} from "../abi/types";
 import {useSendTx} from "./useSendTx";
 import {formatOutcome} from "../lib/reality";
 import {BetFormValues} from "../components/Bet/BetForm";
-import {TransactionReceipt} from "@ethersproject/abstract-provider";
-import {LogDescription} from "@ethersproject/abi"
+import {parseEvents} from "../lib/helpers";
 
 interface UsePlaceBetReturn {
   isLoading: boolean
@@ -21,18 +20,6 @@ interface UsePlaceBetReturn {
 
 type UsePreparePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, results: Bytes[] | false) => UsePlaceBetReturn;
 type UsePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, outcomes: BetFormValues['outcomes']) => UsePlaceBetReturn & {hasVoucher: boolean};
-
-function parseEvents(receipt: TransactionReceipt | undefined, contractAddress: Address, contractInterface: Interface): LogDescription[] {
-  return (receipt?.logs || []).reduce((accumulatedLogs, log) => {
-    try {
-      return log.address.toLowerCase() === contractAddress.toLowerCase()
-        ? [...accumulatedLogs, contractInterface.parseLog(log)]
-        : accumulatedLogs
-    } catch (_err) {
-      return accumulatedLogs
-    }
-  }, [] as LogDescription[])
-}
 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId: Address, price: BigNumber, attribution: Address, results: Bytes[] | false) => {
   const {isLoading, isSuccess, isError, error, write, receipt} = useSendTx({
