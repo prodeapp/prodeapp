@@ -1,6 +1,7 @@
-import {Player, PLAYER_FIELDS} from "../graphql/subgraph";
-import {apolloProdeQuery} from "../lib/apolloClient";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query'
+
+import { Player, PLAYER_FIELDS } from '@/graphql/subgraph'
+import { apolloProdeQuery } from '@/lib/apolloClient'
 
 const query = `
     ${PLAYER_FIELDS}
@@ -9,18 +10,20 @@ const query = `
             ...PlayerFields
         }
     }
-`;
+`
 
 export const usePlayer = (playerId: string) => {
-  return useQuery<Player, Error>(
-    ["usePlayer", playerId],
-    async () => {
-      const response = await apolloProdeQuery<{ player: Player }>(query, {playerId: playerId.toLowerCase()});
+	return useQuery<Player, Error>(
+		['usePlayer', playerId],
+		async () => {
+			const response = await apolloProdeQuery<{ player: Player }>(query, {
+				playerId: playerId.toLowerCase(),
+			})
 
-      if (!response) throw new Error("No response from TheGraph");
+			if (!response) throw new Error('No response from TheGraph')
 
-      return response.data.player;
-    },
-    {enabled: !!playerId}
-  );
-};
+			return response.data.player
+		},
+		{ enabled: !!playerId }
+	)
+}

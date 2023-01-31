@@ -1,46 +1,49 @@
+import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { i18n } from "@lingui/core"
-import React, {useState} from "react";
-import {getMarketUrl} from "../../lib/helpers";
-import {ReactComponent as LinkIcon} from "../../assets/icons/link.svg";
-import {getAccount} from "@wagmi/core";
+import { getAccount } from '@wagmi/core'
+import React, { useState } from 'react'
+
+import { ReactComponent as LinkIcon } from '@/assets/icons/link.svg'
+import { getMarketUrl } from '@/lib/helpers'
 
 const copyReferralLink = async (marketId: string, account: string) => {
-  try {
-    await navigator.clipboard.writeText(`${getMarketUrl(marketId)}?referralId=${account || ''}`);
-  } catch (err) {
-    alert('Unable to copy');
-  }
+	try {
+		await navigator.clipboard.writeText(`${getMarketUrl(marketId)}?referralId=${account || ''}`)
+	} catch (err) {
+		alert('Unable to copy')
+	}
 }
 
-function ReferralLink({marketId}: {marketId: string}) {
-  const {address} = getAccount();
+function ReferralLink({ marketId }: { marketId: string }) {
+	const { address } = getAccount()
 
-  const [textCopied, setTextCopied] = useState(false);
+	const [textCopied, setTextCopied] = useState(false)
 
-  if (!navigator.clipboard) {
-    return null;
-  }
+	if (!navigator.clipboard) {
+		return null
+	}
 
-  const clickHandler = async () => {
-    if (!address) {
-      // open
-      alert(i18n._("Connect your wallet"));
-      return;
-    }
+	const clickHandler = async () => {
+		if (!address) {
+			// open
+			alert(i18n._('Connect your wallet'))
+			return
+		}
 
-    setTextCopied(true);
-    await copyReferralLink(marketId, address);
-    setTimeout(() => setTextCopied(false), 3000);
-  }
+		setTextCopied(true)
+		await copyReferralLink(marketId, address)
+		setTimeout(() => setTextCopied(false), 3000)
+	}
 
-  if (textCopied) {
-    return <Trans id="Referral link copied!" />
-  }
+	if (textCopied) {
+		return <Trans id='Referral link copied!' />
+	}
 
-  return <span className="js-link" onClick={clickHandler}>
-    <LinkIcon /> <Trans id="Copy referral link" />
-  </span>
+	return (
+		<span className='js-link' onClick={clickHandler}>
+			<LinkIcon /> <Trans id='Copy referral link' />
+		</span>
+	)
 }
 
-export default ReferralLink;
+export default ReferralLink

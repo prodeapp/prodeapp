@@ -1,83 +1,80 @@
-import "./index.css";
+import './index.css'
 
-import { wagmiClient, chains } from "./lib/wagmi";
-import { WagmiConfig } from "wagmi";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import React from "react";
-import ReactDOM from "react-dom";
-import {
-  HashRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
-import Layout from "./components/Layout";
-import Home from "./pages/Home";
-import MarketsCreate from "./pages/MarketsCreate";
-import MarketsView from "./pages/MarketsView";
-import Tournament from "./pages/Tournament";
-import { ReactQueryProvider } from "./lib/react-query";
-import { ThemeProvider } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import theme from "./lib/theme"
-import Leaderboard from "./pages/Leaderboard";
-import Profile from "./pages/Profile";
-import CurateValidator from "./pages/CurateValidator";
-import CurateSubmit from "./pages/CurateSubmit";
-import { I18nProvider } from "./lib/I18nProvider";
-import TokenView from "./pages/TokenView";
-import MarketsFund from "./pages/MarketsFund";
-import { GlobalContextProvider } from './lib/GlobalContext';
-import WelcomeDialog from "./components/WelcomeDialog";
-import SendVouchers from "./pages/SendVouchers";
-import AdsList from "./pages/AdsList";
-import AdsCreate from "./pages/AdsCreate";
-import AdsView from "./pages/AdsView";
+import { ThemeProvider } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import { WagmiConfig } from 'wagmi'
+
+import Layout from './components/Layout'
+import WelcomeDialog from './components/WelcomeDialog'
+import { GlobalContextProvider } from './lib/GlobalContext'
+import { I18nProvider } from './lib/I18nProvider'
+import { ReactQueryProvider } from './lib/react-query'
+import theme from './lib/theme'
+import { chains, wagmiClient } from './lib/wagmi'
+import AdsCreate from './pages/AdsCreate'
+import AdsList from './pages/AdsList'
+import AdsView from './pages/AdsView'
+import CurateSubmit from './pages/CurateSubmit'
+import CurateValidator from './pages/CurateValidator'
+import Home from './pages/Home'
+import Leaderboard from './pages/Leaderboard'
+import MarketsCreate from './pages/MarketsCreate'
+import MarketsFund from './pages/MarketsFund'
+import MarketsView from './pages/MarketsView'
+import Profile from './pages/Profile'
+import SendVouchers from './pages/SendVouchers'
+import TokenView from './pages/TokenView'
+import Tournament from './pages/Tournament'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <ReactQueryProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <I18nProvider>
-              <GlobalContextProvider>
-                <WelcomeDialog />
-                <HashRouter>
-                  <Routes>
-                    <Route element={<Layout />}>
-                      <Route index element={<Home />} />
-                      <Route path="markets">
-                        <Route path=":id">
-                          <Route index element={<MarketsView />} />
-                          <Route path="tournament" element={<Tournament />} />
-                          <Route path="fund" element={<MarketsFund />} />
-                          <Route path=":tokenId" element={<TokenView />} />
-                        </Route>
-                        <Route path="new" element={<MarketsCreate />} />
-                      </Route>
-                      <Route path="leaderboard" element={<Leaderboard />} />
-                      <Route path="profile">
-                        <Route index element={<Profile />} />
-                        <Route path=":id" element={<Profile />} />
-                      </Route>
-                      <Route path="curate/validator" element={<CurateValidator />} />
-                      <Route path="curate/submit/:marketId" element={<CurateSubmit />} />
-                      <Route path="send-vouchers" element={<SendVouchers />} />
-                      <Route path="ads">
-                        <Route index element={<AdsList />} />
-                        <Route path="create" element={<AdsCreate />} />
-                        <Route path=":id" element={<AdsView />} />
-                      </Route>
-                    </Route>
-                  </Routes>
-                </HashRouter>
-              </GlobalContextProvider>
-            </I18nProvider>
-          </ThemeProvider>
-        </ReactQueryProvider>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  </React.StrictMode>,
-  document.getElementById("root"),
-);
+	<React.StrictMode>
+		<WagmiConfig client={wagmiClient}>
+			<RainbowKitProvider chains={chains}>
+				<ReactQueryProvider>
+					<ThemeProvider theme={theme}>
+						<CssBaseline />
+						<I18nProvider>
+							<GlobalContextProvider>
+								<WelcomeDialog />
+								<HashRouter>
+									<Routes>
+										<Route element={<Layout />}>
+											<Route index element={<Home />} />
+											<Route path='markets'>
+												<Route path=':id'>
+													<Route index element={<MarketsView />} />
+													<Route path='tournament' element={<Tournament />} />
+													<Route path='fund' element={<MarketsFund />} />
+													<Route path=':tokenId' element={<TokenView />} />
+												</Route>
+												<Route path='new' element={<MarketsCreate />} />
+											</Route>
+											<Route path='leaderboard' element={<Leaderboard />} />
+											<Route path='profile'>
+												<Route index element={<Profile />} />
+												<Route path=':id' element={<Profile />} />
+											</Route>
+											<Route path='curate/validator' element={<CurateValidator />} />
+											<Route path='curate/submit/:marketId' element={<CurateSubmit />} />
+											<Route path='send-vouchers' element={<SendVouchers />} />
+											<Route path='ads'>
+												<Route index element={<AdsList />} />
+												<Route path='create' element={<AdsCreate />} />
+												<Route path=':id' element={<AdsView />} />
+											</Route>
+										</Route>
+									</Routes>
+								</HashRouter>
+							</GlobalContextProvider>
+						</I18nProvider>
+					</ThemeProvider>
+				</ReactQueryProvider>
+			</RainbowKitProvider>
+		</WagmiConfig>
+	</React.StrictMode>,
+	document.getElementById('root')
+)

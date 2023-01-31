@@ -1,39 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
-import {apolloRealityQuery} from "../lib/apolloClient";
-import {BigNumber} from "@ethersproject/bignumber";
-import {Bytes} from "../abi/types";
-import {Address} from "@wagmi/core";
+import { BigNumber } from '@ethersproject/bignumber'
+import { useQuery } from '@tanstack/react-query'
+import { Address } from '@wagmi/core'
+
+import { Bytes } from '@/abi/types'
+import { apolloRealityQuery } from '@/lib/apolloClient'
 
 interface ClaimQuestion {
-  questionId: Bytes
-  historyHash: string
-  currentAnswer: string
-  bounty: string
-  responses: {
-    commitmentId: Bytes
-    answer: Bytes
-    user: Address
-    bond: string
-    historyHash: Bytes
-  }[]
+	questionId: Bytes
+	historyHash: string
+	currentAnswer: string
+	bounty: string
+	responses: {
+		commitmentId: Bytes
+		answer: Bytes
+		user: Address
+		bond: string
+		historyHash: Bytes
+	}[]
 }
 
 interface ClaimableItem {
-  total: BigNumber,
-  question_ids: Bytes[],
-  answer_lengths: BigNumber[],
-  answers: Bytes[],
-  answerers: Address[],
-  bonds: BigNumber[],
-  history_hashes: Bytes[]
+	total: BigNumber
+	question_ids: Bytes[]
+	answer_lengths: BigNumber[]
+	answers: Bytes[]
+	answerers: Address[]
+	bonds: BigNumber[]
+	history_hashes: Bytes[]
 }
 
-export const getUseClaimArgsKey = (account: string) => ["useClaimArgs", account];
+export const getUseClaimArgsKey = (account: string) => ['useClaimArgs', account]
 
 export const useClaimArgs = (account: string) => {
-  // TODO: if the user has more than 1000 claims it will fail
-  //  we need to paginate and return all the existing claims
-  const claimsQuery = `
+	// TODO: if the user has more than 1000 claims it will fail
+	//  we need to paginate and return all the existing claims
+	const claimsQuery = `
   query ClaimsQuery($user: Bytes!) {
     claims(first: 1000, where: {
       user: $user
@@ -42,9 +43,9 @@ export const useClaimArgs = (account: string) => {
         id
       }
     }
-  }`;
+  }`
 
-  const userActionsQuery = `
+	const userActionsQuery = `
   query UserActionsQuery($user: Bytes!, $questionIds: [Bytes!]) {
     userActions(where: {
       user: $user,
@@ -55,9 +56,9 @@ export const useClaimArgs = (account: string) => {
         questionId
       }
     }
-  }`;
+  }`
 
-  const questionsQuery = `
+	const questionsQuery = `
   query QuestionsQuery($questionIds: [Bytes!], $answerFinalizedTimestamp: String!) {
     questions(where: {
       questionId_in: $questionIds,
@@ -77,149 +78,158 @@ export const useClaimArgs = (account: string) => {
         historyHash
       }
     }
-  }`;
+  }`
 
-  return useQuery<ClaimableItem, Error>(
-    getUseClaimArgsKey(account),
-    async () => {
-      // get claims already made
-      const claimsResponse = await apolloRealityQuery<{ claims: {question: {id: string}}[] }>(claimsQuery, {user: account.toLowerCase()});
+	return useQuery<ClaimableItem, Error>(
+		getUseClaimArgsKey(account),
+		async () => {
+			// get claims already made
+			const claimsResponse = await apolloRealityQuery<{
+				claims: { question: { id: string } }[]
+			}>(claimsQuery, { user: account.toLowerCase() })
 
-      if (!claimsResponse) throw new Error("No response from TheGraph");
+			if (!claimsResponse) throw new Error('No response from TheGraph')
 
-      const questionIds = claimsResponse.data.claims.map(data => data.question.id);
+			const questionIds = claimsResponse.data.claims.map(data => data.question.id)
 
-      if (questionIds.length === 0) {
-        // we need to add an empty element, otherwise `question_not_in: []` returns nothing instead of returning all the questions
-        questionIds.push('');
-      }
+			if (questionIds.length === 0) {
+				// we need to add an empty element, otherwise `question_not_in: []` returns nothing instead of returning all the questions
+				questionIds.push('')
+			}
 
-      // get questionsIds not claimed
-      const actionsResponse = await apolloRealityQuery<{ userActions: {question: {questionId: string}}[] }>(userActionsQuery, {user: account.toLowerCase(), questionIds});
+			// get questionsIds not claimed
+			const actionsResponse = await apolloRealityQuery<{
+				userActions: { question: { questionId: string } }[]
+			}>(userActionsQuery, { user: account.toLowerCase(), questionIds })
 
-      if (!actionsResponse) throw new Error("No response from TheGraph");
+			if (!actionsResponse) throw new Error('No response from TheGraph')
 
-      const unclaimedQuestionIds = actionsResponse.data.userActions.map(data => data.question.questionId);
+			const unclaimedQuestionIds = actionsResponse.data.userActions.map(data => data.question.questionId)
 
-      // get questions
-      const now = Math.floor(Date.now()/1000);
+			// get questions
+			const now = Math.floor(Date.now() / 1000)
 
-      const questionsResponse = await apolloRealityQuery<{ questions: ClaimQuestion[] }>(questionsQuery, {questionIds: unclaimedQuestionIds, answerFinalizedTimestamp: String(now)});
+			const questionsResponse = await apolloRealityQuery<{
+				questions: ClaimQuestion[]
+			}>(questionsQuery, {
+				questionIds: unclaimedQuestionIds,
+				answerFinalizedTimestamp: String(now),
+			})
 
-      if (!questionsResponse) throw new Error("No response from TheGraph");
+			if (!questionsResponse) throw new Error('No response from TheGraph')
 
-      const claimableItems = questionsResponse.data.questions
-                                  .map(q => possibleClaimableItems(q, account))
-                                  .filter((qi): qi is ClaimableItem => qi !== false);
+			const claimableItems = questionsResponse.data.questions
+				.map(q => possibleClaimableItems(q, account))
+				.filter((qi): qi is ClaimableItem => qi !== false)
 
-      return mergeClaimableItems(claimableItems);
-    },
-    {enabled: !!account}
-  );
-};
+			return mergeClaimableItems(claimableItems)
+		},
+		{ enabled: !!account }
+	)
+}
 
 function mergeClaimableItems(claimableItems: ClaimableItem[]): ClaimableItem {
-  const combined: ClaimableItem = {
-    total: BigNumber.from(0),
-    question_ids: [],
-    answer_lengths: [],
-    answers: [],
-    answerers: [],
-    bonds: [],
-    history_hashes: []
-  };
+	const combined: ClaimableItem = {
+		total: BigNumber.from(0),
+		question_ids: [],
+		answer_lengths: [],
+		answers: [],
+		answerers: [],
+		bonds: [],
+		history_hashes: [],
+	}
 
-  for (const item of claimableItems) {
-    combined['total'] = combined['total'].add(item.total);
-    combined['question_ids'].push(...item.question_ids);
-    combined['answer_lengths'].push(...item.answer_lengths);
-    combined['answers'].push(...item.answers);
-    combined['answerers'].push(...item.answerers);
-    combined['bonds'].push(...item.bonds);
-    combined['history_hashes'].push(...item.history_hashes);
-  }
+	for (const item of claimableItems) {
+		combined['total'] = combined['total'].add(item.total)
+		combined['question_ids'].push(...item.question_ids)
+		combined['answer_lengths'].push(...item.answer_lengths)
+		combined['answers'].push(...item.answers)
+		combined['answerers'].push(...item.answerers)
+		combined['bonds'].push(...item.bonds)
+		combined['history_hashes'].push(...item.history_hashes)
+	}
 
-  return combined;
+	return combined
 }
 
 function possibleClaimableItems(question_detail: ClaimQuestion, account: string): ClaimableItem | false {
-  let ttl = BigNumber.from(0);
+	let ttl = BigNumber.from(0)
 
-  let question_ids: Bytes[] = [];
-  let answer_lengths: BigNumber[] = [];
-  let claimable_bonds = [];
-  let claimable_answers: Bytes[] = [];
-  let claimable_answerers: Address[] = [];
-  let claimable_history_hashes: Bytes[] = [];
+	const question_ids: Bytes[] = []
+	const answer_lengths: BigNumber[] = []
+	const claimable_bonds = []
+	const claimable_answers: Bytes[] = []
+	const claimable_answerers: Address[] = []
+	const claimable_history_hashes: Bytes[] = []
 
-  let is_first = true;
-  let is_yours = false;
+	let is_first = true
+	let is_yours = false
 
-  let final_answer = question_detail.currentAnswer;
+	const final_answer = question_detail.currentAnswer
 
-  const history = [...question_detail.responses].sort((a, b) => (BigNumber.from(a.bond).gt(b.bond)) ? 1 : -1);
+	const history = [...question_detail.responses].sort((a, b) => (BigNumber.from(a.bond).gt(b.bond) ? 1 : -1))
 
-  for (let i = history.length - 1; i >= 0; i--) {
-    let answer = null;
+	for (let i = history.length - 1; i >= 0; i--) {
+		let answer = null
 
-    // Only set on reveal, otherwise the answer field still holds the commitment ID for commitments
-    if (history[i].commitmentId) {
-      answer = history[i].commitmentId;
-    } else {
-      answer = history[i].answer;
-    }
-    const answerer = history[i].user;
-    const bond = BigNumber.from(history[i].bond);
-    const history_hash = history[i].historyHash;
+		// Only set on reveal, otherwise the answer field still holds the commitment ID for commitments
+		if (history[i].commitmentId) {
+			answer = history[i].commitmentId
+		} else {
+			answer = history[i].answer
+		}
+		const answerer = history[i].user
+		const bond = BigNumber.from(history[i].bond)
+		const history_hash = history[i].historyHash
 
-    const is_answerer_you = (account && (answerer.toLowerCase() === account.toLowerCase()));
-    if (is_yours) {
-      // Somebody takes over your answer
-      if (!is_answerer_you && final_answer === answer) {
-        is_yours = false;
-        ttl = ttl.sub(bond); // pay them their bond
-      } else {
-        ttl = ttl.add(bond); // take their bond
-      }
-    } else {
-      // You take over someone else's answer
-      if (is_answerer_you && final_answer === answer) {
-        is_yours = true;
-        ttl = ttl.add(bond); // your bond back
-      }
-    }
-    if (is_first && is_yours) {
-      ttl = ttl.add(question_detail.bounty);
-    }
+		const is_answerer_you = account && answerer.toLowerCase() === account.toLowerCase()
+		if (is_yours) {
+			// Somebody takes over your answer
+			if (!is_answerer_you && final_answer === answer) {
+				is_yours = false
+				ttl = ttl.sub(bond) // pay them their bond
+			} else {
+				ttl = ttl.add(bond) // take their bond
+			}
+		} else {
+			// You take over someone else's answer
+			if (is_answerer_you && final_answer === answer) {
+				is_yours = true
+				ttl = ttl.add(bond) // your bond back
+			}
+		}
+		if (is_first && is_yours) {
+			ttl = ttl.add(question_detail.bounty)
+		}
 
-    claimable_bonds.push(bond);
-    claimable_answers.push(answer);
-    claimable_answerers.push(answerer);
-    claimable_history_hashes.push(history_hash);
+		claimable_bonds.push(bond)
+		claimable_answers.push(answer)
+		claimable_answerers.push(answerer)
+		claimable_history_hashes.push(history_hash)
 
-    is_first = false;
-  }
+		is_first = false
+	}
 
-  // Nothing for you to claim, so return nothing
-  if (!ttl.gt(0)) {
-    return false;
-  }
+	// Nothing for you to claim, so return nothing
+	if (!ttl.gt(0)) {
+		return false
+	}
 
-  question_ids.push(question_detail.questionId);
-  answer_lengths.push(BigNumber.from(claimable_bonds.length));
+	question_ids.push(question_detail.questionId)
+	answer_lengths.push(BigNumber.from(claimable_bonds.length))
 
-  // For the history hash, each time we need to provide the previous hash in the history
-  // So delete the first item, and add 0x0 to the end.
-  claimable_history_hashes.shift();
-  claimable_history_hashes.push("0x0000000000000000000000000000000000000000000000000000000000000000");
+	// For the history hash, each time we need to provide the previous hash in the history
+	// So delete the first item, and add 0x0 to the end.
+	claimable_history_hashes.shift()
+	claimable_history_hashes.push('0x0000000000000000000000000000000000000000000000000000000000000000')
 
-  return {
-    'total': ttl,
-    'question_ids': question_ids,
-    'answer_lengths': answer_lengths,
-    'answers': claimable_answers,
-    'answerers': claimable_answerers,
-    'bonds': claimable_bonds,
-    'history_hashes': claimable_history_hashes
-  }
+	return {
+		total: ttl,
+		question_ids: question_ids,
+		answer_lengths: answer_lengths,
+		answers: claimable_answers,
+		answerers: claimable_answerers,
+		bonds: claimable_bonds,
+		history_hashes: claimable_history_hashes,
+	}
 }

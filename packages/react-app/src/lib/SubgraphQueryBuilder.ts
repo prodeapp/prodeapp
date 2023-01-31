@@ -1,38 +1,34 @@
-function filterObject<T>(obj: Record<string, T>, callback: (v: T, k: string) => Boolean) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key, val]) => callback(val, key))
-  )
+function filterObject<T>(obj: Record<string, T>, callback: (v: T, k: string) => boolean) {
+	return Object.fromEntries(Object.entries(obj).filter(([key, val]) => callback(val, key)))
 }
 
-type QueryValue = string | string[] | boolean | undefined;
-export type QueryVariables = Record<string, QueryValue>;
+type QueryValue = string | string[] | boolean | undefined
+export type QueryVariables = Record<string, QueryValue>
 
-const getType = (v: QueryValue): String => {
-  if (typeof v === 'string') {
-    return 'String'
-  }
+const getType = (v: QueryValue): string => {
+	if (typeof v === 'string') {
+		return 'String'
+	}
 
-  if (Array.isArray(v)) {
-    return '[String]'
-  }
+	if (Array.isArray(v)) {
+		return '[String]'
+	}
 
-  return 'Boolean';
+	return 'Boolean'
 }
 
 export function buildQuery(query: string, variables: QueryVariables) {
-  variables = filterObject(variables, val => val !== undefined);
+	variables = filterObject(variables, val => val !== undefined)
 
-  const params = Object.entries(variables)
-                  .map(([k, v]) => `$${k}: ${getType(v)}`)
-                  .join(', ')
+	const params = Object.entries(variables)
+		.map(([k, v]) => `$${k}: ${getType(v)}`)
+		.join(', ')
 
-  const where = Object.entries(variables)
-                  // this fields are used only for params
-                  .filter(v => !['orderBy', 'orderDirection'].includes(v[0]))
-                  .map(([k, v]) => `${k}: $${k}`)
-                  .join(', ')
+	const where = Object.entries(variables)
+		// this fields are used only for params
+		.filter(v => !['orderBy', 'orderDirection'].includes(v[0]))
+		.map(([k, _]) => `${k}: $${k}`)
+		.join(', ')
 
-  return query
-    .replace('#where#', where)
-    .replace('(#params#)', params !== '' ? `(${params})` : '');
+	return query.replace('#where#', where).replace('(#params#)', params !== '' ? `(${params})` : '')
 }

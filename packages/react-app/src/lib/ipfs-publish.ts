@@ -5,22 +5,22 @@
  * @return {string} URL of the stored item.
  */
 export async function ipfsPublish(fileName: string, data: string): Promise<string> {
-  const buffer = await Buffer.from(data)
+	const buffer = await Buffer.from(data)
 
-  const response = await fetch('https://ipfs.kleros.io/add', {
-    method: 'POST',
-    body: JSON.stringify({
-      fileName,
-      buffer
-    }),
-    headers: {
-      'content-type': 'application/json'
-    }
-  });
+	const response = await fetch('https://ipfs.kleros.io/add', {
+		method: 'POST',
+		body: JSON.stringify({
+			fileName,
+			buffer,
+		}),
+		headers: {
+			'content-type': 'application/json',
+		},
+	})
 
-  const body = await response.json();
+	const body = await response.json()
 
-  return `/ipfs/${body.data[1].hash}${body.data[0].path}`
+	return `/ipfs/${body.data[1].hash}${body.data[0].path}`
 }
 
 export default ipfsPublish

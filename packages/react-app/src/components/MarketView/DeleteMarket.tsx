@@ -1,32 +1,38 @@
-import React from "react";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import { Trans } from '@lingui/react';
-import {KeyValueAbi} from "../../abi/KeyValue";
-import {Address} from "@wagmi/core"
-import {useSendRecklessTx} from "../../hooks/useSendTx";
+import { Trans } from '@lingui/react'
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import { Address } from '@wagmi/core'
+import React from 'react'
 
-function DeleteMarket({marketId}: {marketId: string}) {
-  const { isSuccess, write } = useSendRecklessTx({
-    address: import.meta.env.VITE_KEY_VALUE as Address,
-    abi: KeyValueAbi,
-    functionName: 'setValue',
-  })
+import { KeyValueAbi } from '@/abi/KeyValue'
+import { useSendRecklessTx } from '@/hooks/useSendTx'
 
-  const deleteMarket = async () => {
-    write!({
-      recklesslySetUnpreparedArgs: [
-        'deleteMarket',
-        marketId
-      ]
-    });
-  }
+function DeleteMarket({ marketId }: { marketId: string }) {
+	const { isSuccess, write } = useSendRecklessTx({
+		address: import.meta.env.VITE_KEY_VALUE as Address,
+		abi: KeyValueAbi,
+		functionName: 'setValue',
+	})
 
-  if (isSuccess) {
-    return <Alert severity="success"><Trans id="This market has been deleted." /></Alert>
-  }
+	const deleteMarket = async () => {
+		write!({
+			recklesslySetUnpreparedArgs: ['deleteMarket', marketId],
+		})
+	}
 
-  return <Button variant="text" size="small" color="error" onClick={deleteMarket}><Trans id="Delete market" /></Button>
+	if (isSuccess) {
+		return (
+			<Alert severity='success'>
+				<Trans id='This market has been deleted.' />
+			</Alert>
+		)
+	}
+
+	return (
+		<Button variant='text' size='small' color='error' onClick={deleteMarket}>
+			<Trans id='Delete market' />
+		</Button>
+	)
 }
 
-export default DeleteMarket;
+export default DeleteMarket

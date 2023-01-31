@@ -1,7 +1,8 @@
-import {ATTRIBUTION_FIELDS, Attribution} from "../graphql/subgraph";
-import {useQuery} from "@tanstack/react-query";
-import {apolloProdeQuery} from "../lib/apolloClient";
-import {buildQuery} from "../lib/SubgraphQueryBuilder";
+import { useQuery } from '@tanstack/react-query'
+
+import { Attribution, ATTRIBUTION_FIELDS } from '@/graphql/subgraph'
+import { apolloProdeQuery } from '@/lib/apolloClient'
+import { buildQuery } from '@/lib/SubgraphQueryBuilder'
 
 const query = `
     ${ATTRIBUTION_FIELDS}
@@ -10,24 +11,24 @@ const query = `
         ...AttributionFields
       }
     }
-`;
+`
 
 interface Props {
-  provider: string
+	provider: string
 }
 
-export const useAttributions = ({provider}: Props) => {
-  return useQuery<Attribution[], Error>(
-    ["useAttributions", provider],
-    async () => {
-      const variables = {provider: provider?.toLowerCase()};
+export const useAttributions = ({ provider }: Props) => {
+	return useQuery<Attribution[], Error>(
+		['useAttributions', provider],
+		async () => {
+			const variables = { provider: provider?.toLowerCase() }
 
-      const response = await apolloProdeQuery<{ attributions: Attribution[] }>(buildQuery(query, variables), variables);
-      
-      if (!response) throw new Error("No response from TheGraph");
-      
-      return response.data.attributions;
-    },
-    {enabled: !!provider}
-  );
-};
+			const response = await apolloProdeQuery<{ attributions: Attribution[] }>(buildQuery(query, variables), variables)
+
+			if (!response) throw new Error('No response from TheGraph')
+
+			return response.data.attributions
+		},
+		{ enabled: !!provider }
+	)
+}

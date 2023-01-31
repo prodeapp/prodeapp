@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import {SVGAd, SVG_AD_FIELDS} from "../graphql/subgraph";
-import {apolloProdeQuery} from "../lib/apolloClient";
+import { useQuery } from '@tanstack/react-query'
+
+import { SVG_AD_FIELDS, SVGAd } from '@/graphql/subgraph'
+import { apolloProdeQuery } from '@/lib/apolloClient'
 
 const query = `
     ${SVG_AD_FIELDS}
@@ -9,17 +10,16 @@ const query = `
         ...SVGAdsFields
       }
     }
-`;
+`
 
 export const useAd = (id: string) => {
-  return useQuery<SVGAd, Error>(
-    ["useAd", id],
-    async () => {
-      const response = await apolloProdeQuery<{ svgad: SVGAd }>(query, {id: id.toLowerCase()});
+	return useQuery<SVGAd, Error>(['useAd', id], async () => {
+		const response = await apolloProdeQuery<{ svgad: SVGAd }>(query, {
+			id: id.toLowerCase(),
+		})
 
-      if (!response) throw new Error("No response from TheGraph");
+		if (!response) throw new Error('No response from TheGraph')
 
-      return response.data.svgad;
-    }
-  );
-};
+		return response.data.svgad
+	})
+}
