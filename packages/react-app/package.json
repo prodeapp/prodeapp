@@ -67,12 +67,6 @@
     "vite-tsconfig-paths": "^4.0.3",
     "wagmi": "^0.10.15"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "scripts": {
     "build": "yarn vite build",
     "ipfs": "yarn build && ipfs-deploy build/",
@@ -85,6 +79,7 @@
   "devDependencies": {
     "jsdom": "^21.0.0",
     "vite-plugin-checker": "^0.5.3",
+    "vite-tsconfig-paths": "^4.0.5",
     "vitest": "^0.27.1"
   }
 }
