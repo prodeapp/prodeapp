@@ -343,4 +343,4 @@ export const FirstPriceAuctionAbi = [
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
-] as const;
+] as const

@@ -1,5 +1,5 @@
-import Container from '@mui/material/Container';
-import { styled } from '@mui/material/styles';
+import Container from '@mui/material/Container'
+import { styled } from '@mui/material/styles'
 
 const FiltersWrapper = styled(Container)(({ theme }) => ({
 	display: 'flex',
@@ -52,6 +52,6 @@ const FiltersWrapper = styled(Container)(({ theme }) => ({
 			marginTop: theme.spacing(2),
 		},
 	},
-}));
+}))
 
-export default FiltersWrapper;
+export default FiltersWrapper

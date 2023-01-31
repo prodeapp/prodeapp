@@ -378,4 +378,4 @@ export const MarketFactoryAbi = [
 		stateMutability: 'view',
 		type: 'function',
 	},
-] as const;
+] as const

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
 	display: flex;
@@ -7,30 +7,30 @@ export const Wrapper = styled.div`
 	align-items: stretch;
 	height: 100%;
 	font-family: ${({ theme }) => theme.fontFamily};
-`;
+`
 export const TopText = styled.p`
 	color: ${({ theme }) => theme.textColor.dark};
 	margin-bottom: 0.2rem;
 	min-height: 1.25rem;
-`;
+`
 export const BottomText = styled.p`
 	color: ${({ theme }) => theme.textColor.dark};
 	flex: 0 0 none;
 	text-align: center;
 	margin-top: 0.2rem;
 	min-height: 1.25rem;
-`;
+`
 export const StyledMatch = styled.div`
 	display: flex;
 	flex-direction: column;
 	flex: 1 1 auto;
 	justify-content: space-between;
-`;
+`
 
-export const Team = styled.div``;
+export const Team = styled.div``
 
 interface ScoreProps {
-	won?: boolean;
+	won?: boolean
 }
 export const Score = styled.div<ScoreProps>`
 	display: flex;
@@ -39,14 +39,12 @@ export const Score = styled.div<ScoreProps>`
 	align-items: center;
 	width: 20%;
 	justify-content: center;
-	background: ${({ theme, won }: any) =>
-		won ? theme.score.background.wonColor : theme.score.background.lostColor};
-	color: ${({ theme, won }: any) =>
-		won ? theme.textColor.highlighted : theme.textColor.dark};
-`;
+	background: ${({ theme, won }: any) => (won ? theme.score.background.wonColor : theme.score.background.lostColor)};
+	color: ${({ theme, won }: any) => (won ? theme.textColor.highlighted : theme.textColor.dark)};
+`
 interface SideProps {
-	won?: boolean;
-	hovered?: boolean;
+	won?: boolean
+	hovered?: boolean
 }
 export const Side = styled.div<SideProps>`
 	display: flex;
@@ -54,8 +52,7 @@ export const Side = styled.div<SideProps>`
 	align-items: center;
 	justify-content: space-between;
 	padding: 0 0 0 1rem;
-	background: ${({ theme, won }: any) =>
-		won ? theme.matchBackground.wonColor : theme.matchBackground.lostColor};
+	background: ${({ theme, won }: any) => (won ? theme.matchBackground.wonColor : theme.matchBackground.lostColor)};
 	:first-of-type {
 		border-top-right-radius: 3px;
 		border-top-left-radius: 3px;
@@ -72,12 +69,10 @@ export const Side = styled.div<SideProps>`
 	border-bottom: 1px solid ${({ theme }) => theme.border.color};
 	transition: border-color 0.5s ${({ theme }) => theme.transitionTimingFunction};
 	${Team} {
-		color: ${({ theme, won }: any) =>
-			won ? theme.textColor.highlighted : theme.textColor.dark};
+		color: ${({ theme, won }: any) => (won ? theme.textColor.highlighted : theme.textColor.dark)};
 	}
 	${Score} {
-		color: ${({ theme, won }: any) =>
-			won ? theme.textColor.highlighted : theme.textColor.dark};
+		color: ${({ theme, won }: any) => (won ? theme.textColor.highlighted : theme.textColor.dark)};
 	}
 	${({ hovered, theme, won }: any) =>
 		hovered &&
@@ -87,27 +82,23 @@ export const Side = styled.div<SideProps>`
 				color: ${theme.textColor.highlighted};
 			}
 			${Score} {
-				color: ${won
-					? theme.score.text.highlightedWonColor
-					: theme.score.text.highlightedLostColor};
+				color: ${won ? theme.score.text.highlightedWonColor : theme.score.text.highlightedLostColor};
 			}
 		`}
-`;
+`
 interface LineProps {
-	highlighted?: boolean;
+	highlighted?: boolean
 }
 export const Line = styled.div<LineProps>`
 	height: 1px;
 	transition: border-color 0.5s ${({ theme }) => theme.smooth};
 	border-width: 1px;
 	border-style: solid;
-	border-color: ${({ highlighted, theme }: any) =>
-		highlighted ? theme.border.highlightedColor : theme.border.color};
-`;
+	border-color: ${({ highlighted, theme }: any) => (highlighted ? theme.border.highlightedColor : theme.border.color)};
+`
 
 export const Anchor = styled.a`
-	font-family: ${(props: any) =>
-		props.font ? props.font : props.theme.fontFamily};
+	font-family: ${(props: any) => (props.font ? props.font : props.theme.fontFamily)};
 	font-weight: ${(props: any) => (props.bold ? '700' : '400')};
 	color: ${(props: any) => props.theme.textColor.main};
 	font-size: ${(props: any) => (props.size ? props.size : '1rem')};
@@ -117,4 +108,4 @@ export const Anchor = styled.a`
 	&:hover {
 		text-decoration: underline;
 	}
-`;
+`

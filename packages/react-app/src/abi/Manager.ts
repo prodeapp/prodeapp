@@ -165,4 +165,4 @@ export const ManagerAbi = [
 		stateMutability: 'payable',
 		type: 'receive',
 	},
-] as const;
+] as const

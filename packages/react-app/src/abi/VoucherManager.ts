@@ -223,4 +223,4 @@ export const VoucherManagerAbi = [
 		],
 		anonymous: false,
 	},
-] as const;
+] as const

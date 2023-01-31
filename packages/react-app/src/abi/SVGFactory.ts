@@ -262,4 +262,4 @@ export const SVGFactoryAbi = [
 		stateMutability: 'payable',
 		type: 'receive',
 	},
-] as const;
+] as const

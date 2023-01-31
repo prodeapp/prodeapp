@@ -18,4 +18,4 @@ export const ArbitratorAbi = [
 		],
 		constant: true,
 	},
-] as const;
+] as const

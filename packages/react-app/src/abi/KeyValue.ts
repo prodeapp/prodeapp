@@ -39,4 +39,4 @@ export const KeyValueAbi = [
 		],
 		anonymous: false,
 	},
-] as const;
+] as const

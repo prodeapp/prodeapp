@@ -1473,4 +1473,4 @@ export const RealityAbi = [
 		name: 'withdraw',
 		inputs: [],
 	},
-] as const;
+] as const

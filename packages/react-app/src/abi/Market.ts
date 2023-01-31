@@ -1051,4 +1051,4 @@ export const MarketAbi = [
 		stateMutability: 'nonpayable',
 		type: 'function',
 	},
-] as const;
+] as const

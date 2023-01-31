@@ -1,34 +1,34 @@
-import './index.css';
+import './index.css'
 
-import { ThemeProvider } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter, Route, Routes } from 'react-router-dom';
-import { WagmiConfig } from 'wagmi';
+import { ThemeProvider } from '@mui/material'
+import CssBaseline from '@mui/material/CssBaseline'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import { WagmiConfig } from 'wagmi'
 
-import Layout from './components/Layout';
-import WelcomeDialog from './components/WelcomeDialog';
-import { GlobalContextProvider } from './lib/GlobalContext';
-import { I18nProvider } from './lib/I18nProvider';
-import { ReactQueryProvider } from './lib/react-query';
-import theme from './lib/theme';
-import { chains, wagmiClient } from './lib/wagmi';
-import AdsCreate from './pages/AdsCreate';
-import AdsList from './pages/AdsList';
-import AdsView from './pages/AdsView';
-import CurateSubmit from './pages/CurateSubmit';
-import CurateValidator from './pages/CurateValidator';
-import Home from './pages/Home';
-import Leaderboard from './pages/Leaderboard';
-import MarketsCreate from './pages/MarketsCreate';
-import MarketsFund from './pages/MarketsFund';
-import MarketsView from './pages/MarketsView';
-import Profile from './pages/Profile';
-import SendVouchers from './pages/SendVouchers';
-import TokenView from './pages/TokenView';
-import Tournament from './pages/Tournament';
+import Layout from './components/Layout'
+import WelcomeDialog from './components/WelcomeDialog'
+import { GlobalContextProvider } from './lib/GlobalContext'
+import { I18nProvider } from './lib/I18nProvider'
+import { ReactQueryProvider } from './lib/react-query'
+import theme from './lib/theme'
+import { chains, wagmiClient } from './lib/wagmi'
+import AdsCreate from './pages/AdsCreate'
+import AdsList from './pages/AdsList'
+import AdsView from './pages/AdsView'
+import CurateSubmit from './pages/CurateSubmit'
+import CurateValidator from './pages/CurateValidator'
+import Home from './pages/Home'
+import Leaderboard from './pages/Leaderboard'
+import MarketsCreate from './pages/MarketsCreate'
+import MarketsFund from './pages/MarketsFund'
+import MarketsView from './pages/MarketsView'
+import Profile from './pages/Profile'
+import SendVouchers from './pages/SendVouchers'
+import TokenView from './pages/TokenView'
+import Tournament from './pages/Tournament'
 
 ReactDOM.render(
 	<React.StrictMode>
@@ -58,14 +58,8 @@ ReactDOM.render(
 												<Route index element={<Profile />} />
 												<Route path=':id' element={<Profile />} />
 											</Route>
-											<Route
-												path='curate/validator'
-												element={<CurateValidator />}
-											/>
-											<Route
-												path='curate/submit/:marketId'
-												element={<CurateSubmit />}
-											/>
+											<Route path='curate/validator' element={<CurateValidator />} />
+											<Route path='curate/submit/:marketId' element={<CurateSubmit />} />
 											<Route path='send-vouchers' element={<SendVouchers />} />
 											<Route path='ads'>
 												<Route index element={<AdsList />} />
@@ -83,4 +77,4 @@ ReactDOM.render(
 		</WagmiConfig>
 	</React.StrictMode>,
 	document.getElementById('root')
-);
+)

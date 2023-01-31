@@ -1,4 +1,4 @@
-import Ajv from 'ajv';
+import Ajv from 'ajv'
 
 const CURATE_SCHEMA = {
 	type: 'object',
@@ -65,20 +65,17 @@ const CURATE_SCHEMA = {
 			type: 'array',
 			minItems: 1,
 			items: {
-				anyOf: [
-					{ $ref: '#/definitions/FormatSimple' },
-					{ $ref: '#/definitions/FormatGroups' },
-				],
+				anyOf: [{ $ref: '#/definitions/FormatSimple' }, { $ref: '#/definitions/FormatGroups' }],
 			},
 		},
 	},
 	required: ['formats'],
 	additionalProperties: false,
-};
+}
 
 // validate json
-const ajv = new Ajv();
+const ajv = new Ajv()
 
-const validate = ajv.compile(CURATE_SCHEMA);
+const validate = ajv.compile(CURATE_SCHEMA)
 
-export default validate;
+export default validate

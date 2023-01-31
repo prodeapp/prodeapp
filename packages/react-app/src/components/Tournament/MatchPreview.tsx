@@ -1,7 +1,7 @@
-import { MatchComponentProps } from '@g-loot/react-tournament-brackets/dist/src/types';
-import React from 'react';
+import { MatchComponentProps } from '@g-loot/react-tournament-brackets/dist/src/types'
+import React from 'react'
 
-import { Side, StyledMatch, Team, Wrapper } from './styles';
+import { Side, StyledMatch, Team, Wrapper } from './styles'
 
 function MatchPreview({
 	/*bottomHovered,
@@ -26,7 +26,7 @@ MatchComponentProps) {
 				</Side>
 			</StyledMatch>
 		</Wrapper>
-	);
+	)
 }
 
-export default MatchPreview;
+export default MatchPreview

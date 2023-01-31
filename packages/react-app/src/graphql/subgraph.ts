@@ -1,31 +1,31 @@
-import { BigNumberish } from '@ethersproject/bignumber';
-import { Address } from '@wagmi/core';
+import { BigNumberish } from '@ethersproject/bignumber'
+import { Address } from '@wagmi/core'
 
 export interface Market {
-	id: Address;
-	hash: string;
-	name: string;
-	nonce: string;
-	category: string;
-	price: BigNumberish;
-	numOfBets: string;
-	creationTime: string;
-	closingTime: string;
-	resultSubmissionPeriodStart: string;
-	submissionTimeout: string;
-	managementFee: string;
-	protocolFee: string;
+	id: Address
+	hash: string
+	name: string
+	nonce: string
+	category: string
+	price: BigNumberish
+	numOfBets: string
+	creationTime: string
+	closingTime: string
+	resultSubmissionPeriodStart: string
+	submissionTimeout: string
+	managementFee: string
+	protocolFee: string
 	manager: {
-		id: string;
-		managementRewards: BigNumberish;
-	};
-	creator: string;
-	pool: string;
-	prizes: string[];
-	curated: boolean;
-	numOfEvents: string;
-	numOfEventsWithAnswer: string;
-	hasPendingAnswers: boolean;
+		id: string
+		managementRewards: BigNumberish
+	}
+	creator: string
+	pool: string
+	prizes: string[]
+	curated: boolean
+	numOfEvents: string
+	numOfEventsWithAnswer: string
+	hasPendingAnswers: boolean
 }
 
 export const MARKET_FIELDS = `
@@ -52,30 +52,30 @@ export const MARKET_FIELDS = `
       numOfEventsWithAnswer
       numOfEvents
     }
-`;
+`
 
-export type Outcome = string;
+export type Outcome = string
 
 export interface Event {
-	id: Address;
-	arbitrator: Address;
+	id: Address
+	arbitrator: Address
 	markets: [
 		{
-			id: string;
+			id: string
 		}
-	];
-	category: string;
-	title: string;
-	answer: string | null;
-	outcomes: Outcome[];
-	openingTs: string;
-	answerFinalizedTimestamp: string | null;
-	isPendingArbitration: boolean;
-	timeout: string;
-	minBond: string;
-	lastBond: string;
-	bounty: string;
-	templateID: string;
+	]
+	category: string
+	title: string
+	answer: string | null
+	outcomes: Outcome[]
+	openingTs: string
+	answerFinalizedTimestamp: string | null
+	isPendingArbitration: boolean
+	timeout: string
+	minBond: string
+	lastBond: string
+	bounty: string
+	templateID: string
 }
 
 export const EVENT_FIELDS = `
@@ -96,14 +96,14 @@ export const EVENT_FIELDS = `
     bounty
     templateID
   }
-`;
+`
 
 export interface Player {
-	id: string;
-	amountBet: BigNumberish;
-	pricesReceived: BigNumberish;
-	totalAttributions: BigNumberish;
-	name: string;
+	id: string
+	amountBet: BigNumberish
+	pricesReceived: BigNumberish
+	totalAttributions: BigNumberish
+	name: string
 }
 
 export const PLAYER_FIELDS = `
@@ -114,20 +114,20 @@ export const PLAYER_FIELDS = `
     totalAttributions
     name
   }
-`;
+`
 
 export interface Attribution {
-	id: string;
+	id: string
 	market: {
-		id: string;
-		name: string;
-	};
-	amount: BigNumberish;
+		id: string
+		name: string
+	}
+	amount: BigNumberish
 	attributor: {
-		id: string;
-	};
-	timestamp: BigNumberish;
-	claimed: boolean;
+		id: string
+	}
+	timestamp: BigNumberish
+	claimed: boolean
 }
 
 export const ATTRIBUTION_FIELDS = `
@@ -139,25 +139,25 @@ export const ATTRIBUTION_FIELDS = `
     timestamp
     claimed
   }
-`;
+`
 
 export interface MarketReferral {
-	id: string;
+	id: string
 	market: {
-		id: string;
-		name: string;
-		resultSubmissionPeriodStart: string;
-	};
-	totalAmount: BigNumberish;
-	claimed: boolean;
-	manager: Address;
+		id: string
+		name: string
+		resultSubmissionPeriodStart: string
+	}
+	totalAmount: BigNumberish
+	claimed: boolean
+	manager: Address
 	attributions: [
 		{
-			id: string;
-			attributor: { id: string };
-			amount: BigNumberish;
+			id: string
+			attributor: { id: string }
+			amount: BigNumberish
 		}
-	];
+	]
 }
 
 export const MARKETREFERRAL_FIELDS = `
@@ -169,26 +169,26 @@ export const MARKETREFERRAL_FIELDS = `
     claimed
     manager
   }
-`;
+`
 
 export interface Leaderboard extends Player {
-	numOfMarkets: string;
-	numOfBets: string;
+	numOfMarkets: string
+	numOfBets: string
 	bets: {
-		id: string;
-		results: string[];
-		tokenID: BigNumberish;
-		points: BigNumberish;
-		reward: BigNumberish;
+		id: string
+		results: string[]
+		tokenID: BigNumberish
+		points: BigNumberish
+		reward: BigNumberish
 		market: {
-			id: string;
-			name: string;
+			id: string
+			name: string
 			events: {
-				answer: string;
-				id: string;
-			};
-		};
-	};
+				answer: string
+				id: string
+			}
+		}
+	}
 }
 
 export const LEADERBOARD_FIELDS = `
@@ -213,28 +213,25 @@ export const LEADERBOARD_FIELDS = `
       }
     }
   }
-`;
+`
 
 export interface Bet {
-	id: string;
+	id: string
 	player: {
-		id: string;
-		name: string;
-	};
+		id: string
+		name: string
+	}
 	market: {
-		id: string;
-		name: string;
-		events: Pick<
-			Event,
-			'id' | 'answer' | 'title' | 'outcomes' | 'openingTs' | 'templateID'
-		>[];
-	};
-	tokenID: string;
-	points: BigNumberish;
-	results: string[];
-	count: BigNumberish;
-	claim: boolean;
-	reward: BigNumberish;
+		id: string
+		name: string
+		events: Pick<Event, 'id' | 'answer' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
+	}
+	tokenID: string
+	points: BigNumberish
+	results: string[]
+	count: BigNumberish
+	claim: boolean
+	reward: BigNumberish
 }
 
 export const BET_FIELDS = `
@@ -263,23 +260,18 @@ export const BET_FIELDS = `
     claim
     reward
   }
-`;
+`
 
-export type CurationStatus =
-	| 'Absent'
-	| 'Registered'
-	| 'RegistrationRequested'
-	| 'ClearingRequested'
-	| 'Error';
+export type CurationStatus = 'Absent' | 'Registered' | 'RegistrationRequested' | 'ClearingRequested' | 'Error'
 
 export interface CurateItem {
-	id: string;
-	hash: string;
-	title: string;
-	timestamp: BigNumberish;
-	json: string;
-	data: string;
-	status: CurationStatus;
+	id: string
+	hash: string
+	title: string
+	timestamp: BigNumberish
+	json: string
+	data: string
+	status: CurationStatus
 }
 
 export const CURATE_ITEM_FIELDS = `
@@ -291,16 +283,16 @@ export const CURATE_ITEM_FIELDS = `
     timestamp
     status
   }
-`;
+`
 
 export interface MarketFactory {
-	id: string;
-	numOfBets: BigNumberish;
-	numOfMarkets: BigNumberish;
-	numOfPlayers: BigNumberish;
-	prizedClaimed: BigNumberish;
-	totalVolumeBets: BigNumberish;
-	totalVolumeFunding: BigNumberish;
+	id: string
+	numOfBets: BigNumberish
+	numOfMarkets: BigNumberish
+	numOfPlayers: BigNumberish
+	prizedClaimed: BigNumberish
+	totalVolumeBets: BigNumberish
+	totalVolumeFunding: BigNumberish
 }
 
 export const MARKET_FACTORY_FIELDS = `
@@ -312,23 +304,14 @@ export const MARKET_FACTORY_FIELDS = `
     totalVolumeBets
     totalVolumeFunding
   }
-`;
+`
 
 export interface SVGAd {
-	id: Address;
-	curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null;
-	markets: Pick<Market, 'id'>[];
-	bids: Pick<
-		AdBid,
-		| 'id'
-		| 'bidPerSecond'
-		| 'market'
-		| 'bidder'
-		| 'balance'
-		| 'startTimestamp'
-		| 'currentHighest'
-	>[];
-	activeMarkets: Pick<Market, 'id'>[];
+	id: Address
+	curateSVGAdItem: Pick<CurateSVGAdItem, 'id'> | null
+	markets: Pick<Market, 'id'>[]
+	bids: Pick<AdBid, 'id' | 'bidPerSecond' | 'market' | 'bidder' | 'balance' | 'startTimestamp' | 'currentHighest'>[]
+	activeMarkets: Pick<Market, 'id'>[]
 }
 
 export const SVG_AD_FIELDS = `
@@ -350,19 +333,19 @@ export const SVG_AD_FIELDS = `
     }
     activeMarkets {id}
   }
-`;
+`
 
 export interface AdBid {
-	id: string;
-	market: Pick<Market, 'id' | 'name'>;
-	bidPerSecond: string;
-	bidder: string;
-	balance: string;
-	startTimestamp: string;
-	currentHighest: boolean;
+	id: string
+	market: Pick<Market, 'id' | 'name'>
+	bidPerSecond: string
+	bidder: string
+	balance: string
+	startTimestamp: string
+	currentHighest: boolean
 }
 
 export interface CurateSVGAdItem {
-	id: Address;
-	SVGAd: Pick<SVGAd, 'id'>;
+	id: Address
+	SVGAd: Pick<SVGAd, 'id'>
 }

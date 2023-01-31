@@ -1,9 +1,9 @@
-import { styled } from '@mui/material/styles';
-import React from 'react';
+import { styled } from '@mui/material/styles'
+import React from 'react'
 
 type RadioProps = React.HTMLAttributes<HTMLDivElement> & {
-	active: boolean;
-};
+	active: boolean
+}
 
 export const RadioStyled = styled('div')(({ theme }) => ({
 	span: {
@@ -31,13 +31,13 @@ export const RadioStyled = styled('div')(({ theme }) => ({
 			},
 		},
 	},
-}));
+}))
 
 export function Radio(props: RadioProps) {
-	const { active, children, ...rest } = props;
+	const { active, children, ...rest } = props
 	return (
 		<RadioStyled {...rest}>
 			<span className={active ? 'active' : ''}>{children}</span>
 		</RadioStyled>
-	);
+	)
 }

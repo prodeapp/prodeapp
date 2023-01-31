@@ -1,3 +1,3 @@
-import { ResolvedConfig } from 'abitype';
+import { ResolvedConfig } from 'abitype'
 
-export type Bytes = ResolvedConfig['BytesType'];
+export type Bytes = ResolvedConfig['BytesType']
