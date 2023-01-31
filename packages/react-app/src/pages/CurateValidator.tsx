@@ -1,152 +1,179 @@
-import React, {useState} from "react";
-import {BoxWrapper, BoxRow, BoxLabelCell, FormError} from "../components"
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import {useForm} from "react-hook-form";
-import { ErrorMessage } from '@hookform/error-message';
-import {
-  DecodedCurateListFields,
-  fetchCurateItemsByHash,
-  getDecodedParams
-} from "../lib/curate";
-import {apolloProdeQuery} from "../lib/apolloClient";
-import {
-  Market,
-  MARKET_FIELDS,
-} from "../graphql/subgraph";
-import Alert from "@mui/material/Alert";
-import {getQuestionsHash} from "../lib/reality";
-import {fetchEvents, useEvents} from "../hooks/useEvents";
-import validate from "../components/Curate/schema";
+import { ErrorMessage } from '@hookform/error-message'
+import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { i18n } from "@lingui/core"
-import {RenderTournament} from "../components/Tournament/RenderTournament";
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+
+import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
+import validate from '@/components/Curate/schema'
+import { RenderTournament } from '@/components/Tournament/RenderTournament'
+import { Market, MARKET_FIELDS } from '@/graphql/subgraph'
+import { fetchEvents, useEvents } from '@/hooks/useEvents'
+import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DecodedCurateListFields, fetchCurateItemsByHash, getDecodedParams } from '@/lib/curate'
+import { getQuestionsHash } from '@/lib/reality'
 
 type FormValues = {
-  itemId: string
+	itemId: string
 }
 
 export const fetchMarketByHash = async (hash: string) => {
-  const query = `
+	const query = `
     ${MARKET_FIELDS}
     query MarketQuery($hash: String) {
         markets(where: {hash: $hash}) {
             ...MarketFields
         }
     }
-`;
+`
 
-  const response = await apolloProdeQuery<{ markets: Market[] }>(query, {hash});
+	const response = await apolloProdeQuery<{ markets: Market[] }>(query, {
+		hash,
+	})
 
-  if (!response) throw new Error("No response from TheGraph");
+	if (!response) throw new Error('No response from TheGraph')
 
-  return response.data.markets[0];
-};
+	return response.data.markets[0]
+}
 
 interface ValidationResult {
-  type: 'error' | 'success'
-  message: string
+	type: 'error' | 'success'
+	message: string
 }
 
 function CurateValidator() {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormValues>({
+		defaultValues: {
+			itemId: '',
+		},
+	})
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({defaultValues: {
-      itemId: '',
-    }});
+	const [marketId, setMarketId] = useState('')
+	const { data: events } = useEvents(marketId)
+	const [results, setResults] = useState<ValidationResult[]>([])
+	const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null)
 
-  const [marketId, setMarketId] = useState('');
-  const {data: events} = useEvents(marketId);
-  const [results, setResults] = useState<ValidationResult[]>([]);
-  const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null);
+	const onSubmit = async (data: FormValues) => {
+		setMarketId('')
 
-  const onSubmit = async (data: FormValues) => {
+		const _results: ValidationResult[] = []
 
-    setMarketId('')
+		let itemProps: DecodedCurateListFields
 
-    const _results: ValidationResult[] = [];
+		setItemJson(null)
+		setResults(_results)
 
-    let itemProps: DecodedCurateListFields;
+		try {
+			itemProps = await getDecodedParams(data.itemId.toLowerCase())
+			setItemJson(itemProps.Details)
+		} catch (e) {
+			setResults([{ type: 'error', message: i18n._('Item id not found') }])
+			return
+		}
 
-    setItemJson(null);
-    setResults(_results);
+		const isValid = validate(itemProps.Details)
 
-    try {
-      itemProps = await getDecodedParams(data.itemId.toLowerCase());
-      setItemJson(itemProps.Details);
-    } catch (e) {
-      setResults([{type: 'error', message: i18n._("Item id not found")}]);
-      return;
-    }
+		_results.push(
+			!isValid ? { type: 'error', message: i18n._('Invalid JSON') } : { type: 'success', message: i18n._('Valid JSON') }
+		)
 
-    const isValid = validate(itemProps.Details);
+		// validate hash
+		const market = await fetchMarketByHash(itemProps.Hash)
 
-    _results.push(
-      !isValid ? {type: 'error', message: i18n._("Invalid JSON")} : {type: 'success', message: i18n._("Valid JSON")}
-    );
+		if (!market) {
+			_results.push({
+				type: 'error',
+				message: i18n._('Market hash not found'),
+			})
+		} else {
+			_results.push({ type: 'success', message: i18n._('Market hash found') })
 
-    // validate hash
-    const market = await fetchMarketByHash(itemProps.Hash);
+			const events = await fetchEvents(market.id)
 
-    if (!market) {
-      _results.push({type: 'error', message: i18n._("Market hash not found")});
-    } else {
-      _results.push({type: 'success', message: i18n._("Market hash found")});
+			// validate hash
+			_results.push(
+				getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
+					? { type: 'error', message: i18n._('Invalid market hash') }
+					: { type: 'success', message: i18n._('Valid market hash') }
+			)
 
-      const events = await fetchEvents(market.id);
+			// validate hash is not already registered
+			const marketCurations = await fetchCurateItemsByHash(itemProps.Hash)
 
-      // validate hash
-      _results.push(
-        getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
-          ? {type: 'error', message: i18n._("Invalid market hash")}
-          : {type: 'success', message: i18n._("Valid market hash")}
-      );
+			_results.push(
+				marketCurations.length > 1
+					? {
+							type: 'error',
+							message: i18n._("This market has more than 1 submissions. ItemId's: {0}", {
+								0: marketCurations.map(tc => tc.id).join(', '),
+							}),
+					  }
+					: {
+							type: 'success',
+							message: i18n._('This is the first submission for this market'),
+					  }
+			)
 
-      // validate hash is not already registered
-      const marketCurations = await fetchCurateItemsByHash(itemProps.Hash);
+			// validate timestamp
+			_results.push(
+				Number(market.closingTime) <= Number(itemProps['Starting timestmap'])
+					? { type: 'success', message: i18n._('Valid starting timestamp') }
+					: {
+							type: 'error',
+							message: i18n._('Starting timestamp is earlier than the betting deadline'),
+					  }
+			)
 
-      _results.push(
-        marketCurations.length > 1
-          ? {type: 'error', message: i18n._("This market has more than 1 submissions. ItemId's: {0}", {0: marketCurations.map(tc => tc.id).join(', ')})}
-          : {type: 'success', message: i18n._("This is the first submission for this market")}
-      );
+			setMarketId(market.id)
+		}
 
-      // validate timestamp
-      _results.push(
-        Number(market.closingTime) <= Number(itemProps['Starting timestmap'])
-          ? {type: 'success', message: i18n._("Valid starting timestamp")}
-          : {type: 'error', message: i18n._("Starting timestamp is earlier than the betting deadline")}
-      );
+		setResults(_results)
+	}
 
-      setMarketId(market.id)
-    }
+	return (
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<BoxWrapper>
+				<BoxRow>
+					<BoxLabelCell>
+						<Trans id='Item Id' />
+					</BoxLabelCell>
+					<div style={{ width: '100%' }}>
+						<TextField
+							{...register('itemId', {
+								required: i18n._('This field is required.'),
+							})}
+							style={{ width: '100%' }}
+						/>
+						<FormError>
+							<ErrorMessage errors={errors} name='itemId' />
+						</FormError>
+					</div>
+				</BoxRow>
+				<BoxRow>
+					<div style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>
+						<Button type='submit'>
+							<Trans id='Validate' />
+						</Button>
+					</div>
+				</BoxRow>
+			</BoxWrapper>
 
-    setResults(_results);
-  }
+			{results.map((result, i) => (
+				<Alert severity={result.type} key={i}>
+					{result.message}
+				</Alert>
+			))}
 
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <BoxWrapper>
-        <BoxRow>
-          <BoxLabelCell><Trans id="Item Id" /></BoxLabelCell>
-          <div style={{width: '100%'}}>
-            <TextField {...register('itemId', {
-              required: i18n._("This field is required.")
-            })} style={{width: '100%'}}/>
-            <FormError><ErrorMessage errors={errors} name="itemId" /></FormError>
-          </div>
-        </BoxRow>
-        <BoxRow>
-          <div style={{textAlign: 'center', width: '100%', marginTop: '20px'}}>
-            <Button type="submit"><Trans id="Validate" /></Button>
-          </div>
-        </BoxRow>
-      </BoxWrapper>
-
-      {results.map((result, i) => <Alert severity={result.type} key={i}>{result.message}</Alert>)}
-
-      {events && itemJson && <RenderTournament events={events} itemJson={itemJson}/>}
-    </form>
-  );
+			{events && itemJson && <RenderTournament events={events} itemJson={itemJson} />}
+		</form>
+	)
 }
 
-export default CurateValidator;
+export default CurateValidator

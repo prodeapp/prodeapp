@@ -1,87 +1,97 @@
 // https://github.com/RealityETH/reality-eth-monorepo/blob/d95a9f4ee5c96f88b07651a63b3b6bf5f0e0074d/packages/reality-eth-lib/formatters/question.js#L221
-import {keccak256} from "@ethersproject/solidity";
-import {BigNumber} from "@ethersproject/bignumber";
-import {hexlify, hexZeroPad} from "@ethersproject/bytes";
-import {FormEventOutcomeValue} from "../components/Answer/AnswerForm";
-import {Bytes} from "../abi/types";
+import { BigNumber } from '@ethersproject/bignumber'
+import { hexlify, hexZeroPad } from '@ethersproject/bytes'
+import { keccak256 } from '@ethersproject/solidity'
 
-export const REALITY_TEMPLATE_SINGLE_SELECT = '2';
-export const REALITY_TEMPLATE_MULTIPLE_SELECT = '3';
+import { Bytes } from '@/abi/types'
+import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 
-export const INVALID_RESULT = "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff";
-export const ANSWERED_TOO_SOON = "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe";
+export const REALITY_TEMPLATE_SINGLE_SELECT = '2'
+export const REALITY_TEMPLATE_MULTIPLE_SELECT = '3'
+
+export const INVALID_RESULT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+export const ANSWERED_TOO_SOON = '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe'
 
 export interface MarketFactoryRealityQuestionStruct {
-  templateID: BigNumber
-  question: string
-  openingTS: number
+	templateID: BigNumber
+	question: string
+	openingTS: number
 }
 
 export function encodeQuestionText(
-  qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
-  txt: string,
-  outcomes: string[],
-  category: string,
-  lang?: string
+	qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
+	txt: string,
+	outcomes: string[],
+	category: string,
+	lang?: string
 ) {
-  let qText = JSON.stringify(txt).replace(/^"|"$/g, '');
-  const delim = '\u241f';
-  //console.log('using template_id', template_id);
-  if (qtype === 'single-select' || qtype === 'multiple-select') {
-    const outcome_str = JSON.stringify(outcomes).replace(/^\[/, '').replace(/\]$/, '');
-    //console.log('made outcome_str', outcome_str);
-    qText = qText + delim + outcome_str;
-    //console.log('made qtext', qtext);
-  }
-  if (typeof lang === 'undefined' || lang === '') {
-    lang = 'en_US';
-  }
-  qText = qText + delim + category + delim + lang;
-  return qText;
+	let qText = JSON.stringify(txt).replace(/^"|"$/g, '')
+	const delim = '\u241f'
+	//console.log('using template_id', template_id);
+	if (qtype === 'single-select' || qtype === 'multiple-select') {
+		const outcome_str = JSON.stringify(outcomes)
+			.replace(/^\[/, '')
+			.replace(/\]$/, '')
+		//console.log('made outcome_str', outcome_str);
+		qText = qText + delim + outcome_str
+		//console.log('made qtext', qtext);
+	}
+	if (typeof lang === 'undefined' || lang === '') {
+		lang = 'en_US'
+	}
+	qText = qText + delim + category + delim + lang
+	return qText
 }
 
-export function getQuestionId(questionData: MarketFactoryRealityQuestionStruct, arbitrator: string, timeout: number, minBond: BigNumber, realitio: string, msgSender: string) {
-  const contentHash = keccak256(
-    ['uint256', 'uint32', 'string'],
-    [questionData.templateID, questionData.openingTS, questionData.question]
-  );
+export function getQuestionId(
+	questionData: MarketFactoryRealityQuestionStruct,
+	arbitrator: string,
+	timeout: number,
+	minBond: BigNumber,
+	realitio: string,
+	msgSender: string
+) {
+	const contentHash = keccak256(
+		['uint256', 'uint32', 'string'],
+		[questionData.templateID, questionData.openingTS, questionData.question]
+	)
 
-  return keccak256(
-    ['bytes32', 'address', 'uint32', 'uint256', 'address', 'address', 'uint256'],
-    [contentHash, arbitrator, timeout, minBond, realitio, msgSender, 0]
-  );
+	return keccak256(
+		['bytes32', 'address', 'uint32', 'uint256', 'address', 'address', 'uint256'],
+		[contentHash, arbitrator, timeout, minBond, realitio, msgSender, 0]
+	)
 }
 
 export function getQuestionsHash(questionIDs: string[]) {
-  return keccak256(
-    questionIDs.map(_ => 'bytes32'),
-    questionIDs.sort((a, b) => a > b ? 1 : -1)
-  );
+	return keccak256(
+		questionIDs.map(_ => 'bytes32'),
+		questionIDs.sort((a, b) => (a > b ? 1 : -1))
+	)
 }
 
 export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | ''): Bytes {
-  if (outcome === '') {
-    // it should never happen because this function is called within a form so the form validation should prevent it
-    // we add this check anyway to simplify the usage of this function
-    throw Error(`Invalid outcome`)
-  }
+	if (outcome === '') {
+		// it should never happen because this function is called within a form so the form validation should prevent it
+		// we add this check anyway to simplify the usage of this function
+		throw Error(`Invalid outcome`)
+	}
 
-  if (typeof outcome === 'object') {
-    // multi-select
+	if (typeof outcome === 'object') {
+		// multi-select
 
-    // INVALID_RESULT and ANSWERED_TOO_SOON are incompatible with multi-select
-    if (outcome.includes(INVALID_RESULT)) {
-      return INVALID_RESULT;
-    }
+		// INVALID_RESULT and ANSWERED_TOO_SOON are incompatible with multi-select
+		if (outcome.includes(INVALID_RESULT)) {
+			return INVALID_RESULT
+		}
 
-    if (outcome.includes(ANSWERED_TOO_SOON)) {
-      return ANSWERED_TOO_SOON;
-    }
+		if (outcome.includes(ANSWERED_TOO_SOON)) {
+			return ANSWERED_TOO_SOON
+		}
 
-    const answerChoice = (outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0);
-    return hexZeroPad(hexlify(answerChoice), 32) as Bytes;
-  }
+		const answerChoice = (outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0)
+		return hexZeroPad(hexlify(answerChoice), 32) as Bytes
+	}
 
-  // single-select
-  return hexZeroPad(hexlify(outcome), 32) as Bytes;
+	// single-select
+	return hexZeroPad(hexlify(outcome), 32) as Bytes
 }

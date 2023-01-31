@@ -1,9 +1,10 @@
-import {useQuery} from "@tanstack/react-query";
-import {apolloProdeQuery} from "../lib/apolloClient";
+import { useQuery } from '@tanstack/react-query'
+
+import { apolloProdeQuery } from '@/lib/apolloClient'
 
 export interface MarketPoint {
-  tokenID: string
-  points: string
+	tokenID: string
+	points: string
 }
 
 const query = `
@@ -13,20 +14,20 @@ const query = `
         points
       }
     }
-`;
+`
 
 export const useMarketPoints = (marketId: string) => {
-  return useQuery<MarketPoint[], Error>(
-    ["useMarketPoints", marketId],
-    async () => {
-      const variables = {marketId: marketId.toLowerCase()};
+	return useQuery<MarketPoint[], Error>(
+		['useMarketPoints', marketId],
+		async () => {
+			const variables = { marketId: marketId.toLowerCase() }
 
-      const response = await apolloProdeQuery<{ bets: MarketPoint[] }>(query, variables);
+			const response = await apolloProdeQuery<{ bets: MarketPoint[] }>(query, variables)
 
-      if (!response) throw new Error("No response from TheGraph");
+			if (!response) throw new Error('No response from TheGraph')
 
-      return response.data.bets;
-    },
-    {enabled: !!marketId}
-  );
-};
+			return response.data.bets
+		},
+		{ enabled: !!marketId }
+	)
+}

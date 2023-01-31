@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import {Event, EVENT_FIELDS} from "../graphql/subgraph";
-import {apolloProdeQuery} from "../lib/apolloClient";
-import {useMemo} from "react";
-import {indexObjectsByKey} from "../lib/helpers";
+import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
+
+import { Event, EVENT_FIELDS } from '@/graphql/subgraph'
+import { apolloProdeQuery } from '@/lib/apolloClient'
+import { indexObjectsByKey } from '@/lib/helpers'
 
 const query = `
     ${EVENT_FIELDS}
@@ -11,25 +12,26 @@ const query = `
         ...EventFields
       }
     }
-`;
+`
 
-export const fetchEvents = async (marketId: string, orderBy: string = 'openingTs', orderDirection: string = 'asc') => {
-  const response = await apolloProdeQuery<{ events: Event[] }>(query, {marketId, orderBy, orderDirection});
+export const fetchEvents = async (marketId: string, orderBy = 'openingTs', orderDirection = 'asc') => {
+	const response = await apolloProdeQuery<{ events: Event[] }>(query, {
+		marketId,
+		orderBy,
+		orderDirection,
+	})
 
-  if (!response) throw new Error("No response from TheGraph");
+	if (!response) throw new Error('No response from TheGraph')
 
-  return response.data.events;
-};
+	return response.data.events
+}
 
 export const useEvents = (marketId: string) => {
-  return useQuery<Event[], Error>(
-    ["useEvents", marketId],
-    async () => {
-      return fetchEvents(marketId);
-    }
-  );
-};
+	return useQuery<Event[], Error>(['useEvents', marketId], async () => {
+		return fetchEvents(marketId)
+	})
+}
 
 export function useIndexedEvents(events?: Event[]) {
-  return useMemo(() => indexObjectsByKey(events || [], 'id'), [events])
+	return useMemo(() => indexObjectsByKey(events || [], 'id'), [events])
 }

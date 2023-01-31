@@ -1,7 +1,8 @@
-import {MarketReferral, MARKETREFERRAL_FIELDS} from "../graphql/subgraph";
-import {useQuery} from "@tanstack/react-query";
-import {apolloProdeQuery} from "../lib/apolloClient";
-import {buildQuery} from "../lib/SubgraphQueryBuilder";
+import { useQuery } from '@tanstack/react-query'
+
+import { MarketReferral, MARKETREFERRAL_FIELDS } from '@/graphql/subgraph'
+import { apolloProdeQuery } from '@/lib/apolloClient'
+import { buildQuery } from '@/lib/SubgraphQueryBuilder'
 
 const query = `
     ${MARKETREFERRAL_FIELDS}
@@ -10,23 +11,25 @@ const query = `
         ...MarketReferralFields
       }
     }
-`;
+`
 
 interface Props {
-  provider: string
+	provider: string
 }
 
-export const useMarketReferrals = ({provider}: Props) => {
-  return useQuery<MarketReferral[], Error>(
-    ["useMarketReferrals", provider],
-    async () => {
-      const variables = {provider: provider.toLowerCase()};
-      const response = await apolloProdeQuery<{ marketReferrals: MarketReferral[] }>(buildQuery(query, variables), variables);
-      
-      if (!response) throw new Error("No response from TheGraph");
-      
-      return response.data.marketReferrals;
-    },
-    {enabled: !!provider}
-  );
-};
+export const useMarketReferrals = ({ provider }: Props) => {
+	return useQuery<MarketReferral[], Error>(
+		['useMarketReferrals', provider],
+		async () => {
+			const variables = { provider: provider.toLowerCase() }
+			const response = await apolloProdeQuery<{
+				marketReferrals: MarketReferral[]
+			}>(buildQuery(query, variables), variables)
+
+			if (!response) throw new Error('No response from TheGraph')
+
+			return response.data.marketReferrals
+		},
+		{ enabled: !!provider }
+	)
+}
