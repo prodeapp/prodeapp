@@ -143,8 +143,8 @@ function GroupsForm() {
 
 function CurateSubmit() {
 	const { marketId } = useParams()
-	const { data: market } = useMarket(String(marketId))
-	const { isLoading, data: events } = useEvents(String(marketId))
+	const { data: market } = useMarket(String(marketId) as Address)
+	const { isLoading, data: events } = useEvents(String(marketId) as Address)
 
 	const { address } = getAccount()
 	const { chain } = useNetwork()
@@ -200,7 +200,7 @@ function CurateSubmit() {
 	useEffect(() => {
 		if (market) {
 			setValue('name', market.name)
-			setValue('startingTimestamp', market.closingTime)
+			setValue('startingTimestamp', market.closingTime.toString())
 		}
 	}, [market, setValue])
 

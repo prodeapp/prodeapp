@@ -1,58 +1,43 @@
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
 
-export interface Market {
+import { Bytes } from '@/abi/types'
+
+export interface GraphMarket {
 	id: Address
-	hash: string
-	name: string
-	nonce: string
-	category: string
-	price: BigNumberish
-	numOfBets: string
-	creationTime: string
-	closingTime: string
-	resultSubmissionPeriodStart: string
-	submissionTimeout: string
-	managementFee: string
-	protocolFee: string
-	manager: {
-		id: string
-		managementRewards: BigNumberish
-	}
 	creator: string
-	pool: string
-	prizes: string[]
-	curated: boolean
-	numOfEvents: string
-	numOfEventsWithAnswer: string
-	hasPendingAnswers: boolean
 }
 
 export const MARKET_FIELDS = `
     fragment MarketFields on Market {
       id
-      hash
-      name
-      nonce
-      category
-      price
-      numOfBets
-      creationTime
-      closingTime
-      resultSubmissionPeriodStart
-      submissionTimeout
-      managementFee
-      protocolFee
-      manager{id, managementRewards}
       creator
-      pool
-      prizes
-      curated
-      hasPendingAnswers
-      numOfEventsWithAnswer
-      numOfEvents
     }
 `
+
+export interface Market {
+	id: Address
+	hash: Bytes
+	name: string
+	price: BigNumber
+	numOfBets: number
+	closingTime: number
+	resultSubmissionPeriodStart: number
+	pool: BigNumber
+	prizes: number[]
+	manager: {
+		id: string
+		managementRewards: BigNumberish
+	}
+	managementFee: number
+	protocolFee: number
+	submissionTimeout: number
+	numOfEvents: number
+	numOfEventsWithAnswer: number
+	hasPendingAnswers: boolean
+	creator: Address
+	curated: boolean
+}
 
 export type Outcome = string
 

@@ -54,7 +54,7 @@ export default function PlaceBet({
 							<Trans id='You have a voucher available to place a bet for free!' />
 						</Alert>
 					)}
-					{betsClosingSoon(Number(market.closingTime)) && (
+					{betsClosingSoon(market.closingTime) && (
 						<Typography variant='p3' component='div'>
 							<Trans id="There's not much time left, hurry!" />
 						</Typography>
@@ -72,7 +72,7 @@ export default function PlaceBet({
 						<Trans
 							id='{0, plural, one {# result left to answer} other {# results left to answer}}'
 							values={{
-								0: Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer),
+								0: market.numOfEvents - market.numOfEventsWithAnswer,
 							}}
 						/>
 					</div>

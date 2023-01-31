@@ -10,8 +10,9 @@ import { useForm } from 'react-hook-form'
 import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
 import validate from '@/components/Curate/schema'
 import { RenderTournament } from '@/components/Tournament/RenderTournament'
-import { Market, MARKET_FIELDS } from '@/graphql/subgraph'
+import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { fetchEvents, useEvents } from '@/hooks/useEvents'
+import { getMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
 import { DecodedCurateListFields, fetchCurateItemsByHash, getDecodedParams } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
@@ -20,7 +21,7 @@ type FormValues = {
 	itemId: string
 }
 
-export const fetchMarketByHash = async (hash: string) => {
+export const fetchMarketByHash = async (hash: string): Promise<Market> => {
 	const query = `
     ${MARKET_FIELDS}
     query MarketQuery($hash: String) {
@@ -30,13 +31,13 @@ export const fetchMarketByHash = async (hash: string) => {
     }
 `
 
-	const response = await apolloProdeQuery<{ markets: Market[] }>(query, {
+	const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(query, {
 		hash,
 	})
 
 	if (!response) throw new Error('No response from TheGraph')
 
-	return response.data.markets[0]
+	return getMarket(response.data.markets[0].id)
 }
 
 interface ValidationResult {
@@ -123,7 +124,7 @@ function CurateValidator() {
 
 			// validate timestamp
 			_results.push(
-				Number(market.closingTime) <= Number(itemProps['Starting timestmap'])
+				market.closingTime <= Number(itemProps['Starting timestmap'])
 					? { type: 'success', message: i18n._('Valid starting timestamp') }
 					: {
 							type: 'error',

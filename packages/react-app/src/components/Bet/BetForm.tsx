@@ -114,7 +114,7 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 
 	const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(
 		market.id,
-		BigNumber.from(market.price),
+		market.price,
 		attribution,
 		outcomes
 	)

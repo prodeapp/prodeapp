@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Address } from '@wagmi/core'
 import compareAsc from 'date-fns/compareAsc'
 import fromUnixTime from 'date-fns/fromUnixTime'
 
@@ -14,7 +15,7 @@ type MarketStatus =
 	| 'WAITING_REGISTER_POINTS'
 	| 'FINALIZED'
 
-export const useMarketStatus = (marketId: string) => {
+export const useMarketStatus = (marketId: Address) => {
 	const { data: market } = useMarket(marketId)
 	const { data: events } = useEvents(marketId)
 
@@ -25,7 +26,7 @@ export const useMarketStatus = (marketId: string) => {
 				return ''
 			}
 
-			if (compareAsc(fromUnixTime(Number(market.closingTime)), new Date()) === 1) {
+			if (compareAsc(fromUnixTime(market.closingTime), new Date()) === 1) {
 				// closingTime > now
 				return 'ACCEPTING_BETS'
 			}
@@ -38,17 +39,14 @@ export const useMarketStatus = (marketId: string) => {
 
 			if (
 				/* now() > closingTime && */
-				market.resultSubmissionPeriodStart === '0'
+				market.resultSubmissionPeriodStart === 0
 			) {
 				return 'WAITING_AVAILABITILY_OF_RESULTS'
 			}
 
 			if (
 				/* market.resultSubmissionPeriodStart !== '0' && */
-				compareAsc(
-					fromUnixTime(Number(market.resultSubmissionPeriodStart) + Number(market.submissionTimeout)),
-					new Date()
-				) === 1
+				compareAsc(fromUnixTime(market.resultSubmissionPeriodStart + market.submissionTimeout), new Date()) === 1
 			) {
 				// resultSubmissionPeriodStart > now
 				return 'WAITING_REGISTER_POINTS'

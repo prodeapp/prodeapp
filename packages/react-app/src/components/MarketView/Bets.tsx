@@ -3,7 +3,7 @@ import { Trans } from '@lingui/react'
 import { Skeleton } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
-import { getAccount } from '@wagmi/core'
+import { Address, getAccount } from '@wagmi/core'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -17,7 +17,7 @@ import { useIndexedMarketWinners } from '@/hooks/useMarketWinners'
 import { useRanking } from '@/hooks/useRanking'
 import { formatPlayerName, getMedalColor } from '@/lib/helpers'
 
-export default function Bets({ marketId, onlyMyBets }: { marketId: string; onlyMyBets?: boolean }) {
+export default function Bets({ marketId, onlyMyBets }: { marketId: Address; onlyMyBets?: boolean }) {
 	const { address } = getAccount()
 	const { isLoading, error, data: ranking } = useRanking(marketId)
 	const marketWinners = useIndexedMarketWinners(marketId)

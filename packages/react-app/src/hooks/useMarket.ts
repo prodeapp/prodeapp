@@ -1,6 +1,9 @@
+import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
+import { Address, readContract, ReadContractResult } from '@wagmi/core'
 
-import { Market, MARKET_FIELDS } from '@/graphql/subgraph'
+import { MarketViewAbi } from '@/abi/MarketView'
+import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
 
 const query = `
@@ -12,14 +15,70 @@ const query = `
     }
 `
 
-export const useMarket = (marketId: string) => {
+export async function getMarket(marketId: Address): Promise<Market> {
+	// TODO: check that this market was created by a whitelisted factory
+
+	const marketViewContract = {
+		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		abi: MarketViewAbi,
+	}
+
+	const marketView = await readContract({
+		...marketViewContract,
+		functionName: 'getMarket',
+		args: [marketId],
+	})
+
+	return marketViewToMarket(marketView)
+}
+
+export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
+	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo] = marketView
+
+	return {
+		id,
+		name: baseInfo.name,
+		hash: baseInfo.hash,
+		price: baseInfo.price,
+		pool: baseInfo.pool,
+		prizes: baseInfo.prizes.map(p => p.toNumber()),
+		manager: {
+			id: managerInfo.managerId,
+			managementRewards: managerInfo.managementRewards,
+		},
+		numOfBets: baseInfo.numOfBets.toNumber(),
+		closingTime: periodsInfo.closingTime.toNumber(),
+		resultSubmissionPeriodStart: periodsInfo.resultSubmissionPeriodStart.toNumber(),
+		submissionTimeout: periodsInfo.submissionTimeout.toNumber(),
+		numOfEvents: eventsInfo.numOfEvents.toNumber(),
+		managementFee: managerInfo.managementFee.toNumber(),
+		protocolFee: managerInfo.protocolFee.toNumber(),
+		numOfEventsWithAnswer: eventsInfo.numOfEventsWithAnswer.toNumber(),
+		hasPendingAnswers: eventsInfo.hasPendingAnswers,
+		curated: baseInfo.curated,
+		creator: AddressZero,
+	}
+}
+
+export const graphMarketToMarket = (graphMarket: GraphMarket, market: Market) => {
+	return {
+		...market,
+		creator: graphMarket.creator as Address,
+	} as Market
+}
+
+export const useMarket = (marketId: Address) => {
 	return useQuery<Market | undefined, Error>(['useMarket', marketId], async () => {
-		const response = await apolloProdeQuery<{ market: Market }>(query, {
+		const response = await apolloProdeQuery<{ market: GraphMarket }>(query, {
 			marketId,
 		})
 
-		if (!response) throw new Error('No response from TheGraph')
+		const market = await getMarket(marketId)
 
-		return response.data.market
+		if (!response?.data?.market) {
+			return market
+		}
+
+		return graphMarketToMarket(response.data.market, market)
 	})
 }
