@@ -3,13 +3,15 @@ import { Trans } from '@lingui/react'
 import { Skeleton, useTheme } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import { Bar, BarChart, LabelList, ResponsiveContainer, XAxis, YAxis } from 'recharts'
 
 import { BoxRow, BoxWrapper } from '@/components'
 import { FormatEvent } from '@/components/FormatEvent'
-import { Bet } from '@/graphql/subgraph'
-import { useRanking } from '@/hooks/useRanking'
+import { Bet, Event } from '@/graphql/subgraph'
+import { useBets } from '@/hooks/useBets'
+import { useEvents } from '@/hooks/useEvents'
 import { getAnswerText, transOutcome } from '@/lib/helpers'
 
 interface Stat {
@@ -20,10 +22,14 @@ interface Stat {
 	title: string
 }
 
-function bets2Stats(bets: Bet[]): Stat[][] {
+function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
+	if (events.length === 0) {
+		return []
+	}
+
 	// Initialize events stats
-	let stats = bets[0].market.events.map(event => {
-		const stat = event.outcomes.map((outcome, index) => {
+	let stats = events.map(event => [
+		...event.outcomes.map((outcome, index) => {
 			return {
 				outcome: transOutcome(outcome),
 				amountBets: 0,
@@ -32,29 +38,28 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 				title: event.title,
 				openingTs: event.openingTs,
 			}
-		})
-		stat.push({
+		}),
+		{
 			outcome: i18n._('Invalid result'),
 			amountBets: 0,
 			percentage: 0,
 			index: -1,
 			title: event.title,
 			openingTs: event.openingTs,
-		})
-		return stat
-	})
-	if (stats.length === 0) return []
+		},
+	])
+
 	// Add stats
 	bets.forEach(bet => {
-		bet.results.forEach((result, i) => {
-			const event = bet.market.events[i]
-			const betText = getAnswerText(result, event.outcomes, event.templateID, 'Invalid value')
-			let betStatIndex = stats[i].findIndex(evnt => evnt.outcome === betText)
+		events.forEach((event, i) => {
+			const betText = getAnswerText(bet.results[i], event.outcomes, event.templateID, 'Invalid value')
+
+			let betStatIndex = stats[i].findIndex(event => event.outcome === betText)
 			if (betStatIndex === -1) {
-				// this bet it's a combination of outcomes, so need to be initialized
+				// this bet is a combination of outcomes, so needs to be initialized
 				betStatIndex = stats[i].length
 				stats[i][betStatIndex] = {
-					outcome: getAnswerText(result, event.outcomes, event.templateID, 'Invalid value'),
+					outcome: getAnswerText(bet.results[i], event.outcomes, event.templateID, 'Invalid value'),
 					amountBets: 0,
 					percentage: 0,
 					index: stats[i].length,
@@ -65,10 +70,11 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 			stats[i][betStatIndex].amountBets = stats[i][betStatIndex].amountBets + 1
 		})
 	})
+
 	// Normalize data
 	const nBets = bets.length
-	stats.forEach((evntStat, i) => {
-		evntStat.forEach((outcomeStat, o) => {
+	stats.forEach((eventStat, i) => {
+		eventStat.forEach((outcomeStat, o) => {
 			stats[i][o].percentage = (stats[i][o].amountBets / nBets) * 100
 		})
 	})
@@ -77,29 +83,27 @@ function bets2Stats(bets: Bet[]): Stat[][] {
 	stats.sort((a, b) => (a[0].openingTs > b[0].openingTs ? 1 : b[0].openingTs > a[0].openingTs ? -1 : 0))
 
 	// sort stats in each event by amount of bets
-	stats.map(evntstat => {
-		return evntstat.sort((a, b) => (a.amountBets > b.amountBets ? -1 : b.amountBets > a.amountBets ? 1 : 0))
-	})
+	stats.map(eventStat =>
+		eventStat.sort((a, b) => (a.amountBets > b.amountBets ? -1 : b.amountBets > a.amountBets ? 1 : 0))
+	)
 
 	// return stats
-	if (bets[0].market.events[0].outcomes.length > 4) {
+	if (events[0].outcomes.length > 4) {
 		// filter zero values for clarity in the graphs
-		stats = stats.map(evntstat => {
-			return evntstat.filter(stat => {
-				return stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._('draw')
-			})
-		})
+		stats = stats.map(eventStat =>
+			eventStat.filter(stat => stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._('draw'))
+		)
 	}
-	// filter invalid if has 0 bets.
-	return stats.map(evntstat => {
-		return evntstat.filter(stat => {
-			return stat.outcome === i18n._('Invalid result') ? stat.amountBets !== 0 : true
-		})
-	})
+
+	// filter invalid if it has 0 bets
+	return stats.map(eventStat =>
+		eventStat.filter(stat => (stat.outcome === i18n._('Invalid result') ? stat.amountBets !== 0 : true))
+	)
 }
 
-export function Stats({ marketId }: { marketId: string }) {
-	const { isLoading, error, data: ranking } = useRanking(marketId)
+export function Stats({ marketId }: { marketId: Address }) {
+	const { isLoading, error, data: bets = [] } = useBets({ marketId })
+	const { data: events = [] } = useEvents(marketId, 'id', 'asc')
 	const theme = useTheme()
 
 	if (isLoading) {
@@ -110,7 +114,7 @@ export function Stats({ marketId }: { marketId: string }) {
 		return <Alert severity='error'>{error}</Alert>
 	}
 
-	const stats = ranking && ranking.length > 0 ? bets2Stats(ranking) : []
+	const stats = bets.length > 0 && events.length > 0 ? bets2Stats(bets, events) : []
 
 	return (
 		<>

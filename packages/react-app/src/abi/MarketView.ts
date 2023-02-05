@@ -144,4 +144,111 @@ export const MarketViewAbi = [
 		stateMutability: 'view',
 		type: 'function',
 	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'marketId',
+				type: 'address',
+			},
+		],
+		name: 'getMarketBets',
+		outputs: [
+			{
+				components: [
+					{
+						internalType: 'address',
+						name: 'marketId',
+						type: 'address',
+					},
+					{
+						internalType: 'string',
+						name: 'marketName',
+						type: 'string',
+					},
+					{
+						internalType: 'uint256',
+						name: 'tokenId',
+						type: 'uint256',
+					},
+					{
+						internalType: 'address',
+						name: 'owner',
+						type: 'address',
+					},
+					{
+						internalType: 'uint256',
+						name: 'points',
+						type: 'uint256',
+					},
+					{
+						internalType: 'bytes32[]',
+						name: 'predictions',
+						type: 'bytes32[]',
+					},
+				],
+				internalType: 'struct MarketView.BetInfo[]',
+				name: 'betInfo',
+				type: 'tuple[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'marketId',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: 'tokenId',
+				type: 'uint256',
+			},
+		],
+		name: 'getTokenBet',
+		outputs: [
+			{
+				components: [
+					{
+						internalType: 'address',
+						name: 'marketId',
+						type: 'address',
+					},
+					{
+						internalType: 'string',
+						name: 'marketName',
+						type: 'string',
+					},
+					{
+						internalType: 'uint256',
+						name: 'tokenId',
+						type: 'uint256',
+					},
+					{
+						internalType: 'address',
+						name: 'owner',
+						type: 'address',
+					},
+					{
+						internalType: 'uint256',
+						name: 'points',
+						type: 'uint256',
+					},
+					{
+						internalType: 'bytes32[]',
+						name: 'predictions',
+						type: 'bytes32[]',
+					},
+				],
+				internalType: 'struct MarketView.BetInfo',
+				name: 'betInfo',
+				type: 'tuple',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
 ] as const

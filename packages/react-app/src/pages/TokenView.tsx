@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
 import { Button } from '@mui/material'
 import Grid from '@mui/material/Grid'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import { Link as RouterLink, useParams } from 'react-router-dom'
 
@@ -11,7 +12,7 @@ import { useBetToken } from '@/hooks/useBetToken'
 
 function TokenView() {
 	const { id, tokenId } = useParams()
-	const { isLoading, data: bet } = useBet(String(id), String(tokenId))
+	const { isLoading, data: bet } = useBet(String(id) as Address, Number(tokenId))
 
 	const { data: image = '' } = useBetToken(String(id), BigNumber.from(tokenId))
 

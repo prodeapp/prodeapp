@@ -13,13 +13,13 @@ import { TableBody, TableHeader } from '@/components'
 import BetDetails from '@/components/Bet/BetDetails'
 import AppDialog from '@/components/Dialog'
 import { Bet } from '@/graphql/subgraph'
+import { useBets } from '@/hooks/useBets'
 import { useIndexedMarketWinners } from '@/hooks/useMarketWinners'
-import { useRanking } from '@/hooks/useRanking'
 import { formatPlayerName, getMedalColor } from '@/lib/helpers'
 
 export default function Bets({ marketId, onlyMyBets }: { marketId: Address; onlyMyBets?: boolean }) {
 	const { address } = getAccount()
-	const { isLoading, error, data: ranking } = useRanking(marketId)
+	const { isLoading, error, data: bets } = useBets({ marketId })
 	const marketWinners = useIndexedMarketWinners(marketId)
 	const [openModal, setOpenModal] = useState(false)
 	const [bet, setBet] = useState<Bet | undefined>()
@@ -61,14 +61,14 @@ export default function Bets({ marketId, onlyMyBets }: { marketId: Address; only
 						<Trans id='Details' />
 					</div>
 				</TableHeader>
-				{ranking && ranking.length === 0 && (
+				{bets && bets.length === 0 && (
 					<Alert severity='info'>
 						<Trans id='No bets found.' />
 					</Alert>
 				)}
-				{ranking &&
-					ranking.length > 0 &&
-					ranking.map((rank, i) => {
+				{bets &&
+					bets.length > 0 &&
+					bets.map((rank, i) => {
 						if (onlyMyBets && address && rank.player.id.toLowerCase() !== address.toLowerCase()) {
 							return null
 						}

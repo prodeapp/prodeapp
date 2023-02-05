@@ -4,6 +4,7 @@ import { Trans } from '@lingui/react'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
+import { Address } from '@wagmi/core'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -57,7 +58,7 @@ function CurateValidator() {
 	})
 
 	const [marketId, setMarketId] = useState('')
-	const { data: events } = useEvents(marketId)
+	const { data: events } = useEvents(marketId as Address)
 	const [results, setResults] = useState<ValidationResult[]>([])
 	const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null)
 

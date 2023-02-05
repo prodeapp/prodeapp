@@ -19,7 +19,7 @@ gnosis.contracts = {
 		blockCreated: 21022491,
 	},
 }
-console.log({ gnosis })
+
 export const { chains, provider } = configureChains(
 	[gnosis],
 	[

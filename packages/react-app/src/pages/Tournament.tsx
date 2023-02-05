@@ -11,7 +11,7 @@ import { useMarket } from '@/hooks/useMarket'
 function Tournament() {
 	const { id } = useParams()
 	const { isLoading: isLoadingMarket, data: market } = useMarket(String(id) as Address)
-	const { isLoading: isLoadingEvents, data: events } = useEvents(String(id))
+	const { isLoading: isLoadingEvents, data: events } = useEvents(String(id) as Address)
 	const itemJson = useCurateItemJson(market?.hash || '')
 
 	if (isLoadingMarket || isLoadingEvents) {

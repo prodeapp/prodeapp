@@ -264,3 +264,7 @@ export function parseEvents(
 		}
 	}, [] as LogDescription[])
 }
+
+export function getOrderedEventsIndexes(events: Event[]) {
+	return Array.from(Array(events.length).keys()).sort((a, b) => (events[a].id < events[b].id ? -1 : 1))
+}

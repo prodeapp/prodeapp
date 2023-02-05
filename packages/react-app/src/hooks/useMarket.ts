@@ -18,13 +18,9 @@ const query = `
 export async function getMarket(marketId: Address): Promise<Market> {
 	// TODO: check that this market was created by a whitelisted factory
 
-	const marketViewContract = {
+	const marketView = await readContract({
 		address: import.meta.env.VITE_MARKET_VIEW as Address,
 		abi: MarketViewAbi,
-	}
-
-	const marketView = await readContract({
-		...marketViewContract,
 		functionName: 'getMarket',
 		args: [marketId],
 	})

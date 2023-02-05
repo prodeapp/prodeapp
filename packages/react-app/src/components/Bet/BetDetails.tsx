@@ -5,8 +5,9 @@ import Box from '@mui/material/Box'
 import { BoxRow, BoxWrapper } from '@/components'
 import { FormatEvent, FormatOutcome } from '@/components/FormatEvent'
 import { Bet } from '@/graphql/subgraph'
+import { useEvents } from '@/hooks/useEvents'
 import { usePhone } from '@/hooks/useResponsive'
-import { getAnswerText } from '@/lib/helpers'
+import { getAnswerText, getOrderedEventsIndexes } from '@/lib/helpers'
 
 function getBetResult(eventResult: string, playerBet: string) {
 	if (eventResult === '') {
@@ -39,11 +40,9 @@ const mobileLabelSx = {
 
 export default function BetDetails({ bet }: { bet: Bet }) {
 	const isPhone = usePhone()
-	const events = [...bet.market.events]
-	events.sort((a, b) => (a.openingTs > b.openingTs ? 1 : b.openingTs > a.openingTs ? -1 : 0))
-	const orderedEventIndices = Array.from(Array(events.length).keys()).sort((a, b) =>
-		events[a].id < events[b].id ? -1 : 1
-	)
+	const { data: events = [] } = useEvents(bet.market.id)
+
+	const orderedEventIndices = getOrderedEventsIndexes(events)
 
 	return (
 		<BoxWrapper>

@@ -203,7 +203,7 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 	)
 }
 
-export default function Results({ marketId }: { marketId: string }) {
+export default function Results({ marketId }: { marketId: Address }) {
 	const { data: events } = useEvents(marketId)
 	const [currentEvent, setCurrentEvent] = useState<Event | undefined>()
 	const [openModal, setOpenModal] = useState(false)

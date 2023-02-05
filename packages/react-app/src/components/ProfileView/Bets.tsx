@@ -2,6 +2,7 @@ import { Trans } from '@lingui/react'
 import { ExpandMoreOutlined } from '@mui/icons-material'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, Skeleton } from '@mui/material'
 import Link from '@mui/material/Link'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -9,8 +10,8 @@ import BetDetails from '@/components/Bet/BetDetails'
 import { useBets } from '@/hooks/useBets'
 import { formatAmount } from '@/lib/helpers'
 
-export function Bets({ playerId }: { playerId: string }) {
-	const { data: bets, error, isLoading } = useBets(playerId)
+export function Bets({ playerId }: { playerId: Address }) {
+	const { data: bets, error, isLoading } = useBets({ playerId })
 
 	if (error) {
 		return <Alert severity='error'>{error}</Alert>

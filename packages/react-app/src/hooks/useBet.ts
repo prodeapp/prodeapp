@@ -1,29 +1,29 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
+import { Address, readContract } from '@wagmi/core'
 
-import { Bet, BET_FIELDS } from '@/graphql/subgraph'
-import { apolloProdeQuery } from '@/lib/apolloClient'
+import { MarketViewAbi } from '@/abi/MarketView'
+import { Bet } from '@/graphql/subgraph'
+import { marketBetViewToBet } from '@/hooks/useBets'
 
-const query = `
-    ${BET_FIELDS}
-    query BetQuery($marketId: String, $tokenId: String) {
-      bets(where: {market: $marketId, tokenID: $tokenId}, orderBy: points, orderDirection: desc) {
-        ...BetFields
-      }
-    }
-`
+export async function getTokenBet(marketId: Address, tokenId: number): Promise<Bet> {
+	// TODO: check that this market was created by a whitelisted factory
 
-export const useBet = (marketId: string, tokenId: string) => {
+	const marketBetView = await readContract({
+		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		abi: MarketViewAbi,
+		functionName: 'getTokenBet',
+		args: [marketId, BigNumber.from(tokenId)],
+	})
+
+	return await marketBetViewToBet(marketBetView)
+}
+
+export const useBet = (marketId: Address, tokenId: number) => {
 	return useQuery<Bet | undefined, Error>(
 		['useBet', marketId, tokenId],
 		async () => {
-			const response = await apolloProdeQuery<{ bets: Bet[] }>(query, {
-				marketId,
-				tokenId,
-			})
-
-			if (!response) throw new Error('No response from TheGraph')
-
-			return response.data.bets[0]
+			return await getTokenBet(marketId, tokenId)
 		},
 		{ enabled: !!marketId || !!tokenId }
 	)

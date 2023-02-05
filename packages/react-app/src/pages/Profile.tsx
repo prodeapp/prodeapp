@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/react'
 import { Button, Container, Grid, Skeleton, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
-import { getAccount } from '@wagmi/core'
+import { Address, getAccount } from '@wagmi/core'
 import * as React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -20,7 +20,7 @@ export default function Profile() {
 	const { address } = getAccount()
 	const { chain } = useNetwork()
 	const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets')
-	const playerId = id || address || ''
+	const playerId = (id || address || '') as Address
 	const { data: player } = usePlayer(String(playerId))
 
 	if (!id) {

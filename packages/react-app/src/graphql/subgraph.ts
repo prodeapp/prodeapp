@@ -202,47 +202,36 @@ export const LEADERBOARD_FIELDS = `
 
 export interface Bet {
 	id: string
+	tokenID: number
 	player: {
-		id: string
+		id: Address
 		name: string
 	}
 	market: {
-		id: string
+		id: Address
 		name: string
-		events: Pick<Event, 'id' | 'answer' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
+	}
+	results: readonly Bytes[]
+	points: number
+	reward: BigNumber
+}
+
+export interface GraphBet {
+	id: string
+	market: {
+		id: string
 	}
 	tokenID: string
-	points: BigNumberish
-	results: string[]
-	count: BigNumberish
-	claim: boolean
 	reward: BigNumberish
 }
 
 export const BET_FIELDS = `
   fragment BetFields on Bet {
     id
-    player {
-      id,
-      name
-    }
     market {
-      id,
-      name,
-      events {
-        id
-        answer
-        title
-        outcomes
-        openingTs
-        templateID
-      }
+      id
     }
     tokenID
-    points
-    results
-    count
-    claim
     reward
   }
 `

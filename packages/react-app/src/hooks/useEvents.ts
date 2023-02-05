@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { Address } from '@wagmi/core'
 import { useMemo } from 'react'
 
 import { Event, EVENT_FIELDS } from '@/graphql/subgraph'
@@ -16,7 +17,7 @@ const query = `
 
 export const fetchEvents = async (marketId: string, orderBy = 'openingTs', orderDirection = 'asc') => {
 	const response = await apolloProdeQuery<{ events: Event[] }>(query, {
-		marketId,
+		marketId: marketId.toLowerCase(),
 		orderBy,
 		orderDirection,
 	})
@@ -26,9 +27,9 @@ export const fetchEvents = async (marketId: string, orderBy = 'openingTs', order
 	return response.data.events
 }
 
-export const useEvents = (marketId: string) => {
-	return useQuery<Event[], Error>(['useEvents', marketId], async () => {
-		return fetchEvents(marketId)
+export const useEvents = (marketId: Address, orderBy = 'openingTs', orderDirection = 'asc') => {
+	return useQuery<Event[], Error>(['useEvents', marketId, orderBy, orderDirection], async () => {
+		return fetchEvents(marketId, orderBy, orderDirection)
 	})
 }
 
