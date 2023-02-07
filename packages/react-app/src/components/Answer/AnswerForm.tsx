@@ -9,15 +9,14 @@ import FormHelperText from '@mui/material/FormHelperText'
 import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
-import { Control } from 'react-hook-form'
-import { FieldErrors } from 'react-hook-form/dist/types/errors'
-import { UseFormHandleSubmit, UseFormRegister } from 'react-hook-form/dist/types/form'
+import { useForm, useWatch } from 'react-hook-form'
 import { useNetwork } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
+import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
-import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { useSendTx } from '@/hooks/useSendTx'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -30,16 +29,12 @@ import {
 
 export type FormEventOutcomeValue = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON
 
-export type AnswerFormValues = {
+type AnswerFormValues = {
 	outcome: FormEventOutcomeValue | [FormEventOutcomeValue] | ''
 }
 
 type AnswerFormProps = {
 	event: Event
-	control: Control<AnswerFormValues>
-	register: UseFormRegister<AnswerFormValues>
-	errors: FieldErrors<AnswerFormValues>
-	handleSubmit: UseFormHandleSubmit<AnswerFormValues>
 	setShowActions: (showActions: boolean) => void
 }
 
@@ -66,19 +61,36 @@ function getOutcomes(event: Event) {
 	return outcomes
 }
 
-export default function AnswerForm({ event, register, errors, handleSubmit, setShowActions }: AnswerFormProps) {
+export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	const { address } = getAccount()
 	const { chain } = useNetwork()
 	const { locale } = useI18nContext()
 
-	const { isLoading, isSuccess, error, write } = useSendRecklessTx({
+	const {
+		register,
+		formState: { errors },
+		handleSubmit,
+		control,
+	} = useForm<AnswerFormValues>({
+		defaultValues: {
+			outcome: '',
+		},
+	})
+
+	const outcome = useWatch({ control, name: 'outcome' })
+
+	const currentBond = event.lastBond.gt(0) ? event.lastBond.mul(2) : event.minBond
+
+	const { isLoading, isSuccess, error, write } = useSendTx({
 		address: import.meta.env.VITE_REALITIO as Address,
 		abi: RealityAbi,
 		functionName: 'submitAnswer',
+		args: [event.id, (outcome !== '' ? formatOutcome(outcome) : '') as Bytes, currentBond],
+		overrides: {
+			value: currentBond,
+		},
+		enabled: outcome !== '',
 	})
-
-	const lastBond = BigNumber.from(event.lastBond)
-	const currentBond = lastBond.gt(0) ? lastBond.mul(2) : BigNumber.from(event.minBond)
 
 	const outcomes = getOutcomes(event)
 
@@ -115,13 +127,8 @@ export default function AnswerForm({ event, register, errors, handleSubmit, setS
 		)
 	}
 
-	const onSubmit = async (data: AnswerFormValues) => {
-		write!({
-			recklesslySetUnpreparedArgs: [event.id, formatOutcome(data.outcome), currentBond],
-			recklesslySetUnpreparedOverrides: {
-				value: currentBond,
-			},
-		})
+	const onSubmit = async (/*data: AnswerFormValues*/) => {
+		write!()
 	}
 
 	const finalized = isFinalized(event)
@@ -162,7 +169,7 @@ export default function AnswerForm({ event, register, errors, handleSubmit, setS
 					</div>
 					<div style={{ width: '60%' }}>{getAnswerText(event.answer, event.outcomes || [], event.templateID)}</div>
 				</BoxRow>
-				{event.bounty !== '0' && (
+				{event.bounty.gt(0) && (
 					<BoxRow>
 						<div style={{ width: '40%' }}>
 							<Trans id='Reward' />

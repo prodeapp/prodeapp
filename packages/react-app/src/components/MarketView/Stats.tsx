@@ -103,7 +103,7 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 
 export function Stats({ marketId }: { marketId: Address }) {
 	const { isLoading, error, data: bets = [] } = useBets({ marketId })
-	const { data: events = [] } = useEvents(marketId, 'id', 'asc')
+	const { data: events = [] } = useEvents(marketId, 'id')
 	const theme = useTheme()
 
 	if (isLoading) {

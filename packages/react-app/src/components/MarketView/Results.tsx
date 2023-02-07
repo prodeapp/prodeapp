@@ -112,7 +112,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 		)
 	}
 
-	const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale)
+	const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp, false, locale)
 
 	if (!answerCountdown) {
 		return (
@@ -161,10 +161,10 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 							'en_US'
 						),
 						event.arbitrator,
-						Number(event.timeout),
-						Number(event.openingTs),
+						event.timeout,
+						event.openingTs,
 						BigNumber.from(0),
-						BigNumber.from(event.minBond),
+						event.minBond,
 						event.id,
 					],
 				})
@@ -209,12 +209,15 @@ export default function Results({ marketId }: { marketId: Address }) {
 	const [openModal, setOpenModal] = useState(false)
 	const isPhone = usePhone()
 
-	const handleClose = () => {
+	const handleClose = async () => {
 		setOpenModal(false)
 		if (currentEvent) {
-			// refetch events and question just in case the user has provided an answer
-			queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id])
-			queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as Address, currentEvent.id])
+			// invalidate queries just in case the user has provided an answer
+			await Promise.all([
+				queryClient.invalidateQueries(['useMarket', marketId]),
+				queryClient.invalidateQueries(['useBets', marketId]),
+				queryClient.invalidateQueries(['useEvents', marketId]),
+			])
 		}
 	}
 

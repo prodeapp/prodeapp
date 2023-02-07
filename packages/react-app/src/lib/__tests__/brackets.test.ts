@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
 import { expect, test } from 'vitest'
 
@@ -7,23 +8,18 @@ import { getDoubleEliminationMatches } from '@/lib/brackets'
 function getMockEvent(id: Address, title: string, outcomes: Outcome[]): Event {
 	return {
 		id: id,
-		markets: [
-			{
-				id: '1',
-			},
-		],
 		title: title,
 		answer: null,
 		outcomes: outcomes,
-		openingTs: '0',
-		answerFinalizedTimestamp: null,
+		openingTs: 0,
+		answerFinalizedTimestamp: 0,
 		isPendingArbitration: false,
-		minBond: '0',
-		lastBond: '0',
-		bounty: '0',
+		minBond: BigNumber.from('0'),
+		lastBond: BigNumber.from('0'),
+		bounty: BigNumber.from('0'),
 		arbitrator: '0x0',
 		category: '',
-		timeout: '0',
+		timeout: 0,
 		templateID: '2',
 	}
 }

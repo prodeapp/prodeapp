@@ -20,6 +20,77 @@ export const MarketViewAbi = [
 				type: 'address',
 			},
 		],
+		name: 'getEvents',
+		outputs: [
+			{
+				components: [
+					{
+						internalType: 'bytes32',
+						name: 'id',
+						type: 'bytes32',
+					},
+					{
+						internalType: 'address',
+						name: 'arbitrator',
+						type: 'address',
+					},
+					{
+						internalType: 'bytes32',
+						name: 'answer',
+						type: 'bytes32',
+					},
+					{
+						internalType: 'uint256',
+						name: 'openingTs',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'answerFinalizedTimestamp',
+						type: 'uint256',
+					},
+					{
+						internalType: 'bool',
+						name: 'isPendingArbitration',
+						type: 'bool',
+					},
+					{
+						internalType: 'uint256',
+						name: 'timeout',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'minBond',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'lastBond',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'bounty',
+						type: 'uint256',
+					},
+				],
+				internalType: 'struct MarketView.EventInfo[]',
+				name: '',
+				type: 'tuple[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'marketId',
+				type: 'address',
+			},
+		],
 		name: 'getMarket',
 		outputs: [
 			{
@@ -188,7 +259,7 @@ export const MarketViewAbi = [
 					},
 				],
 				internalType: 'struct MarketView.BetInfo[]',
-				name: 'betInfo',
+				name: '',
 				type: 'tuple[]',
 			},
 		],

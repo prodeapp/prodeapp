@@ -41,44 +41,33 @@ export interface Market {
 
 export type Outcome = string
 
-export interface Event {
+export interface GraphEvent {
 	id: Address
-	arbitrator: Address
-	markets: [
-		{
-			id: string
-		}
-	]
 	category: string
 	title: string
-	answer: string | null
 	outcomes: Outcome[]
-	openingTs: string
-	answerFinalizedTimestamp: string | null
-	isPendingArbitration: boolean
-	timeout: string
-	minBond: string
-	lastBond: string
-	bounty: string
 	templateID: string
+}
+
+export interface Event extends GraphEvent {
+	id: Address
+	arbitrator: Address
+	answer: string | null
+	openingTs: number
+	answerFinalizedTimestamp: number
+	isPendingArbitration: boolean
+	timeout: number
+	minBond: BigNumber
+	lastBond: BigNumber
+	bounty: BigNumber
 }
 
 export const EVENT_FIELDS = `
   fragment EventFields on Event {
     id
-    arbitrator
-    markets{id}
     category
     title
-    answer
     outcomes
-    openingTs
-    answerFinalizedTimestamp
-    isPendingArbitration
-    timeout
-    minBond
-    lastBond
-    bounty
     templateID
   }
 `

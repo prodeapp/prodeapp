@@ -8,8 +8,7 @@ import { MarketViewAbi } from '@/abi/MarketView'
 import { Bytes } from '@/abi/types'
 import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-
-type ArrayElement<A> = A extends readonly (infer T)[] ? T : never
+import { ArrayElement } from '@/lib/types'
 
 export const marketBetViewToBet = async (
 	marketBetsView: ArrayElement<ReadContractResult<typeof MarketViewAbi, 'getMarketBets'>>
@@ -18,6 +17,8 @@ export const marketBetViewToBet = async (
 	let { points, predictions } = marketBetsView
 
 	if (predictions.length === 0) {
+		// it's an old market, we need to load predictions and points from the graph
+
 		const query = `
 		query BetQuery($marketId: String, $tokenId: String) {
 			bets(where: {market: $marketId, tokenID: $tokenId}) {
@@ -32,7 +33,6 @@ export const marketBetViewToBet = async (
 			tokenId: tokenId.toString(),
 		})
 
-		// it's an old market, we need to load predictions and points from the graph
 		predictions = response?.data?.bets?.[0]?.results || []
 		points = BigNumber.from(response?.data?.bets?.[0]?.points || 0)
 	}
@@ -98,7 +98,7 @@ type UseBets = {
 
 export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; marketId?: Address }) => {
 	return useQuery<Bet[], Error>(
-		['useBets', playerId],
+		['useBets', marketId, playerId],
 		async () => {
 			if (marketId) {
 				return await getMarketBets(marketId)
