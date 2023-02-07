@@ -10,7 +10,7 @@ import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { useNetwork } from 'wagmi'
+import { useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { Bytes } from '@/abi/types'
@@ -61,6 +61,26 @@ function getOutcomes(event: Event) {
 	return outcomes
 }
 
+function getTxParams(
+	eventId: Bytes,
+	outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | '',
+	currentBond: BigNumber
+): UsePrepareContractWriteConfig<typeof RealityAbi, 'submitAnswer'> {
+	if (outcome === '') {
+		return {}
+	}
+
+	return {
+		address: import.meta.env.VITE_REALITIO as Address,
+		abi: RealityAbi,
+		functionName: 'submitAnswer',
+		args: [eventId, formatOutcome(outcome), currentBond],
+		overrides: {
+			value: currentBond,
+		},
+	}
+}
+
 export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	const { address } = getAccount()
 	const { chain } = useNetwork()
@@ -81,16 +101,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 
 	const currentBond = event.lastBond.gt(0) ? event.lastBond.mul(2) : event.minBond
 
-	const { isLoading, isSuccess, error, write } = useSendTx({
-		address: import.meta.env.VITE_REALITIO as Address,
-		abi: RealityAbi,
-		functionName: 'submitAnswer',
-		args: [event.id, (outcome !== '' ? formatOutcome(outcome) : '') as Bytes, currentBond],
-		overrides: {
-			value: currentBond,
-		},
-		enabled: outcome !== '',
-	})
+	const { isLoading, isSuccess, error, write } = useSendTx(getTxParams(event.id, outcome, currentBond))
 
 	const outcomes = getOutcomes(event)
 
@@ -102,6 +113,10 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 
 		setShowActions(!isSuccess)
 	}, [isSuccess, address, chain, setShowActions])
+
+	useEffect(() => {
+		setShowActions(typeof write !== 'undefined')
+	}, [write])
 
 	if (!address) {
 		return (

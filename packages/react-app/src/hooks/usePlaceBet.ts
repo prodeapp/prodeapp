@@ -2,6 +2,7 @@ import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
+import { UsePrepareContractWriteConfig } from 'wagmi'
 
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
@@ -39,16 +40,26 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (
 	attribution: Address,
 	results: Bytes[] | false
 ) => {
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx({
-		address: marketId,
-		abi: MarketAbi,
-		functionName: 'placeBet',
-		args: [attribution, results ? results : []],
-		overrides: {
-			value: price,
-		},
-		enabled: results !== false,
-	})
+	const getTxParams = (
+		attribution: Address,
+		results: Bytes[] | false
+	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBet'> => {
+		if (results === false) {
+			return {}
+		}
+
+		return {
+			address: marketId,
+			abi: MarketAbi,
+			functionName: 'placeBet',
+			args: [attribution, results],
+			overrides: {
+				value: price,
+			},
+		}
+	}
+
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(attribution, results))
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
@@ -63,13 +74,26 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (
 	attribution: Address,
 	results: Bytes[] | false
 ) => {
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx({
-		address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
-		abi: VoucherManagerAbi,
-		functionName: 'placeBet',
-		args: [marketId, attribution, results],
-		enabled: results !== false,
-	})
+	const getTxParams = (
+		marketId: Address,
+		attribution: Address,
+		results: Bytes[] | false
+	): UsePrepareContractWriteConfig<typeof VoucherManagerAbi, 'placeBet'> => {
+		if (results === false) {
+			return {}
+		}
+
+		return {
+			address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+			abi: VoucherManagerAbi,
+			functionName: 'placeBet',
+			args: [marketId, attribution, results],
+		}
+	}
+
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(
+		getTxParams(marketId, attribution, results)
+	)
 
 	const ethersInterface = new Interface(VoucherManagerAbi)
 	const events = parseEvents(receipt, import.meta.env.VITE_VOUCHER_MANAGER as Address, ethersInterface)
