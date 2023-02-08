@@ -21,7 +21,7 @@ export async function getTokenBet(marketId: Address, tokenId: number): Promise<B
 
 export const useBet = (marketId: Address, tokenId: number) => {
 	return useQuery<Bet | undefined, Error>(
-		['useBet', marketId, tokenId],
+		['useBet', { marketId, tokenId }],
 		async () => {
 			return await getTokenBet(marketId, tokenId)
 		},

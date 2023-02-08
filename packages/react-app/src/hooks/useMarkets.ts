@@ -45,7 +45,7 @@ async function graphMarketsToMarkets(graphMarkets: GraphMarket[]): Promise<Marke
 }
 
 export const useMarkets = ({ curated, status, category, minEvents, creatorId }: UseMarketsProps = {}) => {
-	return useQuery<Market[], Error>(['useMarkets', curated, status, category, minEvents, creatorId], async () => {
+	return useQuery<Market[], Error>(['useMarkets', { curated, status, category, minEvents, creatorId }], async () => {
 		const variables: QueryVariables = { curated, orderDirection: 'desc' }
 
 		if (category) {

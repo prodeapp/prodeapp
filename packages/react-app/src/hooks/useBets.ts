@@ -86,8 +86,11 @@ async function graphBetsToBets(graphBets: GraphBet[]): Promise<Bet[]> {
 	})
 
 	return await Promise.all(
-		// @ts-ignore
-		marketBetsView.map(async marketBetView => await marketBetViewToBet(marketBetView))
+		marketBetsView
+			// remove multicall errors
+			.filter(mbv => mbv !== null)
+			// @ts-ignore
+			.map(async marketBetView => await marketBetViewToBet(marketBetView))
 	)
 }
 
@@ -98,7 +101,7 @@ type UseBets = {
 
 export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; marketId?: Address }) => {
 	return useQuery<Bet[], Error>(
-		['useBets', marketId, playerId],
+		['useBets', { marketId, playerId }],
 		async () => {
 			if (marketId) {
 				return await getMarketBets(marketId)

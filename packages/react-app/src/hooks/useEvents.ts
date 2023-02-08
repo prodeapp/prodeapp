@@ -71,7 +71,7 @@ export const fetchEvents: FetchEvents = async (marketId: Address, orderBy = 'ope
 
 type UseEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
 export const useEvents: UseEvents = (marketId: Address, orderBy = 'openingTs') => {
-	return useQuery<Event[], Error>(['useEvents', marketId, orderBy], async () => {
+	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy }], async () => {
 		return fetchEvents(marketId, orderBy)
 	})
 }

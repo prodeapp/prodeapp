@@ -210,15 +210,13 @@ export default function Results({ marketId }: { marketId: Address }) {
 	const isPhone = usePhone()
 
 	const handleClose = async () => {
-		setOpenModal(false)
 		if (currentEvent) {
 			// invalidate queries just in case the user has provided an answer
-			await Promise.all([
-				queryClient.invalidateQueries(['useMarket', marketId]),
-				queryClient.invalidateQueries(['useBets', marketId]),
-				queryClient.invalidateQueries(['useEvents', marketId]),
-			])
+			queryClient.invalidateQueries(['useMarket', marketId])
+			queryClient.invalidateQueries(['useBets', { marketId }])
+			queryClient.invalidateQueries(['useEvents', { marketId }])
 		}
+		setOpenModal(false)
 	}
 
 	return (

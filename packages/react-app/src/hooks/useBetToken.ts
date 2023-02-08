@@ -6,7 +6,7 @@ import { MarketAbi } from '@/abi/Market'
 
 export const useBetToken = (marketId: string, tokenId: BigNumber) => {
 	return useQuery<string, Error>(
-		['useBetToken', marketId, tokenId],
+		['useBetToken', { marketId, tokenId }],
 		async () => {
 			const contract = getContract({
 				address: marketId,
