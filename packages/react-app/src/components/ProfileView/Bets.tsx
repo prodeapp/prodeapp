@@ -7,11 +7,13 @@ import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 
 import BetDetails from '@/components/Bet/BetDetails'
-import { useBets } from '@/hooks/useBets'
+import { useBets, useBetsRewards, useIndexedBetsRewards } from '@/hooks/useBets'
 import { formatAmount } from '@/lib/helpers'
 
 export function Bets({ playerId }: { playerId: Address }) {
 	const { data: bets, error, isLoading } = useBets({ playerId })
+	const { data: betsRewards } = useBetsRewards(bets || [])
+	const indexedBetsRewards = useIndexedBetsRewards(betsRewards)
 
 	if (error) {
 		return <Alert severity='error'>{error}</Alert>
@@ -51,7 +53,7 @@ export function Bets({ playerId }: { playerId: Address }) {
 										<Trans id='Points' />: {bet.points}
 									</div>
 									<div>
-										<Trans id='Reward' />: {formatAmount(bet.reward)}
+										<Trans id='Reward' />: {formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0)}
 									</div>
 								</div>
 							</div>

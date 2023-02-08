@@ -2,12 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
 import { UseQueryResult } from '@tanstack/react-query/src/types'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
+import { useMemo } from 'react'
 import { readContracts } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Bytes } from '@/abi/types'
 import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
 export const marketBetViewToBet = async (
@@ -50,7 +52,6 @@ export const marketBetViewToBet = async (
 			id: marketId,
 			name: marketName,
 		},
-		reward: BigNumber.from(0), // TODO
 	}
 }
 
@@ -127,4 +128,28 @@ export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; m
 		},
 		{ enabled: !!playerId || !!marketId }
 	)
+}
+
+export function useIndexedBetsRewards(graphBets?: GraphBet[]) {
+	return useMemo(() => indexObjectsByKey(graphBets || [], 'id'), [graphBets])
+}
+
+export const useBetsRewards = (bets: Bet[]) => {
+	const betsId = bets.map(b => b.id.toLowerCase())
+
+	return useQuery<GraphBet[], Error>(['useBetsRewards', { bets: betsId }], async () => {
+		const query = `
+    ${BET_FIELDS}
+    query BetsRewardQuery($betsId: [String]) {
+      bets(where: {id_in: $betsId}) {
+        ...BetFields
+      }
+    }
+`
+		const response = await apolloProdeQuery<{ bets: GraphBet[] }>(query, { betsId: betsId })
+
+		if (!response) throw new Error('No response from TheGraph')
+
+		return response.data.bets
+	})
 }
