@@ -38,7 +38,7 @@ export default function Bets({ marketId, onlyMyBets }: { marketId: Address; only
 	}
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	return (

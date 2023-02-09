@@ -111,7 +111,7 @@ export function Stats({ marketId }: { marketId: Address }) {
 	}
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	const stats = bets.length > 0 && events.length > 0 ? bets2Stats(bets, events) : []

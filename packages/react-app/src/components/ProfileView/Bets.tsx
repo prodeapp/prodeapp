@@ -16,7 +16,7 @@ export function Bets({ playerId }: { playerId: Address }) {
 	const indexedBetsRewards = useIndexedBetsRewards(betsRewards)
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	if (isLoading) {

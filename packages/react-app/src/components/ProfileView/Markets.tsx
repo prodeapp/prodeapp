@@ -14,7 +14,7 @@ export function Markets({ creatorId }: { creatorId: string }) {
 	})
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	if (isLoading) {
