@@ -1,5 +1,16 @@
 export const MarketViewAbi = [
 	{
+		inputs: [
+			{
+				internalType: 'contract IRealityRegistry',
+				name: '_realityRegistry',
+				type: 'address',
+			},
+		],
+		stateMutability: 'nonpayable',
+		type: 'constructor',
+	},
+	{
 		inputs: [],
 		name: 'DIVISOR',
 		outputs: [
@@ -72,6 +83,31 @@ export const MarketViewAbi = [
 					{
 						internalType: 'uint256',
 						name: 'bounty',
+						type: 'uint256',
+					},
+					{
+						internalType: 'string',
+						name: 'title',
+						type: 'string',
+					},
+					{
+						internalType: 'string',
+						name: 'outcomes',
+						type: 'string',
+					},
+					{
+						internalType: 'string',
+						name: 'category',
+						type: 'string',
+					},
+					{
+						internalType: 'string',
+						name: 'language',
+						type: 'string',
+					},
+					{
+						internalType: 'uint256',
+						name: 'templateId',
 						type: 'uint256',
 					},
 				],
@@ -317,6 +353,19 @@ export const MarketViewAbi = [
 				internalType: 'struct MarketView.BetInfo',
 				name: 'betInfo',
 				type: 'tuple',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'realityRegistry',
+		outputs: [
+			{
+				internalType: 'contract IRealityRegistry',
+				name: '',
+				type: 'address',
 			},
 		],
 		stateMutability: 'view',

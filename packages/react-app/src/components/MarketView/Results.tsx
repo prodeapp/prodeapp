@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { Address } from '@wagmi/core'
@@ -217,6 +218,14 @@ export default function Results({ marketId }: { marketId: Address }) {
 			queryClient.invalidateQueries(['useEvents', { marketId }])
 		}
 		setOpenModal(false)
+	}
+
+	if (!events || events.length === 0) {
+		return (
+			<Alert severity='error'>
+				<Trans id='The events of this market are still being processed.' />
+			</Alert>
+		)
 	}
 
 	return (

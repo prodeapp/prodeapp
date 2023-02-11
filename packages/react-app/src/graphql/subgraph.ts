@@ -41,15 +41,7 @@ export interface Market {
 
 export type Outcome = string
 
-export interface GraphEvent {
-	id: Address
-	category: string
-	title: string
-	outcomes: Outcome[]
-	templateID: string
-}
-
-export interface Event extends GraphEvent {
+export interface Event {
 	id: Address
 	arbitrator: Address
 	answer: string | null
@@ -60,6 +52,10 @@ export interface Event extends GraphEvent {
 	minBond: BigNumber
 	lastBond: BigNumber
 	bounty: BigNumber
+	category: string
+	title: string
+	outcomes: Outcome[]
+	templateID: string
 }
 
 export const EVENT_FIELDS = `
