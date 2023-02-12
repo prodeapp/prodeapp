@@ -1,19 +1,8 @@
-import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
 
 import { MarketViewAbi } from '@/abi/MarketView'
-import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
-import { apolloProdeQuery } from '@/lib/apolloClient'
-
-const query = `
-    ${MARKET_FIELDS}
-    query MarketQuery($marketId: String) {
-        market(id: $marketId) {
-            ...MarketFields
-        }
-    }
-`
+import { Market } from '@/graphql/subgraph'
 
 export async function getMarket(marketId: Address): Promise<Market> {
 	// TODO: check that this market was created by a whitelisted factory
@@ -52,29 +41,12 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 		numOfEventsWithAnswer: eventsInfo.numOfEventsWithAnswer.toNumber(),
 		hasPendingAnswers: eventsInfo.hasPendingAnswers,
 		curated: baseInfo.curated,
-		creator: AddressZero,
+		creator: baseInfo.creator,
 	}
-}
-
-export const graphMarketToMarket = (graphMarket: GraphMarket, market: Market) => {
-	return {
-		...market,
-		creator: graphMarket.creator as Address,
-	} as Market
 }
 
 export const useMarket = (marketId: Address) => {
 	return useQuery<Market | undefined, Error>(['useMarket', marketId], async () => {
-		const response = await apolloProdeQuery<{ market: GraphMarket }>(query, {
-			marketId,
-		})
-
-		const market = await getMarket(marketId)
-
-		if (!response?.data?.market) {
-			return market
-		}
-
-		return graphMarketToMarket(response.data.market, market)
+		return await getMarket(marketId)
 	})
 }

@@ -15,7 +15,7 @@ import { ArrayElement } from '@/lib/types'
 export const marketBetViewToBet = async (
 	marketBetsView: ArrayElement<ReadContractResult<typeof MarketViewAbi, 'getMarketBets'>>
 ): Promise<Bet> => {
-	const { marketId, marketName, tokenId, owner } = marketBetsView
+	const { marketId, marketName, tokenId, owner, ownerName } = marketBetsView
 	let { points, predictions } = marketBetsView
 
 	if (predictions.length === 0) {
@@ -44,7 +44,7 @@ export const marketBetViewToBet = async (
 		tokenID: tokenId.toNumber(),
 		player: {
 			id: owner,
-			name: owner, // TODO
+			name: ownerName || owner,
 		},
 		results: predictions,
 		points: points.toNumber(),

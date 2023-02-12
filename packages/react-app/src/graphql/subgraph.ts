@@ -58,16 +58,6 @@ export interface Event {
 	templateID: string
 }
 
-export const EVENT_FIELDS = `
-  fragment EventFields on Event {
-    id
-    category
-    title
-    outcomes
-    templateID
-  }
-`
-
 export interface Player {
 	id: string
 	amountBet: BigNumberish

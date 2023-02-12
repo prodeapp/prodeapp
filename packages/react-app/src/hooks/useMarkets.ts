@@ -4,7 +4,7 @@ import { readContracts } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
-import { graphMarketToMarket, marketViewToMarket } from '@/hooks/useMarket'
+import { marketViewToMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
 import { getSubcategories } from '@/lib/helpers'
 import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
@@ -41,7 +41,7 @@ async function graphMarketsToMarkets(graphMarkets: GraphMarket[]): Promise<Marke
 	})
 
 	// @ts-ignore
-	return markets.map((market, i) => graphMarketToMarket(graphMarkets[i], marketViewToMarket(market)))
+	return markets.map(market => marketViewToMarket(market))
 }
 
 export const useMarkets = ({ curated, status, category, minEvents, creatorId }: UseMarketsProps = {}) => {
