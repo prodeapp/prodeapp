@@ -1,28 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
+import { Address, readContract } from '@wagmi/core'
 
-import { Player, PLAYER_FIELDS } from '@/graphql/subgraph'
-import { apolloProdeQuery } from '@/lib/apolloClient'
+import { KeyValueAbi } from '@/abi/KeyValue'
+import { Player } from '@/graphql/subgraph'
 
-const query = `
-    ${PLAYER_FIELDS}
-    query PlayerQuery($playerId: String) {
-        player(id: $playerId) {
-            ...PlayerFields
-        }
-    }
-`
-
-export const usePlayer = (playerId: string) => {
+export const usePlayer = (playerId: Address) => {
 	return useQuery<Player, Error>(
 		['usePlayer', playerId],
 		async () => {
-			const response = await apolloProdeQuery<{ player: Player }>(query, {
-				playerId: playerId.toLowerCase(),
+			const username = await readContract({
+				address: import.meta.env.VITE_KEY_VALUE as Address,
+				abi: KeyValueAbi,
+				functionName: 'username',
+				args: [playerId],
 			})
 
-			if (!response) throw new Error('No response from TheGraph')
-
-			return response.data.player
+			return {
+				id: playerId,
+				name: username || playerId,
+			}
 		},
 		{ enabled: !!playerId }
 	)

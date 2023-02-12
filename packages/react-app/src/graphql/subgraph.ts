@@ -60,19 +60,22 @@ export interface Event {
 
 export interface Player {
 	id: string
-	amountBet: BigNumberish
-	pricesReceived: BigNumberish
-	totalAttributions: BigNumberish
 	name: string
 }
 
-export const PLAYER_FIELDS = `
-  fragment PlayerFields on Player {
+export interface PlayerStats {
+	id: string
+	amountBet: BigNumberish
+	pricesReceived: BigNumberish
+	totalAttributions: BigNumberish
+}
+
+export const PLAYER_STATS_FIELDS = `
+  fragment PlayerStatsFields on Player {
     id
     amountBet
     pricesReceived
     totalAttributions
-    name
   }
 `
 
@@ -152,7 +155,7 @@ export interface Leaderboard extends Player {
 }
 
 export const LEADERBOARD_FIELDS = `
-  ${PLAYER_FIELDS}
+  ${PLAYER_STATS_FIELDS}
   fragment LeaderboardFields on Player {
     ...PlayerFields
     numOfMarkets

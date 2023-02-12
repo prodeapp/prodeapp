@@ -13,6 +13,7 @@ import { Markets } from '@/components/ProfileView/Markets'
 import ProfileForm from '@/components/ProfileView/ProfileForm'
 import { Referrals } from '@/components/ProfileView/Referrals'
 import { usePlayer } from '@/hooks/usePlayer'
+import { usePlayerStats } from '@/hooks/usePlayerStats'
 import { formatAmount } from '@/lib/helpers'
 
 export default function Profile() {
@@ -21,7 +22,8 @@ export default function Profile() {
 	const { chain } = useNetwork()
 	const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets')
 	const playerId = (id || address || '') as Address
-	const { data: player } = usePlayer(String(playerId))
+	const { data: playerStats } = usePlayerStats(playerId)
+	const { data: player } = usePlayer(playerId)
 
 	if (!id) {
 		if (!address) {
@@ -49,7 +51,7 @@ export default function Profile() {
 							<Trans
 								id='Total Bet: {0}'
 								values={{
-									0: player ? formatAmount(player?.amountBet) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.amountBet) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -61,7 +63,7 @@ export default function Profile() {
 							<Trans
 								id='Total Rewards: {0}'
 								values={{
-									0: player ? formatAmount(player?.pricesReceived) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.pricesReceived) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -73,7 +75,7 @@ export default function Profile() {
 							<Trans
 								id='Referrals Earnings: {0}'
 								values={{
-									0: player ? formatAmount(player?.totalAttributions) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.totalAttributions) : <Skeleton />,
 								}}
 							/>
 						</Typography>

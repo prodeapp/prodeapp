@@ -29,7 +29,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	const waitDebounce = typeof args !== 'undefined' && typeof debouncedArgs === 'undefined'
 
 	// @ts-ignore
-	const { config } = usePrepareContractWrite({
+	const { config, isError: isPrepareError } = usePrepareContractWrite({
 		address,
 		abi,
 		functionName: waitDebounce ? '' : functionName,
@@ -61,6 +61,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	})
 
 	return {
+		isPrepareError,
 		isLoading: isWriteLoading || isTxLoading,
 		isSuccess: isTxSuccess,
 		isError: isWriteError || isTxError,

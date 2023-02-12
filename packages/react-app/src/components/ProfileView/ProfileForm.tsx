@@ -6,17 +6,15 @@ import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import TextField from '@mui/material/TextField'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React from 'react'
-import { useForm } from 'react-hook-form'
-import { useNetwork } from 'wagmi'
+import { useForm, useWatch } from 'react-hook-form'
+import { useAccount, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { KeyValueAbi } from '@/abi/KeyValue'
 import { FormError } from '@/components'
-import { Player, PLAYER_FIELDS } from '@/graphql/subgraph'
-import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { apolloProdeQuery } from '@/lib/apolloClient'
+import { usePlayer } from '@/hooks/usePlayer'
+import { useSendTx } from '@/hooks/useSendTx'
 
 export type ProfileFormValues = {
 	name: string
@@ -34,41 +32,41 @@ const innerStyles: React.CSSProperties = {
 	padding: '15px',
 }
 
-const fetchPlayerByName = async (name: string): Promise<Player | undefined> => {
-	const query = `
-    ${PLAYER_FIELDS}
-    query PlayersNameQuery($playerName: String) {
-        players(where: {name:$playerName}) {
-            ...PlayerFields
-        }
-    }
-`
-	const response = await apolloProdeQuery<{ players: Player[] }>(query, {
-		playerName: name,
-	})
-	if (!response) throw new Error('No response from TheGraph')
-	return response.data.players[0]
+function getTxParams(
+	userId: Address | undefined,
+	name: string
+): UsePrepareContractWriteConfig<typeof KeyValueAbi, 'setUsername'> {
+	if (!userId || !name) {
+		return {}
+	}
+
+	return {
+		address: import.meta.env.VITE_KEY_VALUE as Address,
+		abi: KeyValueAbi,
+		functionName: 'setUsername',
+		args: [userId, name],
+	}
 }
 
 export default function ProfileForm({ defaultName }: { defaultName: string }) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const { data: player } = usePlayer((address || '') as Address)
 
 	const {
 		register,
 		formState: { errors },
 		handleSubmit,
+		control,
 	} = useForm<ProfileFormValues>({
 		defaultValues: {
 			name: defaultName,
 		},
 	})
 
-	const { isLoading, isSuccess, error, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_KEY_VALUE as Address,
-		abi: KeyValueAbi,
-		functionName: 'setValue',
-	})
+	const name = useWatch({ control, name: 'name' })
+
+	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(getTxParams(address, name))
 
 	if (!address) {
 		return null
@@ -98,14 +96,8 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 		)
 	}
 
-	const onSubmit = async (data: ProfileFormValues) => {
-		write!({
-			recklesslySetUnpreparedArgs: ['setName', data.name],
-		})
-	}
-
-	const isNameUnique = async (name: string) => {
-		return (await fetchPlayerByName(name)) === undefined
+	const onSubmit = async (/*data: ProfileFormValues*/) => {
+		write!()
 	}
 
 	return (
@@ -124,6 +116,12 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 						</Alert>
 					)}
 
+					{isPrepareError && name !== player?.name && (
+						<Alert severity='error' sx={{ mb: 2 }}>
+							<Trans id='Name already in use, please select another name' />
+						</Alert>
+					)}
+
 					<div
 						style={{
 							display: 'inline-flex',
@@ -136,8 +134,6 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 								<TextField
 									{...register('name', {
 										required: i18n._('This field is required.'),
-										validate: async value =>
-											(await isNameUnique(value)) || 'Name already in use, please select another name',
 									})}
 									placeholder={i18n._('Your username')}
 									error={!!errors.name}
@@ -149,7 +145,7 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 							</FormControl>
 						</div>
 						<div>
-							<Button color='primary' type='submit'>
+							<Button color='primary' type='submit' disabled={!write}>
 								<Trans id='Change username' />
 							</Button>
 						</div>
