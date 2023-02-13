@@ -1,3 +1,4 @@
+import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { Address } from '@wagmi/core'
 import { readContracts } from 'wagmi'
@@ -41,7 +42,7 @@ async function graphMarketsToMarkets(graphMarkets: GraphMarket[]): Promise<Marke
 	})
 
 	// @ts-ignore
-	return markets.map(market => marketViewToMarket(market))
+	return markets.map(market => marketViewToMarket(market)).filter(market => market.id !== AddressZero)
 }
 
 export const useMarkets = ({ curated, status, category, minEvents, creatorId }: UseMarketsProps = {}) => {

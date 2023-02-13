@@ -22,7 +22,7 @@ type FormValues = {
 	itemId: string
 }
 
-export const fetchMarketByHash = async (hash: string): Promise<Market> => {
+const fetchMarketByHash = async (hash: string): Promise<Market | undefined> => {
 	const query = `
     ${MARKET_FIELDS}
     query MarketQuery($hash: String) {

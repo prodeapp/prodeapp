@@ -1,10 +1,11 @@
+import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
 
-export async function getMarket(marketId: Address): Promise<Market> {
+export async function getMarket(marketId: Address): Promise<Market | undefined> {
 	// TODO: check that this market was created by a whitelisted factory
 
 	const marketView = await readContract({
@@ -13,6 +14,10 @@ export async function getMarket(marketId: Address): Promise<Market> {
 		functionName: 'getMarket',
 		args: [marketId],
 	})
+
+	if (marketView.id === AddressZero) {
+		return
+	}
 
 	return marketViewToMarket(marketView)
 }
@@ -47,6 +52,12 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 
 export const useMarket = (marketId: Address) => {
 	return useQuery<Market | undefined, Error>(['useMarket', marketId], async () => {
-		return await getMarket(marketId)
+		const market = await getMarket(marketId)
+
+		if (!market) {
+			throw new Error('Market not found')
+		}
+
+		return market
 	})
 }

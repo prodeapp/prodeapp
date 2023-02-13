@@ -103,7 +103,7 @@ function MarketsView() {
 						<MarketStatus marketId={market.id} />
 						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>{market.name}</h2>
 
-						{address?.toLowerCase() === market.creator && market.pool.eq(0) && (
+						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && (
 							<div style={{ marginBottom: '20px' }}>
 								<DeleteMarket marketId={market.id} />
 							</div>

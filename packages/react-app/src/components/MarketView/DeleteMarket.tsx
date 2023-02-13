@@ -11,12 +11,12 @@ function DeleteMarket({ marketId }: { marketId: string }) {
 	const { isSuccess, write } = useSendRecklessTx({
 		address: import.meta.env.VITE_KEY_VALUE as Address,
 		abi: KeyValueAbi,
-		functionName: 'setValue',
+		functionName: 'deleteMarket',
 	})
 
 	const deleteMarket = async () => {
 		write!({
-			recklesslySetUnpreparedArgs: ['deleteMarket', marketId],
+			recklesslySetUnpreparedArgs: [marketId],
 		})
 	}
 

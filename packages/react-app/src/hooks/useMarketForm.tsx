@@ -4,14 +4,17 @@ import { parseUnits } from '@ethersproject/units'
 import { Address } from '@wagmi/core'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { useEffect, useState } from 'react'
-import { useContractReads } from 'wagmi'
 
 import { MarketFactoryAbi } from '@/abi/MarketFactory'
+import { MarketFactoryV2Abi } from '@/abi/MarketFactoryV2'
+import { useMarketFactoryAttributes } from '@/hooks/useMarketFactory'
 import { parseEvents } from '@/lib/helpers'
 import {
+	encodeOutcomes,
 	encodeQuestionText,
 	getQuestionId,
-	MarketFactoryRealityQuestionStruct,
+	MarketFactoryV2MetaDataStruct,
+	MarketFactoryV2QuestionWithMetadata,
 	REALITY_TEMPLATE_SINGLE_SELECT,
 } from '@/lib/reality'
 
@@ -56,21 +59,21 @@ export function getEventData(questionPlaceholder: string, answers: Answers, mark
 }
 
 function orderByQuestionId(
-	questionsData: MarketFactoryRealityQuestionStruct[],
+	rawQuestionsData: MarketFactoryV2QuestionWithMetadata[],
 	arbitrator: string,
 	timeout: number,
 	minBond: BigNumber,
 	realitio: string,
 	marketFactory: string
-): MarketFactoryRealityQuestionStruct[] {
-	const questionsDataWithQuestionId = questionsData.map(questionData => {
+): MarketFactoryV2MetaDataStruct[] {
+	const questionsDataWithQuestionId = rawQuestionsData.map(rawQuestionData => {
 		return {
-			questionId: getQuestionId(questionData, arbitrator, timeout, minBond, realitio, marketFactory),
-			questionData,
+			questionId: getQuestionId(rawQuestionData, arbitrator, timeout, minBond, realitio, marketFactory),
+			metadata: rawQuestionData.metadata,
 		}
 	})
 
-	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map(qd => qd.questionData)
+	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map(qd => qd.metadata)
 }
 
 interface UseMarketFormReturn {
@@ -83,10 +86,11 @@ interface UseMarketFormReturn {
 
 export default function useMarketForm(): UseMarketFormReturn {
 	const [marketId, setMarketId] = useState<Address | ''>('')
+	const { data: factoryAttrs } = useMarketFactoryAttributes()
 
 	const { isSuccess, error, write, receipt } = useSendRecklessTx({
-		address: import.meta.env.VITE_MARKET_FACTORY as Address,
-		abi: MarketFactoryAbi,
+		address: import.meta.env.VITE_MARKET_FACTORY_V2 as Address,
+		abi: MarketFactoryV2Abi,
 		functionName: 'createMarket',
 	})
 
@@ -98,36 +102,13 @@ export default function useMarketForm(): UseMarketFormReturn {
 		}
 	}, [receipt])
 
-	const { data } = useContractReads({
-		contracts: [
-			{
-				address: import.meta.env.VITE_MARKET_FACTORY as Address,
-				abi: MarketFactoryAbi,
-				functionName: 'arbitrator',
-			},
-			{
-				address: import.meta.env.VITE_MARKET_FACTORY as Address,
-				abi: MarketFactoryAbi,
-				functionName: 'realitio',
-			},
-			{
-				address: import.meta.env.VITE_MARKET_FACTORY as Address,
-				abi: MarketFactoryAbi,
-				functionName: 'QUESTION_TIMEOUT',
-			},
-		],
-	})
-
-	const [arbitrator, realitio, timeout] = [data?.[0] || '', data?.[1] || '', data?.[2] || 0]
-
 	const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
 		const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC')
 		const closingTime = Math.floor(utcClosingTime.getTime() / 1000)
 
-		const questionsData = step1State.events.map(event => {
+		const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map(event => {
 			const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market)
 			return {
-				templateID: BigNumber.from(REALITY_TEMPLATE_SINGLE_SELECT),
 				question: encodeQuestionText(
 					'single-select',
 					eventData.question,
@@ -135,7 +116,14 @@ export default function useMarketForm(): UseMarketFormReturn {
 					step1State.category,
 					'en_US'
 				),
-				openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
+				metadata: {
+					templateID: BigNumber.from(REALITY_TEMPLATE_SINGLE_SELECT),
+					openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
+					title: eventData.question,
+					outcomes: encodeOutcomes(eventData.answers),
+					category: step1State.category,
+					language: 'en_US',
+				},
 			}
 		})
 
@@ -152,10 +140,10 @@ export default function useMarketForm(): UseMarketFormReturn {
 				minBond,
 				orderByQuestionId(
 					questionsData,
-					String(arbitrator),
-					Number(timeout),
+					String(factoryAttrs?.arbitrator),
+					Number(factoryAttrs?.timeout),
 					minBond,
-					String(realitio),
+					String(factoryAttrs?.realitio),
 					import.meta.env.VITE_MARKET_FACTORY as Address
 				),
 				step2State.prizeWeights.map(pw => Math.round((pw.value * DIVISOR) / 100)),
@@ -164,7 +152,7 @@ export default function useMarketForm(): UseMarketFormReturn {
 	}
 
 	return {
-		isLoading: !arbitrator || !realitio || !timeout,
+		isLoading: !factoryAttrs?.arbitrator || !factoryAttrs?.realitio || !factoryAttrs?.timeout,
 		isSuccess,
 		error,
 		createMarket,
