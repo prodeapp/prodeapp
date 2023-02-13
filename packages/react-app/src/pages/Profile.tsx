@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/react'
 import { Button, Container, Grid, Skeleton, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
-import { Address, getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import * as React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { BoxRow, BoxWrapper } from '@/components'
 import { Bets } from '@/components/ProfileView/Bets'
@@ -18,7 +18,7 @@ import { formatAmount } from '@/lib/helpers'
 
 export default function Profile() {
 	const { id } = useParams()
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets')
 	const playerId = (id || address || '') as Address

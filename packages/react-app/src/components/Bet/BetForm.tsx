@@ -12,10 +12,9 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
-import { getAccount } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
@@ -80,7 +79,7 @@ function BetNFT({ marketId, tokenId }: { marketId: string; tokenId: BigNumber })
 }
 
 export default function BetForm({ market, cancelHandler }: BetFormProps) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id)
 

@@ -16,7 +16,6 @@ import TextField from '@mui/material/TextField'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { getAccount } from '@wagmi/core'
 import dateAdd from 'date-fns/add'
 import format from 'date-fns/format'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +23,7 @@ import { Controller, FormProvider, useFieldArray, useForm, useWatch } from 'reac
 import { UseFormReturn } from 'react-hook-form/dist/types'
 import { FieldValues } from 'react-hook-form/dist/types/fields'
 import { Link as RouterLink, useSearchParams } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as ShieldCheckIcon } from '@/assets/icons/shield-check.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
@@ -681,7 +680,7 @@ function BigStepper({ steps, activeStep }: { steps: string[]; activeStep: number
 }
 
 function MarketsCreate() {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const [activeStep, setActiveStep] = useState(0)
 

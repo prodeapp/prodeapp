@@ -1,8 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
-import { UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
@@ -129,7 +128,7 @@ export const usePlaceBet: UsePlaceBetFn = (
 ) => {
 	const results = getResults(outcomes)
 
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const hasVoucher = useHasVoucher(address, marketId, price)
 	const marketPlaceBet = usePlaceBetWithMarket(marketId, price, attribution, results)
 	const voucherPlaceBet = usePlaceBetWithVoucher(marketId, price, attribution, results)

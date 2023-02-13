@@ -7,11 +7,10 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { SVGFactoryAbi } from '@/abi/SVGFactory'
 import { FormError, FormLabel, FormRow } from '@/components'
@@ -93,7 +92,7 @@ function AdsCreate() {
 	const [svg, setSvg] = useState('')
 	const [svgError, setSvgError] = useState('')
 
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 
 	const { isSuccess, isLoading, error, write } = useSendRecklessTx({

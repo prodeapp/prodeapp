@@ -3,9 +3,10 @@ import { Trans } from '@lingui/react'
 import { Skeleton } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
-import { Address, getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as EyeIcon } from '@/assets/icons/eye.svg'
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
@@ -18,7 +19,7 @@ import { useIndexedMarketWinners } from '@/hooks/useMarketWinners'
 import { formatPlayerName, getMedalColor } from '@/lib/helpers'
 
 export default function Bets({ marketId, onlyMyBets }: { marketId: Address; onlyMyBets?: boolean }) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { isLoading, error, data: bets } = useBets({ marketId })
 	const marketWinners = useIndexedMarketWinners(marketId)
 	const [openModal, setOpenModal] = useState(false)

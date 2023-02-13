@@ -2,15 +2,14 @@ import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
-import { getAccount } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
-import { useBalance } from 'wagmi'
+import { useAccount, useBalance } from 'wagmi'
 
 import AppDialog from '@/components/Dialog'
 import { BRIDGE_URL } from '@/lib/helpers'
 
 function WelcomeDialog() {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { data: balance } = useBalance({ address })
 
 	const [alreadyOpened, setAlreadyOpened] = useState(false)

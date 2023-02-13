@@ -3,8 +3,8 @@ import { Trans } from '@lingui/react'
 import { Alert, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { getAccount } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as ArrowRight } from '@/assets/icons/arrow-right-2.svg'
 import { ReactComponent as CurrencyIcon } from '@/assets/icons/currency.svg'
@@ -22,7 +22,7 @@ export default function PlaceBet({
 	onBetClick: () => void
 	onResultsClick: () => void
 }) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const hasVoucher = useHasVoucher(address, market.id, BigNumber.from(market.price))
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()

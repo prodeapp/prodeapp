@@ -7,9 +7,10 @@ import Grid from '@mui/material/Grid'
 import { styled, useTheme } from '@mui/material/styles'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import { Address, getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as ArrowRightIcon } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as TwitterIcon } from '@/assets/icons/twitter.svg'
@@ -47,7 +48,7 @@ function MarketsView() {
 	const [searchParams] = useSearchParams()
 	const [onlyMyBets, setOnlyMyBets] = useState(false)
 	const theme = useTheme()
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	useEffect(() => {
 		const referralId = searchParams.get('referralId')

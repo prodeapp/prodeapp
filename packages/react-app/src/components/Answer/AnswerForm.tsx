@@ -6,11 +6,10 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormHelperText from '@mui/material/FormHelperText'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { Bytes } from '@/abi/types'
@@ -82,7 +81,7 @@ function getTxParams(
 }
 
 export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const { locale } = useI18nContext()
 
