@@ -102,11 +102,11 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 }
 
 export function Stats({ marketId }: { marketId: Address }) {
-	const { isLoading, error, data: bets = [] } = useBets({ marketId })
-	const { data: events = [] } = useEvents(marketId, 'id')
+	const { isLoading: isLoadingBets, error, data: bets = [] } = useBets({ marketId })
+	const { isLoading: isLoadingEvents, data: events = [] } = useEvents(marketId, 'id')
 	const theme = useTheme()
 
-	if (isLoading) {
+	if (isLoadingBets || isLoadingEvents) {
 		return <Skeleton animation='wave' height={150} />
 	}
 
