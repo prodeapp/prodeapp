@@ -1,34 +1,66 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, UseQueryResult } from '@tanstack/react-query'
+import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { useMemo } from 'react'
 
-import { Event, EVENT_FIELDS } from '@/graphql/subgraph'
-import { apolloProdeQuery } from '@/lib/apolloClient'
+import { MarketViewAbi } from '@/abi/MarketView'
+import { Event } from '@/graphql/subgraph'
 import { indexObjectsByKey } from '@/lib/helpers'
+import { ArrayElement } from '@/lib/types'
 
-const query = `
-    ${EVENT_FIELDS}
-    query EventsQuery ($marketId: String!, $orderBy: String!, $orderDirection: String!){
-      events(where:{markets_contains: [$marketId]}, orderBy: $orderBy, orderDirection: $orderDirection) {
-        ...EventFields
-      }
-    }
-`
+export const marketEventViewToEvent = async (
+	marketEventView: ArrayElement<ReadContractResult<typeof MarketViewAbi, 'getEvents'>>
+): Promise<Event> => {
+	const event: Event = {
+		id: marketEventView.id,
+		arbitrator: marketEventView.arbitrator,
+		answer: null,
+		openingTs: marketEventView.openingTs.toNumber(),
+		answerFinalizedTimestamp: marketEventView.answerFinalizedTimestamp.toNumber(),
+		isPendingArbitration: marketEventView.isPendingArbitration,
+		timeout: marketEventView.timeout.toNumber(),
+		minBond: marketEventView.minBond,
+		lastBond: marketEventView.lastBond,
+		bounty: marketEventView.bounty,
+		title: marketEventView.title,
+		category: marketEventView.category,
+		outcomes: marketEventView.outcomes === '' ? [] : JSON.parse(`[${marketEventView.outcomes}]`),
+		templateID: marketEventView.templateId.toString(),
+	}
 
-export const fetchEvents = async (marketId: string, orderBy = 'openingTs', orderDirection = 'asc') => {
-	const response = await apolloProdeQuery<{ events: Event[] }>(query, {
-		marketId,
-		orderBy,
-		orderDirection,
-	})
+	if (event.answerFinalizedTimestamp > 0) {
+		event.answer = marketEventView.answer
+	}
 
-	if (!response) throw new Error('No response from TheGraph')
-
-	return response.data.events
+	return event
 }
 
-export const useEvents = (marketId: string) => {
-	return useQuery<Event[], Error>(['useEvents', marketId], async () => {
-		return fetchEvents(marketId)
+type FetchEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => Promise<Event[]>
+export const fetchEvents: FetchEvents = async (marketId: Address, orderBy = 'openingTs') => {
+	const marketEventsView = await readContract({
+		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		abi: MarketViewAbi,
+		functionName: 'getEvents',
+		args: [marketId],
+	})
+
+	if (typeof marketEventsView.find(e => e.templateId.eq(0)) !== 'undefined') {
+		// it needs to be added to RealityRegistry first
+		return []
+	}
+
+	const events = await Promise.all(
+		marketEventsView.map(async marketEventView => await marketEventViewToEvent(marketEventView))
+	)
+
+	events.sort((a, b) => (a[orderBy] === b[orderBy] ? 0 : a[orderBy] > b[orderBy] ? 1 : -1))
+
+	return events
+}
+
+type UseEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
+export const useEvents: UseEvents = (marketId: Address, orderBy = 'openingTs') => {
+	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy }], async () => {
+		return fetchEvents(marketId, orderBy)
 	})
 }
 

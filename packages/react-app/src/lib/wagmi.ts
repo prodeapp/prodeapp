@@ -24,10 +24,25 @@ export const { chains, provider } = configureChains(
 	[gnosis],
 	[
 		jsonRpcProvider({
-			rpc: chain => ({ http: chain.rpcUrls.default.http[0] }),
+			rpc: () => {
+				return { http: 'https://rpc.gnosischain.com' }
+			},
+		}),
+		jsonRpcProvider({
+			rpc: () => {
+				return { http: 'https://xdai-rpc.gateway.pokt.network' }
+			},
+		}),
+		jsonRpcProvider({
+			rpc: () => {
+				return { http: 'https://rpc.ankr.com/gnosis' }
+			},
 		}),
 		publicProvider(),
-	]
+	],
+	{
+		stallTimeout: 2000,
+	}
 )
 
 const needsInjectedWalletFallback =

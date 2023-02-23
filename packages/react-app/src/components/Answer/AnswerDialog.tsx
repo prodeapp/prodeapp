@@ -2,29 +2,17 @@ import { Trans } from '@lingui/react'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
 
 import AppDialog, { DialogProps } from '@/components/Dialog'
 import { Event } from '@/graphql/subgraph'
 
-import AnswerForm, { AnswerFormValues } from './AnswerForm'
+import AnswerForm from './AnswerForm'
 
 type AnswerDialogProps = DialogProps & {
 	event: Event
 }
 
 function AnswerDialog({ open, handleClose, event }: AnswerDialogProps) {
-	const {
-		register,
-		control,
-		formState: { errors },
-		handleSubmit,
-	} = useForm<AnswerFormValues>({
-		defaultValues: {
-			outcome: '',
-		},
-	})
-
 	const [showActions, setShowActions] = useState(false)
 
 	const dialogActions = (
@@ -37,7 +25,7 @@ function AnswerDialog({ open, handleClose, event }: AnswerDialogProps) {
 
 	return (
 		<AppDialog open={open} handleClose={handleClose} title={event.title} actions={showActions && dialogActions}>
-			<AnswerForm {...{ event, register, control, errors, handleSubmit, setShowActions }} />
+			<AnswerForm {...{ event, setShowActions }} />
 		</AppDialog>
 	)
 }

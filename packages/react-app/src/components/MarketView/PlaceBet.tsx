@@ -3,8 +3,8 @@ import { Trans } from '@lingui/react'
 import { Alert, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { getAccount } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as ArrowRight } from '@/assets/icons/arrow-right-2.svg'
 import { ReactComponent as CurrencyIcon } from '@/assets/icons/currency.svg'
@@ -22,7 +22,7 @@ export default function PlaceBet({
 	onBetClick: () => void
 	onResultsClick: () => void
 }) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const hasVoucher = useHasVoucher(address, market.id, BigNumber.from(market.price))
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()
@@ -54,7 +54,7 @@ export default function PlaceBet({
 							<Trans id='You have a voucher available to place a bet for free!' />
 						</Alert>
 					)}
-					{betsClosingSoon(Number(market.closingTime)) && (
+					{betsClosingSoon(market.closingTime) && (
 						<Typography variant='p3' component='div'>
 							<Trans id="There's not much time left, hurry!" />
 						</Typography>
@@ -72,7 +72,7 @@ export default function PlaceBet({
 						<Trans
 							id='{0, plural, one {# result left to answer} other {# results left to answer}}'
 							values={{
-								0: Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer),
+								0: market.numOfEvents - market.numOfEventsWithAnswer,
 							}}
 						/>
 					</div>

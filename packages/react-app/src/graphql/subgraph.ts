@@ -1,118 +1,81 @@
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
 
-export interface Market {
+import { Bytes } from '@/abi/types'
+
+export interface GraphMarket {
 	id: Address
-	hash: string
-	name: string
-	nonce: string
-	category: string
-	price: BigNumberish
-	numOfBets: string
-	creationTime: string
-	closingTime: string
-	resultSubmissionPeriodStart: string
-	submissionTimeout: string
-	managementFee: string
-	protocolFee: string
-	manager: {
-		id: string
-		managementRewards: BigNumberish
-	}
 	creator: string
-	pool: string
-	prizes: string[]
-	curated: boolean
-	numOfEvents: string
-	numOfEventsWithAnswer: string
-	hasPendingAnswers: boolean
 }
 
 export const MARKET_FIELDS = `
     fragment MarketFields on Market {
       id
-      hash
-      name
-      nonce
-      category
-      price
-      numOfBets
-      creationTime
-      closingTime
-      resultSubmissionPeriodStart
-      submissionTimeout
-      managementFee
-      protocolFee
-      manager{id, managementRewards}
       creator
-      pool
-      prizes
-      curated
-      hasPendingAnswers
-      numOfEventsWithAnswer
-      numOfEvents
     }
 `
+
+export interface Market {
+	id: Address
+	hash: Bytes
+	name: string
+	price: BigNumber
+	numOfBets: number
+	closingTime: number
+	resultSubmissionPeriodStart: number
+	pool: BigNumber
+	prizes: number[]
+	manager: {
+		id: string
+		managementRewards: BigNumberish
+	}
+	managementFee: number
+	protocolFee: number
+	submissionTimeout: number
+	numOfEvents: number
+	numOfEventsWithAnswer: number
+	hasPendingAnswers: boolean
+	creator: Address
+	curated: boolean
+}
 
 export type Outcome = string
 
 export interface Event {
 	id: Address
 	arbitrator: Address
-	markets: [
-		{
-			id: string
-		}
-	]
+	answer: string | null
+	openingTs: number
+	answerFinalizedTimestamp: number
+	isPendingArbitration: boolean
+	timeout: number
+	minBond: BigNumber
+	lastBond: BigNumber
+	bounty: BigNumber
 	category: string
 	title: string
-	answer: string | null
 	outcomes: Outcome[]
-	openingTs: string
-	answerFinalizedTimestamp: string | null
-	isPendingArbitration: boolean
-	timeout: string
-	minBond: string
-	lastBond: string
-	bounty: string
 	templateID: string
 }
 
-export const EVENT_FIELDS = `
-  fragment EventFields on Event {
-    id
-    arbitrator
-    markets{id}
-    category
-    title
-    answer
-    outcomes
-    openingTs
-    answerFinalizedTimestamp
-    isPendingArbitration
-    timeout
-    minBond
-    lastBond
-    bounty
-    templateID
-  }
-`
-
 export interface Player {
+	id: string
+	name: string
+}
+
+export interface PlayerStats {
 	id: string
 	amountBet: BigNumberish
 	pricesReceived: BigNumberish
 	totalAttributions: BigNumberish
-	name: string
 }
 
-export const PLAYER_FIELDS = `
-  fragment PlayerFields on Player {
+export const PLAYER_STATS_FIELDS = `
+  fragment PlayerStatsFields on Player {
     id
     amountBet
     pricesReceived
     totalAttributions
-    name
   }
 `
 
@@ -192,7 +155,7 @@ export interface Leaderboard extends Player {
 }
 
 export const LEADERBOARD_FIELDS = `
-  ${PLAYER_FIELDS}
+  ${PLAYER_STATS_FIELDS}
   fragment LeaderboardFields on Player {
     ...PlayerFields
     numOfMarkets
@@ -217,47 +180,35 @@ export const LEADERBOARD_FIELDS = `
 
 export interface Bet {
 	id: string
+	tokenID: number
 	player: {
-		id: string
+		id: Address
 		name: string
 	}
 	market: {
-		id: string
+		id: Address
 		name: string
-		events: Pick<Event, 'id' | 'answer' | 'title' | 'outcomes' | 'openingTs' | 'templateID'>[]
+	}
+	results: readonly Bytes[]
+	points: number
+}
+
+export interface GraphBet {
+	id: string
+	market: {
+		id: string
 	}
 	tokenID: string
-	points: BigNumberish
-	results: string[]
-	count: BigNumberish
-	claim: boolean
 	reward: BigNumberish
 }
 
 export const BET_FIELDS = `
   fragment BetFields on Bet {
     id
-    player {
-      id,
-      name
-    }
     market {
-      id,
-      name,
-      events {
-        id
-        answer
-        title
-        outcomes
-        openingTs
-        templateID
-      }
+      id
     }
     tokenID
-    points
-    results
-    count
-    claim
     reward
   }
 `

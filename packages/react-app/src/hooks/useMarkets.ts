@@ -1,6 +1,11 @@
+import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
+import { Address } from '@wagmi/core'
+import { readContracts } from 'wagmi'
 
-import { Market, MARKET_FIELDS } from '@/graphql/subgraph'
+import { MarketViewAbi } from '@/abi/MarketView'
+import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
+import { marketViewToMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
 import { getSubcategories } from '@/lib/helpers'
 import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
@@ -24,8 +29,24 @@ export interface UseMarketsProps {
 	creatorId?: string
 }
 
+async function graphMarketsToMarkets(graphMarkets: GraphMarket[]): Promise<Market[]> {
+	const contracts = graphMarkets.map(graphMarket => ({
+		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		abi: MarketViewAbi,
+		functionName: 'getMarket',
+		args: [graphMarket.id],
+	}))
+
+	const markets = await readContracts({
+		contracts,
+	})
+
+	// @ts-ignore
+	return markets.map(market => marketViewToMarket(market)).filter(market => market.id !== AddressZero)
+}
+
 export const useMarkets = ({ curated, status, category, minEvents, creatorId }: UseMarketsProps = {}) => {
-	return useQuery<Market[], Error>(['useMarkets', curated, status, category, minEvents, creatorId], async () => {
+	return useQuery<Market[], Error>(['useMarkets', { curated, status, category, minEvents, creatorId }], async () => {
 		const variables: QueryVariables = { curated, orderDirection: 'desc' }
 
 		if (category) {
@@ -52,10 +73,10 @@ export const useMarkets = ({ curated, status, category, minEvents, creatorId }: 
 			variables['creator'] = creatorId.toLowerCase()
 		}
 
-		const response = await apolloProdeQuery<{ markets: Market[] }>(buildQuery(query, variables), variables)
+		const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(buildQuery(query, variables), variables)
 
 		if (!response) throw new Error('No response from TheGraph')
 
-		return response.data.markets
+		return graphMarketsToMarkets(response.data.markets)
 	})
 }

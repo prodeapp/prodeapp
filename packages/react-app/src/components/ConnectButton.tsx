@@ -2,6 +2,7 @@ import { Trans } from '@lingui/react'
 import { Button } from '@mui/material'
 import Box from '@mui/material/Box'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import Blockies from 'react-blockies'
 import { Link as RouterLink } from 'react-router-dom'
@@ -14,7 +15,7 @@ import { formatPlayerName, shortenAddress } from '@/lib/helpers'
 
 const ConnectedInfo = ({ address }: { address: string }) => {
 	const { disconnect } = useDisconnect()
-	const { data: player } = usePlayer(address || '')
+	const { data: player } = usePlayer((address || '') as Address)
 	let accountName = ''
 
 	if (player) {

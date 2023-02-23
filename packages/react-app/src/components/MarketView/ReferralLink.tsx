@@ -1,7 +1,7 @@
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { getAccount } from '@wagmi/core'
 import React, { useState } from 'react'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as LinkIcon } from '@/assets/icons/link.svg'
 import { getMarketUrl } from '@/lib/helpers'
@@ -15,7 +15,7 @@ const copyReferralLink = async (marketId: string, account: string) => {
 }
 
 function ReferralLink({ marketId }: { marketId: string }) {
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	const [textCopied, setTextCopied] = useState(false)
 

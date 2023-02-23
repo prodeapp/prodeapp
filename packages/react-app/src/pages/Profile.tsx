@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/react'
 import { Button, Container, Grid, Skeleton, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
-import { getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import * as React from 'react'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { BoxRow, BoxWrapper } from '@/components'
 import { Bets } from '@/components/ProfileView/Bets'
@@ -13,15 +13,17 @@ import { Markets } from '@/components/ProfileView/Markets'
 import ProfileForm from '@/components/ProfileView/ProfileForm'
 import { Referrals } from '@/components/ProfileView/Referrals'
 import { usePlayer } from '@/hooks/usePlayer'
+import { usePlayerStats } from '@/hooks/usePlayerStats'
 import { formatAmount } from '@/lib/helpers'
 
 export default function Profile() {
 	const { id } = useParams()
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets')
-	const playerId = id || address || ''
-	const { data: player } = usePlayer(String(playerId))
+	const playerId = (id || address || '') as Address
+	const { data: playerStats } = usePlayerStats(playerId)
+	const { data: player } = usePlayer(playerId)
 
 	if (!id) {
 		if (!address) {
@@ -49,7 +51,7 @@ export default function Profile() {
 							<Trans
 								id='Total Bet: {0}'
 								values={{
-									0: player ? formatAmount(player?.amountBet) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.amountBet) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -61,7 +63,7 @@ export default function Profile() {
 							<Trans
 								id='Total Rewards: {0}'
 								values={{
-									0: player ? formatAmount(player?.pricesReceived) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.pricesReceived) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -73,7 +75,7 @@ export default function Profile() {
 							<Trans
 								id='Referrals Earnings: {0}'
 								values={{
-									0: player ? formatAmount(player?.totalAttributions) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.totalAttributions) : <Skeleton />,
 								}}
 							/>
 						</Typography>

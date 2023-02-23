@@ -5,11 +5,11 @@ import { Trans } from '@lingui/react'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import { Address, getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { MarketAbi } from '@/abi/Market'
 import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
@@ -22,7 +22,7 @@ export type FundMarketFormData = {
 
 function MarketsFund() {
 	const { id: marketId } = useParams()
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 
 	const {

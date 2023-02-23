@@ -12,7 +12,7 @@ import {
 
 import { useDebounce } from './useDebounce'
 
-export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName extends string = string>({
+export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName extends string>({
 	address,
 	abi,
 	functionName,
@@ -25,11 +25,14 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	const [receipt, setReceipt] = useState<TransactionReceipt | undefined>()
 	const debouncedArgs = useDebounce(args, 500)
 
+	// the first call to useDebounce returns undefined, we need to skip this because the args are not ready yet
+	const waitDebounce = typeof args !== 'undefined' && typeof debouncedArgs === 'undefined'
+
 	// @ts-ignore
-	const { config } = usePrepareContractWrite({
+	const { config, isError: isPrepareError } = usePrepareContractWrite({
 		address,
 		abi,
-		functionName,
+		functionName: waitDebounce ? '' : functionName,
 		args: debouncedArgs,
 		overrides,
 		enabled,
@@ -58,6 +61,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	})
 
 	return {
+		isPrepareError,
 		isLoading: isWriteLoading || isTxLoading,
 		isSuccess: isTxSuccess,
 		isError: isWriteError || isTxError,

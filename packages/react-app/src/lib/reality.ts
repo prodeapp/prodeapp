@@ -12,12 +12,25 @@ export const REALITY_TEMPLATE_MULTIPLE_SELECT = '3'
 export const INVALID_RESULT = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 export const ANSWERED_TOO_SOON = '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe'
 
-export interface MarketFactoryRealityQuestionStruct {
+export type MarketFactoryV2MetaDataStruct = {
 	templateID: BigNumber
-	question: string
 	openingTS: number
+	title: string
+	outcomes: string
+	category: string
+	language: string
 }
 
+export type MarketFactoryV2QuestionWithMetadata = {
+	question: string
+	metadata: MarketFactoryV2MetaDataStruct
+}
+
+export function encodeOutcomes(outcomes: string[]) {
+	return JSON.stringify(outcomes)
+		.replace(/^\[/, '')
+		.replace(/\]$/, '')
+}
 export function encodeQuestionText(
 	qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
 	txt: string,
@@ -29,12 +42,7 @@ export function encodeQuestionText(
 	const delim = '\u241f'
 	//console.log('using template_id', template_id);
 	if (qtype === 'single-select' || qtype === 'multiple-select') {
-		const outcome_str = JSON.stringify(outcomes)
-			.replace(/^\[/, '')
-			.replace(/\]$/, '')
-		//console.log('made outcome_str', outcome_str);
-		qText = qText + delim + outcome_str
-		//console.log('made qtext', qtext);
+		qText = qText + delim + encodeOutcomes(outcomes)
 	}
 	if (typeof lang === 'undefined' || lang === '') {
 		lang = 'en_US'
@@ -44,7 +52,7 @@ export function encodeQuestionText(
 }
 
 export function getQuestionId(
-	questionData: MarketFactoryRealityQuestionStruct,
+	rawQuestionData: MarketFactoryV2QuestionWithMetadata,
 	arbitrator: string,
 	timeout: number,
 	minBond: BigNumber,
@@ -53,7 +61,7 @@ export function getQuestionId(
 ) {
 	const contentHash = keccak256(
 		['uint256', 'uint32', 'string'],
-		[questionData.templateID, questionData.openingTS, questionData.question]
+		[rawQuestionData.metadata.templateID, rawQuestionData.metadata.openingTS, rawQuestionData.question]
 	)
 
 	return keccak256(

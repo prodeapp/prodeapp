@@ -68,7 +68,7 @@ function MarketBox({ market }: { market: Market }) {
 	const distributionTimeLeft = getTimeLeft(submissionPeriodEnd, false, locale)
 	let status = <Chip label={i18n._('Closed')} color='error' />
 
-	if (market.resultSubmissionPeriodStart === '0') {
+	if (market.resultSubmissionPeriodStart === 0) {
 		if (closingTimeLeft !== false) {
 			status = <Chip label={i18n._('Betting')} color='success' />
 		} else {
@@ -107,7 +107,7 @@ function MarketBox({ market }: { market: Market }) {
 										<Trans
 											id='{0, plural, one {# result left to answer} other {# results left to answer}}'
 											values={{
-												0: Number(market.numOfEvents) - Number(market.numOfEventsWithAnswer),
+												0: market.numOfEvents - market.numOfEventsWithAnswer,
 											}}
 										/>
 									</div>
@@ -134,7 +134,7 @@ function MarketBox({ market }: { market: Market }) {
 					)}
 					{closingTimeLeft !== false && (
 						<div style={{ textAlign: 'center' }}>
-							{betsClosingSoon(Number(market.closingTime)) && (
+							{betsClosingSoon(market.closingTime) && (
 								<Typography variant='p3' component='div'>
 									<Trans id="There's not much time left, hurry!" />
 								</Typography>

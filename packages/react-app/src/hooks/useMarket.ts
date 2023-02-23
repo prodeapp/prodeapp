@@ -1,25 +1,63 @@
+import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
+import { Address, readContract, ReadContractResult } from '@wagmi/core'
 
-import { Market, MARKET_FIELDS } from '@/graphql/subgraph'
-import { apolloProdeQuery } from '@/lib/apolloClient'
+import { MarketViewAbi } from '@/abi/MarketView'
+import { Market } from '@/graphql/subgraph'
 
-const query = `
-    ${MARKET_FIELDS}
-    query MarketQuery($marketId: String) {
-        market(id: $marketId) {
-            ...MarketFields
-        }
-    }
-`
+export async function getMarket(marketId: Address): Promise<Market | undefined> {
+	// TODO: check that this market was created by a whitelisted factory
 
-export const useMarket = (marketId: string) => {
+	const marketView = await readContract({
+		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		abi: MarketViewAbi,
+		functionName: 'getMarket',
+		args: [marketId],
+	})
+
+	if (marketView.id === AddressZero) {
+		return
+	}
+
+	return marketViewToMarket(marketView)
+}
+
+export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
+	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo] = marketView
+
+	return {
+		id,
+		name: baseInfo.name,
+		hash: baseInfo.hash,
+		price: baseInfo.price,
+		pool: baseInfo.pool,
+		prizes: baseInfo.prizes.map(p => p.toNumber()),
+		manager: {
+			id: managerInfo.managerId,
+			managementRewards: managerInfo.managementRewards,
+		},
+		numOfBets: baseInfo.numOfBets.toNumber(),
+		closingTime: periodsInfo.closingTime.toNumber(),
+		resultSubmissionPeriodStart: periodsInfo.resultSubmissionPeriodStart.toNumber(),
+		submissionTimeout: periodsInfo.submissionTimeout.toNumber(),
+		numOfEvents: eventsInfo.numOfEvents.toNumber(),
+		managementFee: managerInfo.managementFee.toNumber(),
+		protocolFee: managerInfo.protocolFee.toNumber(),
+		numOfEventsWithAnswer: eventsInfo.numOfEventsWithAnswer.toNumber(),
+		hasPendingAnswers: eventsInfo.hasPendingAnswers,
+		curated: baseInfo.curated,
+		creator: baseInfo.creator,
+	}
+}
+
+export const useMarket = (marketId: Address) => {
 	return useQuery<Market | undefined, Error>(['useMarket', marketId], async () => {
-		const response = await apolloProdeQuery<{ market: Market }>(query, {
-			marketId,
-		})
+		const market = await getMarket(marketId)
 
-		if (!response) throw new Error('No response from TheGraph')
+		if (!market) {
+			throw new Error('Market not found')
+		}
 
-		return response.data.market
+		return market
 	})
 }

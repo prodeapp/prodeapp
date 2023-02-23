@@ -72,11 +72,10 @@ function MarketInfo({ market }: { market: Market }) {
 					<Trans id='Fee' />
 				</Typography>
 				<Typography variant='h6s' component='h6'>
-					{((Number(market.managementFee) + Number(market.protocolFee)) * 100) / DIVISOR}%
+					{((market.managementFee + market.protocolFee) * 100) / DIVISOR}%
 				</Typography>
 				<div style={{ fontSize: '11.11px' }}>
-					{(Number(market.protocolFee) * 100) / DIVISOR}% protocol + {(Number(market.managementFee) * 100) / DIVISOR}%
-					manager
+					{(market.protocolFee * 100) / DIVISOR}% protocol + {(market.managementFee * 100) / DIVISOR}% manager
 				</div>
 			</Grid>
 			<Grid item xs={6} md={3}>

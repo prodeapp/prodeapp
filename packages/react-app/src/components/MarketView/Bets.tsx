@@ -3,9 +3,10 @@ import { Trans } from '@lingui/react'
 import { Skeleton } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
-import { getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as EyeIcon } from '@/assets/icons/eye.svg'
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
@@ -13,13 +14,13 @@ import { TableBody, TableHeader } from '@/components'
 import BetDetails from '@/components/Bet/BetDetails'
 import AppDialog from '@/components/Dialog'
 import { Bet } from '@/graphql/subgraph'
+import { useBets } from '@/hooks/useBets'
 import { useIndexedMarketWinners } from '@/hooks/useMarketWinners'
-import { useRanking } from '@/hooks/useRanking'
 import { formatPlayerName, getMedalColor } from '@/lib/helpers'
 
-export default function Bets({ marketId, onlyMyBets }: { marketId: string; onlyMyBets?: boolean }) {
-	const { address } = getAccount()
-	const { isLoading, error, data: ranking } = useRanking(marketId)
+export default function Bets({ marketId, onlyMyBets }: { marketId: Address; onlyMyBets?: boolean }) {
+	const { address } = useAccount()
+	const { isLoading, error, data: bets } = useBets({ marketId })
 	const marketWinners = useIndexedMarketWinners(marketId)
 	const [openModal, setOpenModal] = useState(false)
 	const [bet, setBet] = useState<Bet | undefined>()
@@ -38,7 +39,7 @@ export default function Bets({ marketId, onlyMyBets }: { marketId: string; onlyM
 	}
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	return (
@@ -61,14 +62,14 @@ export default function Bets({ marketId, onlyMyBets }: { marketId: string; onlyM
 						<Trans id='Details' />
 					</div>
 				</TableHeader>
-				{ranking && ranking.length === 0 && (
+				{bets && bets.length === 0 && (
 					<Alert severity='info'>
 						<Trans id='No bets found.' />
 					</Alert>
 				)}
-				{ranking &&
-					ranking.length > 0 &&
-					ranking.map((rank, i) => {
+				{bets &&
+					bets.length > 0 &&
+					bets.map((rank, i) => {
 						if (onlyMyBets && address && rank.player.id.toLowerCase() !== address.toLowerCase()) {
 							return null
 						}

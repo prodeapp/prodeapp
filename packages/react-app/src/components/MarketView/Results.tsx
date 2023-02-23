@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { Address } from '@wagmi/core'
@@ -112,7 +113,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 		)
 	}
 
-	const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp || 0, false, locale)
+	const answerCountdown = getTimeLeft(event.answerFinalizedTimestamp, false, locale)
 
 	if (!answerCountdown) {
 		return (
@@ -161,10 +162,10 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 							'en_US'
 						),
 						event.arbitrator,
-						Number(event.timeout),
-						Number(event.openingTs),
+						event.timeout,
+						event.openingTs,
 						BigNumber.from(0),
-						BigNumber.from(event.minBond),
+						event.minBond,
 						event.id,
 					],
 				})
@@ -203,19 +204,28 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 	)
 }
 
-export default function Results({ marketId }: { marketId: string }) {
+export default function Results({ marketId }: { marketId: Address }) {
 	const { data: events } = useEvents(marketId)
 	const [currentEvent, setCurrentEvent] = useState<Event | undefined>()
 	const [openModal, setOpenModal] = useState(false)
 	const isPhone = usePhone()
 
-	const handleClose = () => {
-		setOpenModal(false)
+	const handleClose = async () => {
 		if (currentEvent) {
-			// refetch events and question just in case the user has provided an answer
-			queryClient.invalidateQueries(['useEvents', currentEvent.markets[0].id])
-			queryClient.invalidateQueries(['useQuestion', import.meta.env.VITE_REALITIO as Address, currentEvent.id])
+			// invalidate queries just in case the user has provided an answer
+			queryClient.invalidateQueries(['useMarket', marketId])
+			queryClient.invalidateQueries(['useBets', { marketId }])
+			queryClient.invalidateQueries(['useEvents', { marketId }])
 		}
+		setOpenModal(false)
+	}
+
+	if (!events || events.length === 0) {
+		return (
+			<Alert severity='error'>
+				<Trans id='The events of this market are still being processed.' />
+			</Alert>
+		)
 	}
 
 	return (

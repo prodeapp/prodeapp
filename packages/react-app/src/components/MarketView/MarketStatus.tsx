@@ -1,6 +1,7 @@
 import { i18n } from '@lingui/core'
 import { Skeleton } from '@mui/material'
 import Chip from '@mui/material/Chip'
+import { Address } from '@wagmi/core'
 import React from 'react'
 
 import { useMarketStatus } from '@/hooks/useMarketStatus'
@@ -8,7 +9,7 @@ import { useSubmissionPeriodEnd } from '@/hooks/useSubmissionPeriodEnd'
 import { getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
-function MarketStatus({ marketId }: { marketId: string }) {
+function MarketStatus({ marketId }: { marketId: Address }) {
 	const { data: marketStatus } = useMarketStatus(marketId)
 	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(marketId)
 	const { locale } = useI18nContext()

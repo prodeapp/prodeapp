@@ -1,3 +1,4 @@
+import { Address } from '@wagmi/core'
 import { useMemo } from 'react'
 
 import { indexObjectsByKey } from '@/lib/helpers'
@@ -51,7 +52,7 @@ export function getMarketWinners(marketPoints: MarketPoint[], totalPrizes: numbe
 	})
 }
 
-export const useMarketWinners = (marketId: string): RankedWinners[] => {
+export const useMarketWinners = (marketId: Address): RankedWinners[] => {
 	const { data: marketPoints } = useMarketPoints(marketId)
 	const { data: market } = useMarket(marketId)
 
@@ -62,7 +63,7 @@ export const useMarketWinners = (marketId: string): RankedWinners[] => {
 	return getMarketWinners(marketPoints, market.prizes.length)
 }
 
-export function useIndexedMarketWinners(marketId: string) {
+export function useIndexedMarketWinners(marketId: Address) {
 	const marketWinners = useMarketWinners(marketId)
 	return useMemo(() => indexObjectsByKey(marketWinners || [], 'tokenID'), [marketWinners])
 }

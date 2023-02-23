@@ -99,7 +99,7 @@ export function Referrals({ provider }: { provider: string }) {
 	})
 
 	if (error) {
-		return <Alert severity='error'>{error}</Alert>
+		return <Alert severity='error'>{error.message}</Alert>
 	}
 
 	if (isLoading) {

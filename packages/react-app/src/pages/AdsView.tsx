@@ -6,10 +6,10 @@ import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
@@ -66,7 +66,7 @@ function AdsView() {
 	const theme = useTheme()
 	const [openModal, setOpenModal] = useState(false)
 	const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO)
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	const { isSuccess, error, write } = useSendRecklessTx({
 		address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,

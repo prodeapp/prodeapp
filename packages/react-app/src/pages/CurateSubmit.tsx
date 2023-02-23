@@ -5,12 +5,11 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { GeneralizedTCRAbi } from '@/abi/GeneralizedTCR'
 import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
@@ -143,10 +142,10 @@ function GroupsForm() {
 
 function CurateSubmit() {
 	const { marketId } = useParams()
-	const { data: market } = useMarket(String(marketId))
-	const { isLoading, data: events } = useEvents(String(marketId))
+	const { data: market } = useMarket(String(marketId) as Address)
+	const { isLoading, data: events } = useEvents(String(marketId) as Address)
 
-	const { address } = getAccount()
+	const { address } = useAccount()
 	const { chain } = useNetwork()
 
 	const { data: submissionDeposit } = useSubmissionDeposit(import.meta.env.VITE_CURATE_REGISTRY as Address)
@@ -200,7 +199,7 @@ function CurateSubmit() {
 	useEffect(() => {
 		if (market) {
 			setValue('name', market.name)
-			setValue('startingTimestamp', market.closingTime)
+			setValue('startingTimestamp', market.closingTime.toString())
 		}
 	}, [market, setValue])
 

@@ -2,12 +2,11 @@ import { Trans } from '@lingui/react'
 import MenuIcon from '@mui/icons-material/Menu'
 import { AppBar, Box, Button, Container, IconButton, Toolbar } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.svg'
@@ -202,7 +201,7 @@ export default function Header() {
 
 function WalletMenu() {
 	const { chain } = useNetwork()
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	const { data: claimArgs } = useClaimArgs(address || '')
 

@@ -7,9 +7,10 @@ import Grid from '@mui/material/Grid'
 import { styled, useTheme } from '@mui/material/styles'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import { getAccount } from '@wagmi/core'
+import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as ArrowRightIcon } from '@/assets/icons/arrow-right.svg'
 import { ReactComponent as TwitterIcon } from '@/assets/icons/twitter.svg'
@@ -42,12 +43,12 @@ type MarketSections = 'bet' | 'bets' | 'results' | 'stats'
 
 function MarketsView() {
 	const { id } = useParams()
-	const { isLoading, data: market } = useMarket(String(id))
+	const { isLoading, data: market } = useMarket(String(id) as Address)
 	const [section, setSection] = useState<MarketSections>('bets')
 	const [searchParams] = useSearchParams()
 	const [onlyMyBets, setOnlyMyBets] = useState(false)
 	const theme = useTheme()
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	useEffect(() => {
 		const referralId = searchParams.get('referralId')
@@ -103,7 +104,7 @@ function MarketsView() {
 						<MarketStatus marketId={market.id} />
 						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>{market.name}</h2>
 
-						{address?.toLowerCase() === market.creator && market.pool === '0' && (
+						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && (
 							<div style={{ marginBottom: '20px' }}>
 								<DeleteMarket marketId={market.id} />
 							</div>

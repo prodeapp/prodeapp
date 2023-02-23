@@ -1,4 +1,5 @@
 import Alert from '@mui/material/Alert'
+import { Address } from '@wagmi/core'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -9,8 +10,8 @@ import { useMarket } from '@/hooks/useMarket'
 
 function Tournament() {
 	const { id } = useParams()
-	const { isLoading: isLoadingMarket, data: market } = useMarket(String(id))
-	const { isLoading: isLoadingEvents, data: events } = useEvents(String(id))
+	const { isLoading: isLoadingMarket, data: market } = useMarket(String(id) as Address)
+	const { isLoading: isLoadingEvents, data: events } = useEvents(String(id) as Address)
 	const itemJson = useCurateItemJson(market?.hash || '')
 
 	if (isLoadingMarket || isLoadingEvents) {

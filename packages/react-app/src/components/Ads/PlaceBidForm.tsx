@@ -6,12 +6,11 @@ import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField'
-import { getAccount } from '@wagmi/core'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { FieldErrors } from 'react-hook-form/dist/types/errors'
 import { UseFormHandleSubmit, UseFormRegister, UseFormWatch } from 'react-hook-form/dist/types/form'
-import { useContractRead, useNetwork } from 'wagmi'
+import { useAccount, useContractRead, useNetwork } from 'wagmi'
 
 import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { Bytes } from '@/abi/types'
@@ -44,7 +43,7 @@ export default function PlaceBidForm({
 	setShowActions,
 }: PlaceBidFormProps) {
 	const { chain } = useNetwork()
-	const { address } = getAccount()
+	const { address } = useAccount()
 
 	const { isLoading, isSuccess, error, write } = useSendRecklessTx({
 		address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
