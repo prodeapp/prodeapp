@@ -1,9 +1,11 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { useMemo } from 'react'
+import { useNetwork } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Event } from '@/graphql/subgraph'
+import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -34,10 +36,11 @@ export const marketEventViewToEvent = async (
 	return event
 }
 
-type FetchEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => Promise<Event[]>
-export const fetchEvents: FetchEvents = async (marketId: Address, orderBy = 'openingTs') => {
+type FetchEvents = (chainId: number, marketId: Address, orderBy?: 'openingTs' | 'id') => Promise<Event[]>
+
+export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'openingTs') => {
 	const marketEventsView = await readContract({
-		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
 		abi: MarketViewAbi,
 		functionName: 'getEvents',
 		args: [marketId],
@@ -59,8 +62,9 @@ export const fetchEvents: FetchEvents = async (marketId: Address, orderBy = 'ope
 
 type UseEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
 export const useEvents: UseEvents = (marketId: Address, orderBy = 'openingTs') => {
-	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy }], async () => {
-		return fetchEvents(marketId, orderBy)
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy, chainId: chain.id }], async () => {
+		return fetchEvents(chain.id, marketId, orderBy)
 	})
 }
 

@@ -6,7 +6,6 @@ import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormHelperText from '@mui/material/FormHelperText'
-import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useAccount, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
@@ -16,6 +15,7 @@ import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
 import { useSendTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -61,6 +61,7 @@ function getOutcomes(event: Event) {
 }
 
 function getTxParams(
+	chainId: number,
 	eventId: Bytes,
 	outcome: FormEventOutcomeValue | FormEventOutcomeValue[] | '',
 	currentBond: BigNumber
@@ -70,7 +71,7 @@ function getTxParams(
 	}
 
 	return {
-		address: import.meta.env.VITE_REALITIO as Address,
+		address: REALITIO_ADDRESSES[chainId as keyof typeof REALITIO_ADDRESSES],
 		abi: RealityAbi,
 		functionName: 'submitAnswer',
 		args: [eventId, formatOutcome(outcome), currentBond],
@@ -100,7 +101,9 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 
 	const currentBond = event.lastBond.gt(0) ? event.lastBond.mul(2) : event.minBond
 
-	const { isLoading, isSuccess, error, write } = useSendTx(getTxParams(event.id, outcome, currentBond))
+	const { isLoading, isSuccess, error, write } = useSendTx(
+		getTxParams(chain?.id || DEFAULT_CHAIN, event.id, outcome, currentBond)
+	)
 
 	const outcomes = getOutcomes(event)
 

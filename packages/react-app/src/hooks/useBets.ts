@@ -3,12 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { UseQueryResult } from '@tanstack/react-query/src/types'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { useMemo } from 'react'
-import { readContracts } from 'wagmi'
+import { readContracts, useNetwork } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Bytes } from '@/abi/types'
 import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -55,12 +56,12 @@ export const marketBetViewToBet = async (
 	}
 }
 
-export async function getMarketBets(marketId: Address): Promise<Bet[]> {
+export async function getMarketBets(chainId: number, marketId: Address): Promise<Bet[]> {
 	// TODO: check that this market was created by a whitelisted factory
 
 	const marketBetsView = (
 		await readContract({
-			address: import.meta.env.VITE_MARKET_VIEW as Address,
+			address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
 			abi: MarketViewAbi,
 			functionName: 'getMarketBets',
 			args: [marketId],
@@ -74,9 +75,9 @@ export async function getMarketBets(marketId: Address): Promise<Bet[]> {
 	return bets
 }
 
-async function graphBetsToBets(graphBets: GraphBet[]): Promise<Bet[]> {
+async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<Bet[]> {
 	const contracts = graphBets.map(graphBet => ({
-		address: import.meta.env.VITE_MARKET_VIEW as Address,
+		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [graphBet.market.id, graphBet.tokenID],
@@ -101,11 +102,12 @@ type UseBets = {
 }
 
 export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; marketId?: Address }) => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	return useQuery<Bet[], Error>(
-		['useBets', { marketId, playerId }],
+		['useBets', { marketId, playerId, chainId: chain.id }],
 		async () => {
 			if (marketId) {
-				return await getMarketBets(marketId)
+				return await getMarketBets(chain.id, marketId)
 			}
 
 			if (playerId) {
@@ -121,7 +123,7 @@ export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; m
 
 				if (!response) throw new Error('No response from TheGraph')
 
-				return await graphBetsToBets(response.data.bets)
+				return await graphBetsToBets(chain.id, response.data.bets)
 			}
 
 			throw new Error('Missing market or player')

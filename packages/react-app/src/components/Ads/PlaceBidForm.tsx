@@ -16,6 +16,7 @@ import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES } from '@/lib/config'
 
 export type PlaceBidFormValues = {
 	market: Address | ''
@@ -46,13 +47,13 @@ export default function PlaceBidForm({
 	const { address } = useAccount()
 
 	const { isLoading, isSuccess, error, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+		address: FIRST_PRICE_AUCTION_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES)],
 		abi: FirstPriceAuctionAbi,
 		functionName: 'placeBid',
 	})
 
 	const { data: MIN_OFFER_DURATION } = useContractRead({
-		address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+		address: FIRST_PRICE_AUCTION_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES)],
 		abi: FirstPriceAuctionAbi,
 		functionName: 'MIN_OFFER_DURATION',
 	})

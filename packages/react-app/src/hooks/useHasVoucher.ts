@@ -1,20 +1,23 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
-import { useContractReads } from 'wagmi'
+import { useContractReads, useNetwork } from 'wagmi'
 
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
+import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
 
 export const useHasVoucher = (address: Address | undefined, marketId: Address, price: BigNumber) => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const { data } = useContractReads({
 		contracts: [
 			{
-				address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+				address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
 				abi: VoucherManagerAbi,
 				functionName: 'balance',
 				args: [address],
 			},
 			{
-				address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+				address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
 				abi: VoucherManagerAbi,
 				functionName: 'marketsWhitelist',
 				args: [marketId],

@@ -15,6 +15,7 @@ import { KeyValueAbi } from '@/abi/KeyValue'
 import { FormError } from '@/components'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useSendTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
 
 export type ProfileFormValues = {
 	name: string
@@ -33,6 +34,7 @@ const innerStyles: React.CSSProperties = {
 }
 
 function getTxParams(
+	chainId: number,
 	userId: Address | undefined,
 	name: string
 ): UsePrepareContractWriteConfig<typeof KeyValueAbi, 'setUsername'> {
@@ -41,7 +43,7 @@ function getTxParams(
 	}
 
 	return {
-		address: import.meta.env.VITE_KEY_VALUE as Address,
+		address: KEY_VALUE_ADDRESSES[chainId as keyof typeof KEY_VALUE_ADDRESSES],
 		abi: KeyValueAbi,
 		functionName: 'setUsername',
 		args: [userId, name],
@@ -66,7 +68,9 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 
 	const name = useWatch({ control, name: 'name' })
 
-	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(getTxParams(address, name))
+	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(
+		getTxParams(chain?.id || DEFAULT_CHAIN, address, name)
+	)
 
 	if (!address) {
 		return null

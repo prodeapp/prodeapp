@@ -19,6 +19,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSubmissionDeposit } from '@/hooks/useSubmissionDeposit'
+import { CURATE_REGISTRY_ADDRESSES, DEFAULT_CHAIN } from '@/lib/config'
 import { FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -148,7 +149,9 @@ function CurateSubmit() {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
 
-	const { data: submissionDeposit } = useSubmissionDeposit(import.meta.env.VITE_CURATE_REGISTRY as Address)
+	const { data: submissionDeposit } = useSubmissionDeposit(
+		CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)]
+	)
 
 	const useFormReturn = useForm<CurateSubmitFormValues>({
 		defaultValues: {
@@ -180,7 +183,7 @@ function CurateSubmit() {
 	const format = useWatch({ control, name: 'format' })
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_CURATE_REGISTRY as Address,
+		address: CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)],
 		abi: GeneralizedTCRAbi,
 		functionName: 'addItem',
 	})
@@ -234,6 +237,7 @@ function CurateSubmit() {
 	const onSubmit = async (data: CurateSubmitFormValues) => {
 		try {
 			const encodedParams = await getEncodedParams(
+				chain?.id || DEFAULT_CHAIN,
 				data,
 				getQuestionsHash(data.questions.map(question => question.value)),
 				data.questions.map(question => question.value)

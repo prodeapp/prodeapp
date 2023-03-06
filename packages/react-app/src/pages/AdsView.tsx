@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { Address } from '@wagmi/core'
 import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
@@ -20,6 +20,7 @@ import { AdBid } from '@/graphql/subgraph'
 import { useAd } from '@/hooks/useAd'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSvgAd } from '@/hooks/useSvgAd'
+import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES } from '@/lib/config'
 import { formatAmount, getBidBalance, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 export interface BidInfo {
@@ -59,6 +60,7 @@ export function useIndexedBids(bids?: AdBid[]) {
 }
 
 function AdsView() {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { id } = useParams()
 	const { isLoading, data: ad } = useAd(String(id))
 	const groupedBids = useIndexedBids(ad?.bids)
@@ -69,7 +71,7 @@ function AdsView() {
 	const { address } = useAccount()
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_FIRST_PRICE_AUCTION as Address,
+		address: FIRST_PRICE_AUCTION_ADDRESSES[chain.id as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES],
 		abi: FirstPriceAuctionAbi,
 		functionName: 'removeBid',
 	})
