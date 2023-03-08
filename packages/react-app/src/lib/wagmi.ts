@@ -8,7 +8,7 @@ import {
 	rainbowWallet,
 	walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { gnosis } from '@wagmi/core/chains'
+import { gnosis, polygonMumbai } from '@wagmi/core/chains'
 import { configureChains, createClient } from 'wagmi'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
@@ -21,7 +21,7 @@ gnosis.contracts = {
 }
 
 export const { chains, provider } = configureChains(
-	[gnosis],
+	[gnosis, polygonMumbai],
 	[
 		jsonRpcProvider({
 			rpc: () => {
@@ -36,6 +36,16 @@ export const { chains, provider } = configureChains(
 		jsonRpcProvider({
 			rpc: () => {
 				return { http: 'https://rpc.ankr.com/gnosis' }
+			},
+		}),
+		jsonRpcProvider({
+			rpc: () => {
+				return { http: 'https://rpc-mumbai.maticvigil.com' }
+			},
+		}),
+		jsonRpcProvider({
+			rpc: () => {
+				return { http: 'https://rpc.ankr.com/polygon_mumbai' }
 			},
 		}),
 		publicProvider(),
