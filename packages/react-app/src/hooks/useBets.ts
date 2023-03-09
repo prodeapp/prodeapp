@@ -14,6 +14,7 @@ import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
 export const marketBetViewToBet = async (
+	chainId: number,
 	marketBetsView: ArrayElement<ReadContractResult<typeof MarketViewAbi, 'getMarketBets'>>
 ): Promise<Bet> => {
 	const { marketId, marketName, tokenId, owner, ownerName } = marketBetsView
@@ -31,7 +32,7 @@ export const marketBetViewToBet = async (
 			}
 		}`
 
-		const response = await apolloProdeQuery<{ bets: { results: Bytes[]; points: number }[] }>(query, {
+		const response = await apolloProdeQuery<{ bets: { results: Bytes[]; points: number }[] }>(chainId, query, {
 			marketId: marketId.toLowerCase(),
 			tokenId: tokenId.toString(),
 		})
@@ -68,7 +69,9 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 		})
 	).slice()
 
-	const bets = await Promise.all(marketBetsView.map(async marketBetView => await marketBetViewToBet(marketBetView)))
+	const bets = await Promise.all(
+		marketBetsView.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
+	)
 
 	bets.sort((a, b) => b.points - a.points)
 
@@ -92,7 +95,7 @@ async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<
 			// remove multicall errors
 			.filter(mbv => mbv !== null)
 			// @ts-ignore
-			.map(async marketBetView => await marketBetViewToBet(marketBetView))
+			.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
 	)
 }
 
@@ -119,7 +122,9 @@ export const useBets: UseBets = ({ playerId, marketId }: { playerId?: Address; m
       }
     }
 `
-				const response = await apolloProdeQuery<{ bets: GraphBet[] }>(query, { playerId: playerId.toLowerCase() })
+				const response = await apolloProdeQuery<{ bets: GraphBet[] }>(chain.id, query, {
+					playerId: playerId.toLowerCase(),
+				})
 
 				if (!response) throw new Error('No response from TheGraph')
 
@@ -137,9 +142,11 @@ export function useIndexedBetsRewards(graphBets?: GraphBet[]) {
 }
 
 export const useBetsRewards = (bets: Bet[]) => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const betsId = bets.map(b => b.id.toLowerCase())
 
-	return useQuery<GraphBet[], Error>(['useBetsRewards', { bets: betsId }], async () => {
+	return useQuery<GraphBet[], Error>(['useBetsRewards', { bets: betsId, chainId: chain.id }], async () => {
 		const query = `
     ${BET_FIELDS}
     query BetsRewardQuery($betsId: [String]) {
@@ -148,7 +155,7 @@ export const useBetsRewards = (bets: Bet[]) => {
       }
     }
 `
-		const response = await apolloProdeQuery<{ bets: GraphBet[] }>(query, { betsId: betsId })
+		const response = await apolloProdeQuery<{ bets: GraphBet[] }>(chain.id, query, { betsId: betsId })
 
 		if (!response) throw new Error('No response from TheGraph')
 

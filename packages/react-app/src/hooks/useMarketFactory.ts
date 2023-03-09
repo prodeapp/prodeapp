@@ -17,10 +17,11 @@ const query = `
 `
 
 export const useMarketFactory = () => {
-	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory'], async () => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory', chain.id], async () => {
 		const response = await apolloProdeQuery<{
 			marketFactories: MarketFactory[]
-		}>(query)
+		}>(chain.id, query)
 
 		if (!response) throw new Error('No response from TheGraph')
 

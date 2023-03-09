@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNetwork } from 'wagmi'
 
 import { SVG_AD_FIELDS, SVGAd } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DEFAULT_CHAIN } from '@/lib/config'
 
 const query = `
     ${SVG_AD_FIELDS}
@@ -13,8 +15,9 @@ const query = `
 `
 
 export const useAd = (id: string) => {
-	return useQuery<SVGAd, Error>(['useAd', id], async () => {
-		const response = await apolloProdeQuery<{ svgad: SVGAd }>(query, {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<SVGAd, Error>(['useAd', id, chain.id], async () => {
+		const response = await apolloProdeQuery<{ svgad: SVGAd }>(chain.id, query, {
 			id: id.toLowerCase(),
 		})
 

@@ -18,7 +18,7 @@ async function getTokenBet(chainId: number, marketId: Address, tokenId: number):
 		args: [marketId, BigNumber.from(tokenId)],
 	})
 
-	return await marketBetViewToBet(marketBetView)
+	return await marketBetViewToBet(chainId, marketBetView)
 }
 
 export const useBet = (marketId: Address, tokenId: number) => {

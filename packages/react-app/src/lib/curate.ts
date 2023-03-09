@@ -61,7 +61,7 @@ const curateItemQuery = `
 async function getRegistryColumns(chainId: number): Promise<any[]> {
 	const result = await apolloProdeQuery<{
 		registry: { clearingMetaEvidence: { URI: string } }
-	}>(registryQuery, {
+	}>(chainId, registryQuery, {
 		registryId: CURATE_REGISTRY_ADDRESSES[chainId as keyof typeof CURATE_REGISTRY_ADDRESSES].toLowerCase(),
 	})
 
@@ -106,7 +106,7 @@ export async function getEncodedParams(
 }
 
 export async function getDecodedParams(chainId: number, itemId: string): Promise<DecodedCurateListFields> {
-	const result = await apolloProdeQuery<{ curateItem: { data: string } }>(curateItemQuery, { itemId })
+	const result = await apolloProdeQuery<{ curateItem: { data: string } }>(chainId, curateItemQuery, { itemId })
 
 	if (!result?.data?.curateItem?.data) {
 		throw new Error('item not found')
@@ -158,7 +158,7 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
 	return format
 }
 
-export const fetchCurateItemsByHash = async (hash: string) => {
+export const fetchCurateItemsByHash = async (chainId: number, hash: string) => {
 	const query = `
     ${CURATE_ITEM_FIELDS}
     query CurateItemsQuery($hash: String) {
@@ -168,7 +168,7 @@ export const fetchCurateItemsByHash = async (hash: string) => {
     }
 `
 
-	const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(query, { hash })
+	const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(chainId, query, { hash })
 
 	if (!response) throw new Error('No response from TheGraph')
 

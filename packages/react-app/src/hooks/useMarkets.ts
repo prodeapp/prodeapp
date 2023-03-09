@@ -76,7 +76,11 @@ export const useMarkets = ({ curated, status, category, minEvents, creatorId }: 
 				variables['creator'] = creatorId.toLowerCase()
 			}
 
-			const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(buildQuery(query, variables), variables)
+			const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
+				chain.id,
+				buildQuery(query, variables),
+				variables
+			)
 
 			if (!response) throw new Error('No response from TheGraph')
 

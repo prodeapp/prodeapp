@@ -1,0 +1,44 @@
+{
+  "repository": "https://github.com/prodeapp/prodeapp",
+  "network": "xdai",
+  "MarketFactory": {
+    "address": "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b",
+    "startBlock": "23172705"
+  },
+  "RealitioV3": {
+    "address": "0xE78996A233895bE74a66F451f1019cA9734205cc",
+    "startBlock": "23172705"
+  },
+  "ClassicCurate": {
+    "address": "0x86E72802D9AbBF7505a889721fD4D6947B02320E",
+    "startBlock": "23165985"
+  },
+  "ContentCurate": {
+    "address": "0x76D159faDCDE966d68885b7267Ce42F4F655238D",
+    "startBlock": "24296648"
+  },
+  "TechnicalCurate": {
+    "address": "0x6E6Bc2032d5A19728Aeb30f06507e7Cb43e4bBFD",
+    "startBlock": "24350145"
+  },
+  "KeyValue": {
+    "address": "0xF230b73987024ed614AE93f8A5fdF2416aD0B835",
+    "startBlock": "23769288"
+  },
+  "SVGFactory": {
+    "address": "0x24C93b506768110A45Fd1a221eCd8Bd6B93Dc15c",
+    "startBlock": "24489790"
+  },
+  "Billing": {
+    "address": "0x9444245c2c7Ac2C1D25798478f700d26a2d244a0",
+    "startBlock": "24534094"
+  },
+  "FirstPriceAuction": {
+    "address": "0xDcdB82E595B3c80e569EbB52C08B05f053Ad7478",
+    "startBlock": "24534096"
+  },
+  "CurateProxySVG": {
+    "address": "0x8167f4bF6f39C178bE68536C290E44E49925ce5f",
+    "startBlock": "24489788"
+  }
+}

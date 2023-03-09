@@ -7,8 +7,9 @@ import { DEFAULT_CHAIN } from '@/lib/config'
 import { DecodedCurateListFields, fetchCurateItemsByHash, getDecodedParams } from '@/lib/curate'
 
 export const useCurateItems = (marketHash: string) => {
-	return useQuery<CurateItem[], Error>(['useCurateItem', marketHash], async () => {
-		return fetchCurateItemsByHash(marketHash)
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<CurateItem[], Error>(['useCurateItem', marketHash, chain.id], async () => {
+		return fetchCurateItemsByHash(chain.id, marketHash)
 	})
 }
 

@@ -34,7 +34,7 @@ const fetchMarketByHash = async (chainId: number, hash: string): Promise<Market 
     }
 `
 
-	const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(query, {
+	const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(chainId, query, {
 		hash,
 	})
 
@@ -110,7 +110,7 @@ function CurateValidator() {
 			)
 
 			// validate hash is not already registered
-			const marketCurations = await fetchCurateItemsByHash(itemProps.Hash)
+			const marketCurations = await fetchCurateItemsByHash(chain.id, itemProps.Hash)
 
 			_results.push(
 				marketCurations.length > 1
