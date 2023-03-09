@@ -30,9 +30,11 @@ dataSources:
       eventHandlers:
         - event: NewMarket(indexed address,indexed bytes32,address)
           handler: handleNewMarket
+      {{#supportsCallHandlers}}
       callHandlers:
         - function: createMarket(string,string,address,uint256,uint256,uint256,uint256,(uint256,string,uint32)[],uint16[])
           handler: handleCreateMarket
+      {{/supportsCallHandlers}}
       file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
@@ -307,8 +309,10 @@ templates:
       abis:
         - name: Manager
           file: ./contracts/abis/Manager.json
+      {{#supportsCallHandlers}}
       callHandlers:
         - function: claimReferralReward(address)
           handler: handleClaimReferralReward
         - function: distributeRewards()
           handler: handleDistributeRewards
+      {{/supportsCallHandlers}}

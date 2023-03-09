@@ -1,44 +1,45 @@
 {
   "repository": "https://github.com/prodeapp/prodeapp-mumbai",
   "network": "mumbai",
+  "supportsCallHandlers": false,
   "MarketFactory": {
     "address": "0xFE6bd7451E92DeddD1096430e659e8af882D2eb7",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "RealitioV3": {
     "address": "0x92115220C28e78312cCe86f3d1dE652CFBD0357A",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "ClassicCurate": {
     "address": "0xFe33e20Da3270323e66c031AB26967cCeE25B3a2",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "ContentCurate": {
     "address": "0xFe33e20Da3270323e66c031AB26967cCeE25B3a2",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "TechnicalCurate": {
     "address": "0xFe33e20Da3270323e66c031AB26967cCeE25B3a2",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "KeyValue": {
     "address": "0xE680Dc6A28674546361531BF4CaaE190E08D6Bad",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "SVGFactory": {
     "address": "0x20755a7aAb26C571dC23B02Fe3C265ca79A80281",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "Billing": {
     "address": "0xcEd313c331e325c4EE96bE56042036aB8787EE0a",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "FirstPriceAuction": {
     "address": "0x62eE718Fc940641166c921E1642c33B2e095bEf3",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   },
   "CurateProxySVG": {
     "address": "0xd9Fb7d38047042fF66C0451874fa366B33c4B72E",
-    "startBlock": "32881279"
+    "startBlock": "32883854"
   }
 }
