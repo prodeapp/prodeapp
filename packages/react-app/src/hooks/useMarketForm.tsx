@@ -8,7 +8,7 @@ import { useNetwork } from 'wagmi'
 
 import { MarketFactoryAbi } from '@/abi/MarketFactory'
 import { MarketFactoryV2Abi } from '@/abi/MarketFactoryV2'
-import { useMarketFactoryAttributes } from '@/hooks/useMarketFactory'
+import { MarketFactoryAttributes, useMarketFactoryAttributes } from '@/hooks/useMarketFactory'
 import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES, MARKET_FACTORY_V2_ADDRESSES, MIN_BOND_VALUE } from '@/lib/config'
 import { parseEvents } from '@/lib/helpers'
 import {
@@ -86,6 +86,56 @@ interface UseMarketFormReturn {
 	marketId: string
 }
 
+export function getTxParams(
+	step1State: MarketFormStep1Values,
+	step2State: MarketFormStep2Values,
+	factoryAttrs: MarketFactoryAttributes,
+	minBond: BigNumber
+) {
+	const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC')
+	const closingTime = Math.floor(utcClosingTime.getTime() / 1000)
+
+	const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map(event => {
+		const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market)
+		return {
+			question: encodeQuestionText(
+				'single-select',
+				eventData.question,
+				eventData.answers,
+				step1State.category,
+				'en_US'
+			),
+			metadata: {
+				templateID: BigNumber.from(REALITY_TEMPLATE_SINGLE_SELECT),
+				openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
+				title: eventData.question,
+				outcomes: encodeOutcomes(eventData.answers),
+				category: step1State.category,
+				language: 'en_US',
+			},
+		}
+	})
+
+	return [
+		step1State.market,
+		'PRODE',
+		step2State.manager as Address,
+		BigNumber.from(Math.round((step2State.managementFee * DIVISOR) / 100)),
+		BigNumber.from(closingTime - 1),
+		parseUnits(String(step2State.price), 18),
+		minBond,
+		orderByQuestionId(
+			questionsData,
+			String(factoryAttrs?.arbitrator),
+			Number(factoryAttrs?.timeout),
+			minBond,
+			String(factoryAttrs?.realitio),
+			factoryAttrs.factory
+		),
+		step2State.prizeWeights.map(pw => Math.round((pw.value * DIVISOR) / 100)),
+	]
+}
+
 export default function useMarketForm(): UseMarketFormReturn {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const [marketId, setMarketId] = useState<Address | ''>('')
@@ -110,51 +160,10 @@ export default function useMarketForm(): UseMarketFormReturn {
 	}, [receipt])
 
 	const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
-		const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC')
-		const closingTime = Math.floor(utcClosingTime.getTime() / 1000)
-
-		const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map(event => {
-			const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market)
-			return {
-				question: encodeQuestionText(
-					'single-select',
-					eventData.question,
-					eventData.answers,
-					step1State.category,
-					'en_US'
-				),
-				metadata: {
-					templateID: BigNumber.from(REALITY_TEMPLATE_SINGLE_SELECT),
-					openingTS: Math.floor(zonedTimeToUtc(event.openingTs!, 'UTC').getTime() / 1000),
-					title: eventData.question,
-					outcomes: encodeOutcomes(eventData.answers),
-					category: step1State.category,
-					language: 'en_US',
-				},
-			}
-		})
-
 		const minBond = MIN_BOND_VALUE[chain.id as keyof typeof MIN_BOND_VALUE]
 
 		write!({
-			recklesslySetUnpreparedArgs: [
-				step1State.market,
-				'PRODE',
-				step2State.manager as Address,
-				BigNumber.from(Math.round((step2State.managementFee * DIVISOR) / 100)),
-				BigNumber.from(closingTime - 1),
-				parseUnits(String(step2State.price), 18),
-				minBond,
-				orderByQuestionId(
-					questionsData,
-					String(factoryAttrs?.arbitrator),
-					Number(factoryAttrs?.timeout),
-					minBond,
-					String(factoryAttrs?.realitio),
-					MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
-				),
-				step2State.prizeWeights.map(pw => Math.round((pw.value * DIVISOR) / 100)),
-			],
+			recklesslySetUnpreparedArgs: getTxParams(step1State, step2State, factoryAttrs!, minBond),
 		})
 	}
 

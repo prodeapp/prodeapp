@@ -29,7 +29,8 @@ export const useMarketFactory = () => {
 	})
 }
 
-type MarketFactoryAttributes = {
+export type MarketFactoryAttributes = {
+	factory: Address
 	arbitrator: Address | ''
 	realitio: Address | ''
 	timeout: number
@@ -37,21 +38,23 @@ type MarketFactoryAttributes = {
 
 export const useMarketFactoryAttributes = () => {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const factoryAddress = MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
+
 	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chain.id], async () => {
 		const data = await readContracts({
 			contracts: [
 				{
-					address: MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES],
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'arbitrator',
 				},
 				{
-					address: MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES],
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'realitio',
 				},
 				{
-					address: MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES],
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'QUESTION_TIMEOUT',
 				},
@@ -59,6 +62,7 @@ export const useMarketFactoryAttributes = () => {
 		})
 
 		return {
+			factory: factoryAddress,
 			arbitrator: data?.[0] || '',
 			realitio: data?.[1] || '',
 			timeout: data?.[2] || 0,
