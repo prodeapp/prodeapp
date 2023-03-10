@@ -191,7 +191,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 						<div style={{ width: '40%' }}>
 							<Trans id='Reward' />
 						</div>
-						<div style={{ width: '60%' }}>{formatAmount(event.bounty)}</div>
+						<div style={{ width: '60%' }}>{formatAmount(event.bounty, chain.id)}</div>
 					</BoxRow>
 				)}
 				{!finalized && (
@@ -227,7 +227,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 							<FormHelperText>
 								<Trans
 									id='To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct.'
-									values={{ 0: formatAmount(currentBond) }}
+									values={{ 0: formatAmount(currentBond, chain.id) }}
 								/>
 							</FormHelperText>
 						</BoxRow>

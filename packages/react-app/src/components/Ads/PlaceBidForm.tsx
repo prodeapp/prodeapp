@@ -16,7 +16,7 @@ import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES, NETWORK_TOKEN } from '@/lib/config'
 
 export type PlaceBidFormValues = {
 	market: Address | ''
@@ -138,7 +138,7 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid' /> (xDAI)
+						<Trans id='Bid' /> ({NETWORK_TOKEN[chain.id]})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField
@@ -167,7 +167,7 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid per second' /> (xDAI)
+						<Trans id='Bid per second' /> ({NETWORK_TOKEN[chain.id]})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField

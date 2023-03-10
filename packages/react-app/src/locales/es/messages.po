@@ -88,8 +88,8 @@ msgstr "Apuesta"
 msgid "Bet Price"
 msgstr "Precio de apuesta"
 
-msgid "Bet Price (xDAI)"
-msgstr "Precio de apuesta (xDAI)"
+msgid "Bet Price ({token})"
+msgstr "Precio de apuesta ({token})"
 
 msgid "Bet Price:"
 msgstr "Precio de Apuesta:"
@@ -295,8 +295,8 @@ msgstr "Fútbol"
 msgid "Format"
 msgstr "Formato"
 
-msgid "Fund amount (xDAI)"
-msgstr "Cantidad a financiar (xDAI)"
+msgid "Fund amount ({token})"
+msgstr "Cantidad a financiar ({token})"
 
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"

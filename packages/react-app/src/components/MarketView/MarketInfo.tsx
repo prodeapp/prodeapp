@@ -3,11 +3,13 @@ import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import React from 'react'
+import { useNetwork } from 'wagmi'
 
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
 import { Market } from '@/graphql/subgraph'
 import { DIVISOR } from '@/hooks/useMarketForm'
-import { formatAmount, getMedalColor, shortenAddress } from '@/lib/helpers'
+import { DEFAULT_CHAIN } from '@/lib/config'
+import { formatAmount, getBlockExplorerUrl, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 const MANAGER_ADDRESS: Record<string, string> = {
 	'0x64ab34d8cb33f8b8bb3d4b38426896297a3e7f81': 'UBI Burner',
@@ -17,6 +19,8 @@ const MANAGER_ADDRESS: Record<string, string> = {
 }
 
 function MarketInfo({ market }: { market: Market }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const GridStyled = styled(Grid)(({ theme }) => ({
 		borderBottom: `1px solid ${theme.palette.black.dark}`,
 		'& > div': {
@@ -42,7 +46,7 @@ function MarketInfo({ market }: { market: Market }) {
 					<Trans id='Prize Pool' />
 				</Typography>
 				<Typography variant='h3' component='h3'>
-					{formatAmount(market.pool)}
+					{formatAmount(market.pool, chain.id)}
 				</Typography>
 			</Grid>
 			<Grid item xs={6} md={3}>
@@ -83,11 +87,7 @@ function MarketInfo({ market }: { market: Market }) {
 					<Trans id='Manager' />
 				</Typography>
 				<Typography variant='h6s' component='h6'>
-					<a
-						href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`}
-						target='_blank'
-						rel='noreferrer'
-					>
+					<a href={getBlockExplorerUrl(market.manager.id, chain.id)} target='_blank' rel='noreferrer'>
 						{MANAGER_ADDRESS[market.manager.id.toLowerCase()] || shortenAddress(market.manager.id)}
 					</a>
 				</Typography>

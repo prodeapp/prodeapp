@@ -32,7 +32,9 @@ import { BigAlert, FormError, FormLabel, FormRow } from '@/components'
 import EventBuilder from '@/components/MarketCreate/EventBuilder'
 import PrizeWeightsBuilder from '@/components/MarketCreate/PrizeWeightsBuilder'
 import useMarketForm, { getEventData, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
+import { DEFAULT_CHAIN, NETWORK_TOKEN } from '@/lib/config'
 import {
+	formatAmount,
 	getCategoryText,
 	getFlattenedCategories,
 	getMarketUrl,
@@ -213,6 +215,8 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 		handleSubmit,
 	} = useFormReturn
 
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	useEffect(() => {
 		useFormReturn.register('prizeDivisor', {
 			validate: value => value === 100 || i18n._('The sum of prize weights must be 100.'),
@@ -227,7 +231,7 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 				<div>
 					<FormRow>
 						<FormLabel>
-							<Trans id='Bet Price (xDAI)' />
+							<Trans id='Bet Price ({token})' values={{ token: NETWORK_TOKEN[chain.id] }} />
 						</FormLabel>
 						<div>
 							<TextField
@@ -402,6 +406,8 @@ function PreviewEvents({
 }
 
 function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: PreviewStepProps) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const prizes = [i18n._('First prize'), i18n._('Second prize'), i18n._('Third prize')]
 
 	return (
@@ -442,7 +448,7 @@ function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: Previe
 
 			<PreviewText
 				title={i18n._('Bet Price')}
-				value={`${step2State.price} xDAI`}
+				value={formatAmount(step2State.price, chain.id)}
 				setActiveStep={setActiveStep}
 				step={1}
 			/>

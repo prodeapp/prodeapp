@@ -3,12 +3,14 @@ import { Trans } from '@lingui/react'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
 import React, { useEffect, useState } from 'react'
-import { useAccount, useBalance } from 'wagmi'
+import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 import AppDialog from '@/components/Dialog'
+import { DEFAULT_CHAIN, NetworkId } from '@/lib/config'
 import { BRIDGE_URL } from '@/lib/helpers'
 
 function WelcomeDialog() {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { address } = useAccount()
 	const { data: balance } = useBalance({ address })
 
@@ -22,6 +24,10 @@ function WelcomeDialog() {
 	const handleClose = () => {
 		setAlreadyOpened(true)
 		setOpen(false)
+	}
+
+	if (chain.id !== NetworkId.GNOSIS) {
+		return null
 	}
 
 	return (

@@ -13,17 +13,23 @@ const prodeClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 	}),
 }
 
-const realityClient = new ApolloClient({
-	uri: 'https://api.thegraph.com/subgraphs/name/realityeth/realityeth-xdai',
-	cache: new InMemoryCache(),
-})
+const realityClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
+	[NetworkId.GNOSIS]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/realityeth/realityeth-xdai',
+		cache: new InMemoryCache(),
+	}),
+	[NetworkId.POLYGON_TESTNET]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/realityeth/realityeth-mumbai',
+		cache: new InMemoryCache(),
+	}),
+}
 
 const apolloProdeQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
 	return apolloQuery<T>(prodeClients[chainId] || prodeClients[DEFAULT_CHAIN], queryString, variables)
 }
 
-const apolloRealityQuery = async <T>(queryString: string, variables: Record<string, any> = {}) => {
-	return apolloQuery<T>(realityClient, queryString, variables)
+const apolloRealityQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
+	return apolloQuery<T>(realityClients[chainId] || realityClients[DEFAULT_CHAIN], queryString, variables)
 }
 
 const apolloQuery = async <T>(

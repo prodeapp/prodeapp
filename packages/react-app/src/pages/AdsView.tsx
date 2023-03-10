@@ -180,7 +180,7 @@ function AdsView() {
 										<TableBody key={j}>
 											<div style={{ width: '25%' }}>{shortenAddress(bid.bidder)}</div>
 											<div style={{ width: '25%' }}>
-												{formatAmount(bid.bidPerSecond)}
+												{formatAmount(bid.bidPerSecond, chain.id)}
 												{bid.currentHighest && (
 													<MedalIcon
 														style={{
@@ -190,7 +190,7 @@ function AdsView() {
 													/>
 												)}
 											</div>
-											<div style={{ width: '25%' }}>{formatAmount(getBidBalance(bid))}</div>
+											<div style={{ width: '25%' }}>{formatAmount(getBidBalance(bid), chain.id)}</div>
 											<div style={{ width: '25%' }}>
 												{address?.toLowerCase() === bid.bidder.toLowerCase() && itemId && (
 													<>

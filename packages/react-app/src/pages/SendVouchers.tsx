@@ -13,7 +13,7 @@ import { useNetwork } from 'wagmi'
 import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, NETWORK_TOKEN, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -110,7 +110,7 @@ function SendVouchers() {
 			{!isSuccess && !isLoading && (
 				<div style={{ maxWidth: '700px', margin: '0 auto' }}>
 					<FormRow>
-						<FormLabel>Enter one address and amount in xDAI on each line.</FormLabel>
+						<FormLabel>Enter one address and amount in {NETWORK_TOKEN[chain.id]} on each line.</FormLabel>
 						<div style={{ width: '100%' }}>
 							<TextField
 								onChange={onChange}
@@ -138,7 +138,9 @@ function SendVouchers() {
 													flexGrow: 1,
 												}}
 											></div>
-											<div>{voucher.value} xDai</div>
+											<div>
+												{voucher.value} {NETWORK_TOKEN[chain.id]}
+											</div>
 										</div>
 									)
 								})}

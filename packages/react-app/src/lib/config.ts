@@ -12,6 +12,12 @@ export const DEFAULT_CHAIN = NetworkId.GNOSIS
 
 type AddressMap = Record<number, Address>
 type BigNumberMap = Record<number, BigNumber>
+type StringMap = Record<number, string>
+
+export const NETWORK_TOKEN: StringMap = {
+	[NetworkId.GNOSIS]: 'xDAI',
+	[NetworkId.POLYGON_TESTNET]: 'MATIC',
+}
 
 export const MARKET_FACTORY_ADDRESSES: AddressMap = {
 	[NetworkId.GNOSIS]: '0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b',

@@ -233,7 +233,7 @@ function WalletMenu() {
 			<Box sx={{ display: 'flex', alignItems: 'center' }}>
 				{chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
 					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
-						<Trans id='Claim' /> {formatAmount(claimArgs.total)}
+						<Trans id='Claim' /> {formatAmount(claimArgs.total, chain.id)}
 					</Button>
 				)}
 
