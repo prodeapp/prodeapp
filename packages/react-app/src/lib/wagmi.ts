@@ -22,34 +22,7 @@ gnosis.contracts = {
 
 export const { chains, provider } = configureChains(
 	[gnosis, polygonMumbai],
-	[
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc.gnosischain.com' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://xdai-rpc.gateway.pokt.network' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc.ankr.com/gnosis' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc-mumbai.maticvigil.com' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc.ankr.com/polygon_mumbai' }
-			},
-		}),
-		publicProvider(),
-	],
+	[jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default.http[0] }) }), publicProvider()],
 	{
 		stallTimeout: 2000,
 	}
