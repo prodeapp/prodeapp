@@ -1,10 +1,10 @@
 import { gtcrDecode, gtcrEncode } from '@kleros/gtcr-encoder'
-import { Address } from '@wagmi/core'
 
 import { Bytes } from '@/abi/types'
 import { CurateSubmitFormValues } from '@/components/Curate'
 import validate from '@/components/Curate/schema'
 import { CURATE_ITEM_FIELDS, CurateItem } from '@/graphql/subgraph'
+import { CURATE_REGISTRY_ADDRESSES } from '@/lib/config'
 
 import { apolloProdeQuery } from './apolloClient'
 import ipfsPublish from './ipfs-publish'
@@ -58,11 +58,11 @@ const curateItemQuery = `
     }
 `
 
-async function getRegistryColumns(): Promise<any[]> {
+async function getRegistryColumns(chainId: number): Promise<any[]> {
 	const result = await apolloProdeQuery<{
 		registry: { clearingMetaEvidence: { URI: string } }
-	}>(registryQuery, {
-		registryId: (import.meta.env.VITE_CURATE_REGISTRY as Address).toLowerCase(),
+	}>(chainId, registryQuery, {
+		registryId: CURATE_REGISTRY_ADDRESSES[chainId as keyof typeof CURATE_REGISTRY_ADDRESSES].toLowerCase(),
 	})
 
 	if (!result?.data?.registry?.clearingMetaEvidence?.URI) {
@@ -79,6 +79,7 @@ async function getRegistryColumns(): Promise<any[]> {
 }
 
 export async function getEncodedParams(
+	chainId: number,
 	data: CurateSubmitFormValues,
 	questionsHash: string,
 	questionsIds: string[]
@@ -101,17 +102,17 @@ export async function getEncodedParams(
 		Details: await ipfsPublish('market.json', JSON.stringify(json)),
 	}
 
-	return gtcrEncode({ columns: await getRegistryColumns(), values }) as Bytes
+	return gtcrEncode({ columns: await getRegistryColumns(chainId), values }) as Bytes
 }
 
-export async function getDecodedParams(itemId: string): Promise<DecodedCurateListFields> {
-	const result = await apolloProdeQuery<{ curateItem: { data: string } }>(curateItemQuery, { itemId })
+export async function getDecodedParams(chainId: number, itemId: string): Promise<DecodedCurateListFields> {
+	const result = await apolloProdeQuery<{ curateItem: { data: string } }>(chainId, curateItemQuery, { itemId })
 
 	if (!result?.data?.curateItem?.data) {
 		throw new Error('item not found')
 	}
 
-	const columns = await getRegistryColumns()
+	const columns = await getRegistryColumns(chainId)
 
 	const decodedItems = gtcrDecode({
 		values: result?.data?.curateItem?.data,
@@ -157,7 +158,7 @@ function getTournamentFormat(data: CurateSubmitFormValues, questionsIds: string[
 	return format
 }
 
-export const fetchCurateItemsByHash = async (hash: string) => {
+export const fetchCurateItemsByHash = async (chainId: number, hash: string) => {
 	const query = `
     ${CURATE_ITEM_FIELDS}
     query CurateItemsQuery($hash: String) {
@@ -167,7 +168,7 @@ export const fetchCurateItemsByHash = async (hash: string) => {
     }
 `
 
-	const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(query, { hash })
+	const response = await apolloProdeQuery<{ curateItems: CurateItem[] }>(chainId, query, { hash })
 
 	if (!response) throw new Error('No response from TheGraph')
 

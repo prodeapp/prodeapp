@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import React, { useContext } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import { useNetwork } from 'wagmi'
 
 import AdsFilter from '@/components/AdsFilter'
 import { AdImg } from '@/components/ImgSvg'
@@ -14,6 +15,7 @@ import { MarketDetails, MarketsGrid } from '@/components/MarketsTable'
 import { SVGAd } from '@/graphql/subgraph'
 import { useAds } from '@/hooks/useAds'
 import { useSvgAd } from '@/hooks/useSvgAd'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { GlobalContext } from '@/lib/GlobalContext'
 import { formatAmount } from '@/lib/helpers'
 
@@ -34,6 +36,7 @@ function getBidsInfo(ad: SVGAd): { max: BigNumber; min: BigNumber } {
 }
 
 function AdBox({ ad }: { ad: SVGAd }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { data: svgAd } = useSvgAd(ad.id)
 
 	const { max: maxBid, min: minBid } = getBidsInfo(ad)
@@ -72,7 +75,7 @@ function AdBox({ ad }: { ad: SVGAd }) {
 						<div>
 							<Trans id='Current Bid' />
 						</div>
-						<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid)}</div>
+						<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid, chain.id)}</div>
 					</div>
 				)}
 
@@ -82,14 +85,14 @@ function AdBox({ ad }: { ad: SVGAd }) {
 							<div>
 								<Trans id='Highest Bid' />
 							</div>
-							<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid)}</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid, chain.id)}</div>
 						</div>
 
 						<div>
 							<div>
 								<Trans id='Lower Bid' />
 							</div>
-							<div style={{ fontWeight: 'bold' }}>{formatAmount(minBid)}</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(minBid, chain.id)}</div>
 						</div>
 					</>
 				)}

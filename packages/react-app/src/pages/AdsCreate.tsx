@@ -7,7 +7,6 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-import { Address } from '@wagmi/core'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAccount, useNetwork } from 'wagmi'
@@ -17,6 +16,7 @@ import { FormError, FormLabel, FormRow } from '@/components'
 import { AdImg } from '@/components/ImgSvg'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSVGAdFactoryDeposit } from '@/hooks/useSVGFactoryDeposit'
+import { DEFAULT_CHAIN, SVG_AD_FACTORY_ADDRESSES } from '@/lib/config'
 
 import { Banner } from './MarketsCreate'
 
@@ -96,7 +96,7 @@ function AdsCreate() {
 	const { chain } = useNetwork()
 
 	const { isSuccess, isLoading, error, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
+		address: SVG_AD_FACTORY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof SVG_AD_FACTORY_ADDRESSES)],
 		abi: SVGFactoryAbi,
 		functionName: 'createAd',
 	})

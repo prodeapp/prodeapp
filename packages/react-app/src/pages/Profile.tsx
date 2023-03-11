@@ -33,13 +33,14 @@ export default function Profile() {
 				</Alert>
 			)
 		}
-		if (!chain || chain.unsupported) {
-			return (
-				<Alert severity='error'>
-					<Trans id='UNSUPPORTED_CHAIN' />
-				</Alert>
-			)
-		}
+	}
+
+	if (!chain || chain.unsupported) {
+		return (
+			<Alert severity='error'>
+				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
 	}
 
 	return (
@@ -51,7 +52,7 @@ export default function Profile() {
 							<Trans
 								id='Total Bet: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.amountBet) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.amountBet, chain.id) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -63,7 +64,7 @@ export default function Profile() {
 							<Trans
 								id='Total Rewards: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.pricesReceived) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.pricesReceived, chain.id) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -75,7 +76,7 @@ export default function Profile() {
 							<Trans
 								id='Referrals Earnings: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.totalAttributions) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.totalAttributions, chain.id) : <Skeleton />,
 								}}
 							/>
 						</Typography>

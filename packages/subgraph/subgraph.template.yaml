@@ -1,6 +1,6 @@
 specVersion: 0.0.4
 description: Subgraph that tracks markets data
-repository: https://github.com/prodeapp/prodeapp
+repository: {{& repository}}
 schema:
   file: ./schema.graphql
 features:
@@ -9,11 +9,11 @@ features:
 dataSources:
   - kind: ethereum/contract
     name: MarketFactory
-    network: xdai
+    network: {{network}}
     source:
       abi: MarketFactory
-      address: "0x67d3673CF19a6b0Ad70D76b4e9C6f715177eb48b"
-      startBlock: 23172705
+      address: "{{MarketFactory.address}}"
+      startBlock: {{MarketFactory.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -30,18 +30,20 @@ dataSources:
       eventHandlers:
         - event: NewMarket(indexed address,indexed bytes32,address)
           handler: handleNewMarket
+      {{#supportsCallHandlers}}
       callHandlers:
         - function: createMarket(string,string,address,uint256,uint256,uint256,uint256,(uint256,string,uint32)[],uint16[])
           handler: handleCreateMarket
+      {{/supportsCallHandlers}}
       file: ./src/mappings/MarketFactory.ts
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: RealitioV3
-    network: xdai
+    network: {{network}}
     source:
       abi: Realitio
-      address: "0xE78996A233895bE74a66F451f1019cA9734205cc"
-      startBlock: 23172705
+      address: "{{RealitioV3.address}}"
+      startBlock: {{RealitioV3.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -68,11 +70,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: ClassicCurate
-    network: xdai
+    network: {{network}}
     source:
       abi: GeneralizedTCR
-      address: "0x86E72802D9AbBF7505a889721fD4D6947B02320E"
-      startBlock: 23165985
+      address: "{{ClassicCurate.address}}"
+      startBlock: {{ClassicCurate.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -94,11 +96,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: ContentCurate
-    network: xdai
+    network: {{network}}
     source:
       abi: GeneralizedTCR
-      address: "0x76D159faDCDE966d68885b7267Ce42F4F655238D"
-      startBlock: 24296648
+      address: "{{ContentCurate.address}}"
+      startBlock: {{ContentCurate.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -117,11 +119,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: TechnicalCurate
-    network: xdai
+    network: {{network}}
     source:
       abi: GeneralizedTCR
-      address: "0x6E6Bc2032d5A19728Aeb30f06507e7Cb43e4bBFD"
-      startBlock: 24350145
+      address: "{{TechnicalCurate.address}}"
+      startBlock: {{TechnicalCurate.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -140,11 +142,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: KeyValue
-    network: xdai
+    network: {{network}}
     source:
       abi: KeyValue
-      address: "0xF230b73987024ed614AE93f8A5fdF2416aD0B835"
-      startBlock: 23769288
+      address: "{{KeyValue.address}}"
+      startBlock: {{KeyValue.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -160,11 +162,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: SVGFactory
-    network: xdai
+    network: {{network}}
     source:
       abi: SVGFactory
-      address: "0x24C93b506768110A45Fd1a221eCd8Bd6B93Dc15c"
-      startBlock:  24489790
+      address: "{{SVGFactory.address}}"
+      startBlock: {{SVGFactory.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -183,11 +185,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: Billing
-    network: xdai
+    network: {{network}}
     source:
       abi: Billing
-      address: "0x9444245c2c7Ac2C1D25798478f700d26a2d244a0"
-      startBlock:  24534094
+      address: "{{Billing.address}}"
+      startBlock:  {{Billing.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -204,11 +206,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: FirstPriceAuction
-    network: xdai
+    network: {{network}}
     source:
       abi: FirstPriceAuction
-      address: "0xDcdB82E595B3c80e569EbB52C08B05f053Ad7478"
-      startBlock:  24534096
+      address: "{{FirstPriceAuction.address}}"
+      startBlock:  {{FirstPriceAuction.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -227,11 +229,11 @@ dataSources:
       language: wasm/assemblyscript
   - kind: ethereum/contract
     name: CurateProxySVG
-    network: xdai
+    network: {{network}}
     source:
       abi: CurateProxySVG
-      address: "0x8167f4bF6f39C178bE68536C290E44E49925ce5f"
-      startBlock:  24489788
+      address: "{{CurateProxySVG.address}}"
+      startBlock: {{CurateProxySVG.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -250,7 +252,7 @@ dataSources:
 templates:
   - name: Market
     kind: ethereum/contract
-    network: xdai
+    network: {{network}}
     source:
       abi: Market
     mapping:
@@ -292,7 +294,7 @@ templates:
           handler: handleRankingUpdated
   - name: Manager
     kind: ethereum/contract
-    network: xdai
+    network: {{network}}
     source:
       abi: Manager
     mapping:
@@ -307,8 +309,10 @@ templates:
       abis:
         - name: Manager
           file: ./contracts/abis/Manager.json
+      {{#supportsCallHandlers}}
       callHandlers:
         - function: claimReferralReward(address)
           handler: handleClaimReferralReward
         - function: distributeRewards()
           handler: handleDistributeRewards
+      {{/supportsCallHandlers}}

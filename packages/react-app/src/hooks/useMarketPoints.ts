@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNetwork } from 'wagmi'
 
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DEFAULT_CHAIN } from '@/lib/config'
 
 export interface MarketPoint {
 	tokenID: string
@@ -17,12 +19,13 @@ const query = `
 `
 
 export const useMarketPoints = (marketId: string) => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	return useQuery<MarketPoint[], Error>(
-		['useMarketPoints', marketId],
+		['useMarketPoints', marketId, chain.id],
 		async () => {
 			const variables = { marketId: marketId.toLowerCase() }
 
-			const response = await apolloProdeQuery<{ bets: MarketPoint[] }>(query, variables)
+			const response = await apolloProdeQuery<{ bets: MarketPoint[] }>(chain.id, query, variables)
 
 			if (!response) throw new Error('No response from TheGraph')
 

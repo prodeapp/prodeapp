@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
+import { useNetwork } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ReactComponent as ArrowRightIcon } from '@/assets/icons/arrow-right.svg'
@@ -15,6 +16,7 @@ import { Event } from '@/graphql/subgraph'
 import { useEvents } from '@/hooks/useEvents'
 import { usePhone } from '@/hooks/useResponsive'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
 import { getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { queryClient } from '@/lib/react-query'
@@ -134,10 +136,11 @@ function AnswerColumn(event: Event, finalized: boolean) {
 }
 
 function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { locale } = useI18nContext()
 
 	const { isSuccess, write, error } = useSendRecklessTx({
-		address: import.meta.env.VITE_REALITIO as Address,
+		address: REALITIO_ADDRESSES[chain.id as keyof typeof REALITIO_ADDRESSES],
 		abi: RealityAbi,
 		functionName: 'reopenQuestion',
 	})

@@ -88,8 +88,8 @@ msgstr "Bet"
 msgid "Bet Price"
 msgstr "Bet Price"
 
-msgid "Bet Price (xDAI)"
-msgstr "Bet Price (xDAI)"
+msgid "Bet Price ({token})"
+msgstr "Bet Price ({token})"
 
 msgid "Bet Price:"
 msgstr "Bet Price:"
@@ -295,8 +295,8 @@ msgstr "Football"
 msgid "Format"
 msgstr "Format"
 
-msgid "Fund amount (xDAI)"
-msgstr "Fund amount (xDAI)"
+msgid "Fund amount ({token})"
+msgstr "Fund amount ({token})"
 
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
@@ -690,9 +690,6 @@ msgstr "Total Players: {0}"
 
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
-
-msgid "Trade NFT in Eporio"
-msgstr "Trade NFT in Eporio"
 
 msgid "Unexpected error"
 msgstr "Unexpected error"

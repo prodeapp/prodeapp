@@ -30,7 +30,7 @@ export default ({ mode }) => {
       outDir: "./build",
     },
     test: {
-      //setupFiles: "src/setupTests.tsx",
+      setupFiles: "src/setupTests.ts",
       environment: "jsdom", // or 'jsdom', 'node'
       globals: true,
       exclude: [

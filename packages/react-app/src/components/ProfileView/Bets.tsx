@@ -1,16 +1,18 @@
 import { Trans } from '@lingui/react'
 import { ExpandMoreOutlined } from '@mui/icons-material'
 import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, Skeleton } from '@mui/material'
-import Link from '@mui/material/Link'
 import { Address } from '@wagmi/core'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
+import { useNetwork } from 'wagmi'
 
 import BetDetails from '@/components/Bet/BetDetails'
 import { useBets, useBetsRewards, useIndexedBetsRewards } from '@/hooks/useBets'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount } from '@/lib/helpers'
 
 export function Bets({ playerId }: { playerId: Address }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { data: bets, error, isLoading } = useBets({ playerId })
 	const { data: betsRewards } = useBetsRewards(bets || [])
 	const indexedBetsRewards = useIndexedBetsRewards(betsRewards)
@@ -53,7 +55,8 @@ export function Bets({ playerId }: { playerId: Address }) {
 										<Trans id='Points' />: {bet.points}
 									</div>
 									<div>
-										<Trans id='Reward' />: {formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0)}
+										<Trans id='Reward' />:{' '}
+										{formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0, chain.id)}
 									</div>
 								</div>
 							</div>
@@ -62,14 +65,6 @@ export function Bets({ playerId }: { playerId: Address }) {
 							<div style={{ marginBottom: '20px' }}>
 								<Button component={RouterLink} to={`/markets/${bet.market.id}`}>
 									<Trans id='Go to market' />
-								</Button>
-								<Button
-									component={Link}
-									href={`https://epor.io/tokens/${bet.market.id}/${bet.tokenID}?network=xDai`}
-									target='_blank'
-									rel='noopener'
-								>
-									<Trans id='Trade NFT in Eporio' />
 								</Button>
 							</div>
 
