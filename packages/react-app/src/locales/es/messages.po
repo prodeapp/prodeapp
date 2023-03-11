@@ -691,9 +691,6 @@ msgstr "Total de Apostadores: {0}"
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
-msgid "Trade NFT in Eporio"
-msgstr "Negociar NFT en Eporio"
-
 msgid "Unexpected error"
 msgstr "Error inesperado"
 

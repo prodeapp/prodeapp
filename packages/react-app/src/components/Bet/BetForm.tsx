@@ -11,7 +11,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { useAccount, useNetwork } from 'wagmi'
@@ -62,17 +61,6 @@ function BetNFT({ marketId, tokenId }: { marketId: string; tokenId: BigNumber })
 				<p>
 					<Trans id='You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.' />
 				</p>
-			</div>
-			<div>
-				<Button
-					component={Link}
-					size='large'
-					href={`https://epor.io/tokens/${marketId}/${tokenId}?network=xDai`}
-					target='_blank'
-					rel='noopener'
-				>
-					<Trans id='Trade NFT in Eporio' />
-				</Button>
 			</div>
 		</div>
 	)
