@@ -1,10 +1,12 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address, readContract, readContracts } from '@wagmi/core'
 import { BigNumber } from 'ethers'
+import { useNetwork } from 'wagmi'
 
 import { LiquidityFactoryAbi } from '@/abi/LiquidityFactory'
 import { LiquidityPoolAbi } from '@/abi/LiquidityPool'
 import { Market } from '@/graphql/subgraph'
+import { DEFAULT_CHAIN, LIQUIDITY_FACTORY_ADDRESSES } from '@/lib/config'
 
 export type LiquidityPool =
 	| {
@@ -18,10 +20,11 @@ export type LiquidityPool =
 	| false
 
 const useMarketHasLiquidityPool = (creator: Address) => {
-	return useQuery<boolean, Error>(['useMarketHasLiquidityPool', creator], async () => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<boolean, Error>(['useMarketHasLiquidityPool', creator, chain.id], async () => {
 		return await readContract({
 			abi: LiquidityFactoryAbi,
-			address: import.meta.env.VITE_LIQUIDITY_FACTORY as Address,
+			address: LIQUIDITY_FACTORY_ADDRESSES[chain.id],
 			functionName: 'exists',
 			args: [creator],
 		})

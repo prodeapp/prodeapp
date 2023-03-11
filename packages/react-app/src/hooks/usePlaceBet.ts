@@ -1,12 +1,13 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
-import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
 import { BetFormValues } from '@/components/Bet/BetForm'
+import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
 
@@ -40,6 +41,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (
 	results: Bytes[] | false
 ) => {
 	const getTxParams = (
+		chainId: number,
 		attribution: Address,
 		results: Bytes[] | false
 	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBet'> => {
@@ -58,7 +60,11 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (
 		}
 	}
 
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(attribution, results))
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(
+		getTxParams(chain.id, attribution, results)
+	)
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
@@ -74,6 +80,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (
 	results: Bytes[] | false
 ) => {
 	const getTxParams = (
+		chainId: number,
 		marketId: Address,
 		attribution: Address,
 		results: Bytes[] | false
@@ -83,19 +90,25 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (
 		}
 
 		return {
-			address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+			address: VOUCHER_MANAGER_ADDRESSES[chainId as keyof typeof KEY_VALUE_ADDRESSES],
 			abi: VoucherManagerAbi,
 			functionName: 'placeBet',
 			args: [marketId, attribution, results],
 		}
 	}
 
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(
-		getTxParams(marketId, attribution, results)
+		getTxParams(chain.id, marketId, attribution, results)
 	)
 
 	const ethersInterface = new Interface(VoucherManagerAbi)
-	const events = parseEvents(receipt, import.meta.env.VITE_VOUCHER_MANAGER as Address, ethersInterface)
+	const events = parseEvents(
+		receipt,
+		VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
+		ethersInterface
+	)
 	const tokenId = events ? events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId }

@@ -1,15 +1,17 @@
 import { Trans } from '@lingui/react'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import { Address } from '@wagmi/core'
 import React from 'react'
+import { useNetwork } from 'wagmi'
 
 import { KeyValueAbi } from '@/abi/KeyValue'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
 
 function DeleteMarket({ marketId }: { marketId: string }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { isSuccess, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_KEY_VALUE as Address,
+		address: KEY_VALUE_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
 		abi: KeyValueAbi,
 		functionName: 'deleteMarket',
 	})

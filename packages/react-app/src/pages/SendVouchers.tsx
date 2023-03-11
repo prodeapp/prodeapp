@@ -6,12 +6,14 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-import { Address, getContract } from '@wagmi/core'
+import { getContract } from '@wagmi/core'
 import React, { useState } from 'react'
+import { useNetwork } from 'wagmi'
 
 import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, NETWORK_TOKEN, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -47,6 +49,7 @@ const VOUCHER_MANAGER_ABI = [
 ]
 
 function SendVouchers() {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { isLoading, isSuccess, write } = useSendRecklessTx({
 		address: TRANSACTION_BATCHER,
 		abi: BATCHER_ABI,
@@ -54,7 +57,7 @@ function SendVouchers() {
 	})
 
 	const voucherContract = getContract({
-		address: import.meta.env.VITE_VOUCHER_MANAGER as Address,
+		address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof VOUCHER_MANAGER_ADDRESSES],
 		abi: VOUCHER_MANAGER_ABI,
 	})
 
@@ -76,7 +79,7 @@ function SendVouchers() {
 
 		write!({
 			recklesslySetUnpreparedArgs: [
-				Array(vouchers.length).fill(import.meta.env.VITE_VOUCHER_MANAGER),
+				Array(vouchers.length).fill(VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof VOUCHER_MANAGER_ADDRESSES]),
 				values,
 				await Promise.all(
 					vouchers.map(
@@ -107,7 +110,7 @@ function SendVouchers() {
 			{!isSuccess && !isLoading && (
 				<div style={{ maxWidth: '700px', margin: '0 auto' }}>
 					<FormRow>
-						<FormLabel>Enter one address and amount in xDAI on each line.</FormLabel>
+						<FormLabel>Enter one address and amount in {NETWORK_TOKEN[chain.id]} on each line.</FormLabel>
 						<div style={{ width: '100%' }}>
 							<TextField
 								onChange={onChange}
@@ -135,7 +138,9 @@ function SendVouchers() {
 													flexGrow: 1,
 												}}
 											></div>
-											<div>{voucher.value} xDai</div>
+											<div>
+												{voucher.value} {NETWORK_TOKEN[chain.id]}
+											</div>
 										</div>
 									)
 								})}

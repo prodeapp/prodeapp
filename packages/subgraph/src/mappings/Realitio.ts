@@ -34,7 +34,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
         // log.debug("handleNewAnswer: summing points for market {}, questionID: {}, questionNonce: {}, with answer {}", [marketId.toHexString(), id, questionNonce.toString(), event.answer!.toHexString()]);
         
         if (i > 0) {
-            const marketSC = MarketSC.bind(Address.fromBytesArray(Address.fromHexString(event.markets[i])));
+            const marketSC = MarketSC.bind(Address.fromBytes(Address.fromHexString(event.markets[i])));
             let aux_nonce = 0;
             while (true) {
                 let questionID = marketSC.try_questionIDs(BigInt.fromI32(aux_nonce));

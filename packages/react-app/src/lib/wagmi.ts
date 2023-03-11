@@ -8,7 +8,7 @@ import {
 	rainbowWallet,
 	walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { gnosis } from '@wagmi/core/chains'
+import { gnosis, polygonMumbai } from '@wagmi/core/chains'
 import { configureChains, createClient } from 'wagmi'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
@@ -21,25 +21,8 @@ gnosis.contracts = {
 }
 
 export const { chains, provider } = configureChains(
-	[gnosis],
-	[
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc.gnosischain.com' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://xdai-rpc.gateway.pokt.network' }
-			},
-		}),
-		jsonRpcProvider({
-			rpc: () => {
-				return { http: 'https://rpc.ankr.com/gnosis' }
-			},
-		}),
-		publicProvider(),
-	],
+	[gnosis, polygonMumbai],
+	[jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default.http[0] }) }), publicProvider()],
 	{
 		stallTimeout: 2000,
 	}

@@ -12,6 +12,7 @@ import fromUnixTime from 'date-fns/fromUnixTime'
 import { enGB, es } from 'date-fns/locale'
 
 import { AdBid, Event, Outcome } from '@/graphql/subgraph'
+import { NETWORK_TOKEN, NetworkId } from '@/lib/config'
 
 import { DecimalBigNumber } from './DecimalBigNumber'
 import { ANSWERED_TOO_SOON, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT } from './reality'
@@ -75,14 +76,14 @@ export function betsClosingSoon(timestamp: number): boolean {
 	return timestamp - now < minDuration
 }
 
-export function formatAmount(amount: BigNumberish) {
+export function formatAmount(amount: BigNumberish, chainId: number) {
 	const number = new DecimalBigNumber(BigNumber.from(amount), 18)
-	return `${number.toString()} xDAI`
+	return `${number.toString()} ${NETWORK_TOKEN[chainId]}`
 }
 
-export function formatAmountDecimalPlaces(amount: BigNumberish) {
+export function formatAmountDecimalPlaces(amount: BigNumberish, chainId: number) {
 	const number = new DecimalBigNumber(BigNumber.from(amount), 18)
-	return `${parseFloat(number.toString()).toFixed(2)} xDAI`
+	return `${parseFloat(number.toString()).toFixed(2)} ${NETWORK_TOKEN[chainId]}`
 }
 
 function getMultiSelectAnswers(value: number): number[] {
@@ -267,4 +268,12 @@ export function parseEvents(
 
 export function getOrderedEventsIndexes(events: Event[]) {
 	return Array.from(Array(events.length).keys()).sort((a, b) => (events[a].id < events[b].id ? -1 : 1))
+}
+
+export function getBlockExplorerUrl(address: string, chainId: number) {
+	if (chainId === NetworkId.POLYGON_TESTNET) {
+		return `https://mumbai.polygonscan.com/address/${address}`
+	}
+
+	return `https://blockscout.com/xdai/mainnet/address/${address}/transactions`
 }

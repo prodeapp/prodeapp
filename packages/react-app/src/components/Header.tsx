@@ -2,7 +2,6 @@ import { Trans } from '@lingui/react'
 import MenuIcon from '@mui/icons-material/Menu'
 import { AppBar, Box, Button, Container, IconButton, Toolbar } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
@@ -13,6 +12,7 @@ import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.sv
 import { ReactComponent as Logo } from '@/assets/logo.svg'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
 import { BRIDGE_URL, formatAmount, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
@@ -206,7 +206,7 @@ function WalletMenu() {
 	const { data: claimArgs } = useClaimArgs(address || '')
 
 	const { isSuccess, write } = useSendRecklessTx({
-		address: import.meta.env.VITE_REALITIO as Address,
+		address: REALITIO_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof REALITIO_ADDRESSES)],
 		abi: RealityAbi,
 		functionName: 'claimMultipleAndWithdrawBalance',
 	})
@@ -233,7 +233,7 @@ function WalletMenu() {
 			<Box sx={{ display: 'flex', alignItems: 'center' }}>
 				{chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
 					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
-						<Trans id='Claim' /> {formatAmount(claimArgs.total)}
+						<Trans id='Claim' /> {formatAmount(claimArgs.total, chain.id)}
 					</Button>
 				)}
 

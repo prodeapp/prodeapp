@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { Address } from '@wagmi/core'
-import { readContracts } from 'wagmi'
+import { readContracts, useNetwork } from 'wagmi'
 
 import { MarketFactoryAbi } from '@/abi/MarketFactory'
 import { MARKET_FACTORY_FIELDS, MarketFactory } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES } from '@/lib/config'
 
 const query = `
     ${MARKET_FACTORY_FIELDS}
@@ -16,10 +17,11 @@ const query = `
 `
 
 export const useMarketFactory = () => {
-	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory'], async () => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory', chain.id], async () => {
 		const response = await apolloProdeQuery<{
 			marketFactories: MarketFactory[]
-		}>(query)
+		}>(chain.id, query)
 
 		if (!response) throw new Error('No response from TheGraph')
 
@@ -27,28 +29,32 @@ export const useMarketFactory = () => {
 	})
 }
 
-type MarketFactoryAttributes = {
+export type MarketFactoryAttributes = {
+	factory: Address
 	arbitrator: Address | ''
 	realitio: Address | ''
 	timeout: number
 }
 
 export const useMarketFactoryAttributes = () => {
-	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes'], async () => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const factoryAddress = MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
+
+	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chain.id], async () => {
 		const data = await readContracts({
 			contracts: [
 				{
-					address: import.meta.env.VITE_MARKET_FACTORY as Address,
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'arbitrator',
 				},
 				{
-					address: import.meta.env.VITE_MARKET_FACTORY as Address,
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'realitio',
 				},
 				{
-					address: import.meta.env.VITE_MARKET_FACTORY as Address,
+					address: factoryAddress,
 					abi: MarketFactoryAbi,
 					functionName: 'QUESTION_TIMEOUT',
 				},
@@ -56,6 +62,7 @@ export const useMarketFactoryAttributes = () => {
 		})
 
 		return {
+			factory: factoryAddress,
 			arbitrator: data?.[0] || '',
 			realitio: data?.[1] || '',
 			timeout: data?.[2] || 0,

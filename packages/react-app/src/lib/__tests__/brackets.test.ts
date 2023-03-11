@@ -37,9 +37,10 @@ test('builds a 4 team double elimination bracket', () => {
 	const matches = {
 		upper: [
 			{
-				id: '1',
-				nextMatchId: '3',
-				nextLooserMatchId: '5',
+				eventTitle: 'Who will win the match between Argentina and Brazil?',
+				id: '0x1',
+				nextMatchId: '0x3',
+				nextLooserMatchId: '0x5',
 				startTime: '',
 				tournamentRoundText: '',
 				state: 'SCHEDULED',
@@ -61,9 +62,10 @@ test('builds a 4 team double elimination bracket', () => {
 				],
 			},
 			{
-				id: '2',
-				nextMatchId: '3',
-				nextLooserMatchId: '5',
+				eventTitle: 'Who will win the match between Italy and Spain?',
+				id: '0x2',
+				nextMatchId: '0x3',
+				nextLooserMatchId: '0x5',
 				startTime: '',
 				tournamentRoundText: '',
 				state: 'SCHEDULED',
@@ -85,9 +87,10 @@ test('builds a 4 team double elimination bracket', () => {
 				],
 			},
 			{
-				id: '3',
-				nextMatchId: '4',
-				nextLooserMatchId: '6',
+				eventTitle: 'Who will win the match between Argentina and Italy?',
+				id: '0x3',
+				nextMatchId: '0x4',
+				nextLooserMatchId: '0x6',
 				startTime: '',
 				tournamentRoundText: '',
 				state: 'SCHEDULED',
@@ -109,7 +112,8 @@ test('builds a 4 team double elimination bracket', () => {
 				],
 			},
 			{
-				id: '4',
+				eventTitle: 'Who will win the match between Argentina and Brazil?',
+				id: '0x4',
 				nextMatchId: null,
 				nextLooserMatchId: undefined,
 				startTime: '',
@@ -135,8 +139,9 @@ test('builds a 4 team double elimination bracket', () => {
 		],
 		lower: [
 			{
-				id: '5',
-				nextMatchId: '6',
+				eventTitle: 'Who will win the match between Brazil and Spain?',
+				id: '0x5',
+				nextMatchId: '0x6',
 				nextLooserMatchId: undefined,
 				startTime: '',
 				tournamentRoundText: '',
@@ -159,8 +164,9 @@ test('builds a 4 team double elimination bracket', () => {
 				],
 			},
 			{
-				id: '6',
-				nextMatchId: '4',
+				eventTitle: 'Who will win the match between Italy and Brazil?',
+				id: '0x6',
+				nextMatchId: '0x4',
 				nextLooserMatchId: undefined,
 				startTime: '',
 				tournamentRoundText: '',

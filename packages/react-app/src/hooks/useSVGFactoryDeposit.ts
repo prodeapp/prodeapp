@@ -1,16 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
 import { getContract, getProvider } from '@wagmi/core'
-import { Address } from '@wagmi/core'
+import { useNetwork } from 'wagmi'
 
 import { SVGFactoryAbi } from '@/abi/SVGFactory'
+import { DEFAULT_CHAIN, SVG_AD_FACTORY_ADDRESSES } from '@/lib/config'
 
 import { getSubmissionDeposit } from './useSubmissionDeposit'
 
 export const useSVGAdFactoryDeposit = () => {
-	return useQuery<BigNumber, Error>(['useSVGAdFactoryDeposit'], async () => {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
+	return useQuery<BigNumber, Error>(['useSVGAdFactoryDeposit', chain.id], async () => {
 		const contract = getContract({
-			address: import.meta.env.VITE_SVG_AD_FACTORY as Address,
+			address: SVG_AD_FACTORY_ADDRESSES[chain.id as keyof typeof SVG_AD_FACTORY_ADDRESSES],
 			abi: SVGFactoryAbi,
 			signerOrProvider: getProvider(),
 		})

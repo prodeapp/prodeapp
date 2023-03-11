@@ -3,12 +3,14 @@ import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import React from 'react'
+import { useNetwork } from 'wagmi'
 
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
 import { Market } from '@/graphql/subgraph'
 import { LiquidityPool, useLiquidityPool } from '@/hooks/useLiquidityPool'
 import { DIVISOR } from '@/hooks/useMarketForm'
-import { formatAmount, getMedalColor, shortenAddress } from '@/lib/helpers'
+import { DEFAULT_CHAIN } from '@/lib/config'
+import { formatAmount, getBlockExplorerUrl, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 const MANAGER_ADDRESS: Record<string, string> = {
 	'0x64ab34d8cb33f8b8bb3d4b38426896297a3e7f81': 'UBI Burner',
@@ -18,6 +20,8 @@ const MANAGER_ADDRESS: Record<string, string> = {
 }
 
 function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPool; market: Market }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	if (!liquidityPool) {
 		return (
 			<>
@@ -25,7 +29,7 @@ function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPo
 					<Trans id='Prize Pool' />
 				</Typography>
 				<Typography variant='h3' component='h3'>
-					{formatAmount(market.pool)}
+					{formatAmount(market.pool, chain.id)}
 				</Typography>
 			</>
 		)
@@ -40,19 +44,20 @@ function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPo
 				<Trans id='Full Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(liquidityPool.prizePool.add(minPrize))}
+				{formatAmount(liquidityPool.prizePool.add(minPrize), chain.id)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
 				Minimum Prize
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(minPrize)}
+				{formatAmount(minPrize, chain.id)}
 			</Typography>
 		</>
 	)
 }
 
 function MarketInfo({ market }: { market: Market }) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const { data: liquidityPool, isLoading } = useLiquidityPool(market)
 
 	const GridStyled = styled(Grid)(({ theme }) => ({
@@ -125,12 +130,8 @@ function MarketInfo({ market }: { market: Market }) {
 							<Trans id='Total Liquidity' />
 						</Typography>
 						<Typography variant='h6s' component='h6'>
-							<a
-								href={`https://blockscout.com/xdai/mainnet/address/${market.manager.id}/transactions`}
-								target='_blank'
-								rel='noreferrer'
-							>
-								{formatAmount(liquidityPool.totalDeposits)}
+							<a href={getBlockExplorerUrl(manager, chain.id)} target='_blank' rel='noreferrer'>
+								{formatAmount(liquidityPool.totalDeposits, chain.id)}
 							</a>
 						</Typography>
 					</>
@@ -141,11 +142,7 @@ function MarketInfo({ market }: { market: Market }) {
 					<Trans id='Manager' />
 				</Typography>
 				<Typography variant='h6s' component='h6'>
-					<a
-						href={`https://blockscout.com/xdai/mainnet/address/${manager}/transactions`}
-						target='_blank'
-						rel='noreferrer'
-					>
+					<a href={getBlockExplorerUrl(manager, chain.id)} target='_blank' rel='noreferrer'>
 						{MANAGER_ADDRESS[manager.toLowerCase()] || shortenAddress(manager)}
 					</a>
 				</Typography>

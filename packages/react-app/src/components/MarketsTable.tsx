@@ -9,10 +9,12 @@ import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import { Link, Link as RouterLink } from 'react-router-dom'
+import { useNetwork } from 'wagmi'
 
 import { Market } from '@/graphql/subgraph'
 import { usePhone } from '@/hooks/useResponsive'
 import { useSubmissionPeriodEnd } from '@/hooks/useSubmissionPeriodEnd'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { betsClosingSoon, formatAmount, getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
@@ -62,6 +64,7 @@ export const MarketDetails = styled(Box)(({ theme }) => ({
 
 function MarketBox({ market }: { market: Market }) {
 	const { locale } = useI18nContext()
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const theme = useTheme()
 	const closingTimeLeft = getTimeLeft(market.closingTime, false, locale)
 	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(market.id)
@@ -158,14 +161,14 @@ function MarketBox({ market }: { market: Market }) {
 					<div>
 						<Trans id='Bet price' />
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price)}</div>
+					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chain.id)}</div>
 				</div>
 
 				<div>
 					<div>
 						<Trans id='Pool prize' />
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool)}</div>
+					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
 				</div>
 
 				<div>

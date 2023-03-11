@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNetwork } from 'wagmi'
 
 import { SVG_AD_FIELDS, SVGAd } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
+import { DEFAULT_CHAIN } from '@/lib/config'
 
 export interface UseAdsProps {
 	market?: string
@@ -17,8 +19,9 @@ const query = `
 `
 
 export const useAds = ({ market }: UseAdsProps = {}) => {
-	return useQuery<SVGAd[], Error>(['useAds', market], async () => {
-		const response = await apolloProdeQuery<{ svgads: SVGAd[] }>(query, {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	return useQuery<SVGAd[], Error>(['useAds', market, chain.id], async () => {
+		const response = await apolloProdeQuery<{ svgads: SVGAd[] }>(chain.id, query, {
 			marketId: market ? [market] : [],
 		})
 

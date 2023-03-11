@@ -71,7 +71,7 @@
     "build": "yarn vite build",
     "ipfs": "yarn build && ipfs-deploy build/",
     "start": "yarn vite dev",
-    "test": "yarn vitest",
+    "test": "vitest",
     "lingui:extract": "lingui extract --clean",
     "lingui:compile": "lingui compile --namespace es",
     "postinstall": "yarn lingui:compile"
@@ -80,6 +80,7 @@
     "jsdom": "^21.0.0",
     "vite-plugin-checker": "^0.5.3",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.27.1"
+    "vitest": "0.25.8",
+    "vitest-fetch-mock": "^0.2.2"
   }
 }
