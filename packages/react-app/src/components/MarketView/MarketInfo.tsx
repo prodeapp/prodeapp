@@ -130,7 +130,7 @@ function MarketInfo({ market }: { market: Market }) {
 							<Trans id='Total Liquidity' />
 						</Typography>
 						<Typography variant='h6s' component='h6'>
-							<a href={getBlockExplorerUrl(manager, chain.id)} target='_blank' rel='noreferrer'>
+							<a href={getBlockExplorerUrl(market.manager.id, chain.id)} target='_blank' rel='noreferrer'>
 								{formatAmount(liquidityPool.totalDeposits, chain.id)}
 							</a>
 						</Typography>
