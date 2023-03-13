@@ -109,6 +109,7 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 	useEffect(() => {
 		if (tokenId !== false) {
 			queryClient.invalidateQueries(['useMarket', market.id])
+			queryClient.invalidateQueries(['useLiquidityPool', market.id])
 			queryClient.invalidateQueries(['useBets', { marketId: market.id }])
 		}
 	}, [tokenId, market.id])
