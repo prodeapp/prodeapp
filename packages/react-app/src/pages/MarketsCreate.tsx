@@ -1,8 +1,9 @@
 import { isAddress } from '@ethersproject/address'
+import { parseUnits } from '@ethersproject/units'
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { MenuItem, Typography } from '@mui/material'
+import { Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
@@ -208,8 +209,13 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 	)
 }
 
-function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormStep2Values>) {
+function Step2Form({
+	useFormReturn,
+	setActiveStep,
+	maxPointsToWin,
+}: FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 	const {
+		control,
 		register,
 		formState: { errors, isValid },
 		handleSubmit,
@@ -222,6 +228,8 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 			validate: value => value === 100 || i18n._('The sum of prize weights must be 100.'),
 		})
 	}, [useFormReturn])
+
+	const addLP = useWatch({ control, name: `addLP` })
 
 	const onSubmit = () => setActiveStep(2)
 
@@ -254,6 +262,12 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 					</FormRow>
 					<FormRow>
 						<FormLabel>
+							<Trans id='Prize Distribution (%)' />
+						</FormLabel>
+						<PrizeWeightsBuilder />
+					</FormRow>
+					<FormRow>
+						<FormLabel>
 							<Trans id='Manager' />
 						</FormLabel>
 						<div>
@@ -274,8 +288,23 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 						</div>
 					</FormRow>
 					<FormRow>
+						<FormControlLabel
+							control={<Checkbox {...register('addLP')} checked={addLP} />}
+							label='Add liquidity pool'
+						/>
+					</FormRow>
+					<FormRow>
 						<FormLabel>
-							<Trans id='Management Fee' /> (%)
+							{!addLP && (
+								<>
+									<Trans id='Management Fee' /> (%)
+								</>
+							)}
+							{addLP && (
+								<>
+									<Trans id='LP Rewards' /> (%)
+								</>
+							)}
 						</FormLabel>
 						<div>
 							<TextField
@@ -296,19 +325,108 @@ function Step2Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 								style={{ width: '100%' }}
 							/>
 							<FormHelperText>
-								<Trans id='The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.' />
+								{!addLP && (
+									<Trans id='The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces.' />
+								)}
+								{addLP && <Trans id='Percentage of the pool paid to Liquidity Providers.' />}
 							</FormHelperText>
 							<FormError>
 								<ErrorMessage errors={errors} name='managementFee' />
 							</FormError>
 						</div>
 					</FormRow>
-					<FormRow>
-						<FormLabel>
-							<Trans id='Prize Distribution (%)' />
-						</FormLabel>
-						<PrizeWeightsBuilder />
-					</FormRow>
+					{addLP && (
+						<>
+							<FormRow>
+								<FormLabel>
+									<Trans id='Creator Fee' /> (%)
+								</FormLabel>
+								<div>
+									<TextField
+										{...register('lpCreatorFee', {
+											required: i18n._('This field is required.'),
+											valueAsNumber: true,
+											validate: v => !isNaN(Number(v)) || 'Invalid number.',
+											min: {
+												value: 0,
+												message: i18n._('Fee must be greater than 0.'),
+											},
+											max: {
+												value: 100,
+												message: i18n._('Fee must be lower than 100.'),
+											},
+										})}
+										error={!!errors.lpCreatorFee}
+										style={{ width: '100%' }}
+									/>
+									<FormHelperText>
+										<Trans id='% of the LP Rewards that goes to the creator of the market.' />
+									</FormHelperText>
+									<FormError>
+										<ErrorMessage errors={errors} name='lpCreatorFee' />
+									</FormError>
+								</div>
+							</FormRow>
+
+							<FormRow>
+								<FormLabel>
+									<Trans id='Bet Multiplier' />
+								</FormLabel>
+								<div>
+									<TextField
+										{...register('lpBetMultiplier', {
+											required: i18n._('This field is required.'),
+											valueAsNumber: true,
+											validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+											min: {
+												value: 1,
+												message: i18n._('Bet multiplier must be greater than 1'),
+											},
+										})}
+										error={!!errors.lpBetMultiplier}
+										style={{ width: '100%' }}
+									/>
+									<FormHelperText>
+										<Trans id='How much the LP adds to the market pool for each $ added to the market' />
+									</FormHelperText>
+									<FormError>
+										<ErrorMessage errors={errors} name='lpBetMultiplier' />
+									</FormError>
+								</div>
+							</FormRow>
+
+							<FormRow>
+								<FormLabel>
+									<Trans id='Points to Win' />
+								</FormLabel>
+								<div>
+									<TextField
+										{...register('lpPointsToWin', {
+											required: i18n._('This field is required.'),
+											valueAsNumber: true,
+											validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+											min: {
+												value: 1,
+												message: i18n._('Points to Win must be greater than 1'),
+											},
+											max: {
+												value: maxPointsToWin,
+												message: i18n._('Points to Win must be lower or equal than the amount of events'),
+											},
+										})}
+										error={!!errors.lpPointsToWin}
+										style={{ width: '100%' }}
+									/>
+									<FormHelperText>
+										<Trans id='Points needed to win the liquidity pool prize' />
+									</FormHelperText>
+									<FormError>
+										<ErrorMessage errors={errors} name='lpPointsToWin' />
+									</FormError>
+								</div>
+							</FormRow>
+						</>
+					)}
 
 					<FormRow style={{ marginBottom: '20px' }}>
 						{isValid && (
@@ -416,13 +534,18 @@ function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: Previe
 				<Trans id='Review and publish your market' />
 			</h2>
 
-			<PreviewText title={i18n._('Market Name')} value={step1State.market} setActiveStep={setActiveStep} step={0} />
+			<PreviewText
+				title={i18n._('Market Name')}
+				value={step1State.market}
+				setActiveStep={setActiveStep}
+				step={FormSteps.STEP_1}
+			/>
 
 			<PreviewText
 				title={i18n._('Category')}
 				value={getCategoryText(step1State.category)}
 				setActiveStep={setActiveStep}
-				step={0}
+				step={FormSteps.STEP_1}
 			/>
 
 			<div
@@ -443,23 +566,14 @@ function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: Previe
 				title={i18n._('Betting Deadline (UTC)')}
 				value={format(step1State.closingTime, DATE_FORMAT)}
 				setActiveStep={setActiveStep}
-				step={0}
+				step={FormSteps.STEP_1}
 			/>
 
 			<PreviewText
 				title={i18n._('Bet Price')}
-				value={formatAmount(step2State.price, chain.id)}
+				value={formatAmount(parseUnits(String(step2State.price), 18), chain.id)}
 				setActiveStep={setActiveStep}
-				step={1}
-			/>
-
-			<PreviewText title={i18n._('Manager')} value={step2State.manager} setActiveStep={setActiveStep} step={1} />
-
-			<PreviewText
-				title={i18n._('Management Fee')}
-				value={`${step2State.managementFee}%`}
-				setActiveStep={setActiveStep}
-				step={1}
+				step={FormSteps.STEP_2}
 			/>
 
 			<PreviewText
@@ -484,8 +598,45 @@ function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: Previe
 					</Grid>
 				}
 				setActiveStep={setActiveStep}
-				step={1}
+				step={FormSteps.STEP_2}
 			/>
+
+			<PreviewText
+				title={i18n._('Manager')}
+				value={step2State.manager}
+				setActiveStep={setActiveStep}
+				step={FormSteps.STEP_2}
+			/>
+
+			<PreviewText
+				title={i18n._(!step2State.addLP ? 'Management Fee' : 'LP Rewards')}
+				value={`${step2State.managementFee}%`}
+				setActiveStep={setActiveStep}
+				step={FormSteps.STEP_2}
+			/>
+
+			{step2State.addLP && (
+				<>
+					<PreviewText
+						title={i18n._('Creator Fee')}
+						value={`${step2State.lpCreatorFee}%`}
+						setActiveStep={setActiveStep}
+						step={FormSteps.STEP_2}
+					/>
+					<PreviewText
+						title={i18n._('Bet Multiplier')}
+						value={step2State.lpBetMultiplier}
+						setActiveStep={setActiveStep}
+						step={FormSteps.STEP_2}
+					/>
+					<PreviewText
+						title={i18n._('Points to Win')}
+						value={step2State.lpPointsToWin}
+						setActiveStep={setActiveStep}
+						step={FormSteps.STEP_2}
+					/>
+				</>
+			)}
 
 			<div style={{ marginBottom: '20px', ...wrapperStyle }}>
 				<Button onClick={onSubmit} color='primary' fullWidth size='large' sx={{ mb: 2 }}>
@@ -685,10 +836,17 @@ function BigStepper({ steps, activeStep }: { steps: string[]; activeStep: number
 	)
 }
 
+enum FormSteps {
+	STEP_1,
+	STEP_2,
+	PREVIEW,
+	SUCCESS,
+}
+
 function MarketsCreate() {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const [activeStep, setActiveStep] = useState(0)
+	const [activeStep, setActiveStep] = useState(FormSteps.STEP_1)
 
 	const defaultClosingTime = dateAdd(today, { days: 5 })
 	const useForm1Return = useForm<MarketFormStep1Values>({
@@ -708,6 +866,10 @@ function MarketsCreate() {
 			prizeDivisor: 0,
 			manager: '',
 			managementFee: 3,
+			addLP: false,
+			lpCreatorFee: 3,
+			lpBetMultiplier: 1,
+			lpPointsToWin: 0,
 		},
 	})
 
@@ -770,7 +932,11 @@ function MarketsCreate() {
 		}
 	}, [searchParams, useForm1Return, useForm2Return])
 
-	const { isSuccess, error, createMarket, marketId } = useMarketForm()
+	const { isSuccess, error, createMarket, marketId } = useMarketForm(
+		step1State,
+		step2State,
+		activeStep === FormSteps.PREVIEW
+	)
 
 	const onSubmit = async () => {
 		if (step1State && step2State) {
@@ -780,7 +946,7 @@ function MarketsCreate() {
 
 	useEffect(() => {
 		if (isSuccess) {
-			setActiveStep(3)
+			setActiveStep(FormSteps.SUCCESS)
 		}
 	}, [isSuccess])
 
@@ -809,7 +975,7 @@ function MarketsCreate() {
 
 	return (
 		<div>
-			{activeStep < 3 && (
+			{activeStep < FormSteps.SUCCESS && (
 				<Banner style={{ backgroundImage: 'url(/banners/banner-3.jpg)' }}>
 					<Typography
 						variant='h1s'
@@ -820,7 +986,7 @@ function MarketsCreate() {
 				</Banner>
 			)}
 
-			{activeStep < 3 && (
+			{activeStep < FormSteps.SUCCESS && (
 				<div style={{ marginBottom: 50 }}>
 					<BigStepper steps={[i18n._('Market detail'), i18n._('Price'), i18n._('Publish')]} activeStep={activeStep} />
 				</div>
@@ -833,11 +999,17 @@ function MarketsCreate() {
 					</Alert>
 				)}
 
-				{activeStep === 0 && <Step1Form useFormReturn={useForm1Return} setActiveStep={setActiveStep} />}
+				{activeStep === FormSteps.STEP_1 && <Step1Form useFormReturn={useForm1Return} setActiveStep={setActiveStep} />}
 
-				{activeStep === 1 && <Step2Form useFormReturn={useForm2Return} setActiveStep={setActiveStep} />}
+				{activeStep === FormSteps.STEP_2 && (
+					<Step2Form
+						useFormReturn={useForm2Return}
+						setActiveStep={setActiveStep}
+						maxPointsToWin={step1State.events.length}
+					/>
+				)}
 
-				{activeStep === 2 && (
+				{activeStep === FormSteps.PREVIEW && (
 					<PreviewStep
 						onSubmit={onSubmit}
 						setActiveStep={setActiveStep}
@@ -846,7 +1018,7 @@ function MarketsCreate() {
 					/>
 				)}
 
-				{activeStep === 3 && (
+				{activeStep === FormSteps.SUCCESS && (
 					<SuccessStep
 						marketName={step1State.market}
 						marketId={marketId}
