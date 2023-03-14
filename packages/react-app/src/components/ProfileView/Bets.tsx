@@ -4,17 +4,15 @@ import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, Skeleton 
 import { Address } from '@wagmi/core'
 import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
 
 import BetDetails from '@/components/Bet/BetDetails'
 import { useBets, useBetsRewards, useIndexedBetsRewards } from '@/hooks/useBets'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount } from '@/lib/helpers'
+import { paths } from '@/lib/paths'
 
-export function Bets({ playerId }: { playerId: Address }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const { data: bets, error, isLoading } = useBets({ playerId })
-	const { data: betsRewards } = useBetsRewards(bets || [])
+export function Bets({ playerId, chainId }: { playerId: Address; chainId: number }) {
+	const { data: bets, error, isLoading } = useBets({ playerId, chainId })
+	const { data: betsRewards } = useBetsRewards(bets || [], chainId)
 	const indexedBetsRewards = useIndexedBetsRewards(betsRewards)
 
 	if (error) {
@@ -35,7 +33,7 @@ export function Bets({ playerId }: { playerId: Address }) {
 
 	return (
 		<div>
-			{bets.map(bet => {
+			{bets.map((bet) => {
 				return (
 					<Accordion id={bet.id} key={bet.id} sx={{ mt: 4 }}>
 						<AccordionSummary expandIcon={<ExpandMoreOutlined />} sx={{ alignContent: 'center' }}>
@@ -56,19 +54,19 @@ export function Bets({ playerId }: { playerId: Address }) {
 									</div>
 									<div>
 										<Trans id='Reward' />:{' '}
-										{formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0, chain.id)}
+										{formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0, chainId)}
 									</div>
 								</div>
 							</div>
 						</AccordionSummary>
 						<AccordionDetails>
 							<div style={{ marginBottom: '20px' }}>
-								<Button component={RouterLink} to={`/markets/${bet.market.id}`}>
+								<Button component={RouterLink} to={paths.market(bet.market.id, chainId)}>
 									<Trans id='Go to market' />
 								</Button>
 							</div>
 
-							<BetDetails bet={bet} />
+							<BetDetails bet={bet} chainId={chainId} />
 						</AccordionDetails>
 					</Accordion>
 				)

@@ -3,14 +3,14 @@ import { getContract, getProvider } from '@wagmi/core'
 
 import { MarketAbi } from '@/abi/Market'
 
-export const useSubmissionPeriodEnd = (marketId: string) => {
+export const useSubmissionPeriodEnd = (marketId: string, chainId: number) => {
 	return useQuery<number, Error>(
-		['useSubmissionPeriodEnd', marketId],
+		['useSubmissionPeriodEnd', marketId, chainId],
 		async () => {
 			const contract = getContract({
 				address: marketId,
 				abi: MarketAbi,
-				signerOrProvider: getProvider(),
+				signerOrProvider: getProvider({ chainId }),
 			})
 
 			const [resultSubmissionPeriodStart, submissionTimeout] = await Promise.all([

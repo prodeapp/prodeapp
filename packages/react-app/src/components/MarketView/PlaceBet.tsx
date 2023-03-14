@@ -4,28 +4,28 @@ import { Alert, Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import React, { useEffect, useState } from 'react'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 import { ReactComponent as ArrowRight } from '@/assets/icons/arrow-right-2.svg'
 import { ReactComponent as CurrencyIcon } from '@/assets/icons/currency.svg'
 import { Market } from '@/graphql/subgraph'
 import { useHasVoucher } from '@/hooks/useHasVoucher'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { betsClosingSoon, formatAmount, getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 export default function PlaceBet({
 	market,
+	chainId,
 	onBetClick,
 	onResultsClick,
 }: {
 	market: Market
+	chainId: number
 	onBetClick: () => void
 	onResultsClick: () => void
 }) {
 	const { address } = useAccount()
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const hasVoucher = useHasVoucher(address, market.id, BigNumber.from(market.price))
+	const hasVoucher = useHasVoucher(address, market.id, chainId, BigNumber.from(market.price))
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()
 
@@ -46,7 +46,7 @@ export default function PlaceBet({
 				<Typography variant='p3' component='div'>
 					<Trans id='Bet Price:' />
 				</Typography>
-				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chain.id)}</div>
+				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
 			</Box>
 
 			{timeLeft !== false && (
@@ -63,7 +63,7 @@ export default function PlaceBet({
 					)}
 					<div style={{ fontWeight: 'bold', marginBottom: '15px' }}>{timeLeft}</div>
 					<Button color='primary' size='large' fullWidth onClick={onBetClick}>
-						<Trans id='Place Bet' /> - {formatAmount(market.price, chain.id)} <ArrowRight style={{ marginLeft: 10 }} />
+						<Trans id='Place Bet' /> - {formatAmount(market.price, chainId)} <ArrowRight style={{ marginLeft: 10 }} />
 					</Button>
 				</>
 			)}

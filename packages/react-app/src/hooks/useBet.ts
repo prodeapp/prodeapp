@@ -16,6 +16,7 @@ async function getTokenBet(chainId: number, marketId: Address, tokenId: number):
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [marketId, BigNumber.from(tokenId)],
+		chainId,
 	})
 
 	return await marketBetViewToBet(chainId, marketBetView)

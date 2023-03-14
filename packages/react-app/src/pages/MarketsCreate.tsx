@@ -42,6 +42,7 @@ import {
 	getTwitterShareUrl,
 	localTimeToUtc,
 } from '@/lib/helpers'
+import { paths } from '@/lib/paths'
 
 export const formatAnswers = (answers: string[]) => {
 	return answers.map((a) => ({ value: a }))
@@ -660,10 +661,12 @@ function PreviewStep({
 }
 
 function SuccessStep({ marketName, marketId, step1State, step2State }: SuccessStepProps) {
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+
 	const shareUrl = getTwitterShareUrl(
 		i18n._(`I have created a new market on @prode_eth: {0} {1}`, {
 			0: marketName,
-			1: getMarketUrl(marketId),
+			1: getMarketUrl(marketId, chain.id),
 		})
 	)
 
@@ -765,7 +768,7 @@ function SuccessStep({ marketName, marketId, step1State, step2State }: SuccessSt
 						</ul>
 
 						<div>
-							<Button component={RouterLink} to={`/markets/${marketId}?new=1`} variant='outlined' fullWidth>
+							<Button component={RouterLink} to={paths.market(marketId, chain.id)} variant='outlined' fullWidth>
 								<Trans id='Go to the market' />
 							</Button>
 						</div>

@@ -1,11 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { useMemo } from 'react'
-import { useNetwork } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Event } from '@/graphql/subgraph'
-import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -44,15 +43,16 @@ export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'ope
 		abi: MarketViewAbi,
 		functionName: 'getEvents',
 		args: [marketId],
+		chainId,
 	})
 
-	if (typeof marketEventsView.find(e => e.templateId.eq(0)) !== 'undefined') {
+	if (typeof marketEventsView.find((e) => e.templateId.eq(0)) !== 'undefined') {
 		// it needs to be added to RealityRegistry first
 		return []
 	}
 
 	const events = await Promise.all(
-		marketEventsView.map(async marketEventView => await marketEventViewToEvent(marketEventView))
+		marketEventsView.map(async (marketEventView) => await marketEventViewToEvent(marketEventView))
 	)
 
 	events.sort((a, b) => (a[orderBy] === b[orderBy] ? 0 : a[orderBy] > b[orderBy] ? 1 : -1))
@@ -60,11 +60,10 @@ export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'ope
 	return events
 }
 
-type UseEvents = (marketId: Address, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
-export const useEvents: UseEvents = (marketId: Address, orderBy = 'openingTs') => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy, chainId: chain.id }], async () => {
-		return fetchEvents(chain.id, marketId, orderBy)
+type UseEvents = (marketId: Address, chainId: number, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
+export const useEvents: UseEvents = (marketId: Address, chainId: number, orderBy = 'openingTs') => {
+	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy, chainId }], async () => {
+		return fetchEvents(chainId, marketId, orderBy)
 	})
 }
 

@@ -10,7 +10,6 @@ import {
 } from '@rainbow-me/rainbowkit/wallets'
 import { gnosis, polygonMumbai } from '@wagmi/core/chains'
 import { configureChains, createClient } from 'wagmi'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { publicProvider } from 'wagmi/providers/public'
 
 gnosis.contracts = {
@@ -20,13 +19,9 @@ gnosis.contracts = {
 	},
 }
 
-export const { chains, provider } = configureChains(
-	[gnosis, polygonMumbai],
-	[jsonRpcProvider({ rpc: chain => ({ http: chain.rpcUrls.default.http[0] }) }), publicProvider()],
-	{
-		stallTimeout: 2000,
-	}
-)
+export const { chains, provider } = configureChains([gnosis, polygonMumbai], [publicProvider()], {
+	stallTimeout: 2000,
+})
 
 const needsInjectedWalletFallback =
 	typeof window !== 'undefined' && window.ethereum && !window.ethereum.isMetaMask && !window.ethereum.isCoinbaseWallet

@@ -38,9 +38,9 @@ const mobileLabelSx = {
 	fontSize: '12px',
 }
 
-export default function BetDetails({ bet }: { bet: Bet }) {
+export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number }) {
 	const isPhone = usePhone()
-	const { data: events = [] } = useEvents(bet.market.id)
+	const { data: events = [] } = useEvents(bet.market.id, chainId)
 
 	const orderedEventIndices = getOrderedEventsIndexes(events)
 

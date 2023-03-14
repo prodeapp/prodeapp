@@ -28,7 +28,7 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 	}
 
 	// Initialize events stats
-	let stats = events.map(event => [
+	let stats = events.map((event) => [
 		...event.outcomes.map((outcome, index) => {
 			return {
 				outcome: transOutcome(outcome),
@@ -50,11 +50,11 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 	])
 
 	// Add stats
-	bets.forEach(bet => {
+	bets.forEach((bet) => {
 		events.forEach((event, i) => {
 			const betText = getAnswerText(bet.results[i], event.outcomes, event.templateID, 'Invalid value')
 
-			let betStatIndex = stats[i].findIndex(event => event.outcome === betText)
+			let betStatIndex = stats[i].findIndex((event) => event.outcome === betText)
 			if (betStatIndex === -1) {
 				// this bet is a combination of outcomes, so needs to be initialized
 				betStatIndex = stats[i].length
@@ -83,27 +83,27 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 	stats.sort((a, b) => (a[0].openingTs > b[0].openingTs ? 1 : b[0].openingTs > a[0].openingTs ? -1 : 0))
 
 	// sort stats in each event by amount of bets
-	stats.map(eventStat =>
+	stats.map((eventStat) =>
 		eventStat.sort((a, b) => (a.amountBets > b.amountBets ? -1 : b.amountBets > a.amountBets ? 1 : 0))
 	)
 
 	// return stats
 	if (events[0].outcomes.length > 4) {
 		// filter zero values for clarity in the graphs
-		stats = stats.map(eventStat =>
-			eventStat.filter(stat => stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._('draw'))
+		stats = stats.map((eventStat) =>
+			eventStat.filter((stat) => stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._('draw'))
 		)
 	}
 
 	// filter invalid if it has 0 bets
-	return stats.map(eventStat =>
-		eventStat.filter(stat => (stat.outcome === i18n._('Invalid result') ? stat.amountBets !== 0 : true))
+	return stats.map((eventStat) =>
+		eventStat.filter((stat) => (stat.outcome === i18n._('Invalid result') ? stat.amountBets !== 0 : true))
 	)
 }
 
-export function Stats({ marketId }: { marketId: Address }) {
-	const { isLoading: isLoadingBets, error, data: bets = [] } = useBets({ marketId })
-	const { isLoading: isLoadingEvents, data: events = [] } = useEvents(marketId, 'id')
+export function Stats({ marketId, chainId }: { marketId: Address; chainId: number }) {
+	const { isLoading: isLoadingBets, error, data: bets = [] } = useBets({ marketId, chainId })
+	const { isLoading: isLoadingEvents, data: events = [] } = useEvents(marketId, chainId, 'id')
 	const theme = useTheme()
 
 	if (isLoadingBets || isLoadingEvents) {

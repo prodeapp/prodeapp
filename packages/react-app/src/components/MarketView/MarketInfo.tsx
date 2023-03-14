@@ -4,12 +4,10 @@ import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import React from 'react'
-import { useNetwork } from 'wagmi'
 
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
 import { Market } from '@/graphql/subgraph'
 import { DIVISOR } from '@/hooks/useMarketForm'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, getBlockExplorerUrl, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 const MANAGER_ADDRESS: Record<string, string> = {
@@ -19,9 +17,7 @@ const MANAGER_ADDRESS: Record<string, string> = {
 	'0xbca74372c17597fa9da905c7c2b530766768027c': 'Protocol Treasury',
 }
 
-function MarketPrizeInfo({ market }: { market: Market }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-
+function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number }) {
 	if (market.liquidityInfo.id === AddressZero) {
 		return (
 			<>
@@ -29,7 +25,7 @@ function MarketPrizeInfo({ market }: { market: Market }) {
 					<Trans id='Prize Pool' />
 				</Typography>
 				<Typography variant='h3' component='h3'>
-					{formatAmount(market.pool, chain.id)}
+					{formatAmount(market.pool, chainId)}
 				</Typography>
 			</>
 		)
@@ -44,21 +40,19 @@ function MarketPrizeInfo({ market }: { market: Market }) {
 				<Trans id='Perfect Score Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(market.liquidityInfo.prizePool.add(minPrize), chain.id)}
+				{formatAmount(market.liquidityInfo.prizePool.add(minPrize), chainId)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
 				<Trans id='Pool Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(minPrize, chain.id)}
+				{formatAmount(minPrize, chainId)}
 			</Typography>
 		</>
 	)
 }
 
-function MarketInfo({ market }: { market: Market }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-
+function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 	const GridStyled = styled(Grid)(({ theme }) => ({
 		borderBottom: `1px solid ${theme.palette.black.dark}`,
 		'& > div': {
@@ -90,7 +84,7 @@ function MarketInfo({ market }: { market: Market }) {
 	return (
 		<GridStyled container spacing={0}>
 			<Grid item xs={6} md={3}>
-				<MarketPrizeInfo market={market} />
+				<MarketPrizeInfo market={market} chainId={chainId} />
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
@@ -125,8 +119,8 @@ function MarketInfo({ market }: { market: Market }) {
 							<Trans id='Total Liquidity' />
 						</Typography>
 						<Typography variant='h6s' component='h6'>
-							<a href={getBlockExplorerUrl(market.manager.id, chain.id)} target='_blank' rel='noreferrer'>
-								{formatAmount(market.liquidityInfo.totalDeposits, chain.id)}
+							<a href={getBlockExplorerUrl(market.manager.id, chainId)} target='_blank' rel='noreferrer'>
+								{formatAmount(market.liquidityInfo.totalDeposits, chainId)}
 							</a>
 						</Typography>
 					</>
@@ -137,7 +131,7 @@ function MarketInfo({ market }: { market: Market }) {
 					<Trans id='Manager' />
 				</Typography>
 				<Typography variant='h6s' component='h6'>
-					<a href={getBlockExplorerUrl(manager, chain.id)} target='_blank' rel='noreferrer'>
+					<a href={getBlockExplorerUrl(manager, chainId)} target='_blank' rel='noreferrer'>
 						{MANAGER_ADDRESS[manager.toLowerCase()] || shortenAddress(manager)}
 					</a>
 				</Typography>

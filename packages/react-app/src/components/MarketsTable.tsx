@@ -18,6 +18,7 @@ import { useSubmissionPeriodEnd } from '@/hooks/useSubmissionPeriodEnd'
 import { DEFAULT_CHAIN } from '@/lib/config'
 import { betsClosingSoon, formatAmount, getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
+import { paths } from '@/lib/paths'
 
 type MarketsTableProps = {
 	markets?: Market[]
@@ -63,12 +64,12 @@ export const MarketDetails = styled(Box)(({ theme }) => ({
 	},
 }))
 
-function MarketBox({ market }: { market: Market }) {
+function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 	const { locale } = useI18nContext()
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const theme = useTheme()
 	const closingTimeLeft = getTimeLeft(market.closingTime, false, locale)
-	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(market.id)
+	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(market.id, chainId)
 	const distributionTimeLeft = getTimeLeft(submissionPeriodEnd, false, locale)
 	let status = <Chip label={i18n._('Closed')} color='error' />
 
@@ -100,7 +101,7 @@ function MarketBox({ market }: { market: Market }) {
 					<div>
 						<div style={{ fontWeight: 'normal', marginBottom: '5px' }}>{status}</div>
 						<Typography variant='h4s' component='h2' style={{ marginTop: '20px' }}>
-							<Link to={`/markets/${market.id.toString()}`}>{market.name}</Link>
+							<Link to={paths.market(market.id, chain.id)}>{market.name}</Link>
 						</Typography>
 					</div>
 					{closingTimeLeft === false && (
@@ -117,7 +118,7 @@ function MarketBox({ market }: { market: Market }) {
 									</div>
 									<Button
 										component={RouterLink}
-										to={`/markets/${market.id.toString()}`}
+										to={paths.market(market.id, chain.id)}
 										color={'primary'}
 										fullWidth
 										size='large'
@@ -146,7 +147,7 @@ function MarketBox({ market }: { market: Market }) {
 							<div style={{ marginBottom: 10, fontWeight: 700 }}>{closingTimeLeft}</div>
 							<Button
 								component={RouterLink}
-								to={`/markets/${market.id.toString()}`}
+								to={paths.market(market.id, chain.id)}
 								color={'primary'}
 								fullWidth
 								size='large'
@@ -211,6 +212,7 @@ function MarketBox({ market }: { market: Market }) {
 
 function MarketsTable({ markets }: MarketsTableProps) {
 	const isPhone = usePhone()
+	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 
 	if (!markets || markets.length === 0) {
 		return (
@@ -225,7 +227,7 @@ function MarketsTable({ markets }: MarketsTableProps) {
 			{markets.map((market, i) => {
 				return (
 					<Grid item xs={12} md={6} key={i}>
-						<MarketBox market={market} />
+						<MarketBox market={market} chainId={chain.id} />
 					</Grid>
 				)
 			})}

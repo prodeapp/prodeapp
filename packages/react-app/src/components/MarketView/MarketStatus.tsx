@@ -9,9 +9,9 @@ import { useSubmissionPeriodEnd } from '@/hooks/useSubmissionPeriodEnd'
 import { getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
-function MarketStatus({ marketId }: { marketId: Address }) {
-	const { data: marketStatus } = useMarketStatus(marketId)
-	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(marketId)
+function MarketStatus({ marketId, chainId }: { marketId: Address; chainId: number }) {
+	const { data: marketStatus } = useMarketStatus(marketId, chainId)
+	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(marketId, chainId)
 	const { locale } = useI18nContext()
 
 	if (!marketStatus) {

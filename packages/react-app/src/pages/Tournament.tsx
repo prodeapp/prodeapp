@@ -7,11 +7,15 @@ import { RenderTournament } from '@/components/Tournament/RenderTournament'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
+import { DEFAULT_CHAIN } from '@/lib/config'
 
 function Tournament() {
-	const { id } = useParams()
-	const { isLoading: isLoadingMarket, data: market } = useMarket(String(id) as Address)
-	const { isLoading: isLoadingEvents, data: events } = useEvents(String(id) as Address)
+	const params = useParams()
+	const id = params.id as Address
+	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
+
+	const { isLoading: isLoadingMarket, data: market } = useMarket(id, chainId)
+	const { isLoading: isLoadingEvents, data: events } = useEvents(id, chainId)
 	const itemJson = useCurateItemJson(market?.hash || '')
 
 	if (isLoadingMarket || isLoadingEvents) {

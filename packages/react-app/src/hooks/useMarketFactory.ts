@@ -46,6 +46,7 @@ export const useMarketFactoryAttributes = () => {
 			abi: MarketViewAbi,
 			functionName: 'getMarketFactoryAttrs',
 			args: [factoryAddress],
+			chainId: chain.id,
 		})
 
 		return {

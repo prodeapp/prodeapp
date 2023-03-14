@@ -68,7 +68,7 @@ function GroupsForm() {
 											{...register(`extraDataGroups.groups.${i}.size`, {
 												required: i18n._('This field is required.'),
 												valueAsNumber: true,
-												validate: v => !isNaN(Number(v)) || 'Invalid number.',
+												validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 												min: {
 													value: 1,
 													message: i18n._('Value must be greater than 0.'),
@@ -124,7 +124,7 @@ function GroupsForm() {
 							{...register(`extraDataGroups.rounds`, {
 								required: i18n._('This field is required.'),
 								valueAsNumber: true,
-								validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+								validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
 								min: {
 									value: 1,
 									message: i18n._('Value must be greater than 0.'),
@@ -142,12 +142,12 @@ function GroupsForm() {
 }
 
 function CurateSubmit() {
+	const { chain } = useNetwork()
 	const { marketId } = useParams()
-	const { data: market } = useMarket(String(marketId) as Address)
-	const { isLoading, data: events } = useEvents(String(marketId) as Address)
+	const { data: market } = useMarket(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
+	const { isLoading, data: events } = useEvents(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
 
 	const { address } = useAccount()
-	const { chain } = useNetwork()
 
 	const { data: submissionDeposit } = useSubmissionDeposit(
 		CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)]
@@ -193,7 +193,7 @@ function CurateSubmit() {
 			return
 		}
 
-		events.forEach(e => {
+		events.forEach((e) => {
 			questionsUseFieldArrayReturn.append({ value: e.id })
 		})
 		// eslint-disable-next-line
@@ -239,8 +239,8 @@ function CurateSubmit() {
 			const encodedParams = await getEncodedParams(
 				chain?.id || DEFAULT_CHAIN,
 				data,
-				getQuestionsHash(data.questions.map(question => question.value)),
-				data.questions.map(question => question.value)
+				getQuestionsHash(data.questions.map((question) => question.value)),
+				data.questions.map((question) => question.value)
 			)
 
 			write!({
