@@ -1,3 +1,4 @@
+import { AddressZero } from '@ethersproject/constants'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
 import { Typography, useTheme } from '@mui/material'
@@ -159,16 +160,27 @@ function MarketBox({ market }: { market: Market }) {
 			<MarketDetails sx={{ minWidth: { md: '245px' } }}>
 				<div>
 					<div>
-						<Trans id='Bet price' />
+						<Trans id='Bet Price' />
 					</div>
 					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chain.id)}</div>
 				</div>
 
 				<div>
 					<div>
-						<Trans id='Pool prize' />
+						<div>
+							<Trans id='Pool Prize' />
+						</div>
+						<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+
+					{market.liquidityInfo.id !== AddressZero && (
+						<div style={{ marginTop: 10 }}>
+							<div>
+								<Trans id='Perfect Score Prize' />
+							</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+						</div>
+					)}
 				</div>
 
 				<div>

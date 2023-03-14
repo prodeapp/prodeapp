@@ -44,7 +44,7 @@ import {
 } from '@/lib/helpers'
 
 export const formatAnswers = (answers: string[]) => {
-	return answers.map(a => ({ value: a }))
+	return answers.map((a) => ({ value: a }))
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
@@ -129,7 +129,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 								error={!!errors.category}
 								style={{ width: '100%' }}
 							>
-								{getFlattenedCategories().map(cat => (
+								{getFlattenedCategories().map((cat) => (
 									<MenuItem value={cat.id} key={cat.id}>
 										{cat.isChild ? `-- ${cat.text}` : cat.text}
 									</MenuItem>
@@ -156,7 +156,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 											onChange={field.onChange}
 											value={field.value}
 											inputFormat={DATE_FORMAT}
-											renderInput={params => <TextField {...params} fullWidth />}
+											renderInput={(params) => <TextField {...params} fullWidth />}
 										/>
 									)}
 								/>
@@ -212,8 +212,8 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 function Step2Form({
 	useFormReturn,
 	setActiveStep,
-	maxPointsToWin,
-}: FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
+}: /*maxPointsToWin,*/
+FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 	const {
 		control,
 		register,
@@ -225,7 +225,7 @@ function Step2Form({
 
 	useEffect(() => {
 		useFormReturn.register('prizeDivisor', {
-			validate: value => value === 100 || i18n._('The sum of prize weights must be 100.'),
+			validate: (value) => value === 100 || i18n._('The sum of prize weights must be 100.'),
 		})
 	}, [useFormReturn])
 
@@ -246,7 +246,7 @@ function Step2Form({
 								{...register('price', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+									validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
 									min: {
 										value: 0.01,
 										message: i18n._('Price must be greater than 0.01'),
@@ -274,7 +274,7 @@ function Step2Form({
 							<TextField
 								{...register('manager', {
 									required: i18n._('This field is required.'),
-									validate: v => isAddress(v) || 'Invalid address.',
+									validate: (v) => isAddress(v) || 'Invalid address.',
 								})}
 								error={!!errors.manager}
 								style={{ width: '100%' }}
@@ -311,7 +311,7 @@ function Step2Form({
 								{...register('managementFee', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: v => !isNaN(Number(v)) || 'Invalid number.',
+									validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 									min: {
 										value: 0,
 										message: i18n._('Fee must be greater than 0.'),
@@ -346,7 +346,7 @@ function Step2Form({
 										{...register('lpCreatorFee', {
 											required: i18n._('This field is required.'),
 											valueAsNumber: true,
-											validate: v => !isNaN(Number(v)) || 'Invalid number.',
+											validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 											min: {
 												value: 0,
 												message: i18n._('Fee must be greater than 0.'),
@@ -367,7 +367,7 @@ function Step2Form({
 									</FormError>
 								</div>
 							</FormRow>
-
+							{/*
 							<FormRow>
 								<FormLabel>
 									<Trans id='Bet Multiplier' />
@@ -425,6 +425,7 @@ function Step2Form({
 									</FormError>
 								</div>
 							</FormRow>
+							*/}
 						</>
 					)}
 
@@ -523,7 +524,13 @@ function PreviewEvents({
 	)
 }
 
-function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: PreviewStepProps) {
+function PreviewStep({
+	onSubmit,
+	step1State,
+	step2State,
+	setActiveStep,
+	isPrepared,
+}: PreviewStepProps & { isPrepared: boolean }) {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 
 	const prizes = [i18n._('First prize'), i18n._('Second prize'), i18n._('Third prize')]
@@ -639,9 +646,11 @@ function PreviewStep({ onSubmit, step1State, step2State, setActiveStep }: Previe
 			)}
 
 			<div style={{ marginBottom: '20px', ...wrapperStyle }}>
-				<Button onClick={onSubmit} color='primary' fullWidth size='large' sx={{ mb: 2 }}>
-					<Trans id='Create Market' /> &gt;
-				</Button>
+				{isPrepared && (
+					<Button onClick={onSubmit} color='primary' fullWidth size='large' sx={{ mb: 2 }}>
+						<Trans id='Create Market' /> &gt;
+					</Button>
+				)}
 				<Button variant='outlined' onClick={() => setActiveStep(1)} fullWidth size='large'>
 					&lt; <Trans id='Previous' />
 				</Button>
@@ -932,7 +941,7 @@ function MarketsCreate() {
 		}
 	}, [searchParams, useForm1Return, useForm2Return])
 
-	const { isSuccess, error, createMarket, marketId } = useMarketForm(
+	const { isPrepared, isSuccess, error, createMarket, marketId } = useMarketForm(
 		step1State,
 		step2State,
 		activeStep === FormSteps.PREVIEW
@@ -1015,6 +1024,7 @@ function MarketsCreate() {
 						setActiveStep={setActiveStep}
 						step1State={step1State}
 						step2State={step2State}
+						isPrepared={isPrepared}
 					/>
 				)}
 

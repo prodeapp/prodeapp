@@ -93,7 +93,7 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ value: '', questionId: event.id }))
+		events && events.forEach((event) => append({ value: '', questionId: event.id }))
 	}, [events, append, remove])
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
@@ -109,7 +109,6 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 	useEffect(() => {
 		if (tokenId !== false) {
 			queryClient.invalidateQueries(['useMarket', market.id])
-			queryClient.invalidateQueries(['useLiquidityPool', market.id])
 			queryClient.invalidateQueries(['useBets', { marketId: market.id }])
 		}
 	}, [tokenId, market.id])

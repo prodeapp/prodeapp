@@ -1,3 +1,4 @@
+import { AddressZero } from '@ethersproject/constants'
 import { Trans } from '@lingui/react'
 import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
@@ -7,7 +8,6 @@ import { useNetwork } from 'wagmi'
 
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'
 import { Market } from '@/graphql/subgraph'
-import { LiquidityPool, useLiquidityPool } from '@/hooks/useLiquidityPool'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, getBlockExplorerUrl, getMedalColor, shortenAddress } from '@/lib/helpers'
@@ -19,10 +19,10 @@ const MANAGER_ADDRESS: Record<string, string> = {
 	'0xbca74372c17597fa9da905c7c2b530766768027c': 'Protocol Treasury',
 }
 
-function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPool; market: Market }) {
+function MarketPrizeInfo({ market }: { market: Market }) {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 
-	if (!liquidityPool) {
+	if (market.liquidityInfo.id === AddressZero) {
 		return (
 			<>
 				<Typography variant='p3' component='div'>
@@ -41,13 +41,13 @@ function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPo
 	return (
 		<>
 			<Typography variant='p3' component='div'>
-				<Trans id='Full Prize' />
+				<Trans id='Perfect Score Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(liquidityPool.prizePool.add(minPrize), chain.id)}
+				{formatAmount(market.liquidityInfo.prizePool.add(minPrize), chain.id)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
-				Minimum Prize
+				<Trans id='Pool Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
 				{formatAmount(minPrize, chain.id)}
@@ -58,7 +58,6 @@ function MarketPrizeInfo({ liquidityPool, market }: { liquidityPool: LiquidityPo
 
 function MarketInfo({ market }: { market: Market }) {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const { data: liquidityPool, isLoading } = useLiquidityPool(market)
 
 	const GridStyled = styled(Grid)(({ theme }) => ({
 		borderBottom: `1px solid ${theme.palette.black.dark}`,
@@ -78,24 +77,20 @@ function MarketInfo({ market }: { market: Market }) {
 		},
 	}))
 
-	if (isLoading) {
-		return null
-	}
-
 	let manager, managementFee
 
-	if (!liquidityPool) {
+	if (market.liquidityInfo.id === AddressZero) {
 		manager = market.manager.id
 		managementFee = market.managementFee
 	} else {
-		manager = liquidityPool.creator
-		managementFee = (market.managementFee * liquidityPool.creatorFee) / DIVISOR
+		manager = market.liquidityInfo.creator
+		managementFee = (market.managementFee * market.liquidityInfo.creatorFee) / DIVISOR
 	}
 
 	return (
 		<GridStyled container spacing={0}>
 			<Grid item xs={6} md={3}>
-				<MarketPrizeInfo liquidityPool={liquidityPool!} market={market} />
+				<MarketPrizeInfo market={market} />
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
@@ -124,18 +119,18 @@ function MarketInfo({ market }: { market: Market }) {
 				<div style={{ fontSize: '11.11px' }}>
 					{(market.protocolFee * 100) / DIVISOR}% protocol + {(managementFee * 100) / DIVISOR}% manager
 				</div>
-				{liquidityPool && (
+				{/*liquidityPool && (
 					<>
 						<Typography variant='p3' component='div' sx={{ mt: 2 }}>
 							<Trans id='Total Liquidity' />
 						</Typography>
 						<Typography variant='h6s' component='h6'>
 							<a href={getBlockExplorerUrl(market.manager.id, chain.id)} target='_blank' rel='noreferrer'>
-								{formatAmount(liquidityPool.totalDeposits, chain.id)}
+								{formatAmount(market.liquidityInfo.totalDeposits, chain.id)}
 							</a>
 						</Typography>
 					</>
-				)}
+				)*/}
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
