@@ -9,6 +9,8 @@ import {
 	walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
 import { gnosis, polygonMumbai } from '@wagmi/core/chains'
+import { alchemyProvider } from '@wagmi/core/providers/alchemy'
+import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
@@ -19,9 +21,19 @@ gnosis.contracts = {
 	},
 }
 
-export const { chains, provider } = configureChains([gnosis, polygonMumbai], [publicProvider()], {
-	stallTimeout: 2000,
-})
+export const { chains, provider } = configureChains(
+	[gnosis, polygonMumbai],
+	[
+		...(import.meta.env.VITE_ALCHEMY_API_KEY
+			? [alchemyProvider({ apiKey: import.meta.env.VITE_ALCHEMY_API_KEY })]
+			: []),
+		...(import.meta.env.VITE_INFURA_API_KEY ? [infuraProvider({ apiKey: import.meta.env.VITE_INFURA_API_KEY })] : []),
+		publicProvider(),
+	],
+	{
+		stallTimeout: 2000,
+	}
+)
 
 const needsInjectedWalletFallback =
 	typeof window !== 'undefined' && window.ethereum && !window.ethereum.isMetaMask && !window.ethereum.isCoinbaseWallet
