@@ -40,7 +40,7 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 				<Trans id='Perfect Score Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(market.liquidityInfo.prizePool.add(minPrize), chainId)}
+				{formatAmount(market.liquidityInfo.prizePool, chainId)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
 				<Trans id='Pool Prize' />

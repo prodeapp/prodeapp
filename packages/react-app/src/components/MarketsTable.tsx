@@ -179,7 +179,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							<div>
 								<Trans id='Perfect Score Prize' />
 							</div>
-							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chain.id)}</div>
 						</div>
 					)}
 				</div>
