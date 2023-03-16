@@ -27,7 +27,7 @@ export interface Market {
 	prizes: number[]
 	manager: {
 		id: string
-		managementRewards: BigNumberish
+		managementRewards: BigNumber
 	}
 	managementFee: number
 	protocolFee: number
@@ -37,6 +37,15 @@ export interface Market {
 	hasPendingAnswers: boolean
 	creator: Address
 	curated: boolean
+	liquidityInfo: {
+		id: Address
+		creator: Address
+		creatorFee: number
+		pointsToWin: number
+		betMultiplier: BigNumber
+		totalDeposits: BigNumber
+		prizePool: BigNumber
+	}
 }
 
 export type Outcome = string

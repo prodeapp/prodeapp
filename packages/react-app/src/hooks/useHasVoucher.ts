@@ -1,26 +1,26 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
-import { useContractReads, useNetwork } from 'wagmi'
+import { useContractReads } from 'wagmi'
 
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
-import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
+import { VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
 
-export const useHasVoucher = (address: Address | undefined, marketId: Address, price: BigNumber) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-
+export const useHasVoucher = (address: Address | undefined, marketId: Address, chainId: number, price: BigNumber) => {
 	const { data } = useContractReads({
 		contracts: [
 			{
-				address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
+				address: address && VOUCHER_MANAGER_ADDRESSES[chainId],
 				abi: VoucherManagerAbi,
 				functionName: 'balance',
 				args: [address],
+				chainId,
 			},
 			{
-				address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
+				address: address && VOUCHER_MANAGER_ADDRESSES[chainId],
 				abi: VoucherManagerAbi,
 				functionName: 'marketsWhitelist',
 				args: [marketId],
+				chainId,
 			},
 		],
 	})

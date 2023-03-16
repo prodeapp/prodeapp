@@ -25,6 +25,7 @@ import ReferralLink from '@/components/MarketView/ReferralLink'
 import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
 import { useMarket } from '@/hooks/useMarket'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
@@ -42,8 +43,11 @@ function a11yProps(index: number) {
 type MarketSections = 'bet' | 'bets' | 'results' | 'stats'
 
 function MarketsView() {
-	const { id } = useParams()
-	const { isLoading, data: market } = useMarket(String(id) as Address)
+	const params = useParams()
+	const id = params.id as Address
+	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
+
+	const { isLoading, data: market } = useMarket(id, chainId)
 	const [section, setSection] = useState<MarketSections>('bets')
 	const [searchParams] = useSearchParams()
 	const [onlyMyBets, setOnlyMyBets] = useState(false)
@@ -54,7 +58,7 @@ function MarketsView() {
 		const referralId = searchParams.get('referralId')
 
 		if (referralId) {
-			window.localStorage.setItem(getReferralKey(String(id)), referralId)
+			window.localStorage.setItem(getReferralKey(id), referralId)
 		}
 	}, [searchParams, id])
 
@@ -67,11 +71,7 @@ function MarketsView() {
 	}
 
 	if (!market) {
-		return searchParams.get('new') === '1' ? (
-			<div>
-				<Trans id='This market was just created, please wait a few seconds for it to be indexed.' />
-			</div>
-		) : (
+		return (
 			<div>
 				<Trans id='Market not found' />
 			</div>
@@ -81,7 +81,7 @@ function MarketsView() {
 	const shareUrl = getTwitterShareUrl(
 		i18n._(`Check this market on @prode_eth: {0} {1}`, {
 			0: market.name,
-			1: getMarketUrl(market.id),
+			1: getMarketUrl(market.id, chainId),
 		})
 	)
 
@@ -101,7 +101,7 @@ function MarketsView() {
 			>
 				<GridLeftColumn item xs={12} lg={4}>
 					<div>
-						<MarketStatus marketId={market.id} />
+						<MarketStatus marketId={market.id} chainId={chainId} />
 						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>{market.name}</h2>
 
 						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && (
@@ -123,7 +123,7 @@ function MarketsView() {
 								<div style={{ fontWeight: 600, marginBottom: 5 }}>
 									<Trans id='Market verification' />:
 								</div>
-								<MarketCurateStatus marketHash={market.hash} marketId={market.id} />
+								<MarketCurateStatus marketHash={market.hash} marketId={market.id} chainId={chainId} />
 							</Grid>
 							<Grid item xs={6} md={6} sx={{ pl: 2 }}>
 								<div style={{ marginBottom: 5 }}>
@@ -132,7 +132,7 @@ function MarketsView() {
 									</a>
 								</div>
 								<div>
-									<ReferralLink marketId={market.id} />
+									<ReferralLink marketId={market.id} chainId={chainId} />
 								</div>
 							</Grid>
 						</Grid>
@@ -140,6 +140,7 @@ function MarketsView() {
 						{section !== 'bet' && (
 							<PlaceBet
 								market={market}
+								chainId={chainId}
 								onBetClick={() => setSection('bet')}
 								onResultsClick={() => setSection('results')}
 							/>
@@ -149,7 +150,7 @@ function MarketsView() {
 				<Grid item xs={12} lg={8}>
 					{section !== 'bet' && (
 						<>
-							<MarketInfo market={market} />
+							<MarketInfo market={market} chainId={chainId} />
 
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<Tabs value={section} onChange={handleChange} aria-label='Market sections' sx={{ marginLeft: '20px' }}>
@@ -173,11 +174,11 @@ function MarketsView() {
 								)}
 							</div>
 
-							{section === 'results' && <Results marketId={market.id} />}
+							{section === 'results' && <Results marketId={market.id} chainId={chainId} />}
 
-							{section === 'bets' && <Bets marketId={market.id} onlyMyBets={onlyMyBets} />}
+							{section === 'bets' && <Bets marketId={market.id} onlyMyBets={onlyMyBets} chainId={chainId} />}
 
-							{section === 'stats' && <Stats marketId={market.id} />}
+							{section === 'stats' && <Stats marketId={market.id} chainId={chainId} />}
 						</>
 					)}
 
@@ -193,7 +194,7 @@ function MarketsView() {
 							>
 								<ArrowRightIcon style={{ marginRight: 10, transform: 'rotate(180deg)' }} /> Return to the market
 							</Button>
-							<BetForm market={market} cancelHandler={() => setSection('bets')} />
+							<BetForm market={market} chainId={chainId} cancelHandler={() => setSection('bets')} />
 						</Box>
 					)}
 				</Grid>

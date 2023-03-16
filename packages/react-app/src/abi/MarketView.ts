@@ -11,6 +11,11 @@ export const MarketViewAbi = [
 				name: '_keyValue',
 				type: 'address',
 			},
+			{
+				internalType: 'contract ILiquidityFactory',
+				name: '_liquidityFactory',
+				type: 'address',
+			},
 		],
 		stateMutability: 'nonpayable',
 		type: 'constructor',
@@ -23,6 +28,124 @@ export const MarketViewAbi = [
 				internalType: 'uint256',
 				name: '',
 				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'SETTLED_TO_SOON',
+		outputs: [
+			{
+				internalType: 'bytes32',
+				name: '',
+				type: 'bytes32',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IKeyValue',
+				name: '_keyValue',
+				type: 'address',
+			},
+		],
+		name: 'changeKeyValue',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: '_owner',
+				type: 'address',
+			},
+		],
+		name: 'changeOwner',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IRealityRegistry',
+				name: '_realityRegistry',
+				type: 'address',
+			},
+		],
+		name: 'changeRealityRegistry',
+		outputs: [],
+		stateMutability: 'nonpayable',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: 'tokenId',
+				type: 'uint256',
+			},
+			{
+				internalType: 'string',
+				name: 'marketName',
+				type: 'string',
+			},
+		],
+		name: 'getBetByToken',
+		outputs: [
+			{
+				components: [
+					{
+						internalType: 'address',
+						name: 'marketId',
+						type: 'address',
+					},
+					{
+						internalType: 'string',
+						name: 'marketName',
+						type: 'string',
+					},
+					{
+						internalType: 'uint256',
+						name: 'tokenId',
+						type: 'uint256',
+					},
+					{
+						internalType: 'address',
+						name: 'owner',
+						type: 'address',
+					},
+					{
+						internalType: 'string',
+						name: 'ownerName',
+						type: 'string',
+					},
+					{
+						internalType: 'uint256',
+						name: 'points',
+						type: 'uint256',
+					},
+					{
+						internalType: 'bytes32[]',
+						name: 'predictions',
+						type: 'bytes32[]',
+					},
+				],
+				internalType: 'struct MarketView.BetInfo',
+				name: 'betInfo',
+				type: 'tuple',
 			},
 		],
 		stateMutability: 'view',
@@ -257,6 +380,48 @@ export const MarketViewAbi = [
 				name: 'eventsInfo',
 				type: 'tuple',
 			},
+			{
+				components: [
+					{
+						internalType: 'address',
+						name: 'id',
+						type: 'address',
+					},
+					{
+						internalType: 'address',
+						name: 'creator',
+						type: 'address',
+					},
+					{
+						internalType: 'uint256',
+						name: 'creatorFee',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'pointsToWin',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'betMultiplier',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'totalDeposits',
+						type: 'uint256',
+					},
+					{
+						internalType: 'uint256',
+						name: 'prizePool',
+						type: 'uint256',
+					},
+				],
+				internalType: 'struct MarketView.LiquidityInfo',
+				name: 'liquidityInfo',
+				type: 'tuple',
+			},
 		],
 		stateMutability: 'view',
 		type: 'function',
@@ -312,6 +477,174 @@ export const MarketViewAbi = [
 				internalType: 'struct MarketView.BetInfo[]',
 				name: '',
 				type: 'tuple[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarketFactory',
+				name: 'marketFactory',
+				type: 'address',
+			},
+		],
+		name: 'getMarketFactoryAttrs',
+		outputs: [
+			{
+				internalType: 'address',
+				name: 'arbitrator',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: 'realitio',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: 'timeout',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+		],
+		name: 'getNumOfEventsWithAnswer',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: 'count',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: 'managementReward',
+				type: 'uint256',
+			},
+			{
+				internalType: 'uint256',
+				name: 'fee',
+				type: 'uint256',
+			},
+		],
+		name: 'getPool',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: 'pool',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: '_tokenID',
+				type: 'uint256',
+			},
+		],
+		name: 'getPredictions',
+		outputs: [
+			{
+				internalType: 'bytes32[]',
+				name: 'predictions',
+				type: 'bytes32[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+		],
+		name: 'getPrizes',
+		outputs: [
+			{
+				internalType: 'uint256[]',
+				name: '',
+				type: 'uint256[]',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'bytes32',
+				name: 'questionId',
+				type: 'bytes32',
+			},
+			{
+				internalType: 'contract RealityETH_v3_0',
+				name: 'realitio',
+				type: 'address',
+			},
+		],
+		name: 'getQuestionId',
+		outputs: [
+			{
+				internalType: 'bytes32',
+				name: '',
+				type: 'bytes32',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+			{
+				internalType: 'uint256',
+				name: '_tokenID',
+				type: 'uint256',
+			},
+		],
+		name: 'getScore',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: 'totalPoints',
+				type: 'uint256',
 			},
 		],
 		stateMutability: 'view',
@@ -384,6 +717,51 @@ export const MarketViewAbi = [
 		outputs: [
 			{
 				internalType: 'contract IKeyValue',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'liquidityFactory',
+		outputs: [
+			{
+				internalType: 'contract ILiquidityFactory',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'contract IMarket',
+				name: 'market',
+				type: 'address',
+			},
+		],
+		name: 'numberOfQuestions',
+		outputs: [
+			{
+				internalType: 'uint256',
+				name: 'count',
+				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'owner',
+		outputs: [
+			{
+				internalType: 'address',
 				name: '',
 				type: 'address',
 			},

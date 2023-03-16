@@ -20,7 +20,7 @@ import {
 	REALITY_TEMPLATE_SINGLE_SELECT,
 } from '@/lib/reality'
 
-import { useSendRecklessTx } from './useSendTx'
+import { useSendTx } from './useSendTx'
 
 export const PLACEHOLDER_REGEX = /\$\d/g
 
@@ -46,6 +46,10 @@ export type MarketFormStep2Values = {
 	price: number
 	manager: Address | ''
 	managementFee: number
+	addLP: boolean
+	lpCreatorFee: number
+	lpBetMultiplier: number
+	lpPointsToWin: number
 }
 
 type EventData = {
@@ -56,7 +60,7 @@ type EventData = {
 export function getEventData(questionPlaceholder: string, answers: Answers, marketName: string): EventData {
 	return {
 		question: questionPlaceholder.replace('[market]', marketName),
-		answers: answers.map(answerPlaceholder => answerPlaceholder.value),
+		answers: answers.map((answerPlaceholder) => answerPlaceholder.value),
 	}
 }
 
@@ -68,17 +72,18 @@ function orderByQuestionId(
 	realitio: string,
 	marketFactory: string
 ): MarketFactoryV2MetaDataStruct[] {
-	const questionsDataWithQuestionId = rawQuestionsData.map(rawQuestionData => {
+	const questionsDataWithQuestionId = rawQuestionsData.map((rawQuestionData) => {
 		return {
 			questionId: getQuestionId(rawQuestionData, arbitrator, timeout, minBond, realitio, marketFactory),
 			metadata: rawQuestionData.metadata,
 		}
 	})
 
-	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map(qd => qd.metadata)
+	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map((qd) => qd.metadata)
 }
 
 interface UseMarketFormReturn {
+	isPrepared: boolean
 	isLoading: boolean
 	isSuccess: boolean
 	error: Error | null
@@ -86,16 +91,20 @@ interface UseMarketFormReturn {
 	marketId: string
 }
 
-export function getTxParams(
+export function getTxArgs(
 	step1State: MarketFormStep1Values,
 	step2State: MarketFormStep2Values,
 	factoryAttrs: MarketFactoryAttributes,
 	minBond: BigNumber
 ) {
 	const utcClosingTime = zonedTimeToUtc(step1State.closingTime, 'UTC')
-	const closingTime = Math.floor(utcClosingTime.getTime() / 1000)
+	const closingTime = BigNumber.from(Math.floor(utcClosingTime.getTime() / 1000) - 1)
 
-	const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map(event => {
+	const creator = step2State.manager as Address
+	const creatorFee = BigNumber.from(Math.round((step2State.managementFee * DIVISOR) / 100))
+	const price = parseUnits(String(step2State.price), 18)
+
+	const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map((event) => {
 		const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market)
 		return {
 			question: encodeQuestionText(
@@ -116,36 +125,85 @@ export function getTxParams(
 		}
 	})
 
-	return [
-		step1State.market,
-		'PRODE',
-		step2State.manager as Address,
-		BigNumber.from(Math.round((step2State.managementFee * DIVISOR) / 100)),
-		BigNumber.from(closingTime - 1),
-		parseUnits(String(step2State.price), 18),
+	const questionsMetadata = orderByQuestionId(
+		questionsData,
+		String(factoryAttrs?.arbitrator),
+		Number(factoryAttrs?.timeout),
 		minBond,
-		orderByQuestionId(
-			questionsData,
-			String(factoryAttrs?.arbitrator),
-			Number(factoryAttrs?.timeout),
+		String(factoryAttrs?.realitio),
+		factoryAttrs.factory
+	)
+
+	const prizeWeights = step2State.prizeWeights.map((pw) => Math.round((pw.value * DIVISOR) / 100))
+
+	if (step2State.addLP) {
+		return [
+			step1State.market,
+			'PRODE',
+			creatorFee,
+			closingTime,
+			price,
 			minBond,
-			String(factoryAttrs?.realitio),
-			factoryAttrs.factory
-		),
-		step2State.prizeWeights.map(pw => Math.round((pw.value * DIVISOR) / 100)),
-	]
+			questionsMetadata,
+			prizeWeights,
+			[
+				creator,
+				BigNumber.from(Math.round((step2State.lpCreatorFee * DIVISOR) / 100)),
+				BigNumber.from(1000000000000 /*step2State.lpBetMultiplier*/),
+				BigNumber.from(step1State.events.length /*step2State.lpPointsToWin*/),
+			],
+		]
+	}
+
+	return [step1State.market, 'PRODE', creator, creatorFee, closingTime, price, minBond, questionsMetadata, prizeWeights]
 }
 
-export default function useMarketForm(): UseMarketFormReturn {
+export function getTxParams(
+	factoryV2Address: Address,
+	step1State: MarketFormStep1Values,
+	step2State: MarketFormStep2Values,
+	factoryAttrs: MarketFactoryAttributes | undefined,
+	minBond: BigNumber,
+	prepareTx: boolean
+) {
+	if (!prepareTx || !factoryAttrs) {
+		return {}
+	}
+
+	const functionName: 'createMarketWithLiquidityPool' | 'createMarket' = step2State.addLP
+		? 'createMarketWithLiquidityPool'
+		: 'createMarket'
+
+	return {
+		address: factoryV2Address,
+		abi: MarketFactoryV2Abi,
+		functionName,
+		args: getTxArgs(step1State, step2State, factoryAttrs, minBond),
+	}
+}
+
+export default function useMarketForm(
+	step1State: MarketFormStep1Values,
+	step2State: MarketFormStep2Values,
+	prepareTx: boolean
+): UseMarketFormReturn {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const [marketId, setMarketId] = useState<Address | ''>('')
 	const { data: factoryAttrs } = useMarketFactoryAttributes()
 
-	const { isSuccess, error, write, receipt } = useSendRecklessTx({
-		address: MARKET_FACTORY_V2_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_V2_ADDRESSES],
-		abi: MarketFactoryV2Abi,
-		functionName: 'createMarket',
-	})
+	const minBond = MIN_BOND_VALUE[chain.id as keyof typeof MIN_BOND_VALUE]
+
+	const { isPrepared, isSuccess, error, write, receipt } = useSendTx(
+		// @ts-ignore
+		getTxParams(
+			MARKET_FACTORY_V2_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_V2_ADDRESSES],
+			step1State,
+			step2State,
+			factoryAttrs,
+			minBond,
+			prepareTx
+		)
+	)
 
 	useEffect(() => {
 		if (receipt) {
@@ -159,15 +217,12 @@ export default function useMarketForm(): UseMarketFormReturn {
 		}
 	}, [receipt])
 
-	const createMarket = async (step1State: MarketFormStep1Values, step2State: MarketFormStep2Values) => {
-		const minBond = MIN_BOND_VALUE[chain.id as keyof typeof MIN_BOND_VALUE]
-
-		write!({
-			recklesslySetUnpreparedArgs: getTxParams(step1State, step2State, factoryAttrs!, minBond),
-		})
+	const createMarket = async () => {
+		write!()
 	}
 
 	return {
+		isPrepared,
 		isLoading: !factoryAttrs?.arbitrator || !factoryAttrs?.realitio || !factoryAttrs?.timeout,
 		isSuccess,
 		error,

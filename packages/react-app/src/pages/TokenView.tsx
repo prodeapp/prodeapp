@@ -9,12 +9,18 @@ import { Link as RouterLink, useParams } from 'react-router-dom'
 import BetDetails from '@/components/Bet/BetDetails'
 import { useBet } from '@/hooks/useBet'
 import { useBetToken } from '@/hooks/useBetToken'
+import { DEFAULT_CHAIN } from '@/lib/config'
+import { paths } from '@/lib/paths'
 
 function TokenView() {
-	const { id, tokenId } = useParams()
-	const { isLoading, data: bet } = useBet(String(id) as Address, Number(tokenId))
+	const params = useParams()
+	const id = params.id as Address
+	const tokenId = Number(params.tokenId)
+	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
 
-	const { data: image = '' } = useBetToken(String(id), BigNumber.from(tokenId))
+	const { isLoading, data: bet } = useBet(id, tokenId)
+
+	const { data: image = '' } = useBetToken(id, BigNumber.from(tokenId))
 
 	if (isLoading) {
 		return (
@@ -39,12 +45,12 @@ function TokenView() {
 					)}
 
 					<div style={{ textAlign: 'center', margin: '20px 0' }}>
-						<Button component={RouterLink} to={`/markets/${id}`}>
+						<Button component={RouterLink} to={paths.market(String(id), Number(chainId))}>
 							<Trans id='Go to market' />
 						</Button>
 					</div>
 
-					<BetDetails bet={bet} />
+					<BetDetails bet={bet} chainId={chainId} />
 				</Grid>
 			</Grid>
 		</>

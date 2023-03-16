@@ -5,7 +5,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { Address } from '@wagmi/core'
 import React, { useEffect, useState } from 'react'
-import { useNetwork } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ReactComponent as ArrowRightIcon } from '@/assets/icons/arrow-right.svg'
@@ -16,7 +15,7 @@ import { Event } from '@/graphql/subgraph'
 import { useEvents } from '@/hooks/useEvents'
 import { usePhone } from '@/hooks/useResponsive'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
+import { REALITIO_ADDRESSES } from '@/lib/config'
 import { getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { queryClient } from '@/lib/react-query'
@@ -135,12 +134,11 @@ function AnswerColumn(event: Event, finalized: boolean) {
 	)
 }
 
-function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+function ActionColumn(event: Event, chainId: number, finalized: boolean, clickHandler: () => void) {
 	const { locale } = useI18nContext()
 
 	const { isSuccess, write, error } = useSendRecklessTx({
-		address: REALITIO_ADDRESSES[chain.id as keyof typeof REALITIO_ADDRESSES],
+		address: REALITIO_ADDRESSES[chainId],
 		abi: RealityAbi,
 		functionName: 'reopenQuestion',
 	})
@@ -207,8 +205,8 @@ function ActionColumn(event: Event, finalized: boolean, clickHandler: () => void
 	)
 }
 
-export default function Results({ marketId }: { marketId: Address }) {
-	const { data: events } = useEvents(marketId)
+export default function Results({ marketId, chainId }: { marketId: Address; chainId: number }) {
+	const { data: events } = useEvents(marketId, chainId)
 	const [currentEvent, setCurrentEvent] = useState<Event | undefined>()
 	const [openModal, setOpenModal] = useState(false)
 	const isPhone = usePhone()
@@ -266,7 +264,7 @@ export default function Results({ marketId }: { marketId: Address }) {
 										</Box>
 										<Box sx={smallColumnsSx}>{AnswerColumn(event, finalized)}</Box>
 										<Box sx={smallColumnsSx}>
-											{ActionColumn(event, finalized, () => {
+											{ActionColumn(event, chainId, finalized, () => {
 												setCurrentEvent(event)
 												setOpenModal(true)
 											})}

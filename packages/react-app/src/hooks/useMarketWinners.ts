@@ -45,16 +45,16 @@ export function getMarketWinners(marketPoints: MarketPoint[], totalPrizes: numbe
 		winners.push(Object.assign({ ranking: currentRanking, prizes: [] }, marketPoint))
 	}
 
-	return winners.map(winner => {
+	return winners.map((winner) => {
 		winner.prizes = rankingPrizes[winner.ranking]
 
 		return winner
 	})
 }
 
-export const useMarketWinners = (marketId: Address): RankedWinners[] => {
-	const { data: marketPoints } = useMarketPoints(marketId)
-	const { data: market } = useMarket(marketId)
+export const useMarketWinners = (marketId: Address, chainId: number): RankedWinners[] => {
+	const { data: marketPoints } = useMarketPoints(marketId, chainId)
+	const { data: market } = useMarket(marketId, chainId)
 
 	if (!market || !marketPoints) {
 		return []
@@ -63,7 +63,7 @@ export const useMarketWinners = (marketId: Address): RankedWinners[] => {
 	return getMarketWinners(marketPoints, market.prizes.length)
 }
 
-export function useIndexedMarketWinners(marketId: Address) {
-	const marketWinners = useMarketWinners(marketId)
+export function useIndexedMarketWinners(marketId: Address, chainId: number) {
+	const marketWinners = useMarketWinners(marketId, chainId)
 	return useMemo(() => indexObjectsByKey(marketWinners || [], 'tokenID'), [marketWinners])
 }

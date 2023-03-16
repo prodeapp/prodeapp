@@ -15,9 +15,9 @@ type MarketStatus =
 	| 'WAITING_REGISTER_POINTS'
 	| 'FINALIZED'
 
-export const useMarketStatus = (marketId: Address) => {
-	const { data: market } = useMarket(marketId)
-	const { data: events } = useEvents(marketId)
+export const useMarketStatus = (marketId: Address, chainId: number) => {
+	const { data: market } = useMarket(marketId, chainId)
+	const { data: events } = useEvents(marketId, chainId)
 
 	return useQuery<MarketStatus | '', Error>(
 		['useMarketStatus', marketId],
@@ -31,7 +31,7 @@ export const useMarketStatus = (marketId: Address) => {
 				return 'ACCEPTING_BETS'
 			}
 
-			const hasPendingAnswers = events.filter(q => !isFinalized(q)).length > 0
+			const hasPendingAnswers = events.filter((q) => !isFinalized(q)).length > 0
 
 			if (hasPendingAnswers) {
 				return 'WAITING_ANSWERS'

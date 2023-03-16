@@ -2,13 +2,12 @@ import { Trans } from '@lingui/react'
 import { Skeleton } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
 
 import { ReactComponent as ShieldCheckIcon } from '@/assets/icons/shield-check.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
 import { CurateItem } from '@/graphql/subgraph'
 import { useCurateItems } from '@/hooks/useCurateItems'
-import { CURATE_REGISTRY_ADDRESSES, DEFAULT_CHAIN } from '@/lib/config'
+import { CURATE_REGISTRY_ADDRESSES } from '@/lib/config'
 
 function getActiveItem(curateItems?: CurateItem[]) {
 	if (!curateItems || curateItems.length === 0) {
@@ -16,7 +15,7 @@ function getActiveItem(curateItems?: CurateItem[]) {
 	}
 
 	// check for registered items
-	const registeredItems = curateItems.filter(item => item.status === 'Registered')
+	const registeredItems = curateItems.filter((item) => item.status === 'Registered')
 
 	if (registeredItems.length > 0) {
 		return registeredItems[0]
@@ -24,7 +23,7 @@ function getActiveItem(curateItems?: CurateItem[]) {
 
 	// check for pending items
 	const pendingItems = curateItems.filter(
-		item => item.status === 'RegistrationRequested' || item.status === 'ClearingRequested'
+		(item) => item.status === 'RegistrationRequested' || item.status === 'ClearingRequested'
 	)
 
 	if (pendingItems.length > 0) {
@@ -34,10 +33,17 @@ function getActiveItem(curateItems?: CurateItem[]) {
 	return null
 }
 
-function MarketCurateStatus({ marketHash, marketId }: { marketHash: string; marketId: string }) {
+function MarketCurateStatus({
+	marketHash,
+	marketId,
+	chainId,
+}: {
+	marketHash: string
+	marketId: string
+	chainId: number
+}) {
 	const { data: curateItems, error, isLoading } = useCurateItems(marketHash)
 	const theme = useTheme()
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 
 	if (error) {
 		return null
@@ -68,12 +74,7 @@ function MarketCurateStatus({ marketHash, marketId }: { marketHash: string; mark
 				</div>
 			) : (
 				<a
-					href={
-						'https://curate.kleros.io/tcr/100/' +
-						CURATE_REGISTRY_ADDRESSES[chain.id as keyof typeof CURATE_REGISTRY_ADDRESSES] +
-						'/' +
-						activeItem.id
-					}
+					href={'https://curate.kleros.io/tcr/100/' + CURATE_REGISTRY_ADDRESSES[chainId] + '/' + activeItem.id}
 					target='_blank'
 					rel='noreferrer'
 				>

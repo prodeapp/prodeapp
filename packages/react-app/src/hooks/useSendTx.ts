@@ -48,7 +48,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 
 	const { isLoading: isTxLoading, error } = useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess: data => {
+		onSuccess: (data) => {
 			const isSuccess = data.status === 1
 			setIsTxSuccess(isSuccess)
 			setIsTxError(!isSuccess)
@@ -65,6 +65,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 		isLoading: isWriteLoading || isTxLoading,
 		isSuccess: isTxSuccess,
 		isError: isWriteError || isTxError,
+		isPrepared: typeof write !== 'undefined',
 		error,
 		write,
 		receipt,
@@ -99,7 +100,7 @@ export const useSendRecklessTx = <
 
 	const { isLoading: isTxLoading, error } = useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess: data => {
+		onSuccess: (data) => {
 			const isSuccess = data.status === 1
 			setIsTxSuccess(isSuccess)
 			setIsTxError(!isSuccess)

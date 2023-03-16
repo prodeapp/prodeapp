@@ -108,7 +108,7 @@ export default function Profile() {
 				</BoxRow>
 			</BoxWrapper>
 
-			{section === 'bets' && <Bets playerId={playerId} />}
+			{section === 'bets' && <Bets playerId={playerId} chainId={chain.id} />}
 
 			{section === 'referrals' && <Referrals provider={playerId} />}
 

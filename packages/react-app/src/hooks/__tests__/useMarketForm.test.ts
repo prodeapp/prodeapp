@@ -2,7 +2,7 @@ import { parseUnits } from '@ethersproject/units'
 import { expect, test } from 'vitest'
 
 import { MarketFactoryAttributes } from '@/hooks/useMarketFactory'
-import { getTxParams, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
+import { getTxArgs, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
 
 test('questions are sent in correct order', () => {
 	const step1State: MarketFormStep1Values = {
@@ -65,6 +65,10 @@ test('questions are sent in correct order', () => {
 		manager: '0x0000000000000000000000000000000000000000',
 		managementFee: 3,
 		price: 0.01,
+		addLP: false,
+		lpCreatorFee: 0,
+		lpBetMultiplier: 0,
+		lpPointsToWin: 0,
 	}
 
 	const factoryAttrs: MarketFactoryAttributes = {
@@ -74,7 +78,7 @@ test('questions are sent in correct order', () => {
 		factory: '0xFE6bd7451E92DeddD1096430e659e8af882D2eb7',
 	}
 
-	const params = getTxParams(step1State, step2State, factoryAttrs, parseUnits('0.0001', 18))
+	const params = getTxArgs(step1State, step2State, factoryAttrs, parseUnits('0.0001', 18))
 
 	// @ts-ignore
 	expect(params[7][0].title).toEqual('Who will win the match between A and B at Test Market?')

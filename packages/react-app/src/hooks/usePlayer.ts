@@ -17,6 +17,7 @@ export const usePlayer = (playerId: Address) => {
 				abi: KeyValueAbi,
 				functionName: 'username',
 				args: [playerId],
+				chainId: chain.id,
 			})
 
 			return {

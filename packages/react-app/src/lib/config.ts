@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { AddressZero } from '@ethersproject/constants'
 import { parseUnits } from '@ethersproject/units'
 import { Address } from '@wagmi/core'
 
@@ -25,13 +24,13 @@ export const MARKET_FACTORY_ADDRESSES: AddressMap = {
 }
 
 export const MARKET_FACTORY_V2_ADDRESSES: AddressMap = {
-	[NetworkId.GNOSIS]: '0xa0eF856337304eC1c7F39F58795b11F83251d526',
-	[NetworkId.POLYGON_TESTNET]: '0x34Dc43dC73C6411E6f1437B21D1f1Cbe9eC492eA',
+	[NetworkId.GNOSIS]: '0x364Bc6fCdF1D2Ce014010aB4f479a892a8736014',
+	[NetworkId.POLYGON_TESTNET]: '0xF25455008BD7a750EBFeEC73d4E64114dA9449F5',
 }
 
 export const MARKET_VIEW_ADDRESSES: AddressMap = {
-	[NetworkId.GNOSIS]: '0xB66a6134C3164e2C797D835043006E452D6c8b7e',
-	[NetworkId.POLYGON_TESTNET]: '0x2183190788594B4210a02e93C7943E5B100B98D6',
+	[NetworkId.GNOSIS]: '0xc2a5Ee5041a3E99B284A8Ca2FFeC62B4611cC3B0',
+	[NetworkId.POLYGON_TESTNET]: '0x288BC7c7C18Ba359A0Cc2b89A52c30262535C9a1',
 }
 
 export const REALITIO_ADDRESSES: AddressMap = {
@@ -51,7 +50,7 @@ export const KEY_VALUE_ADDRESSES: AddressMap = {
 
 export const VOUCHER_MANAGER_ADDRESSES: AddressMap = {
 	[NetworkId.GNOSIS]: '0x10Df43e85261df385B2b865705738233626a21Ad',
-	[NetworkId.POLYGON_TESTNET]: AddressZero,
+	[NetworkId.POLYGON_TESTNET]: '0x6F00370D5CC9e50Fb47c05E0f5b4C27c58918BB6',
 }
 
 export const SVG_AD_FACTORY_ADDRESSES: AddressMap = {

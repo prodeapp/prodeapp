@@ -18,10 +18,18 @@ import { useBets } from '@/hooks/useBets'
 import { useIndexedMarketWinners } from '@/hooks/useMarketWinners'
 import { formatPlayerName, getMedalColor } from '@/lib/helpers'
 
-export default function Bets({ marketId, onlyMyBets }: { marketId: Address; onlyMyBets?: boolean }) {
+export default function Bets({
+	marketId,
+	onlyMyBets,
+	chainId,
+}: {
+	marketId: Address
+	onlyMyBets?: boolean
+	chainId: number
+}) {
 	const { address } = useAccount()
-	const { isLoading, error, data: bets } = useBets({ marketId })
-	const marketWinners = useIndexedMarketWinners(marketId)
+	const { isLoading, error, data: bets } = useBets({ marketId, chainId })
+	const marketWinners = useIndexedMarketWinners(marketId, chainId)
 	const [openModal, setOpenModal] = useState(false)
 	const [bet, setBet] = useState<Bet | undefined>()
 
@@ -46,7 +54,7 @@ export default function Bets({ marketId, onlyMyBets }: { marketId: Address; only
 		<>
 			{bet && (
 				<AppDialog open={openModal} handleClose={handleClose} title={i18n._('Details')}>
-					<BetDetails bet={bet} />
+					<BetDetails bet={bet} chainId={chainId} />
 				</AppDialog>
 			)}
 			<div>

@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
-import { Address } from '@wagmi/core'
-import { readContracts, useNetwork } from 'wagmi'
+import { Address, readContract } from '@wagmi/core'
+import { useNetwork } from 'wagmi'
 
-import { MarketFactoryAbi } from '@/abi/MarketFactory'
+import { MarketViewAbi } from '@/abi/MarketView'
 import { MARKET_FACTORY_FIELDS, MarketFactory } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES, MARKET_VIEW_ADDRESSES } from '@/lib/config'
 
 const query = `
     ${MARKET_FACTORY_FIELDS}
@@ -41,31 +41,19 @@ export const useMarketFactoryAttributes = () => {
 	const factoryAddress = MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
 
 	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chain.id], async () => {
-		const data = await readContracts({
-			contracts: [
-				{
-					address: factoryAddress,
-					abi: MarketFactoryAbi,
-					functionName: 'arbitrator',
-				},
-				{
-					address: factoryAddress,
-					abi: MarketFactoryAbi,
-					functionName: 'realitio',
-				},
-				{
-					address: factoryAddress,
-					abi: MarketFactoryAbi,
-					functionName: 'QUESTION_TIMEOUT',
-				},
-			],
+		const attrs = await readContract({
+			address: MARKET_VIEW_ADDRESSES[chain.id],
+			abi: MarketViewAbi,
+			functionName: 'getMarketFactoryAttrs',
+			args: [factoryAddress],
+			chainId: chain.id,
 		})
 
 		return {
 			factory: factoryAddress,
-			arbitrator: data?.[0] || '',
-			realitio: data?.[1] || '',
-			timeout: data?.[2] || 0,
+			arbitrator: attrs.arbitrator,
+			realitio: attrs.realitio,
+			timeout: attrs.timeout.toNumber(),
 		}
 	})
 }

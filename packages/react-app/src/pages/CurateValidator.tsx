@@ -40,7 +40,7 @@ const fetchMarketByHash = async (chainId: number, hash: string): Promise<Market 
 
 	if (!response) throw new Error('No response from TheGraph')
 
-	return getMarket(chainId, response.data.markets[0].id)
+	return getMarket(response.data.markets[0].id, chainId)
 }
 
 interface ValidationResult {
@@ -61,7 +61,7 @@ function CurateValidator() {
 
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const [marketId, setMarketId] = useState('')
-	const { data: events } = useEvents(marketId as Address)
+	const { data: events } = useEvents(marketId as Address, chain.id)
 	const [results, setResults] = useState<ValidationResult[]>([])
 	const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null)
 
@@ -104,7 +104,7 @@ function CurateValidator() {
 
 			// validate hash
 			_results.push(
-				getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
+				getQuestionsHash(events.map((event) => event.id)) !== itemProps.Hash
 					? { type: 'error', message: i18n._('Invalid market hash') }
 					: { type: 'success', message: i18n._('Valid market hash') }
 			)
@@ -117,7 +117,7 @@ function CurateValidator() {
 					? {
 							type: 'error',
 							message: i18n._("This market has more than 1 submissions. ItemId's: {0}", {
-								0: marketCurations.map(tc => tc.id).join(', '),
+								0: marketCurations.map((tc) => tc.id).join(', '),
 							}),
 					  }
 					: {

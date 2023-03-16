@@ -6,15 +6,15 @@ import { useAccount } from 'wagmi'
 import { ReactComponent as LinkIcon } from '@/assets/icons/link.svg'
 import { getMarketUrl } from '@/lib/helpers'
 
-const copyReferralLink = async (marketId: string, account: string) => {
+const copyReferralLink = async (marketId: string, chainId: number, account: string) => {
 	try {
-		await navigator.clipboard.writeText(`${getMarketUrl(marketId)}?referralId=${account || ''}`)
+		await navigator.clipboard.writeText(`${getMarketUrl(marketId, chainId)}?referralId=${account || ''}`)
 	} catch (err) {
 		alert('Unable to copy')
 	}
 }
 
-function ReferralLink({ marketId }: { marketId: string }) {
+function ReferralLink({ marketId, chainId }: { marketId: string; chainId: number }) {
 	const { address } = useAccount()
 
 	const [textCopied, setTextCopied] = useState(false)
@@ -31,7 +31,7 @@ function ReferralLink({ marketId }: { marketId: string }) {
 		}
 
 		setTextCopied(true)
-		await copyReferralLink(marketId, address)
+		await copyReferralLink(marketId, chainId, address)
 		setTimeout(() => setTextCopied(false), 3000)
 	}
 

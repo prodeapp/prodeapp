@@ -39,6 +39,7 @@ export type BetFormValues = {
 
 type BetFormProps = {
 	market: Market
+	chainId: number
 	cancelHandler: () => void
 }
 
@@ -66,10 +67,10 @@ function BetNFT({ marketId, tokenId }: { marketId: string; tokenId: BigNumber })
 	)
 }
 
-export default function BetForm({ market, cancelHandler }: BetFormProps) {
+export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id)
+	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
 
 	const {
 		register,
@@ -93,7 +94,7 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ value: '', questionId: event.id }))
+		events && events.forEach((event) => append({ value: '', questionId: event.id }))
 	}, [events, append, remove])
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
@@ -101,6 +102,7 @@ export default function BetForm({ market, cancelHandler }: BetFormProps) {
 
 	const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(
 		market.id,
+		chainId,
 		market.price,
 		attribution,
 		outcomes

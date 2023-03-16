@@ -45,7 +45,7 @@ ReactDOM.render(
 										<Route element={<Layout />}>
 											<Route index element={<Home />} />
 											<Route path='markets'>
-												<Route path=':id'>
+												<Route path=':chainId/:id'>
 													<Route index element={<MarketsView />} />
 													<Route path='tournament' element={<Tournament />} />
 													<Route path='fund' element={<MarketsFund />} />

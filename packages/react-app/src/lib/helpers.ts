@@ -13,6 +13,7 @@ import { enGB, es } from 'date-fns/locale'
 
 import { AdBid, Event, Outcome } from '@/graphql/subgraph'
 import { NETWORK_TOKEN, NetworkId } from '@/lib/config'
+import { paths } from '@/lib/paths'
 
 import { DecimalBigNumber } from './DecimalBigNumber'
 import { ANSWERED_TOO_SOON, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT } from './reality'
@@ -118,7 +119,7 @@ export function getAnswerText(
 
 	if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
 		return getMultiSelectAnswers(BigNumber.from(currentAnswer).toNumber())
-			.map(answer => transOutcome(outcomes[answer] || noAnswerText))
+			.map((answer) => transOutcome(outcomes[answer] || noAnswerText))
 			.join(', ')
 	}
 
@@ -157,11 +158,11 @@ type FlattenedCategory = { id: string; text: string; isChild: boolean }
 
 export function getFlattenedCategories(): FlattenedCategory[] {
 	const data: FlattenedCategory[] = []
-	MARKET_CATEGORIES.forEach(category => {
+	MARKET_CATEGORIES.forEach((category) => {
 		data.push({ id: category.id, text: category.text, isChild: false })
 
 		category.children &&
-			category.children.forEach(subcategory => {
+			category.children.forEach((subcategory) => {
 				data.push({
 					id: subcategory.id,
 					text: subcategory.text,
@@ -184,11 +185,11 @@ export function getSubcategories(category: string): MarketCategory[] {
 }
 
 export function getCategoryText(id: string): string {
-	return getFlattenedCategories().filter(c => c.id === id)[0]?.text || ''
+	return getFlattenedCategories().filter((c) => c.id === id)[0]?.text || ''
 }
 
-export function getMarketUrl(marketId: string) {
-	return `${window.location.protocol}//${window.location.hostname}/#/markets/${marketId}`
+export function getMarketUrl(marketId: string, chainId: number) {
+	return `${window.location.protocol}//${window.location.hostname}/#${paths.market(marketId, chainId)}`
 }
 
 export function getReferralKey(marketId: string) {

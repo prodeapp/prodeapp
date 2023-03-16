@@ -1,13 +1,12 @@
 import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { Address, readContract, ReadContractResult } from '@wagmi/core'
-import { useNetwork } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
-import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
 
-export async function getMarket(chainId: number, marketId: Address): Promise<Market | undefined> {
+export async function getMarket(marketId: Address, chainId: number): Promise<Market | undefined> {
 	// TODO: check that this market was created by a whitelisted factory
 
 	const marketView = await readContract({
@@ -15,6 +14,7 @@ export async function getMarket(chainId: number, marketId: Address): Promise<Mar
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [marketId],
+		chainId,
 	})
 
 	if (marketView.id === AddressZero) {
@@ -25,7 +25,7 @@ export async function getMarket(chainId: number, marketId: Address): Promise<Mar
 }
 
 export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
-	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo] = marketView
+	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo, liquidityInfo] = marketView
 
 	return {
 		id,
@@ -33,7 +33,7 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 		hash: baseInfo.hash,
 		price: baseInfo.price,
 		pool: baseInfo.pool,
-		prizes: baseInfo.prizes.map(p => p.toNumber()),
+		prizes: baseInfo.prizes.map((p) => p.toNumber()),
 		manager: {
 			id: managerInfo.managerId,
 			managementRewards: managerInfo.managementRewards,
@@ -49,13 +49,21 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 		hasPendingAnswers: eventsInfo.hasPendingAnswers,
 		curated: baseInfo.curated,
 		creator: baseInfo.creator,
+		liquidityInfo: {
+			id: liquidityInfo.id,
+			creator: liquidityInfo.creator,
+			creatorFee: liquidityInfo.creatorFee.toNumber(),
+			pointsToWin: liquidityInfo.pointsToWin.toNumber(),
+			betMultiplier: liquidityInfo.betMultiplier,
+			totalDeposits: liquidityInfo.totalDeposits,
+			prizePool: liquidityInfo.prizePool,
+		},
 	}
 }
 
-export const useMarket = (marketId: Address) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	return useQuery<Market | undefined, Error>(['useMarket', marketId, chain.id], async () => {
-		const market = await getMarket(chain.id, marketId)
+export const useMarket = (marketId: Address, chainId: number) => {
+	return useQuery<Market | undefined, Error>(['useMarket', marketId, chainId], async () => {
+		const market = await getMarket(marketId, chainId)
 
 		if (!market) {
 			throw new Error('Market not found')
