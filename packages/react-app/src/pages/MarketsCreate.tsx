@@ -631,7 +631,7 @@ function PreviewStep({
 						setActiveStep={setActiveStep}
 						step={FormSteps.STEP_2}
 					/>
-					<PreviewText
+					{/*<PreviewText
 						title={i18n._('Bet Multiplier')}
 						value={step2State.lpBetMultiplier}
 						setActiveStep={setActiveStep}
@@ -642,7 +642,7 @@ function PreviewStep({
 						value={step2State.lpPointsToWin}
 						setActiveStep={setActiveStep}
 						step={FormSteps.STEP_2}
-					/>
+					/>*/}
 				</>
 			)}
 
