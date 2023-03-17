@@ -493,6 +493,9 @@ msgstr "Pozo"
 msgid "Pool prize"
 msgstr "Premio en pozo"
 
+msgid "Base Prize"
+msgstr "Premio Base"
+
 msgid "Previous"
 msgstr "Anterior"
 

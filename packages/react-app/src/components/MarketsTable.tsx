@@ -87,6 +87,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 				display: 'flex',
 				flexDirection: { xs: 'column', md: 'row' },
 				justifyContent: 'space-between',
+				height: '100%',
 			}}
 		>
 			<Box sx={{ p: '24px', paddingRight: { md: '15%' } }}>
@@ -167,19 +168,29 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 				</div>
 
 				<div>
-					<div>
-						<div>
-							<Trans id='Pool Prize' />
-						</div>
-						<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
-					</div>
-
 					{market.liquidityInfo.id !== AddressZero && (
-						<div style={{ marginTop: 10 }}>
-							<div>
-								<Trans id='Perfect Score Prize' />
+						<>
+							<div style={{ marginBottom: 10 }}>
+								<div>
+									<Trans id='Perfect Score Prize' />
+								</div>
+								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chain.id)}</div>
 							</div>
-							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chain.id)}</div>
+							<div>
+								<div>
+									<Trans id='Base Prize' />
+								</div>
+								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+							</div>
+						</>
+					)}
+
+					{market.liquidityInfo.id === AddressZero && (
+						<div>
+							<div>
+								<Trans id='Pool Prize' />
+							</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
 						</div>
 					)}
 				</div>

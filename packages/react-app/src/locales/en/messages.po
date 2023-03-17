@@ -493,6 +493,9 @@ msgstr "Pool"
 msgid "Pool prize"
 msgstr "Pool prize"
 
+msgid "Base Prize"
+msgstr "Base Prize"
+
 msgid "Previous"
 msgstr "Previous"
 

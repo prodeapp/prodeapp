@@ -31,9 +31,6 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 		)
 	}
 
-	const lpReward = market.pool.mul(market.managementFee).div(DIVISOR)
-	const minPrize = market.pool.sub(lpReward)
-
 	return (
 		<>
 			<Typography variant='p3' component='div'>
@@ -43,10 +40,10 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 				{formatAmount(market.liquidityInfo.prizePool, chainId)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
-				<Trans id='Pool Prize' />
+				<Trans id='Base Prize' />
 			</Typography>
 			<Typography variant='h5' component='h5'>
-				{formatAmount(minPrize, chainId)}
+				{formatAmount(market.pool, chainId)}
 			</Typography>
 		</>
 	)

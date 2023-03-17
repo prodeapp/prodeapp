@@ -4,6 +4,7 @@ import { Address, readContract, ReadContractResult } from '@wagmi/core'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
+import { DIVISOR } from '@/hooks/useMarketForm'
 import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
 
 export async function getMarket(marketId: Address, chainId: number): Promise<Market | undefined> {
@@ -27,12 +28,18 @@ export async function getMarket(marketId: Address, chainId: number): Promise<Mar
 export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
 	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo, liquidityInfo] = marketView
 
+	let pool = baseInfo.pool
+	if (liquidityInfo.id !== AddressZero) {
+		const lpReward = pool.mul(managerInfo.managementFee).div(DIVISOR)
+		pool = pool.sub(lpReward)
+	}
+
 	return {
 		id,
 		name: baseInfo.name,
 		hash: baseInfo.hash,
 		price: baseInfo.price,
-		pool: baseInfo.pool,
+		pool,
 		prizes: baseInfo.prizes.map((p) => p.toNumber()),
 		manager: {
 			id: managerInfo.managerId,
