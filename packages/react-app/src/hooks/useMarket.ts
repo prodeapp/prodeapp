@@ -28,11 +28,8 @@ export async function getMarket(marketId: Address, chainId: number): Promise<Mar
 export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
 	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo, liquidityInfo] = marketView
 
-	let pool = baseInfo.pool
-	if (liquidityInfo.id !== AddressZero) {
-		const lpReward = pool.mul(managerInfo.managementFee).div(DIVISOR)
-		pool = pool.sub(lpReward)
-	}
+	const fees = baseInfo.pool.mul(managerInfo.managementFee.add(managerInfo.protocolFee)).div(DIVISOR)
+	const pool = baseInfo.pool.sub(fees)
 
 	return {
 		id,
