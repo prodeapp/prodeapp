@@ -10,18 +10,17 @@ import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import React from 'react'
 import { Link, Link as RouterLink } from 'react-router-dom'
-import { useNetwork } from 'wagmi'
 
 import { Market } from '@/graphql/subgraph'
 import { usePhone } from '@/hooks/useResponsive'
 import { useSubmissionPeriodEnd } from '@/hooks/useSubmissionPeriodEnd'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { betsClosingSoon, formatAmount, getTimeLeft } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { paths } from '@/lib/paths'
 
 type MarketsTableProps = {
 	markets?: Market[]
+	chainId: number
 }
 
 export const MarketsGrid = styled(Grid)(({ theme }) => ({
@@ -66,7 +65,6 @@ export const MarketDetails = styled(Box)(({ theme }) => ({
 
 function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 	const { locale } = useI18nContext()
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 	const theme = useTheme()
 	const closingTimeLeft = getTimeLeft(market.closingTime, false, locale)
 	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(market.id, chainId)
@@ -102,7 +100,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					<div>
 						<div style={{ fontWeight: 'normal', marginBottom: '5px' }}>{status}</div>
 						<Typography variant='h4s' component='h2' style={{ marginTop: '20px' }}>
-							<Link to={paths.market(market.id, chain.id)}>{market.name}</Link>
+							<Link to={paths.market(market.id, chainId)}>{market.name}</Link>
 						</Typography>
 					</div>
 					{closingTimeLeft === false && (
@@ -119,7 +117,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 									</div>
 									<Button
 										component={RouterLink}
-										to={paths.market(market.id, chain.id)}
+										to={paths.market(market.id, chainId)}
 										color={'primary'}
 										fullWidth
 										size='large'
@@ -148,7 +146,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							<div style={{ marginBottom: 10, fontWeight: 700 }}>{closingTimeLeft}</div>
 							<Button
 								component={RouterLink}
-								to={paths.market(market.id, chain.id)}
+								to={paths.market(market.id, chainId)}
 								color={'primary'}
 								fullWidth
 								size='large'
@@ -164,7 +162,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					<div>
 						<Trans id='Bet Price' />
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chain.id)}</div>
+					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
 				</div>
 
 				<div>
@@ -174,13 +172,13 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 								<div>
 									<Trans id='Perfect Score Prize' />
 								</div>
-								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chain.id)}</div>
+								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chainId)}</div>
 							</div>
 							<div>
 								<div>
 									<Trans id='Base Prize' />
 								</div>
-								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chainId)}</div>
 							</div>
 						</>
 					)}
@@ -190,7 +188,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							<div>
 								<Trans id='Pool Prize' />
 							</div>
-							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chain.id)}</div>
+							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chainId)}</div>
 						</div>
 					)}
 				</div>
@@ -221,9 +219,8 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 	)
 }
 
-function MarketsTable({ markets }: MarketsTableProps) {
+function MarketsTable({ markets, chainId }: MarketsTableProps) {
 	const isPhone = usePhone()
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
 
 	if (!markets || markets.length === 0) {
 		return (
@@ -238,7 +235,7 @@ function MarketsTable({ markets }: MarketsTableProps) {
 			{markets.map((market, i) => {
 				return (
 					<Grid item xs={12} md={6} key={i}>
-						<MarketBox market={market} chainId={chain.id} />
+						<MarketBox market={market} chainId={chainId} />
 					</Grid>
 				)
 			})}

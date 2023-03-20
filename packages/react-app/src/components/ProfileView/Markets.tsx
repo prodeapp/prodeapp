@@ -17,7 +17,7 @@ export function Markets({ creatorId }: { creatorId: string }) {
 		data: markets,
 		error,
 		isLoading,
-	} = useMarkets({
+	} = useMarkets(chain.id, {
 		creatorId: creatorId,
 	})
 

@@ -1,12 +1,13 @@
 import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
-import { readContracts, useNetwork } from 'wagmi'
+import { UseQueryResult } from '@tanstack/react-query/src/types'
+import { readContracts } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { marketViewToMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
 import { getSubcategories } from '@/lib/helpers'
 import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
 
@@ -21,7 +22,7 @@ const query = `
 
 export type MarketStatus = 'active' | 'pending' | 'closed'
 
-export interface UseMarketsProps {
+export interface UseMarketsFilters {
 	curated?: boolean
 	status?: MarketStatus
 	category?: string
@@ -30,11 +31,12 @@ export interface UseMarketsProps {
 }
 
 async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[]): Promise<Market[]> {
-	const contracts = graphMarkets.map(graphMarket => ({
+	const contracts = graphMarkets.map((graphMarket) => ({
 		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [graphMarket.id],
+		chainId,
 	}))
 
 	const markets = await readContracts({
@@ -42,18 +44,17 @@ async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[
 	})
 
 	// @ts-ignore
-	return markets.map(market => marketViewToMarket(market)).filter(market => market.id !== AddressZero)
+	return markets.map((market) => marketViewToMarket(market)).filter((market) => market.id !== AddressZero)
 }
-
-export const useMarkets = ({ curated, status, category, minEvents, creatorId }: UseMarketsProps = {}) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+type UseMarkets = (chainId: number, filters: UseMarketsFilters) => UseQueryResult<Market[], Error>
+export const useMarkets: UseMarkets = (chainId, { curated, status, category, minEvents, creatorId } = {}) => {
 	return useQuery<Market[], Error>(
-		['useMarkets', { curated, status, category, minEvents, creatorId, chainId: chain.id }],
+		['useMarkets', { curated, status, category, minEvents, creatorId, chainId }],
 		async () => {
 			const variables: QueryVariables = { curated, orderDirection: 'desc' }
 
 			if (category) {
-				variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)]
+				variables['category_in'] = [category, ...getSubcategories(category).map((s) => s.id)]
 			}
 
 			if (minEvents) {
@@ -77,14 +78,14 @@ export const useMarkets = ({ curated, status, category, minEvents, creatorId }: 
 			}
 
 			const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
-				chain.id,
+				chainId,
 				buildQuery(query, variables),
 				variables
 			)
 
 			if (!response) throw new Error('No response from TheGraph')
 
-			return graphMarketsToMarkets(chain.id, response.data.markets)
+			return graphMarketsToMarkets(chainId, response.data.markets)
 		}
 	)
 }

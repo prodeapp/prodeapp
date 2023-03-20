@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 
-import { MarketStatus, UseMarketsProps } from '@/hooks/useMarkets'
+import { MarketStatus, UseMarketsFilters } from '@/hooks/useMarkets'
 
 interface MarketFiltersProp {
-	curated: UseMarketsProps['curated']
+	curated: UseMarketsFilters['curated']
 	setCurated: (curated: boolean) => void
-	status: UseMarketsProps['status']
+	status: UseMarketsFilters['status']
 	setStatus: (status: MarketStatus) => void
-	category: NonNullable<UseMarketsProps['category']>
+	category: NonNullable<UseMarketsFilters['category']>
 	setCategory: (category: string) => void
-	filters: UseMarketsProps
+	filters: UseMarketsFilters
 }
 
 interface AdsFiltersProp {
