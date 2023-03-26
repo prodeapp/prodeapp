@@ -6,12 +6,12 @@ import { useNetwork } from 'wagmi'
 
 import { KeyValueAbi } from '@/abi/KeyValue'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 
 function DeleteMarket({ marketId }: { marketId: string }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
 	const { isSuccess, write } = useSendRecklessTx({
-		address: KEY_VALUE_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
+		address: getConfigAddress('KEY_VALUE', chain?.id),
 		abi: KeyValueAbi,
 		functionName: 'deleteMarket',
 	})

@@ -12,7 +12,7 @@ import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.sv
 import { ReactComponent as Logo } from '@/assets/logo.svg'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 import { BRIDGE_URL, formatAmount, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
@@ -206,7 +206,7 @@ function WalletMenu() {
 	const { data: claimArgs } = useClaimArgs(address || '')
 
 	const { isSuccess, write } = useSendRecklessTx({
-		address: REALITIO_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof REALITIO_ADDRESSES)],
+		address: getConfigAddress('REALITIO', chain?.id),
 		abi: RealityAbi,
 		functionName: 'claimMultipleAndWithdrawBalance',
 	})

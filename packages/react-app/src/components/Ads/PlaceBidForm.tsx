@@ -16,7 +16,7 @@ import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES, NETWORK_TOKEN } from '@/lib/config'
+import { getConfigAddress, getConfigString } from '@/lib/config'
 
 export type PlaceBidFormValues = {
 	market: Address | ''
@@ -47,13 +47,13 @@ export default function PlaceBidForm({
 	const { address } = useAccount()
 
 	const { isLoading, isSuccess, error, write } = useSendRecklessTx({
-		address: FIRST_PRICE_AUCTION_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES)],
+		address: getConfigAddress('FIRST_PRICE_AUCTION', chain?.id),
 		abi: FirstPriceAuctionAbi,
 		functionName: 'placeBid',
 	})
 
 	const { data: MIN_OFFER_DURATION } = useContractRead({
-		address: FIRST_PRICE_AUCTION_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES)],
+		address: getConfigAddress('FIRST_PRICE_AUCTION', chain?.id),
 		abi: FirstPriceAuctionAbi,
 		functionName: 'MIN_OFFER_DURATION',
 	})
@@ -138,7 +138,7 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid' /> ({NETWORK_TOKEN[chain.id]})
+						<Trans id='Bid' /> ({getConfigString('NETWORK_TOKEN', chain.id)})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField
@@ -167,7 +167,7 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid per second' /> ({NETWORK_TOKEN[chain.id]})
+						<Trans id='Bid per second' /> ({getConfigString('NETWORK_TOKEN', chain.id)})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField

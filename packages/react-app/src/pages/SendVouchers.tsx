@@ -13,7 +13,7 @@ import { useNetwork } from 'wagmi'
 import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, NETWORK_TOKEN, VOUCHER_MANAGER_ADDRESSES } from '@/lib/config'
+import { getConfigAddress, getConfigString } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -49,7 +49,7 @@ const VOUCHER_MANAGER_ABI = [
 ]
 
 function SendVouchers() {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
 	const { isLoading, isSuccess, write } = useSendRecklessTx({
 		address: TRANSACTION_BATCHER,
 		abi: BATCHER_ABI,
@@ -57,7 +57,7 @@ function SendVouchers() {
 	})
 
 	const voucherContract = getContract({
-		address: VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof VOUCHER_MANAGER_ADDRESSES],
+		address: getConfigAddress('VOUCHER_MANAGER', chain?.id),
 		abi: VOUCHER_MANAGER_ABI,
 	})
 
@@ -79,7 +79,7 @@ function SendVouchers() {
 
 		write!({
 			recklesslySetUnpreparedArgs: [
-				Array(vouchers.length).fill(VOUCHER_MANAGER_ADDRESSES[chain.id as keyof typeof VOUCHER_MANAGER_ADDRESSES]),
+				Array(vouchers.length).fill(getConfigAddress('VOUCHER_MANAGER', chain?.id)),
 				values,
 				await Promise.all(
 					vouchers.map(
@@ -110,7 +110,9 @@ function SendVouchers() {
 			{!isSuccess && !isLoading && (
 				<div style={{ maxWidth: '700px', margin: '0 auto' }}>
 					<FormRow>
-						<FormLabel>Enter one address and amount in {NETWORK_TOKEN[chain.id]} on each line.</FormLabel>
+						<FormLabel>
+							Enter one address and amount in {getConfigString('NETWORK_TOKEN', chain?.id)} on each line.
+						</FormLabel>
 						<div style={{ width: '100%' }}>
 							<TextField
 								onChange={onChange}
@@ -139,7 +141,7 @@ function SendVouchers() {
 												}}
 											></div>
 											<div>
-												{voucher.value} {NETWORK_TOKEN[chain.id]}
+												{voucher.value} {getConfigString('NETWORK_TOKEN', chain?.id)}
 											</div>
 										</div>
 									)

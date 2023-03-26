@@ -5,13 +5,13 @@ import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
 import { DIVISOR } from '@/hooks/useMarketForm'
-import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 
 export async function getMarket(marketId: Address, chainId: number): Promise<Market | undefined> {
 	// TODO: check that this market was created by a whitelisted factory
 
 	const marketView = await readContract({
-		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [marketId],
@@ -37,7 +37,7 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 		hash: baseInfo.hash,
 		price: baseInfo.price,
 		pool,
-		prizes: baseInfo.prizes.map((p) => p.toNumber()),
+		prizes: baseInfo.prizes.map(p => p.toNumber()),
 		manager: {
 			id: managerInfo.managerId,
 			managementRewards: managerInfo.managementRewards,

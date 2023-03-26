@@ -19,7 +19,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSubmissionDeposit } from '@/hooks/useSubmissionDeposit'
-import { CURATE_REGISTRY_ADDRESSES, DEFAULT_CHAIN } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 import { FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -68,7 +68,7 @@ function GroupsForm() {
 											{...register(`extraDataGroups.groups.${i}.size`, {
 												required: i18n._('This field is required.'),
 												valueAsNumber: true,
-												validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
+												validate: v => !isNaN(Number(v)) || 'Invalid number.',
 												min: {
 													value: 1,
 													message: i18n._('Value must be greater than 0.'),
@@ -124,7 +124,7 @@ function GroupsForm() {
 							{...register(`extraDataGroups.rounds`, {
 								required: i18n._('This field is required.'),
 								valueAsNumber: true,
-								validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
+								validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
 								min: {
 									value: 1,
 									message: i18n._('Value must be greater than 0.'),
@@ -149,9 +149,7 @@ function CurateSubmit() {
 
 	const { address } = useAccount()
 
-	const { data: submissionDeposit } = useSubmissionDeposit(
-		CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)]
-	)
+	const { data: submissionDeposit } = useSubmissionDeposit(getConfigAddress('CURATE_REGISTRY', chain?.id))
 
 	const useFormReturn = useForm<CurateSubmitFormValues>({
 		defaultValues: {
@@ -183,7 +181,7 @@ function CurateSubmit() {
 	const format = useWatch({ control, name: 'format' })
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)],
+		address: getConfigAddress('CURATE_REGISTRY', chain?.id),
 		abi: GeneralizedTCRAbi,
 		functionName: 'addItem',
 	})
@@ -193,7 +191,7 @@ function CurateSubmit() {
 			return
 		}
 
-		events.forEach((e) => {
+		events.forEach(e => {
 			questionsUseFieldArrayReturn.append({ value: e.id })
 		})
 		// eslint-disable-next-line
@@ -239,8 +237,8 @@ function CurateSubmit() {
 			const encodedParams = await getEncodedParams(
 				chain?.id || DEFAULT_CHAIN,
 				data,
-				getQuestionsHash(data.questions.map((question) => question.value)),
-				data.questions.map((question) => question.value)
+				getQuestionsHash(data.questions.map(question => question.value)),
+				data.questions.map(question => question.value)
 			)
 
 			write!({

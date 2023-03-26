@@ -6,13 +6,13 @@ import { useNetwork } from 'wagmi'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Bet } from '@/graphql/subgraph'
 import { marketBetViewToBet } from '@/hooks/useBets'
-import { DEFAULT_CHAIN, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 
 async function getTokenBet(chainId: number, marketId: Address, tokenId: number): Promise<Bet> {
 	// TODO: check that this market was created by a whitelisted factory
 
 	const marketBetView = await readContract({
-		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [marketId, BigNumber.from(tokenId)],

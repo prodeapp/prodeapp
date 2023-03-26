@@ -15,7 +15,7 @@ import { KeyValueAbi } from '@/abi/KeyValue'
 import { FormError } from '@/components'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 
 export type ProfileFormValues = {
 	name: string
@@ -43,7 +43,7 @@ function getTxParams(
 	}
 
 	return {
-		address: KEY_VALUE_ADDRESSES[chainId as keyof typeof KEY_VALUE_ADDRESSES],
+		address: getConfigAddress('KEY_VALUE', chainId),
 		abi: KeyValueAbi,
 		functionName: 'setUsername',
 		args: [userId, name],

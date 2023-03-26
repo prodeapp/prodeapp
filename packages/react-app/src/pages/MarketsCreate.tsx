@@ -33,7 +33,7 @@ import { BigAlert, FormError, FormLabel, FormRow } from '@/components'
 import EventBuilder from '@/components/MarketCreate/EventBuilder'
 import PrizeWeightsBuilder from '@/components/MarketCreate/PrizeWeightsBuilder'
 import useMarketForm, { getEventData, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
-import { DEFAULT_CHAIN, NETWORK_TOKEN } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigString } from '@/lib/config'
 import {
 	formatAmount,
 	getCategoryText,
@@ -45,7 +45,7 @@ import {
 import { paths } from '@/lib/paths'
 
 export const formatAnswers = (answers: string[]) => {
-	return answers.map((a) => ({ value: a }))
+	return answers.map(a => ({ value: a }))
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
@@ -130,7 +130,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 								error={!!errors.category}
 								style={{ width: '100%' }}
 							>
-								{getFlattenedCategories().map((cat) => (
+								{getFlattenedCategories().map(cat => (
 									<MenuItem value={cat.id} key={cat.id}>
 										{cat.isChild ? `-- ${cat.text}` : cat.text}
 									</MenuItem>
@@ -157,7 +157,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 											onChange={field.onChange}
 											value={field.value}
 											inputFormat={DATE_FORMAT}
-											renderInput={(params) => <TextField {...params} fullWidth />}
+											renderInput={params => <TextField {...params} fullWidth />}
 										/>
 									)}
 								/>
@@ -226,7 +226,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 
 	useEffect(() => {
 		useFormReturn.register('prizeDivisor', {
-			validate: (value) => value === 100 || i18n._('The sum of prize weights must be 100.'),
+			validate: value => value === 100 || i18n._('The sum of prize weights must be 100.'),
 		})
 	}, [useFormReturn])
 
@@ -240,14 +240,14 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 				<div>
 					<FormRow>
 						<FormLabel>
-							<Trans id='Bet Price ({token})' values={{ token: NETWORK_TOKEN[chain.id] }} />
+							<Trans id='Bet Price ({token})' values={{ token: getConfigString('NETWORK_TOKEN', chain.id) }} />
 						</FormLabel>
 						<div>
 							<TextField
 								{...register('price', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
+									validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
 									min: {
 										value: 0.01,
 										message: i18n._('Price must be greater than 0.01'),
@@ -275,7 +275,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 							<TextField
 								{...register('manager', {
 									required: i18n._('This field is required.'),
-									validate: (v) => isAddress(v) || 'Invalid address.',
+									validate: v => isAddress(v) || 'Invalid address.',
 								})}
 								error={!!errors.manager}
 								style={{ width: '100%' }}
@@ -312,7 +312,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 								{...register('managementFee', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
+									validate: v => !isNaN(Number(v)) || 'Invalid number.',
 									min: {
 										value: 0,
 										message: i18n._('Fee must be greater than 0.'),
@@ -347,7 +347,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 										{...register('lpCreatorFee', {
 											required: i18n._('This field is required.'),
 											valueAsNumber: true,
-											validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
+											validate: v => !isNaN(Number(v)) || 'Invalid number.',
 											min: {
 												value: 0,
 												message: i18n._('Fee must be greater than 0.'),

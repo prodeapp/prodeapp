@@ -15,7 +15,7 @@ import { Event } from '@/graphql/subgraph'
 import { useEvents } from '@/hooks/useEvents'
 import { usePhone } from '@/hooks/useResponsive'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { REALITIO_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 import { getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { queryClient } from '@/lib/react-query'
@@ -138,7 +138,7 @@ function ActionColumn(event: Event, chainId: number, finalized: boolean, clickHa
 	const { locale } = useI18nContext()
 
 	const { isSuccess, write, error } = useSendRecklessTx({
-		address: REALITIO_ADDRESSES[chainId],
+		address: getConfigAddress('REALITIO', chainId),
 		abi: RealityAbi,
 		functionName: 'reopenQuestion',
 	})

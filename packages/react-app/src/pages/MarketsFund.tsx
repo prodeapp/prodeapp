@@ -14,7 +14,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { MarketAbi } from '@/abi/Market'
 import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { NETWORK_TOKEN } from '@/lib/config'
+import { getConfigString } from '@/lib/config'
 
 export type FundMarketFormData = {
 	value: string
@@ -86,7 +86,7 @@ function MarketsFund() {
 				<BoxWrapper>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Fund amount ({token})' values={{ token: NETWORK_TOKEN[chain.id] }} />
+							<Trans id='Fund amount ({token})' values={{ token: getConfigString('NETWORK_TOKEN', chain.id) }} />
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField

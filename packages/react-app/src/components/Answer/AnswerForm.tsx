@@ -15,7 +15,7 @@ import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -71,7 +71,7 @@ function getTxParams(
 	}
 
 	return {
-		address: REALITIO_ADDRESSES[chainId as keyof typeof REALITIO_ADDRESSES],
+		address: getConfigAddress('REALITIO', chainId),
 		abi: RealityAbi,
 		functionName: 'submitAnswer',
 		args: [eventId, formatOutcome(outcome), currentBond],

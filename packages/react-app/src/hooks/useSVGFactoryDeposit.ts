@@ -4,7 +4,7 @@ import { getContract, getProvider } from '@wagmi/core'
 import { useNetwork } from 'wagmi'
 
 import { SVGFactoryAbi } from '@/abi/SVGFactory'
-import { DEFAULT_CHAIN, SVG_AD_FACTORY_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 
 import { getSubmissionDeposit } from './useSubmissionDeposit'
 
@@ -13,7 +13,7 @@ export const useSVGAdFactoryDeposit = () => {
 
 	return useQuery<BigNumber, Error>(['useSVGAdFactoryDeposit', chain.id], async () => {
 		const contract = getContract({
-			address: SVG_AD_FACTORY_ADDRESSES[chain.id as keyof typeof SVG_AD_FACTORY_ADDRESSES],
+			address: getConfigAddress('SVG_AD_FACTORY', chain.id),
 			abi: SVGFactoryAbi,
 			signerOrProvider: getProvider(),
 		})

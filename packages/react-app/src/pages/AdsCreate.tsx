@@ -16,7 +16,7 @@ import { FormError, FormLabel, FormRow } from '@/components'
 import { AdImg } from '@/components/ImgSvg'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSVGAdFactoryDeposit } from '@/hooks/useSVGFactoryDeposit'
-import { DEFAULT_CHAIN, SVG_AD_FACTORY_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 
 import { Banner } from './MarketsCreate'
 
@@ -96,7 +96,7 @@ function AdsCreate() {
 	const { chain } = useNetwork()
 
 	const { isSuccess, isLoading, error, write } = useSendRecklessTx({
-		address: SVG_AD_FACTORY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof SVG_AD_FACTORY_ADDRESSES)],
+		address: getConfigAddress('SVG_AD_FACTORY', chain?.id),
 		abi: SVGFactoryAbi,
 		functionName: 'createAd',
 	})

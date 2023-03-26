@@ -4,7 +4,7 @@ import { Bytes } from '@/abi/types'
 import { CurateSubmitFormValues } from '@/components/Curate'
 import validate from '@/components/Curate/schema'
 import { CURATE_ITEM_FIELDS, CurateItem } from '@/graphql/subgraph'
-import { CURATE_REGISTRY_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 
 import { apolloProdeQuery } from './apolloClient'
 import ipfsPublish from './ipfs-publish'
@@ -62,7 +62,7 @@ async function getRegistryColumns(chainId: number): Promise<any[]> {
 	const result = await apolloProdeQuery<{
 		registry: { clearingMetaEvidence: { URI: string } }
 	}>(chainId, registryQuery, {
-		registryId: CURATE_REGISTRY_ADDRESSES[chainId as keyof typeof CURATE_REGISTRY_ADDRESSES].toLowerCase(),
+		registryId: getConfigAddress('CURATE_REGISTRY', chainId).toLowerCase(),
 	})
 
 	if (!result?.data?.registry?.clearingMetaEvidence?.URI) {

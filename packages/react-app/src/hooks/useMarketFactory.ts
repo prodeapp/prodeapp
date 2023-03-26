@@ -5,7 +5,7 @@ import { useNetwork } from 'wagmi'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { MARKET_FACTORY_FIELDS, MarketFactory } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 
 const query = `
     ${MARKET_FACTORY_FIELDS}
@@ -38,11 +38,11 @@ export type MarketFactoryAttributes = {
 
 export const useMarketFactoryAttributes = () => {
 	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const factoryAddress = MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
+	const factoryAddress = getConfigAddress('MARKET_FACTORY', chain.id)
 
 	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chain.id], async () => {
 		const attrs = await readContract({
-			address: MARKET_VIEW_ADDRESSES[chain.id],
+			address: getConfigAddress('MARKET_VIEW', chain.id),
 			abi: MarketViewAbi,
 			functionName: 'getMarketFactoryAttrs',
 			args: [factoryAddress],

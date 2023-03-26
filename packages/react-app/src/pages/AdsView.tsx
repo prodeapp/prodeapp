@@ -20,7 +20,7 @@ import { AdBid } from '@/graphql/subgraph'
 import { useAd } from '@/hooks/useAd'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSvgAd } from '@/hooks/useSvgAd'
-import { DEFAULT_CHAIN, FIRST_PRICE_AUCTION_ADDRESSES } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 import { formatAmount, getBidBalance, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 export interface BidInfo {
@@ -71,7 +71,7 @@ function AdsView() {
 	const { address } = useAccount()
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: FIRST_PRICE_AUCTION_ADDRESSES[chain.id as keyof typeof FIRST_PRICE_AUCTION_ADDRESSES],
+		address: getConfigAddress('FIRST_PRICE_AUCTION', chain?.id),
 		abi: FirstPriceAuctionAbi,
 		functionName: 'removeBid',
 	})
