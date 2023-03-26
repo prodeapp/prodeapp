@@ -3,7 +3,11 @@ import { parseUnits } from '@ethersproject/units'
 import { Address } from '@wagmi/core'
 
 export enum NetworkId {
+	OPTIMISM = 10,
+	BSC = 56,
+	POLYGON = 137,
 	GNOSIS = 100,
+	ARBITRUM = 42161,
 	POLYGON_TESTNET = 80001,
 }
 
@@ -91,6 +95,25 @@ const BIG_NUMBERS_CONFIG: BigNumberConfigValues = {
 	MIN_BOND: {
 		[NetworkId.GNOSIS]: parseUnits('5', 18),
 		[NetworkId.POLYGON_TESTNET]: parseUnits('0.0001', 18),
+	},
+}
+
+export const CROSSCHAIN_CONFIG: Record<number, { CONNEXT: Address; USDC: Address }> = {
+	[NetworkId.ARBITRUM]: {
+		CONNEXT: '0xEE9deC2712cCE65174B561151701Bf54b99C24C8',
+		USDC: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
+	},
+	[NetworkId.OPTIMISM]: {
+		CONNEXT: '0x8f7492DE823025b4CfaAB1D34c58963F2af5DEDA',
+		USDC: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
+	},
+	[NetworkId.POLYGON]: {
+		CONNEXT: '0x11984dc4465481512eb5b777E44061C158CF2259',
+		USDC: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+	},
+	[NetworkId.BSC]: {
+		CONNEXT: '0xCd401c10afa37d641d2F594852DA94C700e4F2CE',
+		USDC: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
 	},
 }
 
