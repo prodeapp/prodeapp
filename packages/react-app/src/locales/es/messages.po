@@ -701,7 +701,7 @@ msgid "Unknown"
 msgstr "Desconocido"
 
 msgid "UNSUPPORTED_CHAIN"
-msgstr "Red no soportada, por favor conéctese a Gnosis Chain."
+msgstr "Red no soportada, por favor conéctese a Gnosis Chain, Arbitrum, Optimism, Polygon o BNB Chain."
 
 msgid "Username updated"
 msgstr ""

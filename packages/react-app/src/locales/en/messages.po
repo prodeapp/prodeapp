@@ -701,7 +701,7 @@ msgid "Unknown"
 msgstr "Unknown"
 
 msgid "UNSUPPORTED_CHAIN"
-msgstr "Unsupported chain, please switch to Gnosis Chain."
+msgstr "Unsupported chain, please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
 
 msgid "Username updated"
 msgstr "Username updated"

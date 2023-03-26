@@ -5,7 +5,7 @@ import { Address, readContract, ReadContractResult } from '@wagmi/core'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
 import { DIVISOR } from '@/hooks/useMarketForm'
-import { getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 export async function getMarket(marketId: Address, chainId: number): Promise<Market | undefined> {
 	// TODO: check that this market was created by a whitelisted factory
@@ -15,7 +15,7 @@ export async function getMarket(marketId: Address, chainId: number): Promise<Mar
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [marketId],
-		chainId,
+		chainId: filterChainId(chainId),
 	})
 
 	if (marketView.id === AddressZero) {

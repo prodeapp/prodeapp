@@ -16,7 +16,7 @@ import { FirstPriceAuctionAbi } from '@/abi/FirstPriceAuction'
 import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigAddress, getConfigString } from '@/lib/config'
+import { filterChainId, getConfigAddress, getConfigString } from '@/lib/config'
 
 export type PlaceBidFormValues = {
 	market: Address | ''
@@ -56,6 +56,7 @@ export default function PlaceBidForm({
 		address: getConfigAddress('FIRST_PRICE_AUCTION', chain?.id),
 		abi: FirstPriceAuctionAbi,
 		functionName: 'MIN_OFFER_DURATION',
+		chainId: filterChainId(chain?.id),
 	})
 
 	useEffect(() => {

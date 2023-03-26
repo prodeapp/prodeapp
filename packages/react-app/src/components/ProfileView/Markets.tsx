@@ -2,22 +2,15 @@ import { Trans } from '@lingui/react'
 import { Grid, Skeleton } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import React from 'react'
-import { useNetwork } from 'wagmi'
 
 import { useMarkets } from '@/hooks/useMarkets'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, shortenAddress } from '@/lib/helpers'
 import { paths } from '@/lib/paths'
 
 import { BoxRow } from '..'
 
-export function Markets({ creatorId }: { creatorId: string }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const {
-		data: markets,
-		error,
-		isLoading,
-	} = useMarkets(chain.id, {
+export function Markets({ creatorId, chainId }: { creatorId: string; chainId: number }) {
+	const { data: markets, error, isLoading } = useMarkets(chainId, {
 		creatorId: creatorId,
 	})
 
@@ -56,15 +49,15 @@ export function Markets({ creatorId }: { creatorId: string }) {
 				</BoxRow>
 
 				{markets &&
-					markets.map((market) => {
+					markets.map(market => {
 						return (
 							<BoxRow key={market.id}>
 								<div style={{ width: '40%' }}>
-									<a href={paths.market(market.id, chain.id)}>{market.name}</a>
+									<a href={paths.market(market.id, chainId)}>{market.name}</a>
 								</div>
-								<div style={{ width: '20%' }}>{formatAmount(market.pool, chain.id)}</div>
+								<div style={{ width: '20%' }}>{formatAmount(market.pool, chainId)}</div>
 								<div style={{ width: '20%' }}>{shortenAddress(market.manager.id)}</div>
-								<div style={{ width: '20%' }}>{formatAmount(market.manager.managementRewards, chain.id)}</div>
+								<div style={{ width: '20%' }}>{formatAmount(market.manager.managementRewards, chainId)}</div>
 							</BoxRow>
 						)
 					})}

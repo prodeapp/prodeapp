@@ -15,13 +15,11 @@ import {
 import Alert from '@mui/material/Alert'
 import { Address } from '@wagmi/core'
 import React from 'react'
-import { useNetwork } from 'wagmi'
 
 import { ManagerAbi } from '@/abi/Manager'
 import { MarketReferral } from '@/graphql/subgraph'
 import { useMarketReferrals } from '@/hooks/useMarketReferrals'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, shortenAddress } from '@/lib/helpers'
 
 import { BoxRow } from '..'
@@ -69,15 +67,14 @@ function ClaimAction({ marketReferral }: { marketReferral: MarketReferral }) {
 	)
 }
 
-function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+function ReferralDetail({ marketReferral, chainId }: { marketReferral: MarketReferral; chainId: number }) {
 	return (
 		<Accordion>
 			<AccordionSummary expandIcon={<ExpandMoreOutlined />} aria-controls='panel1a-content'>
 				<div style={{ width: '60%' }}>
 					<a href={'/#/marketsReferrals/' + marketReferral.market.id}>{marketReferral.market.name}</a>
 				</div>
-				<div style={{ width: '15%' }}>{formatAmount(marketReferral.totalAmount, chain.id)}</div>
+				<div style={{ width: '15%' }}>{formatAmount(marketReferral.totalAmount, chainId)}</div>
 				<div style={{ width: '25%' }}>
 					<ClaimAction marketReferral={marketReferral} />
 				</div>
@@ -87,7 +84,7 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
 					return (
 						<BoxRow key={attribution.id}>
 							<div style={{ width: '80%' }}>{shortenAddress(attribution.attributor.id)}</div>
-							<div style={{ width: '20%' }}>{formatAmount(attribution.amount, chain.id)}</div>
+							<div style={{ width: '20%' }}>{formatAmount(attribution.amount, chainId)}</div>
 						</BoxRow>
 					)
 				})}
@@ -96,7 +93,7 @@ function ReferralDetail({ marketReferral }: { marketReferral: MarketReferral }) 
 	)
 }
 
-export function Referrals({ provider }: { provider: string }) {
+export function Referrals({ provider, chainId }: { provider: string; chainId: number }) {
 	const { data: marketsReferrals, error, isLoading } = useMarketReferrals({
 		provider,
 	})
@@ -134,7 +131,7 @@ export function Referrals({ provider }: { provider: string }) {
 
 				{marketsReferrals &&
 					marketsReferrals.map(mr => {
-						return <ReferralDetail marketReferral={mr} key={mr.id} />
+						return <ReferralDetail marketReferral={mr} chainId={chainId} key={mr.id} />
 					})}
 			</Grid>
 		</Grid>

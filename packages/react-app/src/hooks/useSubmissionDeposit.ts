@@ -4,12 +4,13 @@ import { getContract, getProvider, readContract } from '@wagmi/core'
 
 import { ArbitratorAbi } from '@/abi/Arbitrator'
 import { GeneralizedTCRAbi } from '@/abi/GeneralizedTCR'
+import { filterChainId } from '@/lib/config'
 
-export const useSubmissionDeposit = (tcrAddress: string) => {
+export const useSubmissionDeposit = (tcrAddress: string, chainId: number) => {
 	return useQuery<BigNumber, Error>(
-		['useSubmissionDeposit', tcrAddress],
+		['useSubmissionDeposit', tcrAddress, chainId],
 		async () => {
-			return getSubmissionDeposit(tcrAddress)
+			return getSubmissionDeposit(tcrAddress, chainId)
 		},
 		{
 			enabled: !!tcrAddress,
@@ -17,11 +18,11 @@ export const useSubmissionDeposit = (tcrAddress: string) => {
 	)
 }
 
-export const getSubmissionDeposit = async (tcrAddress: string) => {
+export const getSubmissionDeposit = async (tcrAddress: string, chainId: number) => {
 	const generalizedTCR = getContract({
 		address: tcrAddress,
 		abi: GeneralizedTCRAbi,
-		signerOrProvider: getProvider(),
+		signerOrProvider: getProvider({ chainId: filterChainId(chainId) }),
 	})
 
 	const [arbitrator, arbitratorExtraData, submissionBaseDeposit] = await Promise.all([
@@ -35,6 +36,7 @@ export const getSubmissionDeposit = async (tcrAddress: string) => {
 		abi: ArbitratorAbi,
 		functionName: 'arbitrationCost',
 		args: [arbitratorExtraData],
+		chainId: filterChainId(chainId),
 	})
 
 	return submissionBaseDeposit.add(arbitrationCost)

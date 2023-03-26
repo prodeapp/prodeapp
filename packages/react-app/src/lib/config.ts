@@ -95,13 +95,21 @@ const BIG_NUMBERS_CONFIG: BigNumberConfigValues = {
 }
 
 export const getConfigAddress = <T extends keyof AddressConfigValues>(configKey: T, chainId?: number): Address => {
-	return ADDRESSES_CONFIG[configKey][chainId || DEFAULT_CHAIN] || ADDRESSES_CONFIG[configKey][DEFAULT_CHAIN]
+	return ADDRESSES_CONFIG[configKey][filterChainId(chainId)]
 }
 
 export const getConfigString = <T extends keyof StringConfigValues>(configKey: T, chainId?: number): string => {
-	return STRINGS_CONFIG[configKey][chainId || DEFAULT_CHAIN] || STRINGS_CONFIG[configKey][DEFAULT_CHAIN]
+	return STRINGS_CONFIG[configKey][filterChainId(chainId)]
 }
 
 export const getConfigNumber = <T extends keyof BigNumberConfigValues>(configKey: T, chainId?: number): BigNumber => {
-	return BIG_NUMBERS_CONFIG[configKey][chainId || DEFAULT_CHAIN] || BIG_NUMBERS_CONFIG[configKey][DEFAULT_CHAIN]
+	return BIG_NUMBERS_CONFIG[configKey][filterChainId(chainId)]
+}
+
+export const filterChainId = (chainId?: number) => {
+	if (chainId === NetworkId.POLYGON_TESTNET) {
+		return chainId
+	}
+
+	return DEFAULT_CHAIN
 }

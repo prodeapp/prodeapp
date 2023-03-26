@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getContract, getProvider } from '@wagmi/core'
 
 import { MarketAbi } from '@/abi/Market'
+import { filterChainId } from '@/lib/config'
 
 export const useSubmissionPeriodEnd = (marketId: string, chainId: number) => {
 	return useQuery<number, Error>(
@@ -10,7 +11,7 @@ export const useSubmissionPeriodEnd = (marketId: string, chainId: number) => {
 			const contract = getContract({
 				address: marketId,
 				abi: MarketAbi,
-				signerOrProvider: getProvider({ chainId }),
+				signerOrProvider: getProvider({ chainId: filterChainId(chainId) }),
 			})
 
 			const [resultSubmissionPeriodStart, submissionTimeout] = await Promise.all([

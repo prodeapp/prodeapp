@@ -9,7 +9,7 @@ import { useNetwork } from 'wagmi'
 import { MarketFactoryAbi } from '@/abi/MarketFactory'
 import { MarketFactoryV2Abi } from '@/abi/MarketFactoryV2'
 import { MarketFactoryAttributes, useMarketFactoryAttributes } from '@/hooks/useMarketFactory'
-import { DEFAULT_CHAIN, getConfigAddress, getConfigNumber } from '@/lib/config'
+import { filterChainId, getConfigAddress, getConfigNumber } from '@/lib/config'
 import { parseEvents } from '@/lib/helpers'
 import {
 	encodeOutcomes,
@@ -187,16 +187,17 @@ export default function useMarketForm(
 	step2State: MarketFormStep2Values,
 	prepareTx: boolean
 ): UseMarketFormReturn {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const [marketId, setMarketId] = useState<Address | ''>('')
 	const { data: factoryAttrs } = useMarketFactoryAttributes()
 
-	const minBond = getConfigNumber('MIN_BOND', chain.id)
+	const minBond = getConfigNumber('MIN_BOND', chainId)
 
 	const { isPrepared, isSuccess, error, write, receipt } = useSendTx(
 		// @ts-ignore
 		getTxParams(
-			getConfigAddress('MARKET_FACTORY_V2', chain.id),
+			getConfigAddress('MARKET_FACTORY_V2', chainId),
 			step1State,
 			step2State,
 			factoryAttrs,
@@ -208,7 +209,7 @@ export default function useMarketForm(
 	useEffect(() => {
 		if (receipt) {
 			const ethersInterface = new Interface(MarketFactoryAbi)
-			const events = parseEvents(receipt, getConfigAddress('MARKET_FACTORY', chain.id), ethersInterface)
+			const events = parseEvents(receipt, getConfigAddress('MARKET_FACTORY', chainId), ethersInterface)
 			setMarketId(events?.[0].args?.market?.toLowerCase() || '')
 		}
 	}, [receipt])

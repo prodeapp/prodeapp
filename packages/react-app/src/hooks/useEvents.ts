@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Event } from '@/graphql/subgraph'
-import { getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -43,7 +43,7 @@ export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'ope
 		abi: MarketViewAbi,
 		functionName: 'getEvents',
 		args: [marketId],
-		chainId,
+		chainId: filterChainId(chainId),
 	})
 
 	if (typeof marketEventsView.find(e => e.templateId.eq(0)) !== 'undefined') {

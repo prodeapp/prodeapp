@@ -3,7 +3,7 @@ import { useNetwork } from 'wagmi'
 
 import { SVG_AD_FIELDS, SVGAd } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 
 export interface UseAdsProps {
 	market?: string
@@ -19,9 +19,10 @@ const query = `
 `
 
 export const useAds = ({ market }: UseAdsProps = {}) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	return useQuery<SVGAd[], Error>(['useAds', market, chain.id], async () => {
-		const response = await apolloProdeQuery<{ svgads: SVGAd[] }>(chain.id, query, {
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
+	return useQuery<SVGAd[], Error>(['useAds', market, chainId], async () => {
+		const response = await apolloProdeQuery<{ svgads: SVGAd[] }>(chainId, query, {
 			marketId: market ? [market] : [],
 		})
 

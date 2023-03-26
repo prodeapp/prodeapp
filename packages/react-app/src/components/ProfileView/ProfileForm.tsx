@@ -15,7 +15,7 @@ import { KeyValueAbi } from '@/abi/KeyValue'
 import { FormError } from '@/components'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 export type ProfileFormValues = {
 	name: string
@@ -69,7 +69,7 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 	const name = useWatch({ control, name: 'name' })
 
 	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(
-		getTxParams(chain?.id || DEFAULT_CHAIN, address, name)
+		getTxParams(filterChainId(chain?.id), address, name)
 	)
 
 	if (!address) {

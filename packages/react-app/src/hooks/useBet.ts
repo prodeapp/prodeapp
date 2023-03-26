@@ -6,7 +6,7 @@ import { useNetwork } from 'wagmi'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Bet } from '@/graphql/subgraph'
 import { marketBetViewToBet } from '@/hooks/useBets'
-import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 async function getTokenBet(chainId: number, marketId: Address, tokenId: number): Promise<Bet> {
 	// TODO: check that this market was created by a whitelisted factory
@@ -16,18 +16,19 @@ async function getTokenBet(chainId: number, marketId: Address, tokenId: number):
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [marketId, BigNumber.from(tokenId)],
-		chainId,
+		chainId: filterChainId(chainId),
 	})
 
 	return await marketBetViewToBet(chainId, marketBetView)
 }
 
 export const useBet = (marketId: Address, tokenId: number) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	return useQuery<Bet | undefined, Error>(
-		['useBet', { marketId, tokenId, chainId: chain.id }],
+		['useBet', { marketId, tokenId, chainId }],
 		async () => {
-			return await getTokenBet(chain.id, marketId, tokenId)
+			return await getTokenBet(chainId, marketId, tokenId)
 		},
 		{ enabled: !!marketId || !!tokenId }
 	)

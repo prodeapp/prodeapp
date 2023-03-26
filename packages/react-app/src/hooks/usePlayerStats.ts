@@ -3,7 +3,7 @@ import { useNetwork } from 'wagmi'
 
 import { PLAYER_STATS_FIELDS, PlayerStats } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 
 const query = `
     ${PLAYER_STATS_FIELDS}
@@ -15,11 +15,12 @@ const query = `
 `
 
 export const usePlayerStats = (playerId: string) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	return useQuery<PlayerStats, Error>(
-		['usePlayerStats', playerId, chain.id],
+		['usePlayerStats', playerId, chainId],
 		async () => {
-			const response = await apolloProdeQuery<{ player: PlayerStats }>(chain.id, query, {
+			const response = await apolloProdeQuery<{ player: PlayerStats }>(chainId, query, {
 				playerId: playerId.toLowerCase(),
 			})
 

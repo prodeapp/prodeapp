@@ -19,7 +19,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSubmissionDeposit } from '@/hooks/useSubmissionDeposit'
-import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -143,13 +143,14 @@ function GroupsForm() {
 
 function CurateSubmit() {
 	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const { marketId } = useParams()
-	const { data: market } = useMarket(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
-	const { isLoading, data: events } = useEvents(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
+	const { data: market } = useMarket(String(marketId) as Address, chainId)
+	const { isLoading, data: events } = useEvents(String(marketId) as Address, chainId)
 
 	const { address } = useAccount()
 
-	const { data: submissionDeposit } = useSubmissionDeposit(getConfigAddress('CURATE_REGISTRY', chain?.id))
+	const { data: submissionDeposit } = useSubmissionDeposit(getConfigAddress('CURATE_REGISTRY', chainId), chainId)
 
 	const useFormReturn = useForm<CurateSubmitFormValues>({
 		defaultValues: {
@@ -181,7 +182,7 @@ function CurateSubmit() {
 	const format = useWatch({ control, name: 'format' })
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: getConfigAddress('CURATE_REGISTRY', chain?.id),
+		address: getConfigAddress('CURATE_REGISTRY', chainId),
 		abi: GeneralizedTCRAbi,
 		functionName: 'addItem',
 	})
@@ -235,7 +236,7 @@ function CurateSubmit() {
 	const onSubmit = async (data: CurateSubmitFormValues) => {
 		try {
 			const encodedParams = await getEncodedParams(
-				chain?.id || DEFAULT_CHAIN,
+				chainId,
 				data,
 				getQuestionsHash(data.questions.map(question => question.value)),
 				data.questions.map(question => question.value)

@@ -25,7 +25,7 @@ import ReferralLink from '@/components/MarketView/ReferralLink'
 import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
 import { useMarket } from '@/hooks/useMarket'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
@@ -45,7 +45,7 @@ type MarketSections = 'bet' | 'bets' | 'results' | 'stats'
 function MarketsView() {
 	const params = useParams()
 	const id = params.id as Address
-	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
+	const chainId = filterChainId(Number(params?.chainId || ''))
 
 	const { isLoading, data: market } = useMarket(id, chainId)
 	const [section, setSection] = useState<MarketSections>('bets')

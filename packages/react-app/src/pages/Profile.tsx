@@ -110,9 +110,9 @@ export default function Profile() {
 
 			{section === 'bets' && <Bets playerId={playerId} chainId={chain.id} />}
 
-			{section === 'referrals' && <Referrals provider={playerId} />}
+			{section === 'referrals' && <Referrals provider={playerId} chainId={chain.id} />}
 
-			{section === 'markets' && <Markets creatorId={playerId} />}
+			{section === 'markets' && <Markets creatorId={playerId} chainId={chain.id} />}
 		</Container>
 	)
 }

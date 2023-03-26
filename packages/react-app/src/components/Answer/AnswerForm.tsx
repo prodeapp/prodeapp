@@ -15,7 +15,7 @@ import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -102,7 +102,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	const currentBond = event.lastBond.gt(0) ? event.lastBond.mul(2) : event.minBond
 
 	const { isLoading, isSuccess, error, write } = useSendTx(
-		getTxParams(chain?.id || DEFAULT_CHAIN, event.id, outcome, currentBond)
+		getTxParams(filterChainId(chain?.id), event.id, outcome, currentBond)
 	)
 
 	const outcomes = getOutcomes(event)

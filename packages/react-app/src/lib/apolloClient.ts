@@ -1,6 +1,6 @@
 import { ApolloClient, gql, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
 
-import { DEFAULT_CHAIN, NetworkId } from '@/lib/config'
+import { filterChainId, NetworkId } from '@/lib/config'
 
 const prodeClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 	[NetworkId.GNOSIS]: new ApolloClient({
@@ -25,11 +25,11 @@ const realityClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 }
 
 const apolloProdeQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
-	return apolloQuery<T>(prodeClients[chainId] || prodeClients[DEFAULT_CHAIN], queryString, variables)
+	return apolloQuery<T>(prodeClients[filterChainId(chainId)], queryString, variables)
 }
 
 const apolloRealityQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
-	return apolloQuery<T>(realityClients[chainId] || realityClients[DEFAULT_CHAIN], queryString, variables)
+	return apolloQuery<T>(realityClients[filterChainId(chainId)], queryString, variables)
 }
 
 const apolloQuery = async <T>(

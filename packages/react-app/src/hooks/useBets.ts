@@ -9,7 +9,7 @@ import { MarketViewAbi } from '@/abi/MarketView'
 import { Bytes } from '@/abi/types'
 import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -66,7 +66,7 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 			abi: MarketViewAbi,
 			functionName: 'getMarketBets',
 			args: [marketId],
-			chainId,
+			chainId: filterChainId(chainId),
 		})
 	).slice()
 
@@ -85,6 +85,7 @@ async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [graphBet.market.id, graphBet.tokenID],
+		chainId: filterChainId(chainId),
 	}))
 
 	const marketBetsView = await readContracts({

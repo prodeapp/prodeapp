@@ -7,7 +7,7 @@ import { MarketViewAbi } from '@/abi/MarketView'
 import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { marketViewToMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { getSubcategories } from '@/lib/helpers'
 import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
 
@@ -36,7 +36,7 @@ async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [graphMarket.id],
-		chainId,
+		chainId: filterChainId(chainId),
 	}))
 
 	const markets = await readContracts({

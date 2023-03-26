@@ -5,7 +5,7 @@ import { useNetwork } from 'wagmi'
 
 import { Bytes } from '@/abi/types'
 import { apolloRealityQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 
 interface ClaimQuestion {
 	questionId: Bytes
@@ -34,7 +34,8 @@ interface ClaimableItem {
 export const getUseClaimArgsKey = (account: string) => ['useClaimArgs', account]
 
 export const useClaimArgs = (account: string) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 
 	// TODO: if the user has more than 1000 claims it will fail
 	//  we need to paginate and return all the existing claims
@@ -90,7 +91,7 @@ export const useClaimArgs = (account: string) => {
 			// get claims already made
 			const claimsResponse = await apolloRealityQuery<{
 				claims: { question: { id: string } }[]
-			}>(chain.id, claimsQuery, { user: account.toLowerCase() })
+			}>(chainId, claimsQuery, { user: account.toLowerCase() })
 
 			if (!claimsResponse) throw new Error('No response from TheGraph')
 
@@ -104,7 +105,7 @@ export const useClaimArgs = (account: string) => {
 			// get questionsIds not claimed
 			const actionsResponse = await apolloRealityQuery<{
 				userActions: { question: { questionId: string } }[]
-			}>(chain.id, userActionsQuery, { user: account.toLowerCase(), questionIds })
+			}>(chainId, userActionsQuery, { user: account.toLowerCase(), questionIds })
 
 			if (!actionsResponse) throw new Error('No response from TheGraph')
 
@@ -115,7 +116,7 @@ export const useClaimArgs = (account: string) => {
 
 			const questionsResponse = await apolloRealityQuery<{
 				questions: ClaimQuestion[]
-			}>(chain.id, questionsQuery, {
+			}>(chainId, questionsQuery, {
 				questionIds: unclaimedQuestionIds,
 				answerFinalizedTimestamp: String(now),
 			})

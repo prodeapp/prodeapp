@@ -20,7 +20,7 @@ import { AdBid } from '@/graphql/subgraph'
 import { useAd } from '@/hooks/useAd'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSvgAd } from '@/hooks/useSvgAd'
-import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { formatAmount, getBidBalance, getMedalColor, shortenAddress } from '@/lib/helpers'
 
 export interface BidInfo {
@@ -60,11 +60,12 @@ export function useIndexedBids(bids?: AdBid[]) {
 }
 
 function AdsView() {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const { id } = useParams()
-	const { isLoading, data: ad } = useAd(String(id))
+	const { isLoading, data: ad } = useAd(String(id), chainId)
 	const groupedBids = useIndexedBids(ad?.bids)
-	const { data: svgAd } = useSvgAd(String(id) as Address)
+	const { data: svgAd } = useSvgAd(String(id) as Address, chainId)
 	const theme = useTheme()
 	const [openModal, setOpenModal] = useState(false)
 	const [bidInfo, setBidInfo] = useState<BidInfo>(EMPTY_BID_INFO)
@@ -180,7 +181,7 @@ function AdsView() {
 										<TableBody key={j}>
 											<div style={{ width: '25%' }}>{shortenAddress(bid.bidder)}</div>
 											<div style={{ width: '25%' }}>
-												{formatAmount(bid.bidPerSecond, chain.id)}
+												{formatAmount(bid.bidPerSecond, chainId)}
 												{bid.currentHighest && (
 													<MedalIcon
 														style={{
@@ -190,7 +191,7 @@ function AdsView() {
 													/>
 												)}
 											</div>
-											<div style={{ width: '25%' }}>{formatAmount(getBidBalance(bid), chain.id)}</div>
+											<div style={{ width: '25%' }}>{formatAmount(getBidBalance(bid), chainId)}</div>
 											<div style={{ width: '25%' }}>
 												{address?.toLowerCase() === bid.bidder.toLowerCase() && itemId && (
 													<>

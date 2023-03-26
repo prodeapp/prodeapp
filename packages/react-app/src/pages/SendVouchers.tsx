@@ -6,14 +6,14 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-import { getContract } from '@wagmi/core'
+import { getContract, getProvider } from '@wagmi/core'
 import React, { useState } from 'react'
 import { useNetwork } from 'wagmi'
 
 import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigAddress, getConfigString } from '@/lib/config'
+import { filterChainId, getConfigAddress, getConfigString } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -59,6 +59,7 @@ function SendVouchers() {
 	const voucherContract = getContract({
 		address: getConfigAddress('VOUCHER_MANAGER', chain?.id),
 		abi: VOUCHER_MANAGER_ABI,
+		signerOrProvider: getProvider({ chainId: filterChainId(chain?.id) }),
 	})
 
 	const [vouchers, setVouchers] = useState<VoucherData[]>([])
