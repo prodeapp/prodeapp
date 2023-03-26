@@ -53,6 +53,7 @@ function getTxParams(
 export default function ProfileForm({ defaultName }: { defaultName: string }) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const { data: player } = usePlayer((address || '') as Address)
 
 	const {
@@ -68,24 +69,10 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 
 	const name = useWatch({ control, name: 'name' })
 
-	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(
-		getTxParams(filterChainId(chain?.id), address, name)
-	)
+	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(getTxParams(chainId, address, name))
 
 	if (!address) {
 		return null
-	}
-
-	if (!chain || chain.unsupported) {
-		return (
-			<div style={wrapperStyles}>
-				<div style={innerStyles}>
-					<Alert severity='error'>
-						<Trans id='UNSUPPORTED_CHAIN' />
-					</Alert>
-				</div>
-			</div>
-		)
 	}
 
 	if (isSuccess) {

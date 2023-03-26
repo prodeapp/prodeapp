@@ -33,7 +33,7 @@ import { BigAlert, FormError, FormLabel, FormRow } from '@/components'
 import EventBuilder from '@/components/MarketCreate/EventBuilder'
 import PrizeWeightsBuilder from '@/components/MarketCreate/PrizeWeightsBuilder'
 import useMarketForm, { getEventData, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
-import { filterChainId, getConfigString } from '@/lib/config'
+import { filterChainId, getConfigString, isMainChain } from '@/lib/config'
 import {
 	formatAmount,
 	getCategoryText,
@@ -984,6 +984,14 @@ function MarketsCreate() {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}

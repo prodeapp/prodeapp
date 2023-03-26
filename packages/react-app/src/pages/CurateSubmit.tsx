@@ -19,7 +19,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSubmissionDeposit } from '@/hooks/useSubmissionDeposit'
-import { filterChainId, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress, isMainChain } from '@/lib/config'
 import { FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -213,6 +213,14 @@ function CurateSubmit() {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}

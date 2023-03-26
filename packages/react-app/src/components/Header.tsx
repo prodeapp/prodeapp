@@ -12,7 +12,7 @@ import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.sv
 import { ReactComponent as Logo } from '@/assets/logo.svg'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigAddress } from '@/lib/config'
+import { getConfigAddress, isMainChain } from '@/lib/config'
 import { BRIDGE_URL, formatAmount, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
@@ -231,7 +231,7 @@ function WalletMenu() {
 	return (
 		<>
 			<Box sx={{ display: 'flex', alignItems: 'center' }}>
-				{chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
+				{chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
 					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
 						<Trans id='Claim' /> {formatAmount(claimArgs.total, chain.id)}
 					</Button>

@@ -16,7 +16,7 @@ import { FormError, FormLabel, FormRow } from '@/components'
 import { AdImg } from '@/components/ImgSvg'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSVGAdFactoryDeposit } from '@/hooks/useSVGFactoryDeposit'
-import { getConfigAddress } from '@/lib/config'
+import { getConfigAddress, isMainChain } from '@/lib/config'
 
 import { Banner } from './MarketsCreate'
 
@@ -118,6 +118,14 @@ function AdsCreate() {
 
 	if (!chain || chain.unsupported) {
 		return <Alert severity='error'>{i18n._('UNSUPPORTED_CHAIN')}</Alert>
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
+			</Alert>
+		)
 	}
 
 	const onSubmit = async (data: AdCreateFormValues) => {

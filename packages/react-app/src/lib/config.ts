@@ -113,3 +113,7 @@ export const filterChainId = (chainId?: number) => {
 
 	return DEFAULT_CHAIN
 }
+
+export const isMainChain = (chainId?: number) => {
+	return chainId === NetworkId.POLYGON_TESTNET || chainId === DEFAULT_CHAIN
+}

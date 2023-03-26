@@ -14,7 +14,7 @@ import { useAccount, useNetwork } from 'wagmi'
 import { MarketAbi } from '@/abi/Market'
 import { BoxLabelCell, BoxRow, BoxWrapper, FormError } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigString } from '@/lib/config'
+import { getConfigString, isMainChain } from '@/lib/config'
 
 export type FundMarketFormData = {
 	value: string
@@ -65,6 +65,14 @@ function MarketsFund() {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}

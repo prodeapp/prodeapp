@@ -14,12 +14,14 @@ import ProfileForm from '@/components/ProfileView/ProfileForm'
 import { Referrals } from '@/components/ProfileView/Referrals'
 import { usePlayer } from '@/hooks/usePlayer'
 import { usePlayerStats } from '@/hooks/usePlayerStats'
+import { filterChainId } from '@/lib/config'
 import { formatAmount } from '@/lib/helpers'
 
 export default function Profile() {
 	const { id } = useParams()
 	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const [section, setSection] = useState<'bets' | 'referrals' | 'markets'>('bets')
 	const playerId = (id || address || '') as Address
 	const { data: playerStats } = usePlayerStats(playerId)
@@ -35,14 +37,6 @@ export default function Profile() {
 		}
 	}
 
-	if (!chain || chain.unsupported) {
-		return (
-			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
-			</Alert>
-		)
-	}
-
 	return (
 		<Container>
 			<Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
@@ -52,7 +46,7 @@ export default function Profile() {
 							<Trans
 								id='Total Bet: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.amountBet, chain.id) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.amountBet, chainId) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -64,7 +58,7 @@ export default function Profile() {
 							<Trans
 								id='Total Rewards: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.pricesReceived, chain.id) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.pricesReceived, chainId) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -76,7 +70,7 @@ export default function Profile() {
 							<Trans
 								id='Referrals Earnings: {0}'
 								values={{
-									0: playerStats ? formatAmount(playerStats?.totalAttributions, chain.id) : <Skeleton />,
+									0: playerStats ? formatAmount(playerStats?.totalAttributions, chainId) : <Skeleton />,
 								}}
 							/>
 						</Typography>
@@ -108,11 +102,11 @@ export default function Profile() {
 				</BoxRow>
 			</BoxWrapper>
 
-			{section === 'bets' && <Bets playerId={playerId} chainId={chain.id} />}
+			{section === 'bets' && <Bets playerId={playerId} chainId={chainId} />}
 
-			{section === 'referrals' && <Referrals provider={playerId} chainId={chain.id} />}
+			{section === 'referrals' && <Referrals provider={playerId} chainId={chainId} />}
 
-			{section === 'markets' && <Markets creatorId={playerId} chainId={chain.id} />}
+			{section === 'markets' && <Markets creatorId={playerId} chainId={chainId} />}
 		</Container>
 	)
 }

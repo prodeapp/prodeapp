@@ -15,7 +15,7 @@ import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
 import { useSendTx } from '@/hooks/useSendTx'
-import { filterChainId, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress, isMainChain } from '@/lib/config'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -108,7 +108,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	const outcomes = getOutcomes(event)
 
 	useEffect(() => {
-		if (!address || !chain || chain.unsupported) {
+		if (!address || !chain || chain.unsupported || !isMainChain(chain?.id)) {
 			setShowActions(false)
 			return
 		}
@@ -132,6 +132,14 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}
