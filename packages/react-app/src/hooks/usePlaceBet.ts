@@ -86,13 +86,13 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
 	const usdcAmount = priceInUsdc.add(extra)
 
-	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(
-		CROSSCHAIN_CONFIG[chainId].USDC,
-		address,
-		CROSSCHAIN_CONFIG[chainId].CONNEXT
-	)
+	const USDC_ADDRESS = CROSSCHAIN_CONFIG?.[chainId]?.USDC
+	const CONNEXT_ADDRESS = CROSSCHAIN_CONFIG?.[chainId]?.CONNEXT
+	const DOMAIN_ID = CROSSCHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
-	const { data: relayerFee } = useEstimateRelayerFee(GNOSIS_DOMAIN_ID, CROSSCHAIN_CONFIG[chainId].DOMAIN_ID)
+	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(USDC_ADDRESS, address, CONNEXT_ADDRESS)
+
+	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
 	const getTxParams = (
 		chainId: number,
@@ -116,13 +116,13 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		]) as Bytes
 
 		return {
-			address: CROSSCHAIN_CONFIG[chainId].CONNEXT,
+			address: CONNEXT_ADDRESS,
 			abi: ConnextBridgeFacetAbi,
 			functionName: 'xcall',
 			args: [
 				Number(GNOSIS_DOMAIN_ID),
 				GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				CROSSCHAIN_CONFIG[chainId].USDC,
+				USDC_ADDRESS,
 				address,
 				usdcAmount,
 				slippage,
@@ -134,12 +134,15 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		}
 	}
 
-	const { isLoading, isSuccess, isError, error, write } = useSendTx(getTxParams(chainId, attribution, results))
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(chainId, attribution, results))
 
-	const tokenId = CROSS_CHAIN_TOKEN_ID
+	const ethersInterface = new Interface(ConnextBridgeFacetAbi)
+	const events = parseEvents(receipt, CONNEXT_ADDRESS, ethersInterface)
+	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
+	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
 	const approve = allowance.lt(usdcAmount)
-		? { amount: usdcAmount, token: CROSSCHAIN_CONFIG[chainId].USDC, spender: CROSSCHAIN_CONFIG[chainId].CONNEXT }
+		? { amount: usdcAmount, token: USDC_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	return {
