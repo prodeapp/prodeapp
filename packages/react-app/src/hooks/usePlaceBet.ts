@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
-import { keccak256 } from '@ethersproject/solidity'
+import { MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
 import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
 
@@ -10,19 +10,25 @@ import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
 import { BetFormValues } from '@/components/Bet/BetForm'
-import { CROSSCHAIN_CONFIG, getConfigAddress, isMainChain } from '@/lib/config'
+import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
+import { DIVISOR } from '@/hooks/useMarketForm'
+import { useTokenAllowance } from '@/hooks/useTokenAllowance'
+import { getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
+import { CROSSCHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
 
 import { useHasVoucher } from './useHasVoucher'
 import { useSendTx } from './useSendTx'
 
-interface UsePlaceBetReturn {
+export interface UsePlaceBetReturn {
 	isLoading: boolean
 	error: Error | null
 	tokenId: BigNumber | false
 	placeBet: ReturnType<typeof useSendTx>['write']
 	hasVoucher: boolean
+	isCrossChainBet: boolean
+	approve?: { amount: BigNumber; token: Address; spender: Address }
 }
 
 type UsePreparePlaceBetFn = (
@@ -39,6 +45,8 @@ type UsePlaceBetFn = (
 	attribution: Address,
 	outcomes: BetFormValues['outcomes']
 ) => UsePlaceBetReturn & { hasVoucher: boolean }
+
+export const CROSS_CHAIN_TOKEN_ID = MaxInt256
 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const getTxParams = (
@@ -65,62 +73,86 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
 
-	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher: false }
+	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher: false, isCrossChainBet: false }
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const { address } = useAccount()
+
+	// fix the difference of decimals
+	const priceInUsdc = price.div(10 ** (18 - 6))
+	const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
+	const usdcAmount = priceInUsdc.add(extra)
+
+	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(
+		CROSSCHAIN_CONFIG[chainId].USDC,
+		address,
+		CROSSCHAIN_CONFIG[chainId].CONNEXT
+	)
+
+	const { data: relayerFee } = useEstimateRelayerFee(GNOSIS_DOMAIN_ID, CROSSCHAIN_CONFIG[chainId].DOMAIN_ID)
 
 	const getTxParams = (
 		chainId: number,
 		attribution: Address,
 		results: Bytes[] | false
 	): UsePrepareContractWriteConfig<typeof ConnextBridgeFacetAbi, 'xcall'> => {
-		if (results === false || !address) {
+		if (results === false || !address || !relayerFee) {
 			return {}
 		}
 
-		const GNOSIS_DOMAIN_ID = 6778479
-		const RECEIVER_CONTRACT = '0x348F2706AE7D647461Ce90f9E3569014E7d135Dc'
-		const slippage = BigNumber.from(100) // 1%
-		const amount = price // TODO
+		const slippage = BigNumber.from(300) // 3%
 
-		const size = Math.max(...results.map(r => stripZeros(r).length), 1)
+		const size = Math.max(...results.map((r) => stripZeros(r).length), 1)
 
-		const calldata = keccak256(
-			['address', 'address', 'address', 'uint8', 'bytes'],
-			[
-				address,
-				marketId,
-				attribution,
-				BigNumber.from(size),
-				hexConcat(results.map(r => hexStripZeros(r)).map(r => hexZeroPad(r, size))),
-			]
-		) as Bytes
-
-		const relayerFee = BigNumber.from(0) // TODO
+		const calldata = hexConcat([
+			address,
+			marketId,
+			attribution,
+			BigNumber.from(size).toHexString(),
+			hexConcat(results.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
+		]) as Bytes
 
 		return {
 			address: CROSSCHAIN_CONFIG[chainId].CONNEXT,
 			abi: ConnextBridgeFacetAbi,
 			functionName: 'xcall',
-			args: [GNOSIS_DOMAIN_ID, RECEIVER_CONTRACT, CROSSCHAIN_CONFIG[chainId].USDC, address, amount, slippage, calldata],
+			args: [
+				Number(GNOSIS_DOMAIN_ID),
+				GNOSIS_CHAIN_RECEIVER_ADDRESS,
+				CROSSCHAIN_CONFIG[chainId].USDC,
+				address,
+				usdcAmount,
+				slippage,
+				calldata,
+			],
 			overrides: {
 				value: relayerFee,
 			},
 		}
 	}
 
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(chainId, attribution, results))
+	const { isLoading, isSuccess, isError, error, write } = useSendTx(getTxParams(chainId, attribution, results))
 
-	// TODO
-	const ethersInterface = new Interface(MarketAbi)
-	const events = parseEvents(receipt, marketId, ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+	const tokenId = CROSS_CHAIN_TOKEN_ID
 
-	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher: false }
+	const approve = allowance.lt(usdcAmount)
+		? { amount: usdcAmount, token: CROSSCHAIN_CONFIG[chainId].USDC, spender: CROSSCHAIN_CONFIG[chainId].CONNEXT }
+		: undefined
+
+	return {
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+		placeBet: write,
+		tokenId,
+		hasVoucher: false,
+		approve,
+		isCrossChainBet: true,
+	}
 }
 
 const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
@@ -151,13 +183,13 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 
 	const ethersInterface = new Interface(VoucherManagerAbi)
 	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
-	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher }
+	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher, isCrossChainBet: false }
 }
 
 function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
-	if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
+	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
 	}
@@ -171,7 +203,7 @@ function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
 			 * ============================================================
 			 */
 			.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
-			.map(outcome => formatOutcome(outcome.value))
+			.map((outcome) => formatOutcome(outcome.value))
 	)
 }
 
