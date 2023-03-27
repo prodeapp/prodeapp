@@ -15278,9 +15278,9 @@ tsafe@^1.4.1:
   integrity sha512-wlUeRBnyN3EN2chXznpLm7vBEvJLEOziDU+MN6NRlD99AkwmXgtChNQhp+V97VyRa3Bp05IaL4Cocsc7JlyEUg==
 
 tsconfck@^2.0.1:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/tsconfck/-/tsconfck-2.0.2.tgz#860a488f9acd024a85b2db458888410009b5383d"
-  integrity sha512-H3DWlwKpow+GpVLm/2cpmok72pwRr1YFROV3YzAmvzfGFiC1zEM/mc9b7+1XnrxuXtEbhJ7xUSIqjPFbedp7aQ==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/tsconfck/-/tsconfck-2.1.1.tgz#9b51603d2712d1f4740fa14748ca886a2e1893e5"
+  integrity sha512-ZPCkJBKASZBmBUNqGHmRhdhM8pJYDdOXp4nRgj/O0JwUwsMq50lCDRQP/M5GBNAA0elPrq4gAeu4dkaVCuKWww==
 
 tslib@1.14.1, tslib@^1.11.1, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.14.1"
@@ -15765,10 +15765,10 @@ vite-plugin-svgr@^2.4.0:
     "@rollup/pluginutils" "^5.0.2"
     "@svgr/core" "^6.5.1"
 
-vite-tsconfig-paths@^4.0.3:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/vite-tsconfig-paths/-/vite-tsconfig-paths-4.0.5.tgz#c7c54e2cf7ccc5e600db565cecd7b368a1fa8889"
-  integrity sha512-/L/eHwySFYjwxoYt1WRJniuK/jPv+WGwgRGBYx3leciR5wBeqntQpUE6Js6+TJemChc+ter7fDBKieyEWDx4yQ==
+vite-tsconfig-paths@^4.0.5:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/vite-tsconfig-paths/-/vite-tsconfig-paths-4.0.7.tgz#e109036d4890029e9539291e08a84ac01ef8dec4"
+  integrity sha512-MwIYaby6kcbQGZqMH+gAK6h0UYQGOkjsuAgw4q6bP/5vWkn8VKvnmLuCQHA2+IzHAJHnE8OFTO4lnJLFMf9+7Q==
   dependencies:
     debug "^4.1.1"
     globrex "^0.1.2"
