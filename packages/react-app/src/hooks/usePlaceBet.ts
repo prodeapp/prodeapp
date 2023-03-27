@@ -14,7 +14,7 @@ import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
 import { getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
-import { CROSSCHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
+import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
 
@@ -86,9 +86,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
 	const usdcAmount = priceInUsdc.add(extra)
 
-	const USDC_ADDRESS = CROSSCHAIN_CONFIG?.[chainId]?.USDC
-	const CONNEXT_ADDRESS = CROSSCHAIN_CONFIG?.[chainId]?.CONNEXT
-	const DOMAIN_ID = CROSSCHAIN_CONFIG?.[chainId]?.DOMAIN_ID
+	const USDC_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
+	const DOMAIN_ID = CROSS_CHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
 	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(USDC_ADDRESS, address, CONNEXT_ADDRESS)
 

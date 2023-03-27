@@ -6,7 +6,7 @@ import { NetworkId } from '@/lib/config'
 
 const GNOSIS_DOMAIN_ID = '6778479'
 
-const CROSSCHAIN_CONFIG: Record<number, { DOMAIN_ID: string; CONNEXT: Address; USDC: Address }> = {
+const CROSS_CHAIN_CONFIG: Record<number, { DOMAIN_ID: string; CONNEXT: Address; USDC: Address }> = {
 	[NetworkId.ARBITRUM]: {
 		DOMAIN_ID: '1634886255',
 		CONNEXT: '0xEE9deC2712cCE65174B561151701Bf54b99C24C8',
@@ -44,16 +44,16 @@ function buildSdkConfig(): SdkConfig {
 		//signerAddress: signerAddress,
 		network: 'mainnet',
 		chains: {
-			[CROSSCHAIN_CONFIG[NetworkId.ARBITRUM].DOMAIN_ID]: {
+			[CROSS_CHAIN_CONFIG[NetworkId.ARBITRUM].DOMAIN_ID]: {
 				providers: arbitrum.rpcUrls.default.http,
 			},
-			[CROSSCHAIN_CONFIG[NetworkId.OPTIMISM].DOMAIN_ID]: {
+			[CROSS_CHAIN_CONFIG[NetworkId.OPTIMISM].DOMAIN_ID]: {
 				providers: optimism.rpcUrls.default.http,
 			},
-			[CROSSCHAIN_CONFIG[NetworkId.POLYGON].DOMAIN_ID]: {
+			[CROSS_CHAIN_CONFIG[NetworkId.POLYGON].DOMAIN_ID]: {
 				providers: polygon.rpcUrls.default.http,
 			},
-			[CROSSCHAIN_CONFIG[NetworkId.BSC].DOMAIN_ID]: {
+			[CROSS_CHAIN_CONFIG[NetworkId.BSC].DOMAIN_ID]: {
 				providers: bsc.rpcUrls.default.http,
 			},
 		},
@@ -62,4 +62,4 @@ function buildSdkConfig(): SdkConfig {
 
 const sdkConfig = buildSdkConfig()
 
-export { sdkConfig, CROSSCHAIN_CONFIG, GNOSIS_DOMAIN_ID }
+export { sdkConfig, CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID }
