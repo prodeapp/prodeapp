@@ -1,8 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
-import { Alert, Typography } from '@mui/material'
+import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 

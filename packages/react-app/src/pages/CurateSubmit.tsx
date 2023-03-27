@@ -1,9 +1,11 @@
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
@@ -68,7 +70,7 @@ function GroupsForm() {
 											{...register(`extraDataGroups.groups.${i}.size`, {
 												required: i18n._('This field is required.'),
 												valueAsNumber: true,
-												validate: v => !isNaN(Number(v)) || 'Invalid number.',
+												validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 												min: {
 													value: 1,
 													message: i18n._('Value must be greater than 0.'),
@@ -124,7 +126,7 @@ function GroupsForm() {
 							{...register(`extraDataGroups.rounds`, {
 								required: i18n._('This field is required.'),
 								valueAsNumber: true,
-								validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+								validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
 								min: {
 									value: 1,
 									message: i18n._('Value must be greater than 0.'),
@@ -192,7 +194,7 @@ function CurateSubmit() {
 			return
 		}
 
-		events.forEach(e => {
+		events.forEach((e) => {
 			questionsUseFieldArrayReturn.append({ value: e.id })
 		})
 		// eslint-disable-next-line
@@ -246,8 +248,8 @@ function CurateSubmit() {
 			const encodedParams = await getEncodedParams(
 				chainId,
 				data,
-				getQuestionsHash(data.questions.map(question => question.value)),
-				data.questions.map(question => question.value)
+				getQuestionsHash(data.questions.map((question) => question.value)),
+				data.questions.map((question) => question.value)
 			)
 
 			write!({

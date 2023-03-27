@@ -1,7 +1,7 @@
-import { Typography } from '@mui/material'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import Carousel from 'nuka-carousel'
 import React from 'react'
 

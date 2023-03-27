@@ -22,7 +22,8 @@ module.exports = {
     "react",
     "simple-import-sort",
     "unused-imports",
-    "no-relative-import-paths"
+    "no-relative-import-paths",
+    "mui-path-imports"
   ],
   "rules":{
     "react/prop-types":"off",
@@ -43,7 +44,8 @@ module.exports = {
         "varsIgnorePattern":"^_$",
         "caughtErrorsIgnorePattern":"^_$"
       }
-    ]
+    ],
+    "mui-path-imports/mui-path-imports": "error"
   },
   "settings":{
     "react":{

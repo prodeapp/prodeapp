@@ -1,6 +1,6 @@
 import { i18n } from '@lingui/core'
-import { Skeleton } from '@mui/material'
 import Chip from '@mui/material/Chip'
+import Skeleton from '@mui/material/Skeleton'
 import { Address } from '@wagmi/core'
 import React from 'react'
 

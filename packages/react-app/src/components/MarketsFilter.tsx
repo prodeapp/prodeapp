@@ -1,8 +1,10 @@
 import { Trans } from '@lingui/react'
-import { FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Box from '@mui/material/Box'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
+import Switch from '@mui/material/Switch'
 import React, { useContext, useState } from 'react'
 
 import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.svg'
@@ -24,7 +26,7 @@ const FilterSection = styled('div')(({ theme }) => ({
 }))
 
 const UnderlineButton = styled('div', {
-	shouldForwardProp: prop => prop !== 'selected',
+	shouldForwardProp: (prop) => prop !== 'selected',
 })<{ selected?: boolean }>(({ theme, selected }) => {
 	const activeBorder = {
 		content: '""',
@@ -166,7 +168,7 @@ function MarketsFilter() {
 								<Trans id='All' />
 							</Radio>
 						</Grid>
-						{getFlattenedCategories().map(cat => (
+						{getFlattenedCategories().map((cat) => (
 							<Grid item xs={6} sm={3} key={cat.id}>
 								<Radio active={category === cat.id} onClick={() => setCategory(cat.id)}>
 									{cat.text}

@@ -1,5 +1,9 @@
 import { Trans } from '@lingui/react'
-import { Button, Container, Grid, Skeleton, Typography } from '@mui/material'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
 import { DataGrid } from '@mui/x-data-grid'
 import { BigNumberish } from 'ethers'
 import { useState } from 'react'
@@ -166,7 +170,7 @@ export default function Leaderboard() {
 					columns={columns}
 					loading={isLoading}
 					pageSize={pageSize}
-					onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+					onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
 					rowsPerPageOptions={[10, 50, 100]}
 					pagination
 					disableSelectionOnClick

@@ -1,18 +1,16 @@
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { ExpandMoreOutlined } from '@mui/icons-material'
-import {
-	Accordion,
-	AccordionDetails,
-	AccordionSummary,
-	Button,
-	CircularProgress,
-	Grid,
-	Skeleton,
-	Typography,
-	useTheme,
-} from '@mui/material'
+import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined'
+import { useTheme } from '@mui/material'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress'
+import Grid from '@mui/material/Grid'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
 import { Address } from '@wagmi/core'
 import React from 'react'
 
@@ -80,7 +78,7 @@ function ReferralDetail({ marketReferral, chainId }: { marketReferral: MarketRef
 				</div>
 			</AccordionSummary>
 			<AccordionDetails>
-				{marketReferral.attributions.map(attribution => {
+				{marketReferral.attributions.map((attribution) => {
 					return (
 						<BoxRow key={attribution.id}>
 							<div style={{ width: '80%' }}>{shortenAddress(attribution.attributor.id)}</div>
@@ -94,7 +92,11 @@ function ReferralDetail({ marketReferral, chainId }: { marketReferral: MarketRef
 }
 
 export function Referrals({ provider, chainId }: { provider: string; chainId: number }) {
-	const { data: marketsReferrals, error, isLoading } = useMarketReferrals({
+	const {
+		data: marketsReferrals,
+		error,
+		isLoading,
+	} = useMarketReferrals({
 		provider,
 	})
 
@@ -130,7 +132,7 @@ export function Referrals({ provider, chainId }: { provider: string; chainId: nu
 				</BoxRow>
 
 				{marketsReferrals &&
-					marketsReferrals.map(mr => {
+					marketsReferrals.map((mr) => {
 						return <ReferralDetail marketReferral={mr} chainId={chainId} key={mr.id} />
 					})}
 			</Grid>

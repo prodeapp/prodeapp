@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/react'
-import { Container, Typography } from '@mui/material'
+import Container from '@mui/material/Container'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 import { Link, Link as RouterLink } from 'react-router-dom'
 
@@ -9,7 +10,7 @@ import { BRIDGE_URL, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 const FooterNav = styled('div', {
-	shouldForwardProp: prop => prop !== 'ml',
+	shouldForwardProp: (prop) => prop !== 'ml',
 })<{ ml?: number }>(({ theme, ml }) => ({
 	'& > div': {
 		display: 'inline-block',

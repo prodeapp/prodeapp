@@ -1,8 +1,8 @@
 import { AddressZero } from '@ethersproject/constants'
 import { Trans } from '@lingui/react'
-import { Typography } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
 import React from 'react'
 
 import { ReactComponent as MedalIcon } from '@/assets/icons/medal.svg'

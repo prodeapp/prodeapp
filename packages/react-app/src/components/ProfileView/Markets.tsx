@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/react'
-import { Grid, Skeleton } from '@mui/material'
 import Alert from '@mui/material/Alert'
+import Grid from '@mui/material/Grid'
+import Skeleton from '@mui/material/Skeleton'
 import React from 'react'
 
 import { useMarkets } from '@/hooks/useMarkets'
@@ -10,7 +11,11 @@ import { paths } from '@/lib/paths'
 import { BoxRow } from '..'
 
 export function Markets({ creatorId, chainId }: { creatorId: string; chainId: number }) {
-	const { data: markets, error, isLoading } = useMarkets(chainId, {
+	const {
+		data: markets,
+		error,
+		isLoading,
+	} = useMarkets(chainId, {
 		creatorId: creatorId,
 	})
 
@@ -49,7 +54,7 @@ export function Markets({ creatorId, chainId }: { creatorId: string; chainId: nu
 				</BoxRow>
 
 				{markets &&
-					markets.map(market => {
+					markets.map((market) => {
 						return (
 							<BoxRow key={market.id}>
 								<div style={{ width: '40%' }}>

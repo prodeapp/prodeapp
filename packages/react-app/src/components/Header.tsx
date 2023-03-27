@@ -1,7 +1,12 @@
 import { Trans } from '@lingui/react'
 import MenuIcon from '@mui/icons-material/Menu'
-import { AppBar, Box, Button, Container, IconButton, Toolbar } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
@@ -182,7 +187,7 @@ export default function Header() {
 								<Trans id='Documentation' />
 							</a>
 							<DropdownMenu text={languages[locale]}>
-								{Object.keys(languages).map(lang => {
+								{Object.keys(languages).map((lang) => {
 									return (
 										<Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>
 											{languages[lang]}

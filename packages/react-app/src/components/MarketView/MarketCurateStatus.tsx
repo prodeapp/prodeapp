@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/react'
-import { Skeleton } from '@mui/material'
+import Skeleton from '@mui/material/Skeleton'
 import { useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -15,7 +15,7 @@ function getActiveItem(curateItems?: CurateItem[]) {
 	}
 
 	// check for registered items
-	const registeredItems = curateItems.filter(item => item.status === 'Registered')
+	const registeredItems = curateItems.filter((item) => item.status === 'Registered')
 
 	if (registeredItems.length > 0) {
 		return registeredItems[0]
@@ -23,7 +23,7 @@ function getActiveItem(curateItems?: CurateItem[]) {
 
 	// check for pending items
 	const pendingItems = curateItems.filter(
-		item => item.status === 'RegistrationRequested' || item.status === 'ClearingRequested'
+		(item) => item.status === 'RegistrationRequested' || item.status === 'ClearingRequested'
 	)
 
 	if (pendingItems.length > 0) {

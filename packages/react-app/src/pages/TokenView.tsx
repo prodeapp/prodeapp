@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
-import { Button } from '@mui/material'
+import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import { Address } from '@wagmi/core'
 import React from 'react'

@@ -3,17 +3,20 @@ import { parseUnits } from '@ethersproject/units'
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
+import MenuItem from '@mui/material/MenuItem'
 import { styled, useTheme } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -45,7 +48,7 @@ import {
 import { paths } from '@/lib/paths'
 
 export const formatAnswers = (answers: string[]) => {
-	return answers.map(a => ({ value: a }))
+	return answers.map((a) => ({ value: a }))
 }
 
 export const DATE_FORMAT = 'yyyy-MM-dd hh:mm aaa'
@@ -130,7 +133,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 								error={!!errors.category}
 								style={{ width: '100%' }}
 							>
-								{getFlattenedCategories().map(cat => (
+								{getFlattenedCategories().map((cat) => (
 									<MenuItem value={cat.id} key={cat.id}>
 										{cat.isChild ? `-- ${cat.text}` : cat.text}
 									</MenuItem>
@@ -157,7 +160,7 @@ function Step1Form({ useFormReturn, setActiveStep }: FormStepProps<MarketFormSte
 											onChange={field.onChange}
 											value={field.value}
 											inputFormat={DATE_FORMAT}
-											renderInput={params => <TextField {...params} fullWidth />}
+											renderInput={(params) => <TextField {...params} fullWidth />}
 										/>
 									)}
 								/>
@@ -227,7 +230,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 
 	useEffect(() => {
 		useFormReturn.register('prizeDivisor', {
-			validate: value => value === 100 || i18n._('The sum of prize weights must be 100.'),
+			validate: (value) => value === 100 || i18n._('The sum of prize weights must be 100.'),
 		})
 	}, [useFormReturn])
 
@@ -248,7 +251,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 								{...register('price', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+									validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
 									min: {
 										value: 0.01,
 										message: i18n._('Price must be greater than 0.01'),
@@ -276,7 +279,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 							<TextField
 								{...register('manager', {
 									required: i18n._('This field is required.'),
-									validate: v => isAddress(v) || 'Invalid address.',
+									validate: (v) => isAddress(v) || 'Invalid address.',
 								})}
 								error={!!errors.manager}
 								style={{ width: '100%' }}
@@ -313,7 +316,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 								{...register('managementFee', {
 									required: i18n._('This field is required.'),
 									valueAsNumber: true,
-									validate: v => !isNaN(Number(v)) || 'Invalid number.',
+									validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 									min: {
 										value: 0,
 										message: i18n._('Fee must be greater than 0.'),
@@ -348,7 +351,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 										{...register('lpCreatorFee', {
 											required: i18n._('This field is required.'),
 											valueAsNumber: true,
-											validate: v => !isNaN(Number(v)) || 'Invalid number.',
+											validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 											min: {
 												value: 0,
 												message: i18n._('Fee must be greater than 0.'),

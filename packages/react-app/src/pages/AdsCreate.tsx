@@ -1,12 +1,12 @@
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAccount, useNetwork } from 'wagmi'
@@ -56,7 +56,7 @@ const getImageResult = async (file: File) => {
 	return new Promise<string | ArrayBuffer>((resolve, reject) => {
 		const reader = new FileReader()
 
-		reader.onload = function(e) {
+		reader.onload = function (e) {
 			const result = e?.target?.result || ''
 
 			if (result === '') {
@@ -236,7 +236,7 @@ function AdsCreate() {
 								<TextField
 									{...register('url', {
 										required: i18n._('This field is required.'),
-										validate: v => isValidUrl(v) || i18n._('Invalid URL'),
+										validate: (v) => isValidUrl(v) || i18n._('Invalid URL'),
 									})}
 									error={!!errors.url}
 									style={{ width: '100%' }}
