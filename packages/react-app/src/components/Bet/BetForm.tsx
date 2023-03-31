@@ -112,7 +112,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach((event) => append({ value: '', questionId: event.id }))
+		events && events.forEach(event => append({ value: '', questionId: event.id }))
 	}, [events, append, remove])
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
@@ -127,11 +127,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const {
-		isLoading: isLoadingApprove,
-		error: approveError,
-		write: approveTokens,
-	} = useSendTx(
+	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -176,7 +172,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								</AlertTitle>
 							</div>
 							<div>
-								<Trans id='Your bet is travelling to the destination chain, it will arrive soon!' />
+								<Trans id='Your bet is travelling to the destination chain, it will arrive in a few minutes!' />
 							</div>
 						</div>
 					</Box>
