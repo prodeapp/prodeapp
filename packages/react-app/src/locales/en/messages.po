@@ -760,6 +760,9 @@ msgstr "Yes"
 msgid "You"
 msgstr "You"
 
+msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
+msgstr "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
+
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 
