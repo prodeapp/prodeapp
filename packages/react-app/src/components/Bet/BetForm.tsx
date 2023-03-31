@@ -268,7 +268,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					>
 						<div>
 							<div>
-								<AlertTitle>
+								<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
 									<Trans id='This market was created in Gnosis Chain.' />
 								</AlertTitle>
 							</div>
