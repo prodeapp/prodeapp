@@ -1,8 +1,8 @@
-import { create } from '@connext/sdk'
+import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
-import { BigNumber } from 'ethers'
 
 import { sdkConfig } from '@/lib/connext'
+import { create } from '@/lib/connext/sdk'
 
 export const useEstimateRelayerFee = (originDomain: string, destinationDomain: string) => {
 	return useQuery<BigNumber, Error>(['useEstimateRelayerFee', originDomain, destinationDomain], async () => {

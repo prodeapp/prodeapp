@@ -1,8 +1,8 @@
-import { SdkConfig } from '@connext/sdk'
 import { Address } from '@wagmi/core'
 import { arbitrum, bsc, optimism, polygon } from '@wagmi/core/chains'
 
 import { NetworkId } from '@/lib/config'
+import { SdkConfig } from '@/lib/connext/config'
 
 const GNOSIS_DOMAIN_ID = '6778479'
 
