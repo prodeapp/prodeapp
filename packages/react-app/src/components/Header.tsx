@@ -18,7 +18,7 @@ import { ReactComponent as Logo } from '@/assets/logo.svg'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
-import { BRIDGE_URL, formatAmount, getDocsUrl } from '@/lib/helpers'
+import { formatAmount, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
 
@@ -177,9 +177,6 @@ export default function Header() {
 							<RouterLink to='/markets/new'>
 								<Trans id='Create Market' />
 							</RouterLink>
-							<a href={BRIDGE_URL} target='_blank' rel='noreferrer'>
-								<Trans id='Bridge' />
-							</a>
 							<RouterLink to='/ads'>
 								<Trans id='Ads' />
 							</RouterLink>
@@ -187,7 +184,7 @@ export default function Header() {
 								<Trans id='Documentation' />
 							</a>
 							<DropdownMenu text={languages[locale]}>
-								{Object.keys(languages).map((lang) => {
+								{Object.keys(languages).map(lang => {
 									return (
 										<Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>
 											{languages[lang]}

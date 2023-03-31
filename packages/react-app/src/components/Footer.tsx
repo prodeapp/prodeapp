@@ -6,11 +6,11 @@ import React from 'react'
 import { Link, Link as RouterLink } from 'react-router-dom'
 
 import { ReactComponent as Logo } from '@/assets/logo.svg'
-import { BRIDGE_URL, getDocsUrl } from '@/lib/helpers'
+import { getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 const FooterNav = styled('div', {
-	shouldForwardProp: (prop) => prop !== 'ml',
+	shouldForwardProp: prop => prop !== 'ml',
 })<{ ml?: number }>(({ theme, ml }) => ({
 	'& > div': {
 		display: 'inline-block',
@@ -95,11 +95,6 @@ export default function Footer() {
 							<RouterLink to='/markets/new'>
 								<Trans id='Create Market' />
 							</RouterLink>
-						</div>
-						<div>
-							<a href={BRIDGE_URL} target='_blank' rel='noreferrer'>
-								<Trans id='Bridge' />
-							</a>
 						</div>
 						<div>
 							<RouterLink to='/ads'>

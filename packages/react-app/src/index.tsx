@@ -9,7 +9,6 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { WagmiConfig } from 'wagmi'
 
 import Layout from './components/Layout'
-import WelcomeDialog from './components/WelcomeDialog'
 import { GlobalContextProvider } from './lib/GlobalContext'
 import { I18nProvider } from './lib/I18nProvider'
 import { ReactQueryProvider } from './lib/react-query'
@@ -39,7 +38,6 @@ ReactDOM.render(
 						<CssBaseline />
 						<I18nProvider>
 							<GlobalContextProvider>
-								<WelcomeDialog />
 								<HashRouter>
 									<Routes>
 										<Route element={<Layout />}>

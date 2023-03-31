@@ -19,8 +19,6 @@ import { DecimalBigNumber } from './DecimalBigNumber'
 import { ANSWERED_TOO_SOON, INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT } from './reality'
 import { I18nContextProps } from './types'
 
-export const BRIDGE_URL = 'https://bridge.connext.network/?receivingChainId=100'
-
 const dateLocales = {
 	es,
 	en: enGB,
