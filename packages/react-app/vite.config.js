@@ -9,6 +9,9 @@ import checker from 'vite-plugin-checker'
 
 export default ({ mode }) => {
   return defineConfig({
+    define: {
+      'global.WebSocket': 'globalThis.WebSocket',
+    },
     plugins: [
       react({
         include: "**/*.tsx",
