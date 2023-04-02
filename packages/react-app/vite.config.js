@@ -28,12 +28,6 @@ export default ({ mode }) => {
     },
     build: {
       outDir: "./build",
-      rollupOptions: {
-        plugins: [{ ...polyfillNode({ fs: true }), enforce: "post" }],
-      },
-      commonjsOptions: {
-        transformMixedEsModules: true,
-      },
     },
     test: {
       setupFiles: "src/setupTests.ts",
