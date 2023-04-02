@@ -1,9 +1,11 @@
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { Address } from '@wagmi/core'
 import React, { useEffect } from 'react'
@@ -19,7 +21,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMarket } from '@/hooks/useMarket'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSubmissionDeposit } from '@/hooks/useSubmissionDeposit'
-import { CURATE_REGISTRY_ADDRESSES, DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId, getConfigAddress, isMainChain } from '@/lib/config'
 import { FORMAT_GROUPS, getEncodedParams, TOURNAMENT_FORMATS } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -143,15 +145,14 @@ function GroupsForm() {
 
 function CurateSubmit() {
 	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const { marketId } = useParams()
-	const { data: market } = useMarket(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
-	const { isLoading, data: events } = useEvents(String(marketId) as Address, chain?.id || DEFAULT_CHAIN)
+	const { data: market } = useMarket(String(marketId) as Address, chainId)
+	const { isLoading, data: events } = useEvents(String(marketId) as Address, chainId)
 
 	const { address } = useAccount()
 
-	const { data: submissionDeposit } = useSubmissionDeposit(
-		CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)]
-	)
+	const { data: submissionDeposit } = useSubmissionDeposit(getConfigAddress('CURATE_REGISTRY', chainId), chainId)
 
 	const useFormReturn = useForm<CurateSubmitFormValues>({
 		defaultValues: {
@@ -183,7 +184,7 @@ function CurateSubmit() {
 	const format = useWatch({ control, name: 'format' })
 
 	const { isSuccess, error, write } = useSendRecklessTx({
-		address: CURATE_REGISTRY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof CURATE_REGISTRY_ADDRESSES)],
+		address: getConfigAddress('CURATE_REGISTRY', chainId),
 		abi: GeneralizedTCRAbi,
 		functionName: 'addItem',
 	})
@@ -218,6 +219,14 @@ function CurateSubmit() {
 		)
 	}
 
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
+			</Alert>
+		)
+	}
+
 	if (isLoading) {
 		return (
 			<div>
@@ -237,7 +246,7 @@ function CurateSubmit() {
 	const onSubmit = async (data: CurateSubmitFormValues) => {
 		try {
 			const encodedParams = await getEncodedParams(
-				chain?.id || DEFAULT_CHAIN,
+				chainId,
 				data,
 				getQuestionsHash(data.questions.map((question) => question.value)),
 				data.questions.map((question) => question.value)

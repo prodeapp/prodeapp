@@ -3,15 +3,16 @@ import { useQuery } from '@tanstack/react-query'
 import { getContract, getProvider } from '@wagmi/core'
 
 import { MarketAbi } from '@/abi/Market'
+import { filterChainId } from '@/lib/config'
 
-export const useBetToken = (marketId: string, tokenId: BigNumber) => {
+export const useBetToken = (marketId: string, tokenId: BigNumber, chainId: number) => {
 	return useQuery<string, Error>(
-		['useBetToken', { marketId, tokenId }],
+		['useBetToken', { marketId, tokenId, chainId }],
 		async () => {
 			const contract = getContract({
 				address: marketId,
 				abi: MarketAbi,
-				signerOrProvider: getProvider(),
+				signerOrProvider: getProvider({ chainId: filterChainId(chainId) }),
 			})
 
 			const tokenUri = await contract.tokenURI(tokenId)

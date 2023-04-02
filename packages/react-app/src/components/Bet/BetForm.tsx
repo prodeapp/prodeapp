@@ -4,16 +4,16 @@ import { AddressZero } from '@ethersproject/constants'
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControl } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { useAccount, useNetwork } from 'wagmi'
+import { erc20ABI, useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
@@ -25,7 +25,9 @@ import { useBetToken } from '@/hooks/useBetToken'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
-import { usePlaceBet } from '@/hooks/usePlaceBet'
+import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
+import { useSendTx } from '@/hooks/useSendTx'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
 
@@ -43,8 +45,8 @@ type BetFormProps = {
 	cancelHandler: () => void
 }
 
-function BetNFT({ marketId, tokenId }: { marketId: string; tokenId: BigNumber }) {
-	const { data: image = '' } = useBetToken(marketId, tokenId)
+function BetNFT({ marketId, tokenId, chainId }: { marketId: string; tokenId: BigNumber; chainId: number }) {
+	const { data: image = '' } = useBetToken(marketId, tokenId, chainId)
 
 	if (!image) {
 		return null
@@ -65,6 +67,22 @@ function BetNFT({ marketId, tokenId }: { marketId: string; tokenId: BigNumber })
 			</div>
 		</div>
 	)
+}
+
+function getApproveTxParams(approve: UsePlaceBetReturn['approve']) {
+	if (!approve) {
+		return {}
+	}
+
+	return {
+		address: approve.token,
+		abi: erc20ABI,
+		functionName: 'approve',
+		args: [approve.spender, approve.amount],
+		onTxSuccess: () => {
+			queryClient.invalidateQueries(['useTokenAllowance'])
+		},
+	}
 }
 
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
@@ -94,18 +112,24 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach((event) => append({ value: '', questionId: event.id }))
+		events && events.forEach(event => append({ value: '', questionId: event.id }))
 	}, [events, append, remove])
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
 	const attribution = isAddress(referral) ? referral : AddressZero
 
-	const { isLoading, error, placeBet, tokenId, hasVoucher } = usePlaceBet(
+	const { isLoading, error, placeBet, tokenId, hasVoucher, isCrossChainBet, approve } = usePlaceBet(
 		market.id,
-		chainId,
+		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
+		chain?.id || DEFAULT_CHAIN,
 		market.price,
 		attribution,
 		outcomes
+	)
+
+	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+		// @ts-ignore
+		getApproveTxParams(approve)
 	)
 
 	useEffect(() => {
@@ -122,22 +146,47 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
-	if (isLoadingEvents) {
+	if (isLoading || isLoadingApprove || isLoadingEvents) {
 		return (
-			<div>
-				<Trans id='Loading...' />
+			<div style={{ textAlign: 'center', marginBottom: 15 }}>
+				<CircularProgress />
 			</div>
 		)
 	}
 
 	if (tokenId !== false) {
+		if (tokenId === CROSS_CHAIN_TOKEN_ID) {
+			return (
+				<BigAlert severity='info' sx={{ mb: 4 }}>
+					<Box
+						sx={{
+							display: { md: 'flex' },
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<div>
+							<div>
+								<AlertTitle>
+									<Trans id='Congratulations!' />
+								</AlertTitle>
+							</div>
+							<div>
+								<Trans id='Your bet is travelling to the destination chain, it will arrive in a few minutes!' />
+							</div>
+						</div>
+					</Box>
+				</BigAlert>
+			)
+		}
+
 		return (
 			<>
 				<Alert severity='success' sx={{ mb: 3 }}>
 					<Trans id='Bet placed!' />
 				</Alert>
 
-				<BetNFT marketId={market.id} tokenId={tokenId} />
+				<BetNFT marketId={market.id} tokenId={tokenId} chainId={chainId} />
 			</>
 		)
 	}
@@ -163,14 +212,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 			<Alert severity='error'>
 				<Trans id='Error loading events' />.
 			</Alert>
-		)
-	}
-
-	if (isLoading) {
-		return (
-			<div style={{ textAlign: 'center', marginBottom: 15 }}>
-				<CircularProgress />
-			</div>
 		)
 	}
 
@@ -216,9 +257,35 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</BigAlert>
 			)}
 
-			{error && (
+			{isCrossChainBet && (
+				<BigAlert severity='info' sx={{ mb: 4 }}>
+					<Box
+						sx={{
+							display: { md: 'flex' },
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
+						<div>
+							<div>
+								<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
+									<Trans id='This market was created in Gnosis Chain.' />
+								</AlertTitle>
+							</div>
+							<div>
+								<Trans
+									id='You can bet from {chain} with USDC. We will take care of bridging the funds for you.'
+									values={{ chain: chain.name }}
+								/>
+							</div>
+						</div>
+					</Box>
+				</BigAlert>
+			)}
+
+			{(error || approveError) && (
 				<Alert severity='error' sx={{ mb: 2 }}>
-					{error.message}
+					{error?.message || approveError?.message}
 				</Alert>
 			)}
 			<Grid container spacing={3}>
@@ -263,9 +330,17 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
-					<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-						<Trans id='Place Bet' /> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
-					</Button>
+					{approve && approveTokens && (
+						<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
+							<Trans id='Approve USDC' />{' '}
+							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+						</Button>
+					)}
+					{!approve && (
+						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
+							<Trans id='Place Bet' /> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+						</Button>
+					)}
 				</Grid>
 			</Grid>
 		</form>

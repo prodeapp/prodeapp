@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/react'
-import { Button } from '@mui/material'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
 import { Address } from '@wagmi/core'
 import React from 'react'

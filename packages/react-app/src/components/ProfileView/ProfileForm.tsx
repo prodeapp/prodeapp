@@ -1,10 +1,10 @@
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControl } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 import { Address } from '@wagmi/core'
 import React from 'react'
@@ -15,7 +15,7 @@ import { KeyValueAbi } from '@/abi/KeyValue'
 import { FormError } from '@/components'
 import { usePlayer } from '@/hooks/usePlayer'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 export type ProfileFormValues = {
 	name: string
@@ -43,7 +43,7 @@ function getTxParams(
 	}
 
 	return {
-		address: KEY_VALUE_ADDRESSES[chainId as keyof typeof KEY_VALUE_ADDRESSES],
+		address: getConfigAddress('KEY_VALUE', chainId),
 		abi: KeyValueAbi,
 		functionName: 'setUsername',
 		args: [userId, name],
@@ -53,6 +53,7 @@ function getTxParams(
 export default function ProfileForm({ defaultName }: { defaultName: string }) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const { data: player } = usePlayer((address || '') as Address)
 
 	const {
@@ -68,24 +69,10 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 
 	const name = useWatch({ control, name: 'name' })
 
-	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(
-		getTxParams(chain?.id || DEFAULT_CHAIN, address, name)
-	)
+	const { isPrepareError, isLoading, isSuccess, error, write } = useSendTx(getTxParams(chainId, address, name))
 
 	if (!address) {
 		return null
-	}
-
-	if (!chain || chain.unsupported) {
-		return (
-			<div style={wrapperStyles}>
-				<div style={innerStyles}>
-					<Alert severity='error'>
-						<Trans id='UNSUPPORTED_CHAIN' />
-					</Alert>
-				</div>
-			</div>
-		)
 	}
 
 	if (isSuccess) {

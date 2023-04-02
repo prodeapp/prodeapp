@@ -1,7 +1,12 @@
 import { Trans } from '@lingui/react'
 import MenuIcon from '@mui/icons-material/Menu'
-import { AppBar, Box, Button, Container, IconButton, Toolbar } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
+import Toolbar from '@mui/material/Toolbar'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
@@ -12,8 +17,8 @@ import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.sv
 import { ReactComponent as Logo } from '@/assets/logo.svg'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
-import { BRIDGE_URL, formatAmount, getDocsUrl } from '@/lib/helpers'
+import { getConfigAddress, isMainChain } from '@/lib/config'
+import { formatAmount, getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
 
@@ -172,9 +177,6 @@ export default function Header() {
 							<RouterLink to='/markets/new'>
 								<Trans id='Create Market' />
 							</RouterLink>
-							<a href={BRIDGE_URL} target='_blank' rel='noreferrer'>
-								<Trans id='Bridge' />
-							</a>
 							<RouterLink to='/ads'>
 								<Trans id='Ads' />
 							</RouterLink>
@@ -206,7 +208,7 @@ function WalletMenu() {
 	const { data: claimArgs } = useClaimArgs(address || '')
 
 	const { isSuccess, write } = useSendRecklessTx({
-		address: REALITIO_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof REALITIO_ADDRESSES)],
+		address: getConfigAddress('REALITIO', chain?.id),
 		abi: RealityAbi,
 		functionName: 'claimMultipleAndWithdrawBalance',
 	})
@@ -231,7 +233,7 @@ function WalletMenu() {
 	return (
 		<>
 			<Box sx={{ display: 'flex', alignItems: 'center' }}>
-				{chain && !chain.unsupported && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
+				{chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
 					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
 						<Trans id='Claim' /> {formatAmount(claimArgs.total, chain.id)}
 					</Button>

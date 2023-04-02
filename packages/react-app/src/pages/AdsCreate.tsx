@@ -1,12 +1,12 @@
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useAccount, useNetwork } from 'wagmi'
@@ -16,7 +16,7 @@ import { FormError, FormLabel, FormRow } from '@/components'
 import { AdImg } from '@/components/ImgSvg'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { useSVGAdFactoryDeposit } from '@/hooks/useSVGFactoryDeposit'
-import { DEFAULT_CHAIN, SVG_AD_FACTORY_ADDRESSES } from '@/lib/config'
+import { getConfigAddress, isMainChain } from '@/lib/config'
 
 import { Banner } from './MarketsCreate'
 
@@ -56,7 +56,7 @@ const getImageResult = async (file: File) => {
 	return new Promise<string | ArrayBuffer>((resolve, reject) => {
 		const reader = new FileReader()
 
-		reader.onload = function(e) {
+		reader.onload = function (e) {
 			const result = e?.target?.result || ''
 
 			if (result === '') {
@@ -96,7 +96,7 @@ function AdsCreate() {
 	const { chain } = useNetwork()
 
 	const { isSuccess, isLoading, error, write } = useSendRecklessTx({
-		address: SVG_AD_FACTORY_ADDRESSES[chain?.id || (DEFAULT_CHAIN as keyof typeof SVG_AD_FACTORY_ADDRESSES)],
+		address: getConfigAddress('SVG_AD_FACTORY', chain?.id),
 		abi: SVGFactoryAbi,
 		functionName: 'createAd',
 	})
@@ -118,6 +118,14 @@ function AdsCreate() {
 
 	if (!chain || chain.unsupported) {
 		return <Alert severity='error'>{i18n._('UNSUPPORTED_CHAIN')}</Alert>
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
+			</Alert>
+		)
 	}
 
 	const onSubmit = async (data: AdCreateFormValues) => {
@@ -228,7 +236,7 @@ function AdsCreate() {
 								<TextField
 									{...register('url', {
 										required: i18n._('This field is required.'),
-										validate: v => isValidUrl(v) || i18n._('Invalid URL'),
+										validate: (v) => isValidUrl(v) || i18n._('Invalid URL'),
 									})}
 									error={!!errors.url}
 									style={{ width: '100%' }}

@@ -1,6 +1,7 @@
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { MenuItem, Select } from '@mui/material'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import { FieldErrors } from 'react-hook-form/dist/types/errors'
@@ -39,13 +40,13 @@ function filterOutcomesInterdependencies(
 	outcomesValues: BetFormValues['outcomes'],
 	matchesInterdependencies: MatchesInterdependencies
 ): IndexedBetOutcome[] {
-	return outcomes.filter(outcome => {
+	return outcomes.filter((outcome) => {
 		if (matchesInterdependencies) {
 			const relatedQuestions: string[] = matchesInterdependencies[event.id] ?? []
 			const possibleOutcomes: string[] = []
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
-				const questionPos = events.findIndex(event => event.id === questionId)
+				const questionPos = events.findIndex((event) => event.id === questionId)
 				const userSelectionIndex = outcomesValues[questionPos].value
 				if (userSelectionIndex !== '') {
 					const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
@@ -81,8 +82,8 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 			return
 		}
 
-		inverseInterdependencies[event.id].forEach(matchDependencyId => {
-			const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId)
+		inverseInterdependencies[event.id].forEach((matchDependencyId) => {
+			const matchDependencyIndex = outcomes.findIndex((outcome) => outcome.questionId === matchDependencyId)
 			if (outcomes[matchDependencyIndex].value !== '') {
 				setValue(`outcomes.${matchDependencyIndex}.value`, '', {
 					shouldValidate: true,
@@ -111,7 +112,7 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 							onOutcomeChange()
 						}}
 					>
-						{getOutcomes(event, events, outcomes, matchesInterdependencies).map(outcome => (
+						{getOutcomes(event, events, outcomes, matchesInterdependencies).map((outcome) => (
 							<MenuItem value={outcome.value} key={outcome.value}>
 								{transOutcome(outcome.text)}
 							</MenuItem>

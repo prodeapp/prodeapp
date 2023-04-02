@@ -1,10 +1,12 @@
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControlLabel, FormGroup, Switch } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
 import Grid from '@mui/material/Grid'
 import { styled, useTheme } from '@mui/material/styles'
+import Switch from '@mui/material/Switch'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { Address } from '@wagmi/core'
@@ -25,7 +27,7 @@ import ReferralLink from '@/components/MarketView/ReferralLink'
 import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
 import { useMarket } from '@/hooks/useMarket'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
@@ -45,7 +47,7 @@ type MarketSections = 'bet' | 'bets' | 'results' | 'stats'
 function MarketsView() {
 	const params = useParams()
 	const id = params.id as Address
-	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
+	const chainId = filterChainId(Number(params?.chainId || ''))
 
 	const { isLoading, data: market } = useMarket(id, chainId)
 	const [section, setSection] = useState<MarketSections>('bets')

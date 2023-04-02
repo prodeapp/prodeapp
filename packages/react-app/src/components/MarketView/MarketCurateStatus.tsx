@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/react'
-import { Skeleton } from '@mui/material'
+import Skeleton from '@mui/material/Skeleton'
 import { useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import { ReactComponent as ShieldCheckIcon } from '@/assets/icons/shield-check.s
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
 import { CurateItem } from '@/graphql/subgraph'
 import { useCurateItems } from '@/hooks/useCurateItems'
-import { CURATE_REGISTRY_ADDRESSES } from '@/lib/config'
+import { getConfigAddress } from '@/lib/config'
 
 function getActiveItem(curateItems?: CurateItem[]) {
 	if (!curateItems || curateItems.length === 0) {
@@ -74,7 +74,9 @@ function MarketCurateStatus({
 				</div>
 			) : (
 				<a
-					href={'https://curate.kleros.io/tcr/100/' + CURATE_REGISTRY_ADDRESSES[chainId] + '/' + activeItem.id}
+					href={
+						'https://curate.kleros.io/tcr/100/' + getConfigAddress('CURATE_REGISTRY', chainId) + '/' + activeItem.id
+					}
 					target='_blank'
 					rel='noreferrer'
 				>

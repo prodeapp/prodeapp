@@ -5,7 +5,7 @@ import { useNetwork } from 'wagmi'
 import { MarketViewAbi } from '@/abi/MarketView'
 import { MARKET_FACTORY_FIELDS, MarketFactory } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES, MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 const query = `
     ${MARKET_FACTORY_FIELDS}
@@ -17,11 +17,12 @@ const query = `
 `
 
 export const useMarketFactory = () => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory', chain.id], async () => {
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
+	return useQuery<MarketFactory | undefined, Error>(['useMarketFactory', chainId], async () => {
 		const response = await apolloProdeQuery<{
 			marketFactories: MarketFactory[]
-		}>(chain.id, query)
+		}>(chainId, query)
 
 		if (!response) throw new Error('No response from TheGraph')
 
@@ -37,16 +38,17 @@ export type MarketFactoryAttributes = {
 }
 
 export const useMarketFactoryAttributes = () => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	const factoryAddress = MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES]
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
+	const factoryAddress = getConfigAddress('MARKET_FACTORY', chainId)
 
-	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chain.id], async () => {
+	return useQuery<MarketFactoryAttributes, Error>(['useMarketFactoryAttributes', chainId], async () => {
 		const attrs = await readContract({
-			address: MARKET_VIEW_ADDRESSES[chain.id],
+			address: getConfigAddress('MARKET_VIEW', chainId),
 			abi: MarketViewAbi,
 			functionName: 'getMarketFactoryAttrs',
 			args: [factoryAddress],
-			chainId: chain.id,
+			chainId: filterChainId(chainId),
 		})
 
 		return {

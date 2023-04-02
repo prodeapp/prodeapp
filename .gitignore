@@ -30,3 +30,7 @@ packages/react-app/src/typechain
 
 packages/react-app/src/locales/_build/
 packages/react-app/src/locales/**/*.mjs
+# Local Netlify folder
+.netlify
+
+.idea

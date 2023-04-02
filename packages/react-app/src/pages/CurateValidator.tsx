@@ -16,7 +16,7 @@ import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { fetchEvents, useEvents } from '@/hooks/useEvents'
 import { getMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { DecodedCurateListFields, fetchCurateItemsByHash, getDecodedParams } from '@/lib/curate'
 import { getQuestionsHash } from '@/lib/reality'
 
@@ -59,9 +59,10 @@ function CurateValidator() {
 		},
 	})
 
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const [marketId, setMarketId] = useState('')
-	const { data: events } = useEvents(marketId as Address, chain.id)
+	const { data: events } = useEvents(marketId as Address, chainId)
 	const [results, setResults] = useState<ValidationResult[]>([])
 	const [itemJson, setItemJson] = useState<DecodedCurateListFields['Details'] | null>(null)
 
@@ -76,7 +77,7 @@ function CurateValidator() {
 		setResults(_results)
 
 		try {
-			itemProps = await getDecodedParams(chain.id, data.itemId.toLowerCase())
+			itemProps = await getDecodedParams(chainId, data.itemId.toLowerCase())
 			setItemJson(itemProps.Details)
 		} catch (e) {
 			setResults([{ type: 'error', message: i18n._('Item id not found') }])
@@ -90,7 +91,7 @@ function CurateValidator() {
 		)
 
 		// validate hash
-		const market = await fetchMarketByHash(chain.id, itemProps.Hash)
+		const market = await fetchMarketByHash(chainId, itemProps.Hash)
 
 		if (!market) {
 			_results.push({
@@ -100,24 +101,24 @@ function CurateValidator() {
 		} else {
 			_results.push({ type: 'success', message: i18n._('Market hash found') })
 
-			const events = await fetchEvents(chain.id, market.id)
+			const events = await fetchEvents(chainId, market.id)
 
 			// validate hash
 			_results.push(
-				getQuestionsHash(events.map((event) => event.id)) !== itemProps.Hash
+				getQuestionsHash(events.map(event => event.id)) !== itemProps.Hash
 					? { type: 'error', message: i18n._('Invalid market hash') }
 					: { type: 'success', message: i18n._('Valid market hash') }
 			)
 
 			// validate hash is not already registered
-			const marketCurations = await fetchCurateItemsByHash(chain.id, itemProps.Hash)
+			const marketCurations = await fetchCurateItemsByHash(chainId, itemProps.Hash)
 
 			_results.push(
 				marketCurations.length > 1
 					? {
 							type: 'error',
 							message: i18n._("This market has more than 1 submissions. ItemId's: {0}", {
-								0: marketCurations.map((tc) => tc.id).join(', '),
+								0: marketCurations.map(tc => tc.id).join(', '),
 							}),
 					  }
 					: {

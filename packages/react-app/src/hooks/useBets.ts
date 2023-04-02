@@ -9,7 +9,7 @@ import { MarketViewAbi } from '@/abi/MarketView'
 import { Bytes } from '@/abi/types'
 import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -62,16 +62,16 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 
 	const marketBetsView = (
 		await readContract({
-			address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+			address: getConfigAddress('MARKET_VIEW', chainId),
 			abi: MarketViewAbi,
 			functionName: 'getMarketBets',
 			args: [marketId],
-			chainId,
+			chainId: filterChainId(chainId),
 		})
 	).slice()
 
 	const bets = await Promise.all(
-		marketBetsView.map(async (marketBetView) => await marketBetViewToBet(chainId, marketBetView))
+		marketBetsView.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
 	)
 
 	bets.sort((a, b) => b.points - a.points)
@@ -80,11 +80,12 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 }
 
 async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<Bet[]> {
-	const contracts = graphBets.map((graphBet) => ({
-		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+	const contracts = graphBets.map(graphBet => ({
+		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
 		args: [graphBet.market.id, graphBet.tokenID],
+		chainId: filterChainId(chainId),
 	}))
 
 	const marketBetsView = await readContracts({
@@ -94,9 +95,9 @@ async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<
 	return await Promise.all(
 		marketBetsView
 			// remove multicall errors
-			.filter((mbv) => mbv !== null)
+			.filter(mbv => mbv !== null)
 			// @ts-ignore
-			.map(async (marketBetView) => await marketBetViewToBet(chainId, marketBetView))
+			.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
 	)
 }
 
@@ -150,7 +151,7 @@ export function useIndexedBetsRewards(graphBets?: GraphBet[]) {
 }
 
 export const useBetsRewards = (bets: Bet[], chainId: number) => {
-	const betsId = bets.map((b) => b.id.toLowerCase())
+	const betsId = bets.map(b => b.id.toLowerCase())
 
 	return useQuery<GraphBet[], Error>(['useBetsRewards', { bets: betsId, chainId }], async () => {
 		const query = `

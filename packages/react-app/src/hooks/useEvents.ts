@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 
 import { MarketViewAbi } from '@/abi/MarketView'
 import { Event } from '@/graphql/subgraph'
-import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
 import { ArrayElement } from '@/lib/types'
 
@@ -39,20 +39,20 @@ type FetchEvents = (chainId: number, marketId: Address, orderBy?: 'openingTs' | 
 
 export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'openingTs') => {
 	const marketEventsView = await readContract({
-		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getEvents',
 		args: [marketId],
-		chainId,
+		chainId: filterChainId(chainId),
 	})
 
-	if (typeof marketEventsView.find((e) => e.templateId.eq(0)) !== 'undefined') {
+	if (typeof marketEventsView.find(e => e.templateId.eq(0)) !== 'undefined') {
 		// it needs to be added to RealityRegistry first
 		return []
 	}
 
 	const events = await Promise.all(
-		marketEventsView.map(async (marketEventView) => await marketEventViewToEvent(marketEventView))
+		marketEventsView.map(async marketEventView => await marketEventViewToEvent(marketEventView))
 	)
 
 	events.sort((a, b) => (a[orderBy] === b[orderBy] ? 0 : a[orderBy] > b[orderBy] ? 1 : -1))

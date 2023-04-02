@@ -2,10 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { FormControl, MenuItem, Select } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
+import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import React, { useEffect } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useAccount, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
@@ -15,7 +17,7 @@ import { Bytes } from '@/abi/types'
 import { BoxRow, BoxWrapper, FormError } from '@/components'
 import { Event } from '@/graphql/subgraph'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, REALITIO_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress, isMainChain } from '@/lib/config'
 import { formatAmount, getAnswerText, getTimeLeft, isFinalized } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import {
@@ -71,7 +73,7 @@ function getTxParams(
 	}
 
 	return {
-		address: REALITIO_ADDRESSES[chainId as keyof typeof REALITIO_ADDRESSES],
+		address: getConfigAddress('REALITIO', chainId),
 		abi: RealityAbi,
 		functionName: 'submitAnswer',
 		args: [eventId, formatOutcome(outcome), currentBond],
@@ -102,13 +104,13 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	const currentBond = event.lastBond.gt(0) ? event.lastBond.mul(2) : event.minBond
 
 	const { isLoading, isSuccess, error, write } = useSendTx(
-		getTxParams(chain?.id || DEFAULT_CHAIN, event.id, outcome, currentBond)
+		getTxParams(filterChainId(chain?.id), event.id, outcome, currentBond)
 	)
 
 	const outcomes = getOutcomes(event)
 
 	useEffect(() => {
-		if (!address || !chain || chain.unsupported) {
+		if (!address || !chain || chain.unsupported || !isMainChain(chain?.id)) {
 			setShowActions(false)
 			return
 		}
@@ -132,6 +134,14 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}

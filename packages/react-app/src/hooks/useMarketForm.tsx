@@ -9,7 +9,7 @@ import { useNetwork } from 'wagmi'
 import { MarketFactoryAbi } from '@/abi/MarketFactory'
 import { MarketFactoryV2Abi } from '@/abi/MarketFactoryV2'
 import { MarketFactoryAttributes, useMarketFactoryAttributes } from '@/hooks/useMarketFactory'
-import { DEFAULT_CHAIN, MARKET_FACTORY_ADDRESSES, MARKET_FACTORY_V2_ADDRESSES, MIN_BOND_VALUE } from '@/lib/config'
+import { filterChainId, getConfigAddress, getConfigNumber } from '@/lib/config'
 import { parseEvents } from '@/lib/helpers'
 import {
 	encodeOutcomes,
@@ -60,7 +60,7 @@ type EventData = {
 export function getEventData(questionPlaceholder: string, answers: Answers, marketName: string): EventData {
 	return {
 		question: questionPlaceholder.replace('[market]', marketName),
-		answers: answers.map((answerPlaceholder) => answerPlaceholder.value),
+		answers: answers.map(answerPlaceholder => answerPlaceholder.value),
 	}
 }
 
@@ -72,14 +72,14 @@ function orderByQuestionId(
 	realitio: string,
 	marketFactory: string
 ): MarketFactoryV2MetaDataStruct[] {
-	const questionsDataWithQuestionId = rawQuestionsData.map((rawQuestionData) => {
+	const questionsDataWithQuestionId = rawQuestionsData.map(rawQuestionData => {
 		return {
 			questionId: getQuestionId(rawQuestionData, arbitrator, timeout, minBond, realitio, marketFactory),
 			metadata: rawQuestionData.metadata,
 		}
 	})
 
-	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map((qd) => qd.metadata)
+	return questionsDataWithQuestionId.sort((a, b) => (a.questionId > b.questionId ? 1 : -1)).map(qd => qd.metadata)
 }
 
 interface UseMarketFormReturn {
@@ -104,7 +104,7 @@ export function getTxArgs(
 	const creatorFee = BigNumber.from(Math.round((step2State.managementFee * DIVISOR) / 100))
 	const price = parseUnits(String(step2State.price), 18)
 
-	const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map((event) => {
+	const questionsData: MarketFactoryV2QuestionWithMetadata[] = step1State.events.map(event => {
 		const eventData = getEventData(event.questionPlaceholder, event.answers, step1State.market)
 		return {
 			question: encodeQuestionText(
@@ -134,7 +134,7 @@ export function getTxArgs(
 		factoryAttrs.factory
 	)
 
-	const prizeWeights = step2State.prizeWeights.map((pw) => Math.round((pw.value * DIVISOR) / 100))
+	const prizeWeights = step2State.prizeWeights.map(pw => Math.round((pw.value * DIVISOR) / 100))
 
 	if (step2State.addLP) {
 		return [
@@ -187,16 +187,17 @@ export default function useMarketForm(
 	step2State: MarketFormStep2Values,
 	prepareTx: boolean
 ): UseMarketFormReturn {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	const [marketId, setMarketId] = useState<Address | ''>('')
 	const { data: factoryAttrs } = useMarketFactoryAttributes()
 
-	const minBond = MIN_BOND_VALUE[chain.id as keyof typeof MIN_BOND_VALUE]
+	const minBond = getConfigNumber('MIN_BOND', chainId)
 
 	const { isPrepared, isSuccess, error, write, receipt } = useSendTx(
 		// @ts-ignore
 		getTxParams(
-			MARKET_FACTORY_V2_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_V2_ADDRESSES],
+			getConfigAddress('MARKET_FACTORY_V2', chainId),
 			step1State,
 			step2State,
 			factoryAttrs,
@@ -208,11 +209,7 @@ export default function useMarketForm(
 	useEffect(() => {
 		if (receipt) {
 			const ethersInterface = new Interface(MarketFactoryAbi)
-			const events = parseEvents(
-				receipt,
-				MARKET_FACTORY_ADDRESSES[chain.id as keyof typeof MARKET_FACTORY_ADDRESSES],
-				ethersInterface
-			)
+			const events = parseEvents(receipt, getConfigAddress('MARKET_FACTORY', chainId), ethersInterface)
 			setMarketId(events?.[0].args?.market?.toLowerCase() || '')
 		}
 	}, [receipt])

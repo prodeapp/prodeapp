@@ -3,17 +3,20 @@ import { parseUnits } from '@ethersproject/units'
 import { ErrorMessage } from '@hookform/error-message'
 import { i18n } from '@lingui/core'
 import { Trans } from '@lingui/react'
-import { Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import Container from '@mui/material/Container'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
+import MenuItem from '@mui/material/MenuItem'
 import { styled, useTheme } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -33,7 +36,7 @@ import { BigAlert, FormError, FormLabel, FormRow } from '@/components'
 import EventBuilder from '@/components/MarketCreate/EventBuilder'
 import PrizeWeightsBuilder from '@/components/MarketCreate/PrizeWeightsBuilder'
 import useMarketForm, { getEventData, MarketFormStep1Values, MarketFormStep2Values } from '@/hooks/useMarketForm'
-import { DEFAULT_CHAIN, NETWORK_TOKEN } from '@/lib/config'
+import { filterChainId, getConfigString, isMainChain } from '@/lib/config'
 import {
 	formatAmount,
 	getCategoryText,
@@ -222,7 +225,8 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 		handleSubmit,
 	} = useFormReturn
 
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 
 	useEffect(() => {
 		useFormReturn.register('prizeDivisor', {
@@ -240,7 +244,7 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 				<div>
 					<FormRow>
 						<FormLabel>
-							<Trans id='Bet Price ({token})' values={{ token: NETWORK_TOKEN[chain.id] }} />
+							<Trans id='Bet Price ({token})' values={{ token: getConfigString('NETWORK_TOKEN', chainId) }} />
 						</FormLabel>
 						<div>
 							<TextField
@@ -532,7 +536,8 @@ function PreviewStep({
 	setActiveStep,
 	isPrepared,
 }: PreviewStepProps & { isPrepared: boolean }) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 
 	const prizes = [i18n._('First prize'), i18n._('Second prize'), i18n._('Third prize')]
 
@@ -579,7 +584,7 @@ function PreviewStep({
 
 			<PreviewText
 				title={i18n._('Bet Price')}
-				value={formatAmount(parseUnits(String(step2State.price), 18), chain.id)}
+				value={formatAmount(parseUnits(String(step2State.price), 18), chainId)}
 				setActiveStep={setActiveStep}
 				step={FormSteps.STEP_2}
 			/>
@@ -661,12 +666,13 @@ function PreviewStep({
 }
 
 function SuccessStep({ marketName, marketId, step1State, step2State }: SuccessStepProps) {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 
 	const shareUrl = getTwitterShareUrl(
 		i18n._(`I have created a new market on @prode_eth: {0} {1}`, {
 			0: marketName,
-			1: getMarketUrl(marketId, chain.id),
+			1: getMarketUrl(marketId, chainId),
 		})
 	)
 
@@ -768,7 +774,7 @@ function SuccessStep({ marketName, marketId, step1State, step2State }: SuccessSt
 						</ul>
 
 						<div>
-							<Button component={RouterLink} to={paths.market(marketId, chain.id)} variant='outlined' fullWidth>
+							<Button component={RouterLink} to={paths.market(marketId, chainId)} variant='outlined' fullWidth>
 								<Trans id='Go to the market' />
 							</Button>
 						</div>
@@ -981,6 +987,14 @@ function MarketsCreate() {
 		return (
 			<Alert severity='error'>
 				<Trans id='UNSUPPORTED_CHAIN' />
+			</Alert>
+		)
+	}
+
+	if (!isMainChain(chain?.id)) {
+		return (
+			<Alert severity='error'>
+				<Trans id='ONLY_MAIN_CHAIN' />
 			</Alert>
 		)
 	}

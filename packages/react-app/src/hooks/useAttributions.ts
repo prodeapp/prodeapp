@@ -3,7 +3,7 @@ import { useNetwork } from 'wagmi'
 
 import { Attribution, ATTRIBUTION_FIELDS } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { buildQuery } from '@/lib/SubgraphQueryBuilder'
 
 const query = `
@@ -20,14 +20,15 @@ interface Props {
 }
 
 export const useAttributions = ({ provider }: Props) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 	return useQuery<Attribution[], Error>(
-		['useAttributions', provider, chain.id],
+		['useAttributions', provider, chainId],
 		async () => {
 			const variables = { provider: provider?.toLowerCase() }
 
 			const response = await apolloProdeQuery<{ attributions: Attribution[] }>(
-				chain.id,
+				chainId,
 				buildQuery(query, variables),
 				variables
 			)

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/react'
-import { Button } from '@mui/material'
+import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import { Address } from '@wagmi/core'
 import React from 'react'
@@ -9,18 +9,18 @@ import { Link as RouterLink, useParams } from 'react-router-dom'
 import BetDetails from '@/components/Bet/BetDetails'
 import { useBet } from '@/hooks/useBet'
 import { useBetToken } from '@/hooks/useBetToken'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { paths } from '@/lib/paths'
 
 function TokenView() {
 	const params = useParams()
 	const id = params.id as Address
 	const tokenId = Number(params.tokenId)
-	const chainId = Number(params?.chainId || '') || DEFAULT_CHAIN
+	const chainId = filterChainId(Number(params?.chainId || ''))
 
 	const { isLoading, data: bet } = useBet(id, tokenId)
 
-	const { data: image = '' } = useBetToken(id, BigNumber.from(tokenId))
+	const { data: image = '' } = useBetToken(id, BigNumber.from(tokenId), chainId)
 
 	if (isLoading) {
 		return (

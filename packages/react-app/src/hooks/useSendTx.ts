@@ -19,7 +19,13 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	args,
 	overrides,
 	enabled,
-}: UsePrepareContractWriteConfig<TAbi, TFunctionName>) => {
+	onTxSuccess = () => {
+		/* do nothing */
+	},
+	onTxError = () => {
+		/* do nothing */
+	},
+}: UsePrepareContractWriteConfig<TAbi, TFunctionName> & { onTxSuccess?: () => void; onTxError?: () => void }) => {
 	const [isTxSuccess, setIsTxSuccess] = useState(false)
 	const [isTxError, setIsTxError] = useState(false)
 	const [receipt, setReceipt] = useState<TransactionReceipt | undefined>()
@@ -53,10 +59,12 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 			setIsTxSuccess(isSuccess)
 			setIsTxError(!isSuccess)
 			setReceipt(data)
+			isSuccess ? onTxSuccess() : onTxError()
 		},
 		onError: () => {
 			setIsTxSuccess(false)
 			setIsTxError(true)
+			onTxError()
 		},
 	})
 

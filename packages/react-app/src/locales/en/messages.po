@@ -701,7 +701,10 @@ msgid "Unknown"
 msgstr "Unknown"
 
 msgid "UNSUPPORTED_CHAIN"
-msgstr "Unsupported chain, please switch to Gnosis Chain."
+msgstr "Unsupported chain, please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
+
+msgid "ONLY_MAIN_CHAIN"
+msgstr "Please switch to Gnosis Chain."
 
 msgid "Username updated"
 msgstr "Username updated"
@@ -756,6 +759,9 @@ msgstr "Yes"
 
 msgid "You"
 msgstr "You"
+
+msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
+msgstr "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
 
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."

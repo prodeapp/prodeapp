@@ -4,20 +4,21 @@ import { useNetwork } from 'wagmi'
 
 import { KeyValueAbi } from '@/abi/KeyValue'
 import { Player } from '@/graphql/subgraph'
-import { DEFAULT_CHAIN, KEY_VALUE_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 export const usePlayer = (playerId: Address) => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
 
 	return useQuery<Player, Error>(
-		['usePlayer', playerId, chain.id],
+		['usePlayer', playerId, chainId],
 		async () => {
 			const username = await readContract({
-				address: KEY_VALUE_ADDRESSES[chain.id as keyof typeof KEY_VALUE_ADDRESSES],
+				address: getConfigAddress('KEY_VALUE', chainId),
 				abi: KeyValueAbi,
 				functionName: 'username',
 				args: [playerId],
-				chainId: chain.id,
+				chainId: filterChainId(chainId),
 			})
 
 			return {

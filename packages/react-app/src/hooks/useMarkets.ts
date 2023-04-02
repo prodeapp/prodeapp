@@ -7,7 +7,7 @@ import { MarketViewAbi } from '@/abi/MarketView'
 import { GraphMarket, Market, MARKET_FIELDS } from '@/graphql/subgraph'
 import { marketViewToMarket } from '@/hooks/useMarket'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { MARKET_VIEW_ADDRESSES } from '@/lib/config'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 import { getSubcategories } from '@/lib/helpers'
 import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
 
@@ -31,12 +31,12 @@ export interface UseMarketsFilters {
 }
 
 async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[]): Promise<Market[]> {
-	const contracts = graphMarkets.map((graphMarket) => ({
-		address: MARKET_VIEW_ADDRESSES[chainId as keyof typeof MARKET_VIEW_ADDRESSES],
+	const contracts = graphMarkets.map(graphMarket => ({
+		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
 		args: [graphMarket.id],
-		chainId,
+		chainId: filterChainId(chainId),
 	}))
 
 	const markets = await readContracts({
@@ -44,7 +44,7 @@ async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[
 	})
 
 	// @ts-ignore
-	return markets.map((market) => marketViewToMarket(market)).filter((market) => market.id !== AddressZero)
+	return markets.map(market => marketViewToMarket(market)).filter(market => market.id !== AddressZero)
 }
 type UseMarkets = (chainId: number, filters: UseMarketsFilters) => UseQueryResult<Market[], Error>
 export const useMarkets: UseMarkets = (chainId, { curated, status, category, minEvents, creatorId } = {}) => {
@@ -54,7 +54,7 @@ export const useMarkets: UseMarkets = (chainId, { curated, status, category, min
 			const variables: QueryVariables = { curated, orderDirection: 'desc' }
 
 			if (category) {
-				variables['category_in'] = [category, ...getSubcategories(category).map((s) => s.id)]
+				variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)]
 			}
 
 			if (minEvents) {

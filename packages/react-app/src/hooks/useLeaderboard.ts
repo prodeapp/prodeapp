@@ -3,7 +3,7 @@ import { useNetwork } from 'wagmi'
 
 import { Leaderboard, LEADERBOARD_FIELDS } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
-import { DEFAULT_CHAIN } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 
 const query = `
     ${LEADERBOARD_FIELDS}
@@ -15,9 +15,10 @@ const query = `
 `
 
 export const useLeaderboard = () => {
-	const { chain = { id: DEFAULT_CHAIN } } = useNetwork()
-	return useQuery<Leaderboard[], Error>(['useLeaderboard', chain.id], async () => {
-		const response = await apolloProdeQuery<{ players: Leaderboard[] }>(chain.id, query)
+	const { chain } = useNetwork()
+	const chainId = filterChainId(chain?.id)
+	return useQuery<Leaderboard[], Error>(['useLeaderboard', chainId], async () => {
+		const response = await apolloProdeQuery<{ players: Leaderboard[] }>(chainId, query)
 
 		if (!response) throw new Error('No response from TheGraph')
 
