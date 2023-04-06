@@ -242,6 +242,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										control={control}
 										errors={errors}
 										setValue={setValue}
+										currentPrice={market.price}
 									/>
 									<FormError>
 										<ErrorMessage errors={errors} name={`outcomes.${i}.value`} />
