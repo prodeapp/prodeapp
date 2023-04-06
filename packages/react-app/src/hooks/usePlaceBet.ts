@@ -108,23 +108,38 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (
 	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId }
 }
 
-function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
+function getResults(outcomes: BetFormValues['outcomes'], combinations: number): Bytes[] | false {
 	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
 	}
 
-	return (
-		outcomes
-			/**
-			 * ============================================================
-			 * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
-			 * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
-			 * ============================================================
-			 */
-			.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
-			.map((outcome) => formatOutcome(outcome.value))
-	)
+	const orderedOutcomes = outcomes
+		/**
+		 * ============================================================
+		 * THE RESULTS MUST BE SORTED BY QUESTION ID IN 'ascending' ORDER
+		 * OTHERWISE THE BETS WILL BE PLACED INCORRECTLY
+		 * ============================================================
+		 */
+		.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
+		.map((outcome) => formatOutcome(outcome.value))
+
+	const allOutputs = new Array(combinations)
+	for (let i = 0; i < combinations; i++) {
+		allOutputs[i] = new Array(orderedOutcomes.length)
+	}
+
+	let repetitions = combinations
+	for (let j = 0; j < orderedOutcomes.length; j++) {
+		const outcome = orderedOutcomes[j]
+		repetitions = repetitions / outcome.length
+		for (let i = 0; i < combinations; i++) {
+			const index = (i / repetitions) % outcome.length
+			allOutputs[i][j] = outcome[index]
+		}
+	}
+
+	return orderedOutcomes
 }
 
 export const usePlaceBet: UsePlaceBetFn = (
@@ -134,7 +149,15 @@ export const usePlaceBet: UsePlaceBetFn = (
 	attribution: Address,
 	outcomes: BetFormValues['outcomes']
 ) => {
-	const results = getResults(outcomes)
+	let combinations = 1
+	for (let i = 0; i < outcomes.length; i++) {
+		const outcome = outcomes[i]
+		if (Array.isArray(outcome)) {
+			combinations = combinations * outcome.length
+		}
+	}
+
+	const results = getResults(outcomes, combinations)
 
 	const { address } = useAccount()
 	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
