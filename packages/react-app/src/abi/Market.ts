@@ -259,6 +259,20 @@ export const MarketAbi = [
 	},
 	{
 		type: 'function',
+		stateMutability: 'payable',
+		outputs: [{ type: 'uint256', name: '', internalType: 'uint256' }],
+		name: 'placeBets',
+		inputs: [
+			{ type: 'address[]', name: '_attributions', internalType: 'address[]' },
+			{
+				type: 'bytes32[][]',
+				name: '_resultsArray',
+				internalType: 'bytes32[][]',
+			},
+		],
+	},
+	{
+		type: 'function',
 		stateMutability: 'view',
 		outputs: [{ type: 'uint256', name: '', internalType: 'uint256' }],
 		name: 'price',

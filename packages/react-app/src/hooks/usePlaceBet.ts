@@ -108,6 +108,42 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (
 	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId }
 }
 
+const useBatchedPlaceBetWithMarket: UsePreparePlaceBetFn = (
+	marketId: Address,
+	chainId: number,
+	price: BigNumber,
+	attribution: Address[],
+	results: Bytes[][] | false
+) => {
+	const getTxParams = (
+		chainId: number,
+		attributions: Address[],
+		resultsArray: Bytes[][] | false
+	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBets'> => {
+		if (results === false) {
+			return {}
+		}
+
+		return {
+			address: marketId,
+			abi: MarketAbi,
+			functionName: 'placeBets',
+			args: [Array(results.length).fill(attribution), results],
+			overrides: {
+				value: price,
+			},
+		}
+	}
+
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(chainId, attributions, results))
+
+	const ethersInterface = new Interface(MarketAbi)
+	const events = parseEvents(receipt, marketId, ethersInterface)
+	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+
+	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId }
+}
+
 function getResults(outcomes: BetFormValues['outcomes'], combinations: number): Bytes[] | false {
 	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
@@ -135,7 +171,7 @@ function getResults(outcomes: BetFormValues['outcomes'], combinations: number): 
 		repetitions = repetitions / outcome.length
 		for (let i = 0; i < combinations; i++) {
 			const index = Math.floor(i / repetitions) % outcome.length
-			allOutputs[i][j] = outcome[index]
+			allOutputs[j][i] = outcome[index]
 		}
 	}
 
@@ -160,25 +196,38 @@ export const usePlaceBet: UsePlaceBetFn = (
 	const results = getResults(outcomes, combinations)
 
 	const { address } = useAccount()
-	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
-	const marketPlaceBet = usePlaceBetWithMarket(marketId, chainId, price, attribution, results)
-	const voucherPlaceBet = usePlaceBetWithVoucher(marketId, chainId, price, attribution, results)
+	if (combinations > 1) {
+		const marketBatchedPlaceBet = useBatchedPlaceBetWithMarket(marketId, chainId, price.mul(combinations), attribution, results)
 
-	// we need to keep track of the tokenId once a bet is placed using a voucher
-	// because hookReturn changes to marketPlaceBet and the previous tokenId is lost
-	let tokenId: BigNumber | false = false
-
-	if (marketPlaceBet.tokenId !== false) {
-		tokenId = marketPlaceBet.tokenId
-	} else if (voucherPlaceBet.tokenId !== false) {
-		tokenId = voucherPlaceBet.tokenId
+		return {
+			isLoading: marketBatchedPlaceBet.isLoading,
+			error: marketBatchedPlaceBet.error,
+			hasVoucher: false,
+			placeBet: marketBatchedPlaceBet.placeBet,
+			marketBatchedPlaceBet.tokenId,
+		}
+	} else {
+		const hasVoucher = useHasVoucher(address, marketId, chainId, price)
+		const marketPlaceBet = usePlaceBetWithMarket(marketId, chainId, price, attribution, results)
+		const voucherPlaceBet = usePlaceBetWithVoucher(marketId, chainId, price, attribution, results)
+		
+		// we need to keep track of the tokenId once a bet is placed using a voucher
+		// because hookReturn changes to marketPlaceBet and the previous tokenId is lost
+		let tokenId: BigNumber | false = false
+	
+		if (marketPlaceBet.tokenId !== false) {
+			tokenId = marketPlaceBet.tokenId
+		} else if (voucherPlaceBet.tokenId !== false) {
+			tokenId = voucherPlaceBet.tokenId
+		}
+	
+		return {
+			isLoading: hasVoucher ? voucherPlaceBet.isLoading : marketPlaceBet.isLoading,
+			error: hasVoucher ? voucherPlaceBet.error : marketPlaceBet.error,
+			hasVoucher: hasVoucher,
+			placeBet: hasVoucher ? voucherPlaceBet.placeBet : marketPlaceBet.placeBet,
+			tokenId,
+		}
 	}
-
-	return {
-		isLoading: hasVoucher ? voucherPlaceBet.isLoading : marketPlaceBet.isLoading,
-		error: hasVoucher ? voucherPlaceBet.error : marketPlaceBet.error,
-		hasVoucher: hasVoucher,
-		placeBet: hasVoucher ? voucherPlaceBet.placeBet : marketPlaceBet.placeBet,
-		tokenId,
-	}
+	
 }
