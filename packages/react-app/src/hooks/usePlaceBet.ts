@@ -134,7 +134,7 @@ function getResults(outcomes: BetFormValues['outcomes'], combinations: number): 
 		const outcome = orderedOutcomes[j]
 		repetitions = repetitions / outcome.length
 		for (let i = 0; i < combinations; i++) {
-			const index = (i / repetitions) % outcome.length
+			const index = Math.floor(i / repetitions) % outcome.length
 			allOutputs[i][j] = outcome[index]
 		}
 	}
