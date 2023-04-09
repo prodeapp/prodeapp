@@ -13,6 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+msgid "% of the LP Rewards that goes to the creator of the market."
+msgstr "% of the LP Rewards that goes to the creator of the market."
+
 msgid "A market must have at least three events."
 msgstr "A market must have at least three events."
 
@@ -79,6 +82,12 @@ msgstr "Answered too soon"
 msgid "Answers"
 msgstr "Answers"
 
+msgid "Approve USDC"
+msgstr "Approve USDC"
+
+msgid "Base Prize"
+msgstr "Base Prize"
+
 msgid "Basketball"
 msgstr "Basketball"
 
@@ -88,8 +97,8 @@ msgstr "Bet"
 msgid "Bet Price"
 msgstr "Bet Price"
 
-msgid "Bet Price ({token})"
-msgstr "Bet Price ({token})"
+msgid "Bet Price ({0})"
+msgstr "Bet Price ({0})"
 
 msgid "Bet Price:"
 msgstr "Bet Price:"
@@ -99,9 +108,6 @@ msgstr "Bet not found"
 
 msgid "Bet placed!"
 msgstr "Bet placed!"
-
-msgid "Bet price"
-msgstr "Bet price"
 
 msgid "Bets"
 msgstr "Bets"
@@ -129,9 +135,6 @@ msgstr "Bid placed."
 
 msgid "Bid removed."
 msgstr "Bid removed."
-
-msgid "Bridge"
-msgstr "Bridge"
 
 msgid "By verifying your market future bettors will know that:"
 msgstr "By verifying your market future bettors will know that:"
@@ -166,9 +169,6 @@ msgstr "Choose template"
 msgid "Claim"
 msgstr "Claim"
 
-msgid "Close and bridge later"
-msgstr "Close and bridge later"
-
 msgid "Closed"
 msgstr "Closed"
 
@@ -177,9 +177,6 @@ msgstr "Congratulations!"
 
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
-
-msgid "Connect with your MetaMask Wallet"
-msgstr "Connect with your MetaMask Wallet"
 
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
@@ -217,8 +214,11 @@ msgstr "Create a market and earn fees on each bet."
 msgid "Create a new ad"
 msgstr "Create a new ad"
 
-msgid "Create a new market<0/>in 3 simple steps"
-msgstr "Create a new market<0/>in 3 simple steps"
+msgid "Create a new market<br />in 3 simple steps"
+msgstr "Create a new market<br />in 3 simple steps"
+
+msgid "Creator Fee"
+msgstr "Creator Fee"
 
 msgid "Current Bid"
 msgstr "Current Bid"
@@ -295,8 +295,8 @@ msgstr "Football"
 msgid "Format"
 msgstr "Format"
 
-msgid "Fund amount ({token})"
-msgstr "Fund amount ({token})"
+msgid "Fund amount ({0})"
+msgstr "Fund amount ({0})"
 
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
@@ -307,26 +307,17 @@ msgstr "Global Metrics:"
 msgid "Go to market"
 msgstr "Go to market"
 
-msgid "Go to the bridge"
-msgstr "Go to the bridge"
-
 msgid "Go to the market"
 msgstr "Go to the market"
 
 msgid "Groups"
 msgstr "Groups"
 
-msgid "Hey! Welcome to Prode"
-msgstr "Hey! Welcome to Prode"
-
 msgid "Highest Bid"
 msgstr "Highest Bid"
 
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "I have created a new market on @prode_eth: {marketName} {0}"
-
-msgid "If first you want to take a look around, you can access the bridge later from the link in the main menu."
-msgstr "If first you want to take a look around, you can access the bridge later from the link in the main menu."
 
 msgid "Image"
 msgstr "Image"
@@ -349,14 +340,14 @@ msgstr "Invalid number."
 msgid "Invalid result"
 msgstr "Invalid result"
 
-msgid "It looks like you have 0 xDAI in your wallet."
-msgstr "It looks like you have 0 xDAI in your wallet."
-
 msgid "Item Id"
 msgstr "Item Id"
 
 msgid "Item id not found"
 msgstr "Item id not found"
+
+msgid "LP Rewards"
+msgstr "LP Rewards"
 
 msgid "Loading..."
 msgstr "Loading..."
@@ -415,6 +406,9 @@ msgstr "Message"
 msgid "Miscellaneous"
 msgstr "Miscellaneous"
 
+msgid "Name already in use, please select another name"
+msgstr "Name already in use, please select another name"
+
 msgid "New result"
 msgstr "New result"
 
@@ -442,6 +436,9 @@ msgstr "Not yet"
 msgid "Number of questions"
 msgstr "Number of questions"
 
+msgid "ONLY_MAIN_CHAIN"
+msgstr "Please switch to Gnosis Chain."
+
 msgid "Offer too low"
 msgstr "Offer too low"
 
@@ -465,6 +462,12 @@ msgstr "Pending"
 
 msgid "Pending arbitration"
 msgstr "Pending arbitration"
+
+msgid "Percentage of the pool paid to Liquidity Providers."
+msgstr "Percentage of the pool paid to Liquidity Providers."
+
+msgid "Perfect Score Prize"
+msgstr "Perfect Score Prize"
 
 msgid "Place Bet"
 msgstr "Place Bet"
@@ -490,11 +493,8 @@ msgstr "Points Earned"
 msgid "Pool"
 msgstr "Pool"
 
-msgid "Pool prize"
-msgstr "Pool prize"
-
-msgid "Base Prize"
-msgstr "Base Prize"
+msgid "Pool Prize"
+msgstr "Pool Prize"
 
 msgid "Previous"
 msgstr "Previous"
@@ -562,9 +562,6 @@ msgstr "Reward"
 msgid "Rewards receiver"
 msgstr "Rewards receiver"
 
-msgid "Scan with WalletConnect to connect"
-msgstr "Scan with WalletConnect to connect"
-
 msgid "Second prize"
 msgstr "Second prize"
 
@@ -631,6 +628,9 @@ msgstr "The event name must be a question written in english, for example: 'Who 
 msgid "The events are of public knowledge."
 msgstr "The events are of public knowledge."
 
+msgid "The events of this market are still being processed."
+msgstr "The events of this market are still being processed."
+
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
 msgstr "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
 
@@ -670,8 +670,8 @@ msgstr "This market has been deleted."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
-msgid "This market was just created, please wait a few seconds for it to be indexed."
-msgstr "This market was just created, please wait a few seconds for it to be indexed."
+msgid "This market was created in Gnosis Chain."
+msgstr "This market was created in Gnosis Chain."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
@@ -694,17 +694,14 @@ msgstr "Total Players: {0}"
 msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
+msgid "UNSUPPORTED_CHAIN"
+msgstr "Unsupported chain, please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
+
 msgid "Unexpected error"
 msgstr "Unexpected error"
 
 msgid "Unknown"
 msgstr "Unknown"
-
-msgid "UNSUPPORTED_CHAIN"
-msgstr "Unsupported chain, please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
-
-msgid "ONLY_MAIN_CHAIN"
-msgstr "Please switch to Gnosis Chain."
 
 msgid "Username updated"
 msgstr "Username updated"
@@ -754,6 +751,9 @@ msgstr "Waiting result"
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
 
+msgid "Wrong network"
+msgstr "Wrong network"
+
 msgid "Yes"
 msgstr "Yes"
 
@@ -771,6 +771,9 @@ msgstr "You have a voucher available to place a bet for free!"
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "You will receive {0}% of the prize pool as fee."
+
+msgid "Your bet is travelling to the destination chain, it will arrive in a few minutes!"
+msgstr "Your bet is travelling to the destination chain, it will arrive in a few minutes!"
 
 msgid "Your betting position is represented by the following NFT."
 msgstr "Your betting position is represented by the following NFT."
@@ -790,11 +793,8 @@ msgstr "draw"
 msgid "eSports"
 msgstr "eSports"
 
-msgid "xDAI is bridged DAI, so if you have DAI in any other network (Ethereum Mainnet, Arbitrum, Optimism, etc.), you can use the bridge to transfer some of it to Gnosis Chain."
-msgstr "xDAI is bridged DAI, so if you have DAI in any other network (Ethereum Mainnet, Arbitrum, Optimism, etc.), you can use the bridge to transfer some of it to Gnosis Chain."
-
-msgid "xDAI is the native token of Gnosis Chain, and the one used to place bets in the markets."
-msgstr "xDAI is the native token of Gnosis Chain, and the one used to place bets in the markets."
-
 msgid "{0, plural, one {# result left to answer} other {# results left to answer}}"
 msgstr "{0, plural, one {# result left to answer} other {# results left to answer}}"
+
+msgid "{0}"
+msgstr "{0}"

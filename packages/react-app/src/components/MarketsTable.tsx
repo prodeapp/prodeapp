@@ -1,6 +1,6 @@
 import { AddressZero } from '@ethersproject/constants'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useTheme } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
@@ -70,13 +70,13 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 	const closingTimeLeft = getTimeLeft(market.closingTime, false, locale)
 	const { data: submissionPeriodEnd = 0 } = useSubmissionPeriodEnd(market.id, chainId)
 	const distributionTimeLeft = getTimeLeft(submissionPeriodEnd, false, locale)
-	let status = <Chip label={i18n._('Closed')} color='error' />
+	let status = <Chip label={t`Closed`} color='error' />
 
 	if (market.resultSubmissionPeriodStart === 0) {
 		if (closingTimeLeft !== false) {
-			status = <Chip label={i18n._('Betting')} color='success' />
+			status = <Chip label={t`Betting`} color='success' />
 		} else {
-			status = <Chip label={i18n._('Playing')} color='warning' />
+			status = <Chip label={t`Playing`} color='warning' />
 		}
 	}
 
@@ -123,7 +123,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 										fullWidth
 										size='large'
 									>
-										<Trans id='Answer results' />
+										<Trans>Answer results</Trans>
 									</Button>
 								</>
 							)}
@@ -131,7 +131,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							{distributionTimeLeft !== false && (
 								<div>
 									<div style={{ marginBottom: 10, fontWeight: 700 }}>
-										{i18n._('Prize distribution:') + ' ' + distributionTimeLeft}
+										{t`Prize distribution:` + ' ' + distributionTimeLeft}
 									</div>
 								</div>
 							)}
@@ -141,7 +141,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 						<div style={{ textAlign: 'center' }}>
 							{betsClosingSoon(market.closingTime) && (
 								<Typography variant='p3' component='div'>
-									<Trans id="There's not much time left, hurry!" />
+									<Trans>{`There's not much time left, hurry!`}</Trans>
 								</Typography>
 							)}
 							<div style={{ marginBottom: 10, fontWeight: 700 }}>{closingTimeLeft}</div>
@@ -152,7 +152,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 								fullWidth
 								size='large'
 							>
-								<Trans id='Place Bet' />
+								<Trans>Place Bet</Trans>
 							</Button>
 						</div>
 					)}
@@ -161,7 +161,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 			<MarketDetails sx={{ minWidth: { md: '245px' } }}>
 				<div>
 					<div>
-						<Trans id='Bet Price' />
+						<Trans>Bet Price</Trans>
 					</div>
 					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
 				</div>
@@ -171,13 +171,13 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 						<>
 							<div style={{ marginBottom: 10 }}>
 								<div>
-									<Trans id='Perfect Score Prize' />
+									<Trans>Perfect Score Prize</Trans>
 								</div>
 								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.liquidityInfo.prizePool, chainId)}</div>
 							</div>
 							<div>
 								<div>
-									<Trans id='Base Prize' />
+									<Trans>Base Prize</Trans>
 								</div>
 								<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chainId)}</div>
 							</div>
@@ -187,7 +187,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					{market.liquidityInfo.id === AddressZero && (
 						<div>
 							<div>
-								<Trans id='Pool Prize' />
+								<Trans>Pool Prize</Trans>
 							</div>
 							<div style={{ fontWeight: 'bold' }}>{formatAmount(market.pool, chainId)}</div>
 						</div>
@@ -196,14 +196,14 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 
 				<div>
 					<div>
-						<Trans id='Participants' />
+						<Trans>Participants</Trans>
 					</div>
 					<div style={{ fontWeight: 'bold' }}>{market.numOfBets}</div>
 				</div>
 
 				<div>
 					<div>
-						<Trans id='Verified' />
+						<Trans>Verified</Trans>
 					</div>
 					<div
 						style={{
@@ -211,8 +211,8 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							color: market.curated ? theme.palette.success.dark : theme.palette.error.dark,
 						}}
 					>
-						{market.curated && <Trans id='Yes' />}
-						{!market.curated && <Trans id='Not yet' />}
+						{market.curated && <Trans>Yes</Trans>}
+						{!market.curated && <Trans>Not yet</Trans>}
 					</div>
 				</div>
 			</MarketDetails>
@@ -226,7 +226,7 @@ function MarketsTable({ markets, chainId }: MarketsTableProps) {
 	if (!markets || markets.length === 0) {
 		return (
 			<Alert severity='info'>
-				<Trans id='No markets found.' />
+				<Trans>No markets found.</Trans>
 			</Alert>
 		)
 	}

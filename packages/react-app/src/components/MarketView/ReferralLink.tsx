@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
@@ -26,7 +26,7 @@ function ReferralLink({ marketId, chainId }: { marketId: string; chainId: number
 	const clickHandler = async () => {
 		if (!address) {
 			// open
-			alert(i18n._('Connect your wallet'))
+			alert(t`Connect your wallet`)
 			return
 		}
 
@@ -36,12 +36,12 @@ function ReferralLink({ marketId, chainId }: { marketId: string; chainId: number
 	}
 
 	if (textCopied) {
-		return <Trans id='Referral link copied!' />
+		return <Trans>Referral link copied!</Trans>
 	}
 
 	return (
 		<span className='js-link' onClick={clickHandler}>
-			<LinkIcon /> <Trans id='Copy referral link' />
+			<LinkIcon /> <Trans>Copy referral link</Trans>
 		</span>
 	)
 }

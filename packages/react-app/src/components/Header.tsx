@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -175,16 +175,16 @@ export default function Header() {
 						</RouterLink>
 						<MenuBar className={mobileOpen ? 'mobile-open' : ''}>
 							<RouterLink to='/markets/new'>
-								<Trans id='Create Market' />
+								<Trans>Create Market</Trans>
 							</RouterLink>
 							<RouterLink to='/ads'>
-								<Trans id='Ads' />
+								<Trans>Ads</Trans>
 							</RouterLink>
 							<a href={getDocsUrl(locale)} target='_blank' rel='noreferrer'>
-								<Trans id='Documentation' />
+								<Trans>Documentation</Trans>
 							</a>
 							<DropdownMenu text={languages[locale]}>
-								{Object.keys(languages).map(lang => {
+								{Object.keys(languages).map((lang) => {
 									return (
 										<Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>
 											{languages[lang]}
@@ -235,7 +235,7 @@ function WalletMenu() {
 			<Box sx={{ display: 'flex', alignItems: 'center' }}>
 				{chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
 					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
-						<Trans id='Claim' /> {formatAmount(claimArgs.total, chain.id)}
+						<Trans>Claim</Trans> {formatAmount(claimArgs.total, chain.id)}
 					</Button>
 				)}
 

@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 
 import { BoxRow, BoxWrapper } from '@/components'
@@ -49,16 +49,16 @@ export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number
 			{!isPhone && (
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Event' />
+						<Trans>Event</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Bet' />
+						<Trans>Bet</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Result' />
+						<Trans>Result</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Points Earned' />
+						<Trans>Points Earned</Trans>
 					</div>
 				</BoxRow>
 			)}
@@ -90,7 +90,7 @@ export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number
 							<Box sx={smallColumnsSx}>
 								{isPhone && (
 									<div style={mobileLabelSx}>
-										<Trans id='Bet' />
+										<Trans>Bet</Trans>
 									</div>
 								)}
 								<FormatOutcome name={playerBet} title={event.title} />
@@ -98,20 +98,20 @@ export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number
 							<Box sx={smallColumnsSx}>
 								{isPhone && (
 									<div style={mobileLabelSx}>
-										<Trans id='Result' />
+										<Trans>Result</Trans>
 									</div>
 								)}
-								<FormatOutcome name={eventResult || i18n._('Unknown')} title={event.title} />
+								<FormatOutcome name={eventResult || t`Unknown`} title={event.title} />
 							</Box>
 							<Box sx={smallColumnsSx}>
 								{isPhone && (
 									<div style={mobileLabelSx}>
-										<Trans id='Points Earned' />
+										<Trans>Points Earned</Trans>
 									</div>
 								)}
 								{betResult === 0 && (
 									<span>
-										<Trans id='Waiting result' />
+										<Trans>Waiting result</Trans>
 									</span>
 								)}
 								{betResult === 1 && <span style={{ color: 'green' }}>1</span>}

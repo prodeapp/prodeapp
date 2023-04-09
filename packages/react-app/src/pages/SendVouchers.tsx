@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -68,7 +68,7 @@ function SendVouchers() {
 
 	const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setVouchers(
-			[...evt.target.value.matchAll(regex)].map(match => ({
+			[...evt.target.value.matchAll(regex)].map((match) => ({
 				address: match[1],
 				value: match[2],
 			}))
@@ -76,7 +76,7 @@ function SendVouchers() {
 	}
 
 	const sendVouchers = async () => {
-		const values: BigNumber[] = vouchers.map(voucher => parseEther(voucher.value))
+		const values: BigNumber[] = vouchers.map((voucher) => parseEther(voucher.value))
 
 		write!({
 			recklesslySetUnpreparedArgs: [
@@ -84,7 +84,7 @@ function SendVouchers() {
 				values,
 				await Promise.all(
 					vouchers.map(
-						async voucher => (await voucherContract.populateTransaction.fundAddress(voucher.address)).data! as Bytes
+						async (voucher) => (await voucherContract.populateTransaction.fundAddress(voucher.address)).data! as Bytes
 					)
 				),
 			],
@@ -104,7 +104,7 @@ function SendVouchers() {
 
 			{isSuccess && (
 				<Alert severity='success'>
-					<Trans id='Vouchers sent' />
+					<Trans>Vouchers sent</Trans>
 				</Alert>
 			)}
 
@@ -157,7 +157,7 @@ function SendVouchers() {
 									}}
 								>
 									<Button type='button' onClick={sendVouchers}>
-										<Trans id='Submit' />
+										<Trans>Submit</Trans>
 									</Button>
 								</div>
 							</FormRow>

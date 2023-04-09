@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -67,7 +67,7 @@ function MarketsView() {
 	if (isLoading) {
 		return (
 			<div>
-				<Trans id='Loading...' />
+				<Trans>Loading...</Trans>
 			</div>
 		)
 	}
@@ -75,16 +75,13 @@ function MarketsView() {
 	if (!market) {
 		return (
 			<div>
-				<Trans id='Market not found' />
+				<Trans>Market not found</Trans>
 			</div>
 		)
 	}
 
 	const shareUrl = getTwitterShareUrl(
-		i18n._(`Check this market on @prode_eth: {0} {1}`, {
-			0: market.name,
-			1: getMarketUrl(market.id, chainId),
-		})
+		t`Check this market on @prode_eth: ${market.name} ${getMarketUrl(market.id, chainId)}`
 	)
 
 	const handleChange = (event: React.SyntheticEvent, newValue: MarketSections) => {
@@ -123,14 +120,14 @@ function MarketsView() {
 						>
 							<Grid item xs={6} md={6} sx={{ pr: 2 }} style={{ borderRight: `1px solid ${theme.palette.black.dark}` }}>
 								<div style={{ fontWeight: 600, marginBottom: 5 }}>
-									<Trans id='Market verification' />:
+									<Trans>Market verification</Trans>:
 								</div>
 								<MarketCurateStatus marketHash={market.hash} marketId={market.id} chainId={chainId} />
 							</Grid>
 							<Grid item xs={6} md={6} sx={{ pl: 2 }}>
 								<div style={{ marginBottom: 5 }}>
 									<a href={shareUrl} target='_blank' rel='noreferrer'>
-										<TwitterIcon /> <Trans id='Share on Twitter' />
+										<TwitterIcon /> <Trans>Share on Twitter</Trans>
 									</a>
 								</div>
 								<div>
@@ -156,9 +153,9 @@ function MarketsView() {
 
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<Tabs value={section} onChange={handleChange} aria-label='Market sections' sx={{ marginLeft: '20px' }}>
-									<Tab label={i18n._('Bets')} value='bets' {...a11yProps(0)} />
-									<Tab label={i18n._('Results')} value='results' {...a11yProps(1)} />
-									<Tab label={i18n._('Statistics')} value='stats' {...a11yProps(2)} />
+									<Tab label={t`Bets`} value='bets' {...a11yProps(0)} />
+									<Tab label={t`Results`} value='results' {...a11yProps(1)} />
+									<Tab label={t`Statistics`} value='stats' {...a11yProps(2)} />
 								</Tabs>
 								{address && section === 'bets' && (
 									<div>
@@ -167,7 +164,7 @@ function MarketsView() {
 												control={<Switch checked={onlyMyBets} onClick={() => setOnlyMyBets(!onlyMyBets)} />}
 												label={
 													<span style={{ fontSize: '14px' }}>
-														<Trans id='See only my bets' />
+														<Trans>See only my bets</Trans>
 													</span>
 												}
 											/>

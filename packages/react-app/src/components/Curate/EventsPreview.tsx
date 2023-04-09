@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import * as React from 'react'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { UseFieldArrayReturn, useFormContext, useWatch } from 'react-hook-form'
@@ -40,15 +40,15 @@ export default function EventsPreview({ useFieldArrayReturn, events }: Props) {
 		<div>
 			<div style={{ marginBottom: '20px' }}>
 				<h3 style={{ marginBottom: '30px' }}>
-					<Trans id='Drag and drop each question to the correct position' />
+					<Trans>Drag and drop each question to the correct position</Trans>
 				</h3>
 				<DragDropContext onDragEnd={handleFieldDragEnd}>
 					<Droppable droppableId='panel-dropzone'>
-						{provided => (
+						{(provided) => (
 							<div ref={provided.innerRef} {...provided.droppableProps} className='panels-wrapper'>
 								{useFieldArrayReturn.fields.map((field, index) => (
 									<Draggable draggableId={field.id} index={index} key={field.id}>
-										{provided => (
+										{(provided) => (
 											<div
 												ref={provided.innerRef}
 												{...provided.draggableProps}
@@ -69,14 +69,18 @@ export default function EventsPreview({ useFieldArrayReturn, events }: Props) {
 			{format === FORMAT_GROUPS && (
 				<div>
 					<Groups
-						events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])}
+						events={useFieldArrayReturn.fields.map((f) => indexedEvents[f.value])}
 						config={convertExtraDataGroups(extraDataGroups)}
 					/>
 				</div>
 			)}
 			{format !== FORMAT_GROUPS && (
 				<div>
-					<Brackets events={useFieldArrayReturn.fields.map(f => indexedEvents[f.value])} type={format} preview={true} />
+					<Brackets
+						events={useFieldArrayReturn.fields.map((f) => indexedEvents[f.value])}
+						type={format}
+						preview={true}
+					/>
 				</div>
 			)}
 		</div>

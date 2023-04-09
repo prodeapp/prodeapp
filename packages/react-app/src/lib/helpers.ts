@@ -2,7 +2,7 @@ import { Interface, LogDescription } from '@ethersproject/abi'
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { getAddress } from '@ethersproject/address'
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
 import { Address } from '@wagmi/core'
 import { intervalToDuration } from 'date-fns'
 import compareAsc from 'date-fns/compareAsc'
@@ -102,22 +102,22 @@ export function getAnswerText(
 	currentAnswer: string | null,
 	outcomes: Outcome[],
 	templateID: BigNumberish,
-	noAnswerText = i18n._('Not answered yet')
+	noAnswerText = t`Not answered yet`
 ): string {
 	if (currentAnswer === null) {
 		return noAnswerText
 	}
 	if (currentAnswer === INVALID_RESULT) {
-		return i18n._('Invalid result')
+		return t`Invalid result`
 	}
 
 	if (currentAnswer === ANSWERED_TOO_SOON) {
-		return i18n._('Answered too soon')
+		return t`Answered too soon`
 	}
 
 	if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
 		return getMultiSelectAnswers(BigNumber.from(currentAnswer).toNumber())
-			.map(answer => transOutcome(outcomes[answer] || noAnswerText))
+			.map((answer) => transOutcome(outcomes[answer] || noAnswerText))
 			.join(', ')
 	}
 
@@ -126,7 +126,7 @@ export function getAnswerText(
 }
 
 export function transOutcome(outcome: string) {
-	return outcome === 'Draw' ? i18n._('Draw') : outcome
+	return outcome === 'Draw' ? t`Draw` : outcome
 }
 
 // https://github.com/RealityETH/reality-eth-monorepo/blob/34fd0601d5d6f9be0aed41278bdf0b8a1211b5fa/packages/contracts/development/contracts/RealityETH-3.0.sol#L490
@@ -140,27 +140,27 @@ type MarketCategory = { id: string; text: string; children?: MarketCategory[] }
 export const MARKET_CATEGORIES: MarketCategory[] = [
 	{
 		id: 'sports',
-		text: i18n._('Sports'),
+		text: t`Sports`,
 		children: [
-			{ id: 'football', text: i18n._('Football') },
-			{ id: 'basketball', text: i18n._('Basketball') },
-			{ id: 'tenis', text: i18n._('Tennis') },
-			{ id: 'esports', text: i18n._('eSports') },
-			{ id: 'F1', text: i18n._('F1') },
+			{ id: 'football', text: t`Football` },
+			{ id: 'basketball', text: t`Basketball` },
+			{ id: 'tenis', text: t`Tennis` },
+			{ id: 'esports', text: t`eSports` },
+			{ id: 'F1', text: t`F1` },
 		],
 	},
-	{ id: 'misc', text: i18n._('Miscellaneous') },
+	{ id: 'misc', text: t`Miscellaneous` },
 ]
 
 type FlattenedCategory = { id: string; text: string; isChild: boolean }
 
 export function getFlattenedCategories(): FlattenedCategory[] {
 	const data: FlattenedCategory[] = []
-	MARKET_CATEGORIES.forEach(category => {
+	MARKET_CATEGORIES.forEach((category) => {
 		data.push({ id: category.id, text: category.text, isChild: false })
 
 		category.children &&
-			category.children.forEach(subcategory => {
+			category.children.forEach((subcategory) => {
 				data.push({
 					id: subcategory.id,
 					text: subcategory.text,
@@ -183,7 +183,7 @@ export function getSubcategories(category: string): MarketCategory[] {
 }
 
 export function getCategoryText(id: string): string {
-	return getFlattenedCategories().filter(c => c.id === id)[0]?.text || ''
+	return getFlattenedCategories().filter((c) => c.id === id)[0]?.text || ''
 }
 
 export function getMarketUrl(marketId: string, chainId: number) {

@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import FormHelperText from '@mui/material/FormHelperText'
 import Grid from '@mui/material/Grid'
@@ -20,7 +20,11 @@ export default function PrizeWeightsBuilder() {
 		formState: { errors },
 	} = useFormContext<MarketFormStep2Values>()
 
-	const { fields: prizesFields, append: appendPrizesField, remove: removePrizesField } = useFieldArray({
+	const {
+		fields: prizesFields,
+		append: appendPrizesField,
+		remove: removePrizesField,
+	} = useFieldArray({
 		control,
 		name: 'prizeWeights',
 	})
@@ -30,7 +34,7 @@ export default function PrizeWeightsBuilder() {
 	useEffect(() => {
 		setValue(
 			'prizeDivisor',
-			prizeWeights.map(pw => Number(pw.value)).reduce((partialSum, a) => partialSum + a, 0),
+			prizeWeights.map((pw) => Number(pw.value)).reduce((partialSum, a) => partialSum + a, 0),
 			{ shouldValidate: true }
 		)
 	}, [setValue, prizeWeights])
@@ -45,7 +49,7 @@ export default function PrizeWeightsBuilder() {
 		<div>
 			{prizesFields.length === 0 && (
 				<FormError style={{ marginBottom: '5px' }}>
-					<Trans id='Add at least one prize weight.' />
+					<Trans>Add at least one prize weight.</Trans>
 				</FormError>
 			)}
 			<Grid container spacing={2}>
@@ -55,7 +59,7 @@ export default function PrizeWeightsBuilder() {
 							<div>
 								<TextField
 									{...register(`prizeWeights.${i}.value`, {
-										required: i18n._('This field is required.'),
+										required: t`This field is required.`,
 									})}
 									error={!!errors.prizeWeights?.[i]?.value}
 									type='number'
@@ -77,14 +81,14 @@ export default function PrizeWeightsBuilder() {
 				})}
 			</Grid>
 			<FormHelperText>
-				<Trans id='What % of the pool will win the player ranked at position #X.' />
+				<Trans>What % of the pool will win the player ranked at position #X.</Trans>
 			</FormHelperText>
 			<FormError>
 				<ErrorMessage errors={errors} name={`prizeDivisor`} />
 			</FormError>
 			{prizesFields.length < 3 && (
 				<Button onClick={addPrizeWeight} variant='outlined'>
-					<Trans id='Add prize weight' />
+					<Trans>Add prize weight</Trans>
 				</Button>
 			)}
 		</div>

@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
@@ -35,7 +35,7 @@ export default function Profile() {
 		if (!address) {
 			return (
 				<Alert severity='error'>
-					<Trans id='Connect your wallet to view your profile.' />
+					<Trans>Connect your wallet to view your profile.</Trans>
 				</Alert>
 			)
 		}
@@ -90,17 +90,17 @@ export default function Profile() {
 				<BoxRow style={{ justifyContent: 'center' }}>
 					<div>
 						<Button onClick={() => setSection('bets')} color={section === 'bets' ? 'secondary' : 'primary'}>
-							<Trans id='Bets' />
+							<Trans>Bets</Trans>
 						</Button>
 					</div>
 					<div>
 						<Button onClick={() => setSection('referrals')} color={section === 'referrals' ? 'secondary' : 'primary'}>
-							<Trans id='Referrals' />
+							<Trans>Referrals</Trans>
 						</Button>
 					</div>
 					<div>
 						<Button onClick={() => setSection('markets')} color={section === 'markets' ? 'secondary' : 'primary'}>
-							<Trans id='Markets' />
+							<Trans>Markets</Trans>
 						</Button>
 					</div>
 				</BoxRow>

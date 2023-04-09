@@ -1,5 +1,5 @@
 import { AddressZero } from '@ethersproject/constants'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Grid from '@mui/material/Grid'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -22,7 +22,7 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 		return (
 			<>
 				<Typography variant='p3' component='div'>
-					<Trans id='Prize Pool' />
+					<Trans>Prize Pool</Trans>
 				</Typography>
 				<Typography variant='h3' component='h3'>
 					{formatAmount(market.pool, chainId)}
@@ -34,13 +34,13 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 	return (
 		<>
 			<Typography variant='p3' component='div'>
-				<Trans id='Perfect Score Prize' />
+				<Trans>Perfect Score Prize</Trans>
 			</Typography>
 			<Typography variant='h5' component='h5'>
 				{formatAmount(market.liquidityInfo.prizePool, chainId)}
 			</Typography>
 			<Typography variant='p3' component='div' sx={{ mt: 2 }}>
-				<Trans id='Base Prize' />
+				<Trans>Base Prize</Trans>
 			</Typography>
 			<Typography variant='h5' component='h5'>
 				{formatAmount(market.pool, chainId)}
@@ -85,7 +85,7 @@ function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
-					<Trans id='Prize Distribution' />
+					<Trans>Prize Distribution</Trans>
 				</Typography>
 				<div>
 					{market.prizes.map((value, index) => {
@@ -102,7 +102,7 @@ function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
-					<Trans id='Fee' />
+					<Trans>Fee</Trans>
 				</Typography>
 				<Typography variant='h6s' component='h6'>
 					{((managementFee + market.protocolFee) * 100) / DIVISOR}%
@@ -113,7 +113,7 @@ function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 				{/*liquidityPool && (
 					<>
 						<Typography variant='p3' component='div' sx={{ mt: 2 }}>
-							<Trans id='Total Liquidity' />
+							<Trans>Total Liquidity</Trans>
 						</Typography>
 						<Typography variant='h6s' component='h6'>
 							<a href={getBlockExplorerUrl(market.manager.id, chainId)} target='_blank' rel='noreferrer'>
@@ -125,7 +125,7 @@ function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 			</Grid>
 			<Grid item xs={6} md={3}>
 				<Typography variant='p3' component='div'>
-					<Trans id='Manager' />
+					<Trans>Manager</Trans>
 				</Typography>
 				<Typography variant='h6s' component='h6'>
 					<a href={getBlockExplorerUrl(manager, chainId)} target='_blank' rel='noreferrer'>

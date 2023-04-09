@@ -1,7 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -81,7 +81,7 @@ export default function PlaceBidForm({
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
+				<Trans>UNSUPPORTED_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -89,7 +89,7 @@ export default function PlaceBidForm({
 	if (isSuccess) {
 		return (
 			<Alert severity='success'>
-				<Trans id='Bid placed.' />
+				<Trans>Bid placed.</Trans>
 			</Alert>
 		)
 	}
@@ -121,12 +121,12 @@ export default function PlaceBidForm({
 			<BoxWrapper>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Market' />
+						<Trans>Market</Trans>
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField
 							{...register('market', {
-								required: i18n._('This field is required.'),
+								required: t`This field is required.`,
 							})}
 							style={{ width: '100%' }}
 							size='small'
@@ -139,17 +139,16 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid' /> ({getConfigString('NETWORK_TOKEN', chain.id)})
+						<Trans>Bid</Trans> ({getConfigString('NETWORK_TOKEN', chain.id)})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField
 							{...register('bid', {
-								required: i18n._('This field is required.'),
+								required: t`This field is required.`,
 								validate: {
-									isNumber: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
-									isGreaterThan0: v =>
-										(!isNaN(Number(v)) && (isEdit ? Number(v) >= 0 : Number(v) > 0)) ||
-										i18n._('Value must be greater than 0'),
+									isNumber: (v) => !isNaN(Number(v)) || t`Invalid number.`,
+									isGreaterThan0: (v) =>
+										(!isNaN(Number(v)) && (isEdit ? Number(v) >= 0 : Number(v) > 0)) || t`Value must be greater than 0`,
 								},
 							})}
 							style={{ width: '100%' }}
@@ -158,7 +157,7 @@ export default function PlaceBidForm({
 						/>
 						{isEdit && (
 							<FormHelperText>
-								<Trans id='The provided value will be added to the current bid.' />
+								<Trans>The provided value will be added to the current bid.</Trans>
 							</FormHelperText>
 						)}
 						<FormError>
@@ -168,16 +167,16 @@ export default function PlaceBidForm({
 				</BoxRow>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Bid per second' /> ({getConfigString('NETWORK_TOKEN', chain.id)})
+						<Trans>Bid per second</Trans> ({getConfigString('NETWORK_TOKEN', chain.id)})
 					</div>
 					<div style={{ width: '60%' }}>
 						<TextField
 							{...register('bidPerSecond', {
-								required: i18n._('This field is required.'),
+								required: t`This field is required.`,
 								validate: {
-									number: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
-									bid: v => validBid(v) || i18n._('Offer too low'),
-									isGreaterThan0: v => (!isNaN(Number(v)) && Number(v) > 0) || i18n._('Value must be greater than 0'),
+									number: (v) => !isNaN(Number(v)) || t`Invalid number.`,
+									bid: (v) => validBid(v) || t`Offer too low`,
+									isGreaterThan0: (v) => (!isNaN(Number(v)) && Number(v) > 0) || t`Value must be greater than 0`,
 								},
 							})}
 							style={{ width: '100%' }}

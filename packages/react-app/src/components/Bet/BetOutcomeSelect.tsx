@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import React from 'react'
@@ -98,7 +98,7 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 				name={`outcomes.${i}.value`}
 				control={control}
 				rules={{
-					required: i18n._('This field is required'),
+					required: t`This field is required`,
 				}}
 				defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ''}
 				render={({ field: { onChange, value } }) => (
@@ -118,7 +118,7 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 							</MenuItem>
 						))}
 						<MenuItem value={INVALID_RESULT}>
-							<Trans id='Invalid result' />
+							<Trans>Invalid result</Trans>
 						</MenuItem>
 					</Select>
 				)}

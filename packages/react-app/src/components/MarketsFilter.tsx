@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
@@ -100,7 +100,7 @@ function MarketsFilter() {
 				<div className='filter-columns'>
 					<div>
 						<div className='filter-label'>
-							<Trans id='Status' />:
+							<Trans>Status</Trans>:
 						</div>
 						<Box
 							sx={{
@@ -111,24 +111,24 @@ function MarketsFilter() {
 						>
 							<div>
 								<UnderlineButton onClick={() => changeStatus('active')} selected={status === 'active'}>
-									<Trans id='Betting' />
+									<Trans>Betting</Trans>
 								</UnderlineButton>
 							</div>
 							<div>
 								<UnderlineButton onClick={() => changeStatus('pending')} selected={status === 'pending'}>
-									<Trans id='Playing' />
+									<Trans>Playing</Trans>
 								</UnderlineButton>
 							</div>
 							<div>
 								<UnderlineButton onClick={() => changeStatus('closed')} selected={status === 'closed'}>
-									<Trans id='Closed' />
+									<Trans>Closed</Trans>
 								</UnderlineButton>
 							</div>
 						</Box>
 					</div>
 					<div>
 						<div className='filter-label'>
-							<Trans id='Category' />:
+							<Trans>Category</Trans>:
 						</div>
 						<FilterDropdown
 							isOpen={activeSection === 'category'}
@@ -152,7 +152,7 @@ function MarketsFilter() {
 								control={<Switch checked={curated} onClick={() => setCurated(!curated)} />}
 								label={
 									<span style={{ fontSize: '14px' }}>
-										<Trans id='Only verified markets' />
+										<Trans>Only verified markets</Trans>
 									</span>
 								}
 							/>
@@ -165,7 +165,7 @@ function MarketsFilter() {
 					<Grid container spacing={0}>
 						<Grid item xs={6} sm={3}>
 							<Radio active={category === 'All'} onClick={() => setCategory('All')}>
-								<Trans id='All' />
+								<Trans>All</Trans>
 							</Radio>
 						</Grid>
 						{getFlattenedCategories().map((cat) => (

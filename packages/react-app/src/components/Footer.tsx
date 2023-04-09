@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Container from '@mui/material/Container'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -10,7 +10,7 @@ import { getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 const FooterNav = styled('div', {
-	shouldForwardProp: prop => prop !== 'ml',
+	shouldForwardProp: (prop) => prop !== 'ml',
 })<{ ml?: number }>(({ theme, ml }) => ({
 	'& > div': {
 		display: 'inline-block',
@@ -68,7 +68,7 @@ export default function Footer() {
 					</div>
 					<FooterNav ml={2}>
 						<div style={{ fontWeight: 700 }}>
-							<Trans id='Follow us' />:
+							<Trans>Follow us</Trans>:
 						</div>
 						<div>
 							<a href='http://twitter.com/prode_eth' target='_blank' rel='noreferrer'>
@@ -93,17 +93,17 @@ export default function Footer() {
 					<FooterNav>
 						<div>
 							<RouterLink to='/markets/new'>
-								<Trans id='Create Market' />
+								<Trans>Create Market</Trans>
 							</RouterLink>
 						</div>
 						<div>
 							<RouterLink to='/ads'>
-								<Trans id='Ads' />
+								<Trans>Ads</Trans>
 							</RouterLink>
 						</div>
 						<div>
 							<a href={getDocsUrl(locale)} target='_blank' rel='noreferrer'>
-								<Trans id='Documentation' />
+								<Trans>Documentation</Trans>
 							</a>
 						</div>
 					</FooterNav>

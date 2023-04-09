@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
@@ -54,7 +54,7 @@ function GroupsForm() {
 			<BoxWrapper>
 				<BoxRow>
 					<BoxLabelCell>
-						<Trans id='Groups' />
+						<Trans>Groups</Trans>
 					</BoxLabelCell>
 				</BoxRow>
 				{groupsFields.length > 0 &&
@@ -63,17 +63,17 @@ function GroupsForm() {
 							<BoxRow key={groupField.id} style={{ flexDirection: 'column' }}>
 								<div style={{ width: '100%', display: 'flex', padding: '5px 0' }}>
 									<BoxLabelCell>
-										<Trans id='Number of questions' />
+										<Trans>Number of questions</Trans>
 									</BoxLabelCell>
 									<div style={{ width: '100%', display: 'flex' }}>
 										<TextField
 											{...register(`extraDataGroups.groups.${i}.size`, {
-												required: i18n._('This field is required.'),
+												required: t`This field is required.`,
 												valueAsNumber: true,
 												validate: (v) => !isNaN(Number(v)) || 'Invalid number.',
 												min: {
 													value: 1,
-													message: i18n._('Value must be greater than 0.'),
+													message: t`Value must be greater than 0.`,
 												},
 											})}
 											style={{ width: '100%' }}
@@ -88,7 +88,7 @@ function GroupsForm() {
 									<div style={{ width: '100%', display: 'flex' }}>
 										<TextField
 											{...register(`extraDataGroups.groups.${i}.name`, {
-												required: i18n._('This field is required.'),
+												required: t`This field is required.`,
 											})}
 											style={{ width: '100%' }}
 										/>
@@ -105,7 +105,7 @@ function GroupsForm() {
 									}}
 								>
 									<Button onClick={() => removeGroup(i)}>
-										- <Trans id='Remove group' />
+										- <Trans>Remove group</Trans>
 									</Button>
 								</div>
 							</BoxRow>
@@ -114,7 +114,7 @@ function GroupsForm() {
 				<BoxRow>
 					<div style={{ textAlign: 'center', width: '100%' }}>
 						<Button onClick={addGroup}>
-							+ <Trans id='Add group' />
+							+ <Trans>Add group</Trans>
 						</Button>
 					</div>
 				</BoxRow>
@@ -124,12 +124,12 @@ function GroupsForm() {
 					<div style={{ width: '100%' }}>
 						<TextField
 							{...register(`extraDataGroups.rounds`, {
-								required: i18n._('This field is required.'),
+								required: t`This field is required.`,
 								valueAsNumber: true,
-								validate: (v) => !isNaN(Number(v)) || i18n._('Invalid number.'),
+								validate: (v) => !isNaN(Number(v)) || t`Invalid number.`,
 								min: {
 									value: 1,
-									message: i18n._('Value must be greater than 0.'),
+									message: t`Value must be greater than 0.`,
 								},
 							})}
 						/>
@@ -208,13 +208,13 @@ function CurateSubmit() {
 	}, [market, setValue])
 
 	if (!address) {
-		return <Alert severity='error'>{i18n._('Connect your wallet to verify a market.')}</Alert>
+		return <Alert severity='error'>{t`Connect your wallet to verify a market.`}</Alert>
 	}
 
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
+				<Trans>UNSUPPORTED_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -222,7 +222,7 @@ function CurateSubmit() {
 	if (!isMainChain(chain?.id)) {
 		return (
 			<Alert severity='error'>
-				<Trans id='ONLY_MAIN_CHAIN' />
+				<Trans>ONLY_MAIN_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -230,7 +230,7 @@ function CurateSubmit() {
 	if (isLoading) {
 		return (
 			<div>
-				<Trans id='Loading...' />
+				<Trans>Loading...</Trans>
 			</div>
 		)
 	}
@@ -238,7 +238,7 @@ function CurateSubmit() {
 	if (!events) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Market not found.' />
+				<Trans>Market not found.</Trans>
 			</Alert>
 		)
 	}
@@ -259,14 +259,14 @@ function CurateSubmit() {
 				},
 			})
 		} catch (e) {
-			alert(e instanceof Error ? e.message : i18n._('Unexpected error'))
+			alert(e instanceof Error ? e.message : t`Unexpected error`)
 		}
 	}
 
 	if (isSuccess) {
 		return (
 			<Alert severity='success'>
-				<Trans id='Market sent to Kleros Curate' />
+				<Trans>Market sent to Kleros Curate</Trans>
 			</Alert>
 		)
 	}
@@ -282,12 +282,12 @@ function CurateSubmit() {
 				<BoxWrapper>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Market name' />
+							<Trans>Market name</Trans>
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField
 								{...register('name', {
-									required: i18n._('This field is required.'),
+									required: t`This field is required.`,
 								})}
 								style={{ width: '100%' }}
 							/>
@@ -298,7 +298,7 @@ function CurateSubmit() {
 					</BoxRow>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Description' />
+							<Trans>Description</Trans>
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField {...register('description')} style={{ width: '100%' }} />
@@ -309,12 +309,12 @@ function CurateSubmit() {
 					</BoxRow>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Starting timestamp' />
+							<Trans>Starting timestamp</Trans>
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField
 								{...register('startingTimestamp', {
-									required: i18n._('This field is required.'),
+									required: t`This field is required.`,
 								})}
 								style={{ width: '100%' }}
 							/>
@@ -325,7 +325,7 @@ function CurateSubmit() {
 					</BoxRow>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Format' />
+							<Trans>Format</Trans>
 						</BoxLabelCell>
 						<div style={{ width: 200 }}>
 							<FormControl fullWidth>
@@ -333,7 +333,7 @@ function CurateSubmit() {
 									defaultValue=''
 									id={`market-format`}
 									{...register(`format`, {
-										required: i18n._('This field is required.'),
+										required: t`This field is required.`,
 									})}
 								>
 									{Object.keys(TOURNAMENT_FORMATS).map((format, i) => (
@@ -363,7 +363,7 @@ function CurateSubmit() {
 					<BoxRow>
 						<div style={{ textAlign: 'center', width: '100%', marginTop: '20px' }}>
 							<Button type='submit'>
-								<Trans id='Submit' />
+								<Trans>Submit</Trans>
 							</Button>
 						</div>
 					</BoxRow>

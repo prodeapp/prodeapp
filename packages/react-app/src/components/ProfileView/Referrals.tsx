@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined'
 import { useTheme } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
@@ -36,13 +36,13 @@ function ClaimAction({ marketReferral }: { marketReferral: MarketReferral }) {
 	}
 
 	if (marketReferral.claimed || isSuccess) {
-		return <>{i18n._('Already Claimed') + '!'}</>
+		return <>{t`Already Claimed` + '!'}</>
 	}
 
 	if (marketReferral.market.resultSubmissionPeriodStart === '0') {
 		return (
 			<div>
-				<Trans id='Waiting for prize distribution' />
+				<Trans>Waiting for prize distribution</Trans>
 			</div>
 		)
 	}
@@ -54,11 +54,11 @@ function ClaimAction({ marketReferral }: { marketReferral: MarketReferral }) {
 	return (
 		<div style={{ display: 'flex' }}>
 			<Button onClick={() => handleClaimOnClick(marketReferral.manager)}>
-				<Trans id='Claim' />
+				<Trans>Claim</Trans>
 			</Button>
 			{isError ? (
 				<Typography sx={{ color: theme.palette.error.main, marginLeft: '10px' }}>
-					<Trans id='Error' />
+					<Trans>Error</Trans>
 				</Typography>
 			) : null}
 		</div>
@@ -111,7 +111,7 @@ export function Referrals({ provider, chainId }: { provider: string; chainId: nu
 	if (!marketsReferrals || marketsReferrals.length === 0) {
 		return (
 			<Alert severity='info'>
-				<Trans id='Start referring into markets and earn part of the fees that your referred pays.' />
+				<Trans>Start referring into markets and earn part of the fees that your referred pays.</Trans>
 			</Alert>
 		)
 	}
@@ -120,13 +120,13 @@ export function Referrals({ provider, chainId }: { provider: string; chainId: nu
 			<Grid item sm={12} md={12}>
 				<BoxRow key='header'>
 					<div style={{ width: '60%' }}>
-						<Trans id='Market' />
+						<Trans>Market</Trans>
 					</div>
 					<div style={{ width: '15%' }}>
-						<Trans id='Earn' />
+						<Trans>Earn</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Claim' />
+						<Trans>Claim</Trans>
 					</div>
 					<div style={{ width: '5%' }}></div>
 				</BoxRow>

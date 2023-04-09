@@ -13,6 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+msgid "% of the LP Rewards that goes to the creator of the market."
+msgstr "% de los LP Rewards que se destinan al creador del mercado."
+
 msgid "A market must have at least three events."
 msgstr "Un mercado debe tener al menos tres eventos."
 
@@ -20,10 +23,10 @@ msgid "Accepting bets"
 msgstr "Aceptando Apuestas"
 
 msgid "Ad created."
-msgstr ""
+msgstr "Anuncio creado."
 
 msgid "Ad not found"
-msgstr ""
+msgstr "Anuncio no encontrado."
 
 msgid "Add answer"
 msgstr "Agregar respuesta"
@@ -47,7 +50,7 @@ msgid "Address to send management fees to."
 msgstr "Billetera donde se enviará la comisión del creador"
 
 msgid "Ads"
-msgstr ""
+msgstr "Anuncios"
 
 msgid "All"
 msgstr "Todos"
@@ -79,6 +82,12 @@ msgstr "Contestada antes de tiempo"
 msgid "Answers"
 msgstr "Respuestas"
 
+msgid "Approve USDC"
+msgstr "Aprobar USDC"
+
+msgid "Base Prize"
+msgstr "Premio Base"
+
 msgid "Basketball"
 msgstr "Básquetbol"
 
@@ -88,8 +97,8 @@ msgstr "Apuesta"
 msgid "Bet Price"
 msgstr "Precio de apuesta"
 
-msgid "Bet Price ({token})"
-msgstr "Precio de apuesta ({token})"
+msgid "Bet Price ({0})"
+msgstr "Precio de Apuesta ({0})"
 
 msgid "Bet Price:"
 msgstr "Precio de Apuesta:"
@@ -99,9 +108,6 @@ msgstr "Apuesta no encontrada"
 
 msgid "Bet placed!"
 msgstr "¡Apuesta realizada!"
-
-msgid "Bet price"
-msgstr "Precio de Apuesta"
 
 msgid "Bets"
 msgstr "Apuestas"
@@ -119,19 +125,16 @@ msgid "Betting Deadline (UTC)"
 msgstr "Fecha límite de apuesta (UTC)"
 
 msgid "Bid"
-msgstr ""
+msgstr "Oferta"
 
 msgid "Bid per second"
-msgstr ""
+msgstr "Oferta por segundo"
 
 msgid "Bid placed."
-msgstr ""
+msgstr "Oferta enviada."
 
 msgid "Bid removed."
-msgstr ""
-
-msgid "Bridge"
-msgstr "Bridge"
+msgstr "Oferta eliminada."
 
 msgid "By verifying your market future bettors will know that:"
 msgstr "Al verificar tu mercado los apostadores sabrán que:"
@@ -146,7 +149,7 @@ msgid "Change result"
 msgstr "Cambiar resultado"
 
 msgid "Change username"
-msgstr ""
+msgstr "Cambiar nombre de usuario"
 
 msgid "Check this market on @prode_eth: {0} {1}"
 msgstr "Mirá este mercado en @prode_eth: {0} {1}"
@@ -166,9 +169,6 @@ msgstr "Elija una plantilla"
 msgid "Claim"
 msgstr "Claim"
 
-msgid "Close and bridge later"
-msgstr "Cerrar y usar el bridge luego"
-
 msgid "Closed"
 msgstr "Cerrado"
 
@@ -177,9 +177,6 @@ msgstr "¡Felicitaciones!"
 
 msgid "Connect Wallet"
 msgstr "Conectar Billetera"
-
-msgid "Connect with your MetaMask Wallet"
-msgstr "Conectar con billetera Metamask"
 
 msgid "Connect your wallet"
 msgstr "Conecte su billetera"
@@ -191,7 +188,7 @@ msgid "Connect your wallet to create a market."
 msgstr "Conecte su billetera para crear un mercado"
 
 msgid "Connect your wallet to create an ad."
-msgstr ""
+msgstr "Contecte su billetera para crear un anuncio."
 
 msgid "Connect your wallet to fund a market."
 msgstr "Conecte su billetera para financiar un mercado"
@@ -215,13 +212,16 @@ msgid "Create a market and earn fees on each bet."
 msgstr "Cree un mercado y gane comisiones de cada apuesta"
 
 msgid "Create a new ad"
-msgstr ""
+msgstr "Crear nuevo anuncio"
 
-msgid "Create a new market<0/>in 3 simple steps"
-msgstr "Crea un nuevo mercado<0/>en 3 simples pasos"
+msgid "Create a new market<br />in 3 simple steps"
+msgstr "Crea un nuevo mercado<br />en 3 simples pasos"
+
+msgid "Creator Fee"
+msgstr "Comisi del Creador"
 
 msgid "Current Bid"
-msgstr ""
+msgstr "Oferta Actual"
 
 msgid "Current result"
 msgstr "Resultado actual"
@@ -266,10 +266,10 @@ msgid "Events"
 msgstr "Eventos"
 
 msgid "F1"
-msgstr ""
+msgstr "F1"
 
 msgid "Failed to load image."
-msgstr ""
+msgstr "Error al la cargar imagen."
 
 msgid "Fee"
 msgstr "Comisiones"
@@ -295,8 +295,8 @@ msgstr "Fútbol"
 msgid "Format"
 msgstr "Formato"
 
-msgid "Fund amount ({token})"
-msgstr "Cantidad a financiar ({token})"
+msgid "Fund amount ({0})"
+msgstr "Cantidad a financiar ({0})"
 
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"
@@ -307,29 +307,20 @@ msgstr "Métricas Globales:"
 msgid "Go to market"
 msgstr "Ir al mercado"
 
-msgid "Go to the bridge"
-msgstr "Ir al bridge"
-
 msgid "Go to the market"
 msgstr "Ir al mercado"
 
 msgid "Groups"
 msgstr "Grupos"
 
-msgid "Hey! Welcome to Prode"
-msgstr "¡Hola! Bienvenido a Prode"
-
 msgid "Highest Bid"
-msgstr ""
+msgstr "Mayor Oferta"
 
 msgid "I have created a new market on @prode_eth: {marketName} {0}"
 msgstr "He creado un nuevo mercado en @prode_eth: {marketName} {0}"
 
-msgid "If first you want to take a look around, you can access the bridge later from the link in the main menu."
-msgstr "Si primero quieres revisar la app, puedes acceder al bridge luego desde el enlace en el menu principal."
-
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 msgid "In process"
 msgstr "En proceso"
@@ -338,7 +329,7 @@ msgid "Invalid JSON"
 msgstr "JSON inválido"
 
 msgid "Invalid URL"
-msgstr ""
+msgstr "URL inválida"
 
 msgid "Invalid market hash"
 msgstr "Market hash inválido"
@@ -349,20 +340,20 @@ msgstr "Número inválido."
 msgid "Invalid result"
 msgstr "Respuesta inválida"
 
-msgid "It looks like you have 0 xDAI in your wallet."
-msgstr "Parece que tienes 0 xDAI en tu billetera."
-
 msgid "Item Id"
 msgstr "Item Id"
 
 msgid "Item id not found"
 msgstr "Item id no encontrado"
 
+msgid "LP Rewards"
+msgstr "Recomenzas de LP"
+
 msgid "Loading..."
 msgstr "Cargando..."
 
 msgid "Lower Bid"
-msgstr ""
+msgstr "Menor Oferta"
 
 msgid "Management Fee"
 msgstr "Comisión del Creador"
@@ -415,6 +406,9 @@ msgstr "Mensaje"
 msgid "Miscellaneous"
 msgstr "Misceláneas"
 
+msgid "Name already in use, please select another name"
+msgstr "El nombre ya se encuentra en uso, seleccione otro"
+
 msgid "New result"
 msgstr "Nuevo resultado"
 
@@ -425,7 +419,7 @@ msgid "No bets found."
 msgstr "No se encontraron apuestas"
 
 msgid "No bids found."
-msgstr ""
+msgstr "No se encontraron ofertas."
 
 msgid "No markets found."
 msgstr "No se encontraron mercados"
@@ -442,8 +436,11 @@ msgstr "Todavía no"
 msgid "Number of questions"
 msgstr "Número de preguntas"
 
+msgid "ONLY_MAIN_CHAIN"
+msgstr "Por favor conéctese a Gnosis Chain."
+
 msgid "Offer too low"
-msgstr ""
+msgstr "Oferta demasiado baja"
 
 msgid "Only verified markets"
 msgstr "Solo mercados verificados"
@@ -452,10 +449,10 @@ msgid "Open to answers in {openingTimeLeft}"
 msgstr "Disponible para responder en {openingTimeLeft}"
 
 msgid "Opening Time"
-msgstr ""
+msgstr "Hora de Apertura"
 
 msgid "Opening Time (UTC)"
-msgstr ""
+msgstr "Hora de Apertura (UTC)"
 
 msgid "Participants"
 msgstr "Participantes"
@@ -466,11 +463,17 @@ msgstr "Pendiente"
 msgid "Pending arbitration"
 msgstr "Pendiente de arbitraje"
 
+msgid "Percentage of the pool paid to Liquidity Providers."
+msgstr "Porcentaje del pool pagado a los Proveedores de Liquidez"
+
+msgid "Perfect Score Prize"
+msgstr "Premio de Puntaje Perfecto"
+
 msgid "Place Bet"
 msgstr "Apostar"
 
 msgid "Place Bid"
-msgstr ""
+msgstr "Enviar Oferta"
 
 msgid "Place your bet"
 msgstr "Enviar apuesta"
@@ -490,11 +493,8 @@ msgstr "Puntos ganados"
 msgid "Pool"
 msgstr "Pozo"
 
-msgid "Pool prize"
-msgstr "Premio en pozo"
-
-msgid "Base Prize"
-msgstr "Premio Base"
+msgid "Pool Prize"
+msgstr "Premio en Pozo"
 
 msgid "Previous"
 msgstr "Anterior"
@@ -562,14 +562,11 @@ msgstr "Recompensa"
 msgid "Rewards receiver"
 msgstr "Receptor de recompensas"
 
-msgid "Scan with WalletConnect to connect"
-msgstr "Scan con WalletConnect para conectar"
-
 msgid "Second prize"
 msgstr "Segundo premio"
 
 msgid "See ad"
-msgstr ""
+msgstr "Ver anuncio"
 
 msgid "See details"
 msgstr "Ver detalles"
@@ -611,7 +608,7 @@ msgid "Submit"
 msgstr "Enviar"
 
 msgid "Submit Ad"
-msgstr ""
+msgstr "Enviar Anuncio"
 
 msgid "Submit answer"
 msgstr "Enviar resultado"
@@ -623,13 +620,16 @@ msgid "The closing time is before the start of the first event."
 msgstr "La fecha de cierre es anterior al comienzo del primer evento."
 
 msgid "The event date must be after the closing time."
-msgstr ""
+msgstr "La fecha del evento debe ser posterior a la hora de cierre."
 
 msgid "The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
 msgstr "El nombre del evento debe ser una pregunta en inglés, por ejemplo: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
 
 msgid "The events are of public knowledge."
 msgstr "Los eventos son de público conocimiento."
+
+msgid "The events of this market are still being processed."
+msgstr "Los eventos de este mercado aún están siendo procesados."
 
 msgid "The manager will receive this percentage of the pool as reward. In addition, the market creator will be rewarded when bets are traded on NFT marketplaces."
 msgstr "El creador recibirá este porcentaje del pozo de premios. Además, será recompensado cuando apuestas sean comercializadas en mercados secundarios."
@@ -641,10 +641,10 @@ msgid "The market was successfully created and is ready to take bets."
 msgstr "El mercado fue creado exitosamente y está listo para recibir apuestas"
 
 msgid "The provided value will be added to the current bid."
-msgstr ""
+msgstr "El valor provisto será agregado a la oferta actual."
 
 msgid "The results of this event will be available to be answered at this time."
-msgstr ""
+msgstr "Los resultados de este evento estarán disponibles para ser respondidos a esta hora."
 
 msgid "The sum of prize weights must be 100."
 msgstr "La suma de los premios debe ser igual a 100."
@@ -670,8 +670,8 @@ msgstr "Este mercado ha sido eliminado."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "Este mercado tiene más de un envío a la lista"
 
-msgid "This market was just created, please wait a few seconds for it to be indexed."
-msgstr "Este mercado fue creado recientemente, por favor espere unos segundos hasta que sea indexado"
+msgid "This market was created in Gnosis Chain."
+msgstr "Este mercado fue creado en Gnosis Chain."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
@@ -683,7 +683,7 @@ msgid "Total Bets"
 msgstr "Total de Apuestas"
 
 msgid "Total Bids"
-msgstr ""
+msgstr "Ofertas Totales"
 
 msgid "Total Markets: {0}"
 msgstr "Total de Mercados: {0}"
@@ -694,20 +694,17 @@ msgstr "Total de Apostadores: {0}"
 msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
+msgid "UNSUPPORTED_CHAIN"
+msgstr "Red no soportada, por favor conéctese a Gnosis Chain, Arbitrum, Optimism, Polygon o BNB Chain."
+
 msgid "Unexpected error"
 msgstr "Error inesperado"
 
 msgid "Unknown"
 msgstr "Desconocido"
 
-msgid "UNSUPPORTED_CHAIN"
-msgstr "Red no soportada, por favor conéctese a Gnosis Chain, Arbitrum, Optimism, Polygon o BNB Chain."
-
-msgid "ONLY_MAIN_CHAIN"
-msgstr "Por favor conéctese a Gnosis Chain."
-
 msgid "Username updated"
-msgstr ""
+msgstr "Nombre de usuario actualizado"
 
 msgid "Valid JSON"
 msgstr "JSON válido"
@@ -722,7 +719,7 @@ msgid "Validate"
 msgstr "Validar"
 
 msgid "Value must be greater than 0"
-msgstr ""
+msgstr "El valor debe ser mayor a 0"
 
 msgid "Value must be greater than 0."
 msgstr "El valor debe ser mayor que 0."
@@ -740,7 +737,7 @@ msgid "Verify your market"
 msgstr "Verifique su mercado"
 
 msgid "Vouchers sent"
-msgstr ""
+msgstr "Vouchers enviados"
 
 msgid "Waiting for prize distribution"
 msgstr "Esperando distribución de premios"
@@ -753,6 +750,9 @@ msgstr "Esperando resultado"
 
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "Qué % del pozo ganará el jugador en la posición #X."
+
+msgid "Wrong network"
+msgstr "Red incorrecta"
 
 msgid "Yes"
 msgstr "Si"
@@ -772,6 +772,9 @@ msgstr "¡Tienes un voucher disponible para realizar una apuesta gratuita!"
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."
 
+msgid "Your bet is travelling to the destination chain, it will arrive in a few minutes!"
+msgstr "Tu apuesta esta viajando a la red de destino, ¡llegará en unos pocos minutos!"
+
 msgid "Your betting position is represented by the following NFT."
 msgstr "Su apuesta está representada por el siguiente NFT."
 
@@ -782,7 +785,7 @@ msgid "Your questions are well formulated."
 msgstr "Tus preguntas están bien formuladas."
 
 msgid "Your username"
-msgstr ""
+msgstr "Tu usuario"
 
 msgid "draw"
 msgstr "empate"
@@ -790,11 +793,8 @@ msgstr "empate"
 msgid "eSports"
 msgstr "eSports"
 
-msgid "xDAI is bridged DAI, so if you have DAI in any other network (Ethereum Mainnet, Arbitrum, Optimism, etc.), you can use the bridge to transfer some of it to Gnosis Chain."
-msgstr "xDAI es DAI puenteado, por lo tanto si tienes DAI en alguna otra red (Ethereum Mainnet, Arbitrum, Optimism, etc.), puedes usar el bridge para transferir un poco a Gnosis Chain."
-
-msgid "xDAI is the native token of Gnosis Chain, and the one used to place bets in the markets."
-msgstr "xDAI es el token nativo de Gnosis Chain, y es usado para realizar apuestas en los mercados."
-
 msgid "{0, plural, one {# result left to answer} other {# results left to answer}}"
 msgstr "{0, plural, one {# resultado para responder } other {# resultados para responder}}"
+
+msgid "{0}"
+msgstr "{0}"

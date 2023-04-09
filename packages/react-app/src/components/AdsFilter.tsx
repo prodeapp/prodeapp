@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -24,7 +24,7 @@ function AdsFilter() {
 				<div className='filter-columns'>
 					<div>
 						<div className='filter-label'>
-							<Trans id='Market' />:
+							<Trans>Market</Trans>:
 						</div>
 						<Box
 							sx={{

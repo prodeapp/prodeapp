@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -85,7 +85,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 					<FormatOutcome name={answerText} title={event.title} />
 				</StatusBadge>
 				<div style={{ fontSize: '11.11px', marginTop: '5px' }}>
-					<Trans id='Answer accepted' />
+					<Trans>Answer accepted</Trans>
 				</div>
 			</div>
 		)
@@ -97,10 +97,10 @@ function AnswerColumn(event: Event, finalized: boolean) {
 		return (
 			<div>
 				<StatusBadge color='red'>
-					<Trans id='Pending' />
+					<Trans>Pending</Trans>
 				</StatusBadge>
 				<div style={{ fontSize: '11.11px', marginTop: '5px' }}>
-					<Trans id='Open to answers in {openingTimeLeft}' values={{ openingTimeLeft }} />
+					<Trans>Open to answers in {openingTimeLeft}</Trans>
 				</div>
 			</div>
 		)
@@ -109,7 +109,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 	if (event.isPendingArbitration) {
 		return (
 			<StatusBadge color='yellow'>
-				<Trans id='Pending arbitration' />
+				<Trans>Pending arbitration</Trans>
 			</StatusBadge>
 		)
 	}
@@ -119,7 +119,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 	if (!answerCountdown) {
 		return (
 			<StatusBadge color='yellow'>
-				<Trans id='Pending' />
+				<Trans>Pending</Trans>
 			</StatusBadge>
 		)
 	}
@@ -128,7 +128,7 @@ function AnswerColumn(event: Event, finalized: boolean) {
 		<div>
 			<StatusBadge color='yellow'>{answerText}</StatusBadge>
 			<div style={{ fontSize: '11.11px', marginTop: '5px' }}>
-				<Trans id='Answer closes in {answerCountdown}' values={{ answerCountdown }} />
+				<Trans>Answer closes in {answerCountdown}</Trans>
 			</div>
 		</div>
 	)
@@ -176,14 +176,14 @@ function ActionColumn(event: Event, chainId: number, finalized: boolean, clickHa
 				// TODO: update event in cache to allow to answer instantly
 				return (
 					<div>
-						<Trans id='Question reopened!' />
+						<Trans>Question reopened!</Trans>
 					</div>
 				)
 			}
 
 			return (
 				<Button color='primary' size='small' onClick={reopenQuestion}>
-					<Trans id='Reopen question' />
+					<Trans>Reopen question</Trans>
 				</Button>
 			)
 		}
@@ -199,7 +199,7 @@ function ActionColumn(event: Event, chainId: number, finalized: boolean, clickHa
 
 	return (
 		<span className='js-link' onClick={clickHandler}>
-			{event.answer === null ? <Trans id='Answer result' /> : <Trans id='Change result' />}
+			{event.answer === null ? <Trans>Answer result</Trans> : <Trans>Change result</Trans>}
 			<ArrowRightIcon style={{ marginLeft: '10px' }} />
 		</span>
 	)
@@ -224,7 +224,7 @@ export default function Results({ marketId, chainId }: { marketId: Address; chai
 	if (!events || events.length === 0) {
 		return (
 			<Alert severity='error'>
-				<Trans id='The events of this market are still being processed.' />
+				<Trans>The events of this market are still being processed.</Trans>
 			</Alert>
 		)
 	}
@@ -236,10 +236,10 @@ export default function Results({ marketId, chainId }: { marketId: Address; chai
 				{!isPhone && (
 					<TableHeader>
 						<div style={{ width: '40%' }}>
-							<Trans id='Event' />
+							<Trans>Event</Trans>
 						</div>
 						<div style={{ width: '30%' }}>
-							<Trans id='Result' />
+							<Trans>Result</Trans>
 						</div>
 						<div style={{ width: '30%' }}></div>
 					</TableHeader>

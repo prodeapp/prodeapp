@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 import FormControl from '@mui/material/FormControl'
@@ -29,7 +29,7 @@ type TemplateDialogProps = DialogProps & {
 }
 
 function replacePlaceholders(text: string, questionParams: string[]) {
-	return text.replace(PLACEHOLDER_REGEX, event => {
+	return text.replace(PLACEHOLDER_REGEX, (event) => {
 		return questionParams[Number(event.replace('$', '')) - 1] || event
 	})
 }
@@ -94,12 +94,12 @@ function TemplateDialog({ open, handleClose, onTemplateChange }: TemplateDialogP
 		onTemplateChange(
 			replacePlaceholders(
 				questionPlaceholder,
-				data.questionParams.map(qp => qp.value)
+				data.questionParams.map((qp) => qp.value)
 			),
-			marketsTemplates[template].a.map(answerPlaceholder => {
+			marketsTemplates[template].a.map((answerPlaceholder) => {
 				return replacePlaceholders(
 					answerPlaceholder,
-					questionParams.map(qp => qp.value)
+					questionParams.map((qp) => qp.value)
 				)
 			})
 		)
@@ -112,28 +112,28 @@ function TemplateDialog({ open, handleClose, onTemplateChange }: TemplateDialogP
 	const dialogActions = (
 		<DialogActions>
 			<Button autoFocus onClick={clickSubmit} color='primary'>
-				<Trans id='Set question' />
+				<Trans>Set question</Trans>
 			</Button>
 		</DialogActions>
 	)
 
 	return (
-		<AppDialog open={open} handleClose={handleClose} title={i18n._('Choose question')} actions={dialogActions}>
+		<AppDialog open={open} handleClose={handleClose} title={t`Choose question`} actions={dialogActions}>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<FormControl fullWidth sx={{ marginBottom: '20px' }}>
 					<InputLabel id='market-template-label'>
-						<Trans id='Choose template' />
+						<Trans>Choose template</Trans>
 					</InputLabel>
 					<Select
 						labelId='market-template-label'
 						id='market-template-select'
 						defaultValue={-1}
 						{...register('template', {
-							required: i18n._('This field is required.'),
+							required: t`This field is required.`,
 						})}
 					>
 						<MenuItem value={-1} key={-1}>
-							<Trans id='Choose question format' />
+							<Trans>Choose question format</Trans>
 						</MenuItem>
 						{marketsTemplates.map((template, i) => (
 							<MenuItem value={i} key={i}>
@@ -149,7 +149,7 @@ function TemplateDialog({ open, handleClose, onTemplateChange }: TemplateDialogP
 								<div key={i} style={{ margin: '0 5px 0 0' }}>
 									<TextField
 										{...register(`questionParams.${i}.value`, {
-											required: i18n._('This field is required.'),
+											required: t`This field is required.`,
 										})}
 										placeholder={`$${i + 1}`}
 									/>
