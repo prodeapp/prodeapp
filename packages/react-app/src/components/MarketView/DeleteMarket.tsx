@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import React from 'react'
@@ -25,14 +25,14 @@ function DeleteMarket({ marketId }: { marketId: string }) {
 	if (isSuccess) {
 		return (
 			<Alert severity='success'>
-				<Trans id='This market has been deleted.' />
+				<Trans>This market has been deleted.</Trans>
 			</Alert>
 		)
 	}
 
 	return (
 		<Button variant='text' size='small' color='error' onClick={deleteMarket}>
-			<Trans id='Delete market' />
+			<Trans>Delete market</Trans>
 		</Button>
 	)
 }

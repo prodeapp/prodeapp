@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import { Address } from '@wagmi/core'
@@ -25,13 +25,13 @@ function TokenView() {
 	if (isLoading) {
 		return (
 			<div>
-				<Trans id='Loading...' />
+				<Trans>Loading...</Trans>
 			</div>
 		)
 	}
 
 	if (!bet) {
-		return <Trans id='Bet not found' />
+		return <Trans>Bet not found</Trans>
 	}
 
 	return (
@@ -46,7 +46,7 @@ function TokenView() {
 
 					<div style={{ textAlign: 'center', margin: '20px 0' }}>
 						<Button component={RouterLink} to={paths.market(String(id), Number(chainId))}>
-							<Trans id='Go to market' />
+							<Trans>Go to market</Trans>
 						</Button>
 					</div>
 

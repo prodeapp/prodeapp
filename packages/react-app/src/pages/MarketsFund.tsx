@@ -1,7 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
@@ -56,7 +56,7 @@ function MarketsFund() {
 	if (!address) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Connect your wallet to fund a market.' />
+				<Trans>Connect your wallet to fund a market.</Trans>
 			</Alert>
 		)
 	}
@@ -64,7 +64,7 @@ function MarketsFund() {
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
+				<Trans>UNSUPPORTED_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -72,7 +72,7 @@ function MarketsFund() {
 	if (!isMainChain(chain?.id)) {
 		return (
 			<Alert severity='error'>
-				<Trans id='ONLY_MAIN_CHAIN' />
+				<Trans>ONLY_MAIN_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -86,7 +86,7 @@ function MarketsFund() {
 			)}
 			{isSuccess && (
 				<Alert severity='success' sx={{ mb: 2 }}>
-					<Trans id='Market funded successfully!' />
+					<Trans>Market funded successfully!</Trans>
 				</Alert>
 			)}
 
@@ -94,17 +94,17 @@ function MarketsFund() {
 				<BoxWrapper>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Fund amount ({token})' values={{ token: getConfigString('NETWORK_TOKEN', chain.id) }} />
+							<Trans>Fund amount ({getConfigString('NETWORK_TOKEN', chain.id)})</Trans>
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField
 								{...register('value', {
-									required: i18n._('This field is required.'),
+									required: t`This field is required.`,
 									valueAsNumber: true,
-									validate: v => !isNaN(Number(v)) || i18n._('Invalid number.'),
+									validate: (v) => !isNaN(Number(v)) || t`Invalid number.`,
 									min: {
 										value: 0.01,
-										message: i18n._('Fund amount must be greater than 0.01'),
+										message: t`Fund amount must be greater than 0.01`,
 									},
 								})}
 								style={{ width: '100%' }}
@@ -116,7 +116,7 @@ function MarketsFund() {
 					</BoxRow>
 					<BoxRow>
 						<BoxLabelCell>
-							<Trans id='Message' />
+							<Trans>Message</Trans>
 						</BoxLabelCell>
 						<div style={{ width: '100%' }}>
 							<TextField
@@ -136,7 +136,7 @@ function MarketsFund() {
 					<div style={{ textAlign: 'center', width: '100%', marginBottom: '20px' }}>
 						<div>
 							<Button type='submit'>
-								<Trans id='Submit' />
+								<Trans>Submit</Trans>
 							</Button>
 						</div>
 					</div>

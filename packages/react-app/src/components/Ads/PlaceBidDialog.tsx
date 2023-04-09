@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 import React, { useEffect, useState } from 'react'
@@ -40,7 +40,7 @@ function PlaceBidDialog({ open, handleClose, itemId, bidInfo }: PlaceBidDialogPr
 	const dialogActions = (
 		<DialogActions>
 			<Button autoFocus color='primary' type='submit' form='place-bid-form'>
-				<Trans id='Place Bid' />
+				<Trans>Place Bid</Trans>
 			</Button>
 		</DialogActions>
 	)

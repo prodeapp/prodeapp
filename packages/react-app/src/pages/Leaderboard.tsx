@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
@@ -68,13 +68,13 @@ export default function Leaderboard() {
 	return (
 		<Container style={{ width: '100%', marginTop: '20px' }}>
 			<Typography variant='h5'>
-				<Trans id='Global Metrics:' />
+				<Trans>Global Metrics:</Trans>
 			</Typography>
 			<Grid container columnSpacing={2} rowSpacing={1} sx={{ marginTop: '30px', justifyContent: 'space-between' }}>
 				<Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
 					<BoxWrapper sx={{ padding: 2 }}>
 						<Typography variant='h6'>
-							<Trans id='Total Bets' />:{' '}
+							<Trans>Total Bets</Trans>:{' '}
 							{marketFactory ? formatAmount(marketFactory.totalVolumeBets, chainId) : <Skeleton />}
 						</Typography>
 					</BoxWrapper>
@@ -82,7 +82,7 @@ export default function Leaderboard() {
 				<Grid item sm={12} md={3} sx={{ alignItems: 'center', justifyContent: 'center' }}>
 					<BoxWrapper sx={{ padding: 2 }}>
 						<Typography variant='h6'>
-							<Trans id='Total Bets' /> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}
+							<Trans>Total Bets</Trans> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}
 						</Typography>
 					</BoxWrapper>
 				</Grid>

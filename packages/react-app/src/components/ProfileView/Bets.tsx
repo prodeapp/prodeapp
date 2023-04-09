@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -31,7 +31,7 @@ export function Bets({ playerId, chainId }: { playerId: Address; chainId: number
 	if (!bets || bets.length === 0) {
 		return (
 			<Alert severity='error'>
-				<Trans id='No bets found.' />
+				<Trans>No bets found.</Trans>
 			</Alert>
 		)
 	}
@@ -55,10 +55,10 @@ export function Bets({ playerId, chainId }: { playerId: Address; chainId: number
 								</div>
 								<div style={{ width: '100%', display: 'flex' }}>
 									<div style={{ marginRight: '50px' }}>
-										<Trans id='Points' />: {bet.points}
+										<Trans>Points</Trans>: {bet.points}
 									</div>
 									<div>
-										<Trans id='Reward' />:{' '}
+										<Trans>Reward</Trans>:{' '}
 										{formatAmount(indexedBetsRewards?.[bet.id.toLowerCase()]?.reward || 0, chainId)}
 									</div>
 								</div>
@@ -67,7 +67,7 @@ export function Bets({ playerId, chainId }: { playerId: Address; chainId: number
 						<AccordionDetails>
 							<div style={{ marginBottom: '20px' }}>
 								<Button component={RouterLink} to={paths.market(bet.market.id, chainId)}>
-									<Trans id='Go to market' />
+									<Trans>Go to market</Trans>
 								</Button>
 							</div>
 

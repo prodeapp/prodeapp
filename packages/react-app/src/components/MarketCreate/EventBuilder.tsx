@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import FormHelperText from '@mui/material/FormHelperText'
 import TextField from '@mui/material/TextField'
@@ -67,18 +67,18 @@ export default function EventBuilder({ eventIndex, removeEvent }: EventBuilderPr
 			<TemplateDialog open={openModal} handleClose={handleClose} onTemplateChange={onTemplateChange} />
 			<FormRow>
 				<FormLabel>
-					<Trans id='Question' /> #{eventIndex + 1}
+					<Trans>Question</Trans> #{eventIndex + 1}
 				</FormLabel>
 				<div>
 					<QuestionBuilder {...{ eventIndex }} />
 					<Button onClick={() => setOpenModal(true)} variant='outlined'>
-						<Trans id='Choose Question' />
+						<Trans>Choose Question</Trans>
 					</Button>
 				</div>
 			</FormRow>
 			<FormRow>
 				<FormLabel>
-					<Trans id='Opening Time (UTC)' />
+					<Trans>Opening Time (UTC)</Trans>
 				</FormLabel>
 				<div>
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -86,10 +86,10 @@ export default function EventBuilder({ eventIndex, removeEvent }: EventBuilderPr
 							control={control}
 							name={`events.${eventIndex}.openingTs`}
 							rules={{
-								required: i18n._('This field is required'),
-								validate: v =>
+								required: t`This field is required`,
+								validate: (v) =>
 									(v && closingTime && compareAsc(v, closingTime) === 1) ||
-									i18n._('The event date must be after the closing time.'),
+									t`The event date must be after the closing time.`,
 							}}
 							render={({ field }) => (
 								<DateTimePicker
@@ -97,13 +97,13 @@ export default function EventBuilder({ eventIndex, removeEvent }: EventBuilderPr
 									onChange={field.onChange}
 									value={field.value}
 									inputFormat={DATE_FORMAT}
-									renderInput={params => <TextField {...params} fullWidth />}
+									renderInput={(params) => <TextField {...params} fullWidth />}
 								/>
 							)}
 						/>
 					</LocalizationProvider>
 					<FormHelperText>
-						<Trans id='The results of this event will be available to be answered at this time.' />
+						<Trans>The results of this event will be available to be answered at this time.</Trans>
 					</FormHelperText>
 					<FormError>
 						<ErrorMessage errors={errors} name={`events.${eventIndex}.openingTs`} />
@@ -112,17 +112,17 @@ export default function EventBuilder({ eventIndex, removeEvent }: EventBuilderPr
 			</FormRow>
 			<FormRow>
 				<FormLabel>
-					<Trans id='Answers' />
+					<Trans>Answers</Trans>
 				</FormLabel>
 				<AnswersBuilder {...{ eventIndex, answersFields, addAnswer, deleteAnswer }} />
 			</FormRow>
 
 			<FormRow>
 				<Button onClick={addAnswer} variant='outlined'>
-					<Trans id='Add answer' /> +
+					<Trans>Add answer</Trans> +
 				</Button>
 				<Button onClick={() => removeEvent(eventIndex)} color='error' sx={{ ml: 2 }}>
-					<Trans id='Remove event' /> -
+					<Trans>Remove event</Trans> -
 				</Button>
 			</FormRow>
 		</div>

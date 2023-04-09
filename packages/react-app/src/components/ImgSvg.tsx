@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import * as React from 'react'
 import { useState } from 'react'
@@ -28,7 +28,7 @@ export function AdImg(props: ImgSvgProps & { type: 'svg' | 'base64' }) {
 	if (error) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Failed to load image.' />
+				<Trans>Failed to load image.</Trans>
 			</Alert>
 		)
 	}

@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { useTheme } from '@mui/material'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
@@ -41,7 +41,7 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 			}
 		}),
 		{
-			outcome: i18n._('Invalid result'),
+			outcome: t`Invalid result`,
 			amountBets: 0,
 			percentage: 0,
 			index: -1,
@@ -92,13 +92,13 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 	if (events[0].outcomes.length > 4) {
 		// filter zero values for clarity in the graphs
 		stats = stats.map((eventStat) =>
-			eventStat.filter((stat) => stat.amountBets !== 0 || stat.outcome.toLowerCase() === i18n._('draw'))
+			eventStat.filter((stat) => stat.amountBets !== 0 || stat.outcome.toLowerCase() === t`draw`)
 		)
 	}
 
 	// filter invalid if it has 0 bets
 	return stats.map((eventStat) =>
-		eventStat.filter((stat) => (stat.outcome === i18n._('Invalid result') ? stat.amountBets !== 0 : true))
+		eventStat.filter((stat) => (stat.outcome === t`Invalid result` ? stat.amountBets !== 0 : true))
 	)
 }
 
@@ -122,7 +122,7 @@ export function Stats({ marketId, chainId }: { marketId: Address; chainId: numbe
 			<BoxWrapper>
 				{stats.length === 0 && (
 					<Alert severity='info'>
-						<Trans id='No bets found.' />
+						<Trans>No bets found.</Trans>
 					</Alert>
 				)}
 				{stats.length > 0 &&

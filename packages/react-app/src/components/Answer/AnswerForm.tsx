@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
@@ -125,7 +125,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (!address) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Connect your wallet to answer' />
+				<Trans>Connect your wallet to answer</Trans>
 			</Alert>
 		)
 	}
@@ -133,7 +133,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
+				<Trans>UNSUPPORTED_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -141,7 +141,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (!isMainChain(chain?.id)) {
 		return (
 			<Alert severity='error'>
-				<Trans id='ONLY_MAIN_CHAIN' />
+				<Trans>ONLY_MAIN_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -149,7 +149,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (isSuccess) {
 		return (
 			<Alert severity='success'>
-				<Trans id='Answer sent' />!
+				<Trans>Answer sent</Trans>!
 			</Alert>
 		)
 	}
@@ -164,7 +164,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (openingTimeLeft !== false) {
 		return (
 			<div>
-				<Trans id='Open to answers in {openingTimeLeft}' values={{ openingTimeLeft }} />
+				<Trans>Open to answers in {openingTimeLeft}</Trans>
 			</div>
 		)
 	}
@@ -172,7 +172,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 	if (event.isPendingArbitration) {
 		return (
 			<div>
-				<Trans id='Event result is pending arbitration.' />
+				<Trans>Event result is pending arbitration.</Trans>
 			</div>
 		)
 	}
@@ -192,14 +192,14 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 			<BoxWrapper>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Current result' />
+						<Trans>Current result</Trans>
 					</div>
 					<div style={{ width: '60%' }}>{getAnswerText(event.answer, event.outcomes || [], event.templateID)}</div>
 				</BoxRow>
 				{event.bounty.gt(0) && (
 					<BoxRow>
 						<div style={{ width: '40%' }}>
-							<Trans id='Reward' />
+							<Trans>Reward</Trans>
 						</div>
 						<div style={{ width: '60%' }}>{formatAmount(event.bounty, chain.id)}</div>
 					</BoxRow>
@@ -208,7 +208,7 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 					<>
 						<BoxRow>
 							<div style={{ width: '40%' }}>
-								<Trans id='New result' />
+								<Trans>New result</Trans>
 							</div>
 							<div style={{ width: '60%' }}>
 								<FormControl fullWidth>
@@ -217,13 +217,13 @@ export default function AnswerForm({ event, setShowActions }: AnswerFormProps) {
 										multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
 										id={`question-outcome-select`}
 										{...register(`outcome`, {
-											required: i18n._('This field is required.'),
+											required: t`This field is required.`,
 										})}
 										error={!!errors.outcome}
 									>
 										{outcomes.map((outcome, i) => (
 											<MenuItem value={outcome.value} key={i}>
-												<Trans id={outcome.text} />
+												<Trans>{outcome.text}</Trans>
 											</MenuItem>
 										))}
 									</Select>

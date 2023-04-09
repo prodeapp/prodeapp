@@ -1,5 +1,5 @@
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
@@ -53,7 +53,7 @@ export default function Bets({
 	return (
 		<>
 			{bet && (
-				<AppDialog open={openModal} handleClose={handleClose} title={i18n._('Details')}>
+				<AppDialog open={openModal} handleClose={handleClose} title={t`Details`}>
 					<BetDetails bet={bet} chainId={chainId} />
 				</AppDialog>
 			)}
@@ -61,18 +61,18 @@ export default function Bets({
 				<TableHeader>
 					<div style={{ width: '10%' }}>#</div>
 					<div style={{ width: '40%' }}>
-						<Trans id='Player' />
+						<Trans>Player</Trans>
 					</div>
 					<Box sx={{ width: '40%', textAlign: { xs: 'center', sm: 'left' } }}>
-						<Trans id='Points' />
+						<Trans>Points</Trans>
 					</Box>
 					<div style={{ width: '180px' }}>
-						<Trans id='Details' />
+						<Trans>Details</Trans>
 					</div>
 				</TableHeader>
 				{bets && bets.length === 0 && (
 					<Alert severity='info'>
-						<Trans id='No bets found.' />
+						<Trans>No bets found.</Trans>
 					</Alert>
 				)}
 				{bets &&
@@ -100,7 +100,7 @@ export default function Bets({
 								<div style={{ width: '40%' }}>
 									<Link to={`/profile/${rank.player.id}`}>
 										{address && rank.player.id.toLowerCase() === address.toLowerCase()
-											? i18n._('You')
+											? t`You`
 											: formatPlayerName(rank.player.name, rank.player.id)}
 									</Link>
 								</div>
@@ -115,7 +115,7 @@ export default function Bets({
 								</Box>
 								<div style={{ width: '180px' }}>
 									<span className='js-link' onClick={() => handleOpen(rank)}>
-										<EyeIcon /> <Trans id='See details' />
+										<EyeIcon /> <Trans>See details</Trans>
 									</span>
 								</div>
 							</TableBody>

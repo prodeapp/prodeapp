@@ -2,8 +2,8 @@ import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
@@ -56,13 +56,16 @@ function BetNFT({ marketId, tokenId, chainId }: { marketId: string; tokenId: Big
 		<div style={{ textAlign: 'center', margin: '10px 0' }}>
 			<div>
 				<p>
-					<Trans id='Your betting position is represented by the following NFT.' />
+					<Trans>Your betting position is represented by the following NFT.</Trans>
 				</p>
 			</div>
 			<img src={image} style={{ margin: '20px 0' }} alt='Bet NFT' />
 			<div>
 				<p>
-					<Trans id='You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins.' />
+					<Trans>
+						You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if
+						this bet wins.
+					</Trans>
 				</p>
 			</div>
 		</div>
@@ -112,7 +115,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ value: '', questionId: event.id }))
+		events && events.forEach((event) => append({ value: '', questionId: event.id }))
 	}, [events, append, remove])
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
@@ -127,7 +130,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -168,11 +175,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						<div>
 							<div>
 								<AlertTitle>
-									<Trans id='Congratulations!' />
+									<Trans>Congratulations!</Trans>
 								</AlertTitle>
 							</div>
 							<div>
-								<Trans id='Your bet is travelling to the destination chain, it will arrive in a few minutes!' />
+								<Trans>Your bet is travelling to the destination chain, it will arrive in a few minutes!</Trans>
 							</div>
 						</div>
 					</Box>
@@ -183,7 +190,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		return (
 			<>
 				<Alert severity='success' sx={{ mb: 3 }}>
-					<Trans id='Bet placed!' />
+					<Trans>Bet placed!</Trans>
 				</Alert>
 
 				<BetNFT marketId={market.id} tokenId={tokenId} chainId={chainId} />
@@ -194,7 +201,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	if (!address) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Connect your wallet to place a bet.' />
+				<Trans>Connect your wallet to place a bet.</Trans>
 			</Alert>
 		)
 	}
@@ -202,7 +209,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
-				<Trans id='UNSUPPORTED_CHAIN' />
+				<Trans>UNSUPPORTED_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -210,7 +217,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	if (eventsError) {
 		return (
 			<Alert severity='error'>
-				<Trans id='Error loading events' />.
+				<Trans>Error loading events</Trans>.
 			</Alert>
 		)
 	}
@@ -222,7 +229,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<h2 style={{ margin: '35px 0', fontSize: '33.18px' }}>
-				<Trans id='Place your bet' />
+				<Trans>Place your bet</Trans>
 			</h2>
 			<h4
 				style={{
@@ -231,7 +238,10 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					paddingBottom: '20px',
 				}}
 			>
-				<Trans id='Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!' />
+				<Trans>
+					Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s
+					prize!
+				</Trans>
 			</h4>
 
 			{hasVoucher && (
@@ -246,11 +256,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						<div>
 							<div>
 								<AlertTitle>
-									<Trans id='Congratulations!' />
+									<Trans>Congratulations!</Trans>
 								</AlertTitle>
 							</div>
 							<div>
-								<Trans id='You have a voucher available to place a bet for free!' />
+								<Trans>You have a voucher available to place a bet for free!</Trans>
 							</div>
 						</div>
 					</Box>
@@ -269,7 +279,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						<div>
 							<div>
 								<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
-									<Trans id='This market was created in Gnosis Chain.' />
+									<Trans>This market was created in Gnosis Chain.</Trans>
 								</AlertTitle>
 							</div>
 							<div>
@@ -317,7 +327,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								<input
 									type='hidden'
 									{...register(`outcomes.${i}.questionId`, {
-										required: i18n._('This field is required'),
+										required: t`This field is required`,
 									})}
 								/>
 							</Grid>
@@ -326,19 +336,19 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				})}
 				<Grid item xs={6}>
 					<Button type='button' color='primary' size='large' variant='outlined' fullWidth onClick={cancelHandler}>
-						<Trans id='Cancel' /> <CrossIcon style={{ marginLeft: 10 }} width={10} height={10} />
+						<Trans>Cancel</Trans> <CrossIcon style={{ marginLeft: 10 }} width={10} height={10} />
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
 					{approve && approveTokens && (
 						<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
-							<Trans id='Approve USDC' />{' '}
+							<Trans>Approve USDC</Trans>{' '}
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
 					{!approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans id='Place Bet' /> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+							<Trans>Place Bet</Trans> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
 				</Grid>

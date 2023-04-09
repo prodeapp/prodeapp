@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -21,7 +21,7 @@ import { formatAmount } from '@/lib/helpers'
 
 function getBidsInfo(ad: SVGAd): { max: BigNumber; min: BigNumber } {
 	const bids = ad.bids
-		.map(bid => {
+		.map((bid) => {
 			return BigNumber.from(bid.bidPerSecond)
 		})
 		.sort((a, b) => {
@@ -66,7 +66,7 @@ function AdBox({ ad }: { ad: SVGAd }) {
 			<MarketDetails sx={{ minWidth: { md: '245px' } }}>
 				<div>
 					<div>
-						<Trans id='Total Bids' />
+						<Trans>Total Bids</Trans>
 					</div>
 					<div style={{ fontWeight: 'bold' }}>{ad.bids.length}</div>
 				</div>
@@ -74,7 +74,7 @@ function AdBox({ ad }: { ad: SVGAd }) {
 				{ad.bids.length === 1 && (
 					<div>
 						<div>
-							<Trans id='Current Bid' />
+							<Trans>Current Bid</Trans>
 						</div>
 						<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid, chainId)}</div>
 					</div>
@@ -84,14 +84,14 @@ function AdBox({ ad }: { ad: SVGAd }) {
 					<>
 						<div>
 							<div>
-								<Trans id='Highest Bid' />
+								<Trans>Highest Bid</Trans>
 							</div>
 							<div style={{ fontWeight: 'bold' }}>{formatAmount(maxBid, chainId)}</div>
 						</div>
 
 						<div>
 							<div>
-								<Trans id='Lower Bid' />
+								<Trans>Lower Bid</Trans>
 							</div>
 							<div style={{ fontWeight: 'bold' }}>{formatAmount(minBid, chainId)}</div>
 						</div>
@@ -100,7 +100,7 @@ function AdBox({ ad }: { ad: SVGAd }) {
 
 				<div>
 					<Button component={RouterLink} to={`/ads/${ad.id}`} color={'primary'} fullWidth>
-						<Trans id='See ad' />
+						<Trans>See ad</Trans>
 					</Button>
 				</div>
 			</MarketDetails>

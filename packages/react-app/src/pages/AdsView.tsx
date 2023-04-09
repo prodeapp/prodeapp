@@ -1,5 +1,5 @@
 import { formatUnits } from '@ethersproject/units'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -44,7 +44,7 @@ export function useIndexedBids(bids?: AdBid[]) {
 	return useMemo(() => {
 		const res: Record<string, { market: AdBid['market']; bids: AdBid[] }> = {}
 
-		bids?.forEach(bid => {
+		bids?.forEach((bid) => {
 			if (!res[bid.market.id]) {
 				res[bid.market.id] = {
 					market: bid.market,
@@ -90,7 +90,7 @@ function AdsView() {
 	if (isLoading) {
 		return (
 			<div>
-				<Trans id='Loading...' />
+				<Trans>Loading...</Trans>
 			</div>
 		)
 	}
@@ -98,7 +98,7 @@ function AdsView() {
 	if (!ad) {
 		return (
 			<div>
-				<Trans id='Ad not found' />
+				<Trans>Ad not found</Trans>
 			</div>
 		)
 	}
@@ -140,13 +140,13 @@ function AdsView() {
 				<Grid item xs={12} lg={8} sx={{ p: 3 }}>
 					{isSuccess && (
 						<Alert severity='success'>
-							<Trans id='Bid removed.' />
+							<Trans>Bid removed.</Trans>
 						</Alert>
 					)}
 					{error && <Alert severity='error'>{error.message}</Alert>}
 					{groupedBids.length === 0 && (
 						<Alert severity='info'>
-							<Trans id='No bids found.' />
+							<Trans>No bids found.</Trans>
 						</Alert>
 					)}
 					{groupedBids.map((bidInfo, i) => {

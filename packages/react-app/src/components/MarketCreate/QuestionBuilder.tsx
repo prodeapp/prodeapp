@@ -1,5 +1,5 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
+import { t } from '@lingui/macro'
 import TextField from '@mui/material/TextField'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
@@ -22,12 +22,10 @@ export default function QuestionBuilder({ eventIndex }: QuestionBuilderProps) {
 			<div style={{ display: 'flex' }}>
 				<TextField
 					{...register(`events.${eventIndex}.questionPlaceholder`, {
-						required: i18n._('This field is required.'),
-						validate: v =>
+						required: t`This field is required.`,
+						validate: (v) =>
 							v.includes('?') ||
-							i18n._(
-								"The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'"
-							),
+							t`The event name must be a question written in english, for example: 'Who will win the match between Barcelona and Real Madrid at the Champions League 2022/2023 Final?'`,
 					})}
 					error={!!errors.events?.[eventIndex]?.questionPlaceholder}
 					style={{ flexGrow: 1 }}

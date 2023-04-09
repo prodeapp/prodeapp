@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -45,7 +45,7 @@ export default function PlaceBet({
 			<Box sx={{ marginTop: '50px', marginBottom: { xs: '50px', md: '100px' } }}>
 				<CurrencyIcon />
 				<Typography variant='p3' component='div'>
-					<Trans id='Bet Price:' />
+					<Trans>Bet Price:</Trans>
 				</Typography>
 				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
 			</Box>
@@ -54,17 +54,17 @@ export default function PlaceBet({
 				<>
 					{hasVoucher && (
 						<Alert severity={'info'} sx={{ mb: 2, fontWeight: 700, justifyContent: 'center' }}>
-							<Trans id='You have a voucher available to place a bet for free!' />
+							<Trans>You have a voucher available to place a bet for free!</Trans>
 						</Alert>
 					)}
 					{betsClosingSoon(market.closingTime) && (
 						<Typography variant='p3' component='div'>
-							<Trans id="There's not much time left, hurry!" />
+							<Trans>{`There's not much time left, hurry!`}</Trans>
 						</Typography>
 					)}
 					<div style={{ fontWeight: 'bold', marginBottom: '15px' }}>{timeLeft}</div>
 					<Button color='primary' size='large' fullWidth onClick={onBetClick}>
-						<Trans id='Place Bet' /> - {formatAmount(market.price, chainId)} <ArrowRight style={{ marginLeft: 10 }} />
+						<Trans>Place Bet</Trans> - {formatAmount(market.price, chainId)} <ArrowRight style={{ marginLeft: 10 }} />
 					</Button>
 				</>
 			)}
@@ -80,7 +80,7 @@ export default function PlaceBet({
 						/>
 					</div>
 					<Button color='primary' size='large' fullWidth onClick={onResultsClick}>
-						<Trans id='Answer results' /> <ArrowRight style={{ marginLeft: 10 }} />
+						<Trans>Answer results</Trans> <ArrowRight style={{ marginLeft: 10 }} />
 					</Button>
 				</>
 			)}

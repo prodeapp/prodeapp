@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -113,17 +113,17 @@ function AdsCreate() {
 	const { errors, isValid } = formState
 
 	if (!address) {
-		return <Alert severity='error'>{i18n._('Connect your wallet to create an ad.')}</Alert>
+		return <Alert severity='error'>{t`Connect your wallet to create an ad.`}</Alert>
 	}
 
 	if (!chain || chain.unsupported) {
-		return <Alert severity='error'>{i18n._('UNSUPPORTED_CHAIN')}</Alert>
+		return <Alert severity='error'>{t`UNSUPPORTED_CHAIN`}</Alert>
 	}
 
 	if (!isMainChain(chain?.id)) {
 		return (
 			<Alert severity='error'>
-				<Trans id='ONLY_MAIN_CHAIN' />
+				<Trans>ONLY_MAIN_CHAIN</Trans>
 			</Alert>
 		)
 	}
@@ -181,14 +181,14 @@ function AdsCreate() {
 				}}
 			>
 				<Typography variant='h1s'>
-					<Trans id='Create a new ad' />
+					<Trans>Create a new ad</Trans>
 				</Typography>
 			</Banner>
 
 			<Container>
 				{isSuccess && (
 					<Alert severity='success'>
-						<Trans id='Ad created.' />
+						<Trans>Ad created.</Trans>
 					</Alert>
 				)}
 
@@ -207,7 +207,7 @@ function AdsCreate() {
 						)}
 						<FormRow>
 							<FormLabel>
-								<Trans id='Image' />
+								<Trans>Image</Trans>
 							</FormLabel>
 							<div style={{ width: '100%' }}>
 								<input
@@ -235,8 +235,8 @@ function AdsCreate() {
 							<div>
 								<TextField
 									{...register('url', {
-										required: i18n._('This field is required.'),
-										validate: (v) => isValidUrl(v) || i18n._('Invalid URL'),
+										required: t`This field is required.`,
+										validate: (v) => isValidUrl(v) || t`Invalid URL`,
 									})}
 									error={!!errors.url}
 									style={{ width: '100%' }}
@@ -265,7 +265,7 @@ function AdsCreate() {
 								</div>
 								<div style={{ marginBottom: '20px' }}>
 									<Button type='submit' fullWidth size='large'>
-										<Trans id='Submit Ad' />
+										<Trans>Submit Ad</Trans>
 									</Button>
 								</div>
 							</>

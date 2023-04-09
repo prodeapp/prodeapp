@@ -5,7 +5,8 @@ import polyfillNode from "rollup-plugin-polyfill-node";
 import { defineConfig } from "vite";
 import svgrPlugin from "vite-plugin-svgr";
 import viteTsconfigPaths from "vite-tsconfig-paths";
-import checker from 'vite-plugin-checker'
+import checker from 'vite-plugin-checker';
+import { lingui } from "@lingui/vite-plugin";
 
 export default ({ mode }) => {
   return defineConfig({
@@ -15,7 +16,11 @@ export default ({ mode }) => {
     plugins: [
       react({
         include: "**/*.tsx",
+        babel: {
+          plugins: ["macros"]
+        }
       }),
+      lingui(),
       viteTsconfigPaths(),
       svgrPlugin(),
       { ...polyfillNode({ fs: true }), enforce: "post" },

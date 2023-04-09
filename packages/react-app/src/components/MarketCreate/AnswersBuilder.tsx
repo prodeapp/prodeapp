@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 import React from 'react'
@@ -26,7 +26,7 @@ export default function AnswersBuilder({ eventIndex, answersFields, deleteAnswer
 		<div style={{ width: '100%' }}>
 			{answersFields.length < 2 && (
 				<FormError style={{ marginBottom: '5px' }}>
-					<Trans id='Add at least two answers' />.
+					<Trans>Add at least two answers</Trans>.
 				</FormError>
 			)}
 
@@ -37,7 +37,7 @@ export default function AnswersBuilder({ eventIndex, answersFields, deleteAnswer
 							<div>
 								<TextField
 									{...register(`events.${eventIndex}.answers.${i}.value`, {
-										required: i18n._('This field is required.'),
+										required: t`This field is required.`,
 									})}
 									error={!!errors.events?.[eventIndex]?.answers?.[i]?.value}
 									fullWidth

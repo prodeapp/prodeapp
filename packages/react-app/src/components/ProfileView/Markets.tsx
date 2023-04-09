@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
@@ -30,7 +30,7 @@ export function Markets({ creatorId, chainId }: { creatorId: string; chainId: nu
 	if (!markets || markets.length === 0) {
 		return (
 			<Alert severity='info'>
-				<Trans id='Create a market and earn fees on each bet.' />
+				<Trans>Create a market and earn fees on each bet.</Trans>
 			</Alert>
 		)
 	}
@@ -40,16 +40,16 @@ export function Markets({ creatorId, chainId }: { creatorId: string; chainId: nu
 			<Grid item sm={12} md={12}>
 				<BoxRow>
 					<div style={{ width: '40%' }}>
-						<Trans id='Market' />
+						<Trans>Market</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Pool' />
+						<Trans>Pool</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Rewards receiver' />
+						<Trans>Rewards receiver</Trans>
 					</div>
 					<div style={{ width: '20%' }}>
-						<Trans id='Management Rewards Earned' />
+						<Trans>Management Rewards Earned</Trans>
 					</div>
 				</BoxRow>
 

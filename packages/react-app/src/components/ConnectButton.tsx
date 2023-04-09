@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
@@ -58,14 +58,14 @@ export const ConnectButton = () => {
 							if (!connected) {
 								return (
 									<Button onClick={openConnectModal} color='primary' size='large'>
-										<Trans id='Connect Wallet' /> <ArrowRight style={{ marginLeft: 10 }} />
+										<Trans>Connect Wallet</Trans> <ArrowRight style={{ marginLeft: 10 }} />
 									</Button>
 								)
 							}
 							if (chain.unsupported) {
 								return (
 									<Button onClick={openChainModal} color='error' size='large'>
-										<Trans id='Wrong network' /> <ArrowRight style={{ marginLeft: 10 }} />
+										<Trans>Wrong network</Trans> <ArrowRight style={{ marginLeft: 10 }} />
 									</Button>
 								)
 							}

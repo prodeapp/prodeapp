@@ -1,6 +1,6 @@
 import { ErrorMessage } from '@hookform/error-message'
-import { i18n } from '@lingui/core'
-import { Trans } from '@lingui/react'
+import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -80,7 +80,7 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 			<div style={wrapperStyles}>
 				<div style={innerStyles}>
 					<Alert severity='success'>
-						<Trans id='Username updated' />!
+						<Trans>Username updated</Trans>!
 					</Alert>
 				</div>
 			</div>
@@ -109,7 +109,7 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 
 					{isPrepareError && name !== player?.name && (
 						<Alert severity='error' sx={{ mb: 2 }}>
-							<Trans id='Name already in use, please select another name' />
+							<Trans>Name already in use, please select another name</Trans>
 						</Alert>
 					)}
 
@@ -124,9 +124,9 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 							<FormControl fullWidth>
 								<TextField
 									{...register('name', {
-										required: i18n._('This field is required.'),
+										required: t`This field is required.`,
 									})}
-									placeholder={i18n._('Your username')}
+									placeholder={t`Your username`}
 									error={!!errors.name}
 									style={{ width: '100%' }}
 								/>
@@ -137,7 +137,7 @@ export default function ProfileForm({ defaultName }: { defaultName: string }) {
 						</div>
 						<div>
 							<Button color='primary' type='submit' disabled={!write}>
-								<Trans id='Change username' />
+								<Trans>Change username</Trans>
 							</Button>
 						</div>
 					</div>

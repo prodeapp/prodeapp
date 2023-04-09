@@ -1,0 +1,18 @@
+{
+    "presets": [
+        "@babel/preset-typescript",
+        [
+            "@babel/preset-react",
+            {
+                "runtime": "automatic",
+                "importSource": "react"
+            }
+        ]
+    ],
+    "plugins": ["macros"],
+    "env": {
+        "test": {
+            "plugins": ["macros", "dynamic-import-node"]
+        }
+    }
+}

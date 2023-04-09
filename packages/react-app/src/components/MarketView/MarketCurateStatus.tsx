@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Skeleton from '@mui/material/Skeleton'
 import { useTheme } from '@mui/material/styles'
 import { Link as RouterLink } from 'react-router-dom'
@@ -59,7 +59,7 @@ function MarketCurateStatus({
 		return (
 			<div style={{ display: 'flex', alignItems: 'center' }}>
 				<div>
-					<Trans id='Verified' />
+					<Trans>Verified</Trans>
 				</div>
 				<ShieldCheckIcon width='12' height='13' style={{ marginLeft: 5 }} />
 			</div>
@@ -70,7 +70,7 @@ function MarketCurateStatus({
 		<div style={{ display: 'flex' }}>
 			{activeItem === null || activeItem.status === 'Absent' ? (
 				<div>
-					<Trans id='Not verified yet' />
+					<Trans>Not verified yet</Trans>
 				</div>
 			) : (
 				<a
@@ -80,7 +80,7 @@ function MarketCurateStatus({
 					target='_blank'
 					rel='noreferrer'
 				>
-					<Trans id='In process' />
+					<Trans>In process</Trans>
 				</a>
 			)}
 			<div
@@ -91,7 +91,7 @@ function MarketCurateStatus({
 				}}
 			>
 				<RouterLink to={`/curate/submit/${marketId}`}>
-					<Trans id='Verify' />{' '}
+					<Trans>Verify</Trans>{' '}
 					<TriangleIcon
 						style={{
 							marginLeft: 5,

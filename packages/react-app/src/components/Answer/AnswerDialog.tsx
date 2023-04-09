@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/react'
+import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
 import DialogActions from '@mui/material/DialogActions'
 import React, { useState } from 'react'
@@ -18,7 +18,7 @@ function AnswerDialog({ open, handleClose, event }: AnswerDialogProps) {
 	const dialogActions = (
 		<DialogActions>
 			<Button autoFocus color='primary' type='submit' form='answer-form'>
-				<Trans id='Submit answer' />
+				<Trans>Submit answer</Trans>
 			</Button>
 		</DialogActions>
 	)
