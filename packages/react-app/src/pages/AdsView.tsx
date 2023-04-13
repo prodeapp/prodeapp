@@ -123,7 +123,7 @@ function AdsView() {
 				spacing={0}
 				style={{
 					minHeight: '100%',
-					borderTop: `1px solid ${theme.palette.black.dark}`,
+					borderTop: `1px solid ${theme.palette.secondary.contrastText}`,
 				}}
 			>
 				<GridLeftColumn item xs={12} lg={4}>

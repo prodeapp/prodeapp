@@ -27,7 +27,7 @@ const MenuBar = styled(Box)(({ theme }) => ({
 
 	a: {
 		fontSize: '19.2px',
-		color: theme.palette.black.dark,
+		color: theme.palette.secondary.contrastText,
 		fontWeight: 700,
 		alignItems: 'center',
 		display: 'flex',
@@ -114,7 +114,7 @@ function DropdownMenu({ text, children }: { text: string; children: React.ReactN
 			display: 'block',
 		},
 		'&:hover svg': {
-			fill: theme.palette.black.dark,
+			fill: theme.palette.secondary.contrastText,
 			transform: 'rotate(180deg)',
 		},
 	}))

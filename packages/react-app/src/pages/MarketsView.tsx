@@ -95,7 +95,7 @@ function MarketsView() {
 				spacing={0}
 				style={{
 					minHeight: '100%',
-					borderTop: `1px solid ${theme.palette.black.dark}`,
+					borderTop: `1px solid ${theme.palette.secondary.main}`,
 				}}
 			>
 				<GridLeftColumn item xs={12} lg={4}>
@@ -113,12 +113,18 @@ function MarketsView() {
 							container
 							spacing={0}
 							style={{
-								borderBottom: `1px solid ${theme.palette.black.dark}`,
+								borderBottom: `1px solid ${theme.palette.secondary.main}`,
 								fontSize: '14px',
 								paddingBottom: '20px',
 							}}
 						>
-							<Grid item xs={7} md={6} sx={{ pr: 2 }} style={{ borderRight: `1px solid ${theme.palette.black.dark}` }}>
+							<Grid
+								item
+								xs={6}
+								md={6}
+								sx={{ pr: 2 }}
+								style={{ borderRight: `1px solid ${theme.palette.secondary.main}` }}
+							>
 								<div style={{ fontWeight: 600, marginBottom: 5 }}>
 									<Trans>Market verification</Trans>:
 								</div>

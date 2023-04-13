@@ -31,7 +31,7 @@ const fonts = `@font-face {
     font-style: normal;
 }`
 
-const palette = {
+/*const light = {
 	primary: {
 		light: '#C2D5FC',
 		main: '#4267B3',
@@ -44,6 +44,31 @@ const palette = {
 		dark: '#D9D2C2',
 		contrastText: '#303030',
 	},
+	borders: {
+		main: '#303030',
+	}
+}*/
+
+const dark = {
+	primary: {
+		light: '#C2D5FC',
+		main: '#4267B3',
+		dark: '#385899',
+		contrastText: '#FFF',
+	},
+	secondary: {
+		light: '#2c2e37',
+		main: '#20222a',
+		dark: '#141722',
+		contrastText: '#eee9e2',
+	},
+	borders: {
+		main: '#141722',
+	},
+}
+
+const palette = {
+	...dark,
 	black: {
 		light: '#969696',
 		main: '#636363',
@@ -151,10 +176,10 @@ const darkTheme = createTheme({
             body {
               font-family: 'Mulish', sans-serif;
               background-color: ${palette.secondary.light};
-              color: ${palette.black.dark};
+              color: ${palette.secondary.contrastText};
             }
             h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
-              color: ${palette.black.dark};
+              color: ${palette.secondary.contrastText};
             }
             a {
               color: ${palette.primary.main};
@@ -200,7 +225,7 @@ const darkTheme = createTheme({
 			styleOverrides: {
 				root: {
 					'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-						borderColor: palette.black.dark,
+						borderColor: palette.secondary.contrastText,
 						borderWidth: 1,
 						opacity: 1,
 					},
@@ -210,7 +235,7 @@ const darkTheme = createTheme({
 					},
 				},
 				notchedOutline: {
-					borderColor: palette.black.dark,
+					borderColor: palette.secondary.contrastText,
 					borderRadius: '4px',
 					opacity: 0.4,
 				},
@@ -241,7 +266,7 @@ const darkTheme = createTheme({
 				},
 				indicator: {
 					height: '4px',
-					background: palette.black.dark,
+					background: palette.secondary.contrastText,
 				},
 			},
 		},
@@ -253,7 +278,7 @@ const darkTheme = createTheme({
 					color: '#B0B0B0',
 					fontSize: '16px',
 					'&.Mui-selected': {
-						color: palette.black.dark,
+						color: palette.secondary.contrastText,
 						fontWeight: 700,
 					},
 				},

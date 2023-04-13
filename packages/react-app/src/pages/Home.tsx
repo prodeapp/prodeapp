@@ -3,7 +3,6 @@ import CircularProgress from '@mui/material/CircularProgress'
 import React, { useContext } from 'react'
 import { useNetwork } from 'wagmi'
 
-import HomeSlider from '@/components/HomeSlider'
 import MarketsFilter from '@/components/MarketsFilter'
 import MarketsTable from '@/components/MarketsTable'
 import { useMarkets } from '@/hooks/useMarkets'
@@ -18,8 +17,6 @@ function Home() {
 
 	return (
 		<>
-			<HomeSlider />
-
 			<MarketsFilter />
 
 			{isLoading && <CircularProgress />}

@@ -19,7 +19,7 @@ const FooterNav = styled('div', {
 		},
 	},
 	a: {
-		color: theme.palette.black.dark,
+		color: theme.palette.secondary.main,
 	},
 }))
 
@@ -27,7 +27,7 @@ const FooterWrapper = styled('footer')(({ theme }) => ({
 	background: theme.palette.secondary.main,
 
 	'>div': {
-		borderTop: `1px solid ${theme.palette.black.dark}`,
+		borderTop: `1px solid ${theme.palette.secondary.main}`,
 		minHeight: '52px',
 		display: 'flex',
 		alignItems: 'center',

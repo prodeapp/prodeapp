@@ -51,7 +51,7 @@ function MarketPrizeInfo({ market, chainId }: { market: Market; chainId: number 
 
 function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 	const GridStyled = styled(Grid)(({ theme }) => ({
-		borderBottom: `1px solid ${theme.palette.black.dark}`,
+		borderBottom: `1px solid ${theme.palette.secondary.main}`,
 		'& > div': {
 			padding: '10px 20px',
 			[theme.breakpoints.up('md')]: {
@@ -63,7 +63,7 @@ function MarketInfo({ market, chainId }: { market: Market; chainId: number }) {
 		},
 		[theme.breakpoints.up('md')]: {
 			'& > div + div': {
-				borderLeft: `1px solid ${theme.palette.black.dark}`,
+				borderLeft: `1px solid ${theme.palette.secondary.main}`,
 			},
 		},
 	}))

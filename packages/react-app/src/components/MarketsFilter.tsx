@@ -66,7 +66,7 @@ const FilterDropdownStyled = styled('div')(({ theme }) => ({
 		fill: theme.palette.primary.main,
 	},
 	'&.open svg': {
-		fill: theme.palette.black.dark,
+		fill: theme.palette.secondary.contrastText,
 		transform: 'rotate(180deg)',
 	},
 }))

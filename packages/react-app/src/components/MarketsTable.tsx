@@ -26,10 +26,10 @@ type MarketsTableProps = {
 
 export const MarketsGrid = styled(Grid)(({ theme }) => ({
 	[theme.breakpoints.up('sm')]: {
-		borderTop: `1px solid ${theme.palette.black.dark}`,
+		borderTop: `1px solid ${theme.palette.borders.main}`,
 	},
 	'.MuiGrid-item': {
-		border: `1px solid ${theme.palette.black.dark}`,
+		border: `1px solid ${theme.palette.borders.main}`,
 
 		[theme.breakpoints.down('sm')]: {
 			marginBottom: '20px',
@@ -53,13 +53,13 @@ export const MarketsGrid = styled(Grid)(({ theme }) => ({
 
 export const MarketDetails = styled(Box)(({ theme }) => ({
 	[theme.breakpoints.up('sm')]: {
-		borderLeft: `1px solid ${theme.palette.black.dark}`,
+		borderLeft: `1px solid ${theme.palette.borders.main}`,
 	},
 	'>div': {
 		padding: theme.spacing(2),
 
 		'&:not(:last-child)': {
-			borderBottom: `1px solid ${theme.palette.black.dark}`,
+			borderBottom: `1px solid ${theme.palette.borders.main}`,
 		},
 	},
 }))

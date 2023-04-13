@@ -814,7 +814,7 @@ function BigStepper({ steps, activeStep }: { steps: string[]; activeStep: number
 			'&.current-step': {
 				position: 'relative',
 				'&:before': {
-					...cssTriangle(23, theme.palette.black.dark),
+					...cssTriangle(23, theme.palette.secondary.contrastText),
 					position: 'absolute',
 					bottom: '-23px',
 				},

@@ -31,7 +31,7 @@ export const FormRow = styled('div')`
 `
 
 export const FormLabel = styled('div')(({ theme }) => ({
-	color: theme.palette.black.dark,
+	color: theme.palette.secondary.contrastText,
 	fontSize: '14px',
 	fontWeight: 'bold',
 	marginBottom: '5px',
@@ -46,8 +46,8 @@ const TableRow = styled('div')(() => ({
 
 export const TableHeader = styled(TableRow)(({ theme }) => ({
 	background: theme.palette.secondary.dark,
-	borderTop: `1px solid ${theme.palette.black.dark}`,
-	borderBottom: `1px solid ${theme.palette.black.dark}`,
+	borderTop: `1px solid ${theme.palette.secondary.main}`,
+	borderBottom: `1px solid ${theme.palette.secondary.main}`,
 	fontWeight: 600,
 	fontSize: '14px',
 	minHeight: '40px',
@@ -56,7 +56,7 @@ export const TableHeader = styled(TableRow)(({ theme }) => ({
 export const TableBody = styled(TableRow)(({ theme }) => ({
 	fontSize: '16px',
 	minHeight: '44px',
-	borderBottom: `1px solid ${theme.palette.black.dark}`,
+	borderBottom: `1px solid ${theme.palette.secondary.main}`,
 	'&.padding-lg': {
 		paddingTop: '16px',
 		paddingBottom: '16px',
@@ -69,7 +69,7 @@ export const BoxLabelCell = styled('div')`
 `
 
 export const BigAlert = styled(Alert, {
-	shouldForwardProp: prop => prop !== 'ml',
+	shouldForwardProp: (prop) => prop !== 'ml',
 })<{ ml?: number }>((/*{ theme, ml }*/) => ({
 	fontSize: '19.2px',
 	padding: '24px 28px',

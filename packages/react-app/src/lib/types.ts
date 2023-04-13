@@ -22,9 +22,11 @@ export enum LocaleEnum {
 declare module '@mui/material/styles' {
 	interface Palette {
 		black: Palette['primary']
+		borders: Palette['primary']
 	}
 	interface PaletteOptions {
 		black: PaletteOptions['primary']
+		borders: PaletteOptions['primary']
 	}
 	interface TypographyVariants {
 		p1: React.CSSProperties
