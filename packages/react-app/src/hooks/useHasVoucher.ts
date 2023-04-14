@@ -2,19 +2,28 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Address } from '@wagmi/core'
 import { useContractReads } from 'wagmi'
 
+import { GnosisChainReceiverAbi } from '@/abi/GnosisChainReceiver'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
-import { filterChainId, getConfigAddress } from '@/lib/config'
+import { filterChainId, getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
 
 export const useHasVoucher = (address: Address | undefined, marketId: Address, chainId: number, price: BigNumber) => {
 	const { data } = useContractReads({
 		contracts: [
-			{
-				address: address && getConfigAddress('VOUCHER_MANAGER', chainId),
-				abi: VoucherManagerAbi,
-				functionName: 'balance',
-				args: [address],
-				chainId: filterChainId(chainId),
-			},
+			isMainChain(chainId)
+				? {
+						address: address && getConfigAddress('VOUCHER_MANAGER', chainId),
+						abi: VoucherManagerAbi,
+						functionName: 'balance',
+						args: [address],
+						chainId: filterChainId(chainId),
+				  }
+				: {
+						address: address && GNOSIS_CHAIN_RECEIVER_ADDRESS,
+						abi: GnosisChainReceiverAbi,
+						functionName: 'voucherBalance',
+						args: [address],
+						chainId: filterChainId(chainId),
+				  },
 			{
 				address: address && getConfigAddress('VOUCHER_MANAGER', chainId),
 				abi: VoucherManagerAbi,

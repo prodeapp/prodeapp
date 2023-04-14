@@ -267,7 +267,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</BigAlert>
 			)}
 
-			{isCrossChainBet && (
+			{!hasVoucher && isCrossChainBet && (
 				<BigAlert severity='info' sx={{ mb: 4 }}>
 					<Box
 						sx={{
