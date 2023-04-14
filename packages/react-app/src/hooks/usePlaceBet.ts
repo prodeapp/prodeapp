@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
-import { MaxInt256 } from '@ethersproject/constants'
+import { AddressZero, MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
 import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
 
@@ -82,25 +82,27 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const { address } = useAccount()
 	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
 
+	let ASSET_ADDRESS: Address = AddressZero
 	let usdcAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
+		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+
 		// fix the difference of decimals
 		const priceInUsdc = price.div(10 ** (18 - 6))
 		const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
 		usdcAmount = priceInUsdc.add(extra)
 	}
 
-	const USDC_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
 	const DOMAIN_ID = CROSS_CHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
-	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(USDC_ADDRESS, address, CONNEXT_ADDRESS)
+	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(ASSET_ADDRESS, address, CONNEXT_ADDRESS)
 
 	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
 	const approve: UsePlaceBetReturn['approve'] = allowance.lt(usdcAmount)
-		? { amount: usdcAmount, token: USDC_ADDRESS, spender: CONNEXT_ADDRESS }
+		? { amount: usdcAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -131,7 +133,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			args: [
 				Number(GNOSIS_DOMAIN_ID),
 				GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				USDC_ADDRESS,
+				ASSET_ADDRESS,
 				address,
 				usdcAmount,
 				slippage,
