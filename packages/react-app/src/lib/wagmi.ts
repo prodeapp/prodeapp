@@ -14,6 +14,8 @@ import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
+import { googleConnector } from './RainbowWeb3authConnector'
+
 gnosis.contracts = {
 	multicall3: {
 		address: '0xca11bde05977b3631167028862be2a173976ca11',
@@ -57,6 +59,10 @@ const connectors = connectorsForWallets([
 			walletConnectWallet({ chains }),
 			...(needsInjectedWalletFallback ? [injectedWallet({ chains, shimDisconnect: true })] : []),
 		],
+	},
+	{
+		groupName: 'Social',
+		wallets: [googleConnector({ chains })],
 	},
 ])
 
