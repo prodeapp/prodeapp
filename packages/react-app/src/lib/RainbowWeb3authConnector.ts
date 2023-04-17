@@ -4,10 +4,10 @@ import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector'
 import { Chain } from 'wagmi'
 
-function createWeb3AuthInstance(chains: Chain[]) {
+function createWeb3AuthInstance(chains: Chain[], clientId: string) {
 	// Create Web3Auth Instance
 	const web3AuthInstance = new Web3AuthNoModal({
-		clientId: import.meta.env.VITE_WEB3AUTH_CLIENT_ID,
+		clientId,
 		chainConfig: {
 			chainNamespace: CHAIN_NAMESPACES.EIP155,
 			chainId: '0x' + chains[0].id.toString(16),
@@ -38,8 +38,8 @@ function createWeb3AuthInstance(chains: Chain[]) {
 	return web3AuthInstance
 }
 
-export const googleConnector = ({ chains }: { chains: Chain[] }) => {
-	const web3AuthInstance = createWeb3AuthInstance(chains)
+export const googleConnector = (chains: Chain[], clientId: string) => {
+	const web3AuthInstance = createWeb3AuthInstance(chains, clientId)
 	const name = 'Login with Google'
 	const iconUrl =
 		'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-icon-logo-png-transparent-svg-vector-bie-supply-14.png'

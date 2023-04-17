@@ -60,10 +60,14 @@ const connectors = connectorsForWallets([
 			...(needsInjectedWalletFallback ? [injectedWallet({ chains, shimDisconnect: true })] : []),
 		],
 	},
-	{
-		groupName: 'Social',
-		wallets: [googleConnector({ chains })],
-	},
+	...(import.meta.env.VITE_WEB3AUTH_CLIENT_ID
+		? [
+				{
+					groupName: 'Social',
+					wallets: [googleConnector(chains, import.meta.env.VITE_WEB3AUTH_CLIENT_ID)],
+				},
+		  ]
+		: []),
 ])
 
 export const wagmiClient = createClient({
