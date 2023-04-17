@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import React, { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as ArrowRight } from '@/assets/icons/arrow-right-2.svg'
 import { ReactComponent as CurrencyIcon } from '@/assets/icons/currency.svg'
@@ -26,7 +26,8 @@ export default function PlaceBet({
 	onResultsClick: () => void
 }) {
 	const { address } = useAccount()
-	const hasVoucher = useHasVoucher(address, market.id, chainId, BigNumber.from(market.price))
+	const { chain } = useNetwork()
+	const hasVoucher = useHasVoucher(address, market.id, chain?.id || chainId, BigNumber.from(market.price))
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()
 

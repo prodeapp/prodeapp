@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
-import { MaxInt256 } from '@ethersproject/constants'
+import { AddressZero, MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
 import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
 
@@ -73,29 +73,36 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
 
 	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher: false, isCrossChainBet: false }
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const { address } = useAccount()
+	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
 
-	// fix the difference of decimals
-	const priceInUsdc = price.div(10 ** (18 - 6))
-	const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
-	const usdcAmount = priceInUsdc.add(extra)
+	let ASSET_ADDRESS: Address = AddressZero
+	let usdcAmount = BigNumber.from(0)
 
-	const USDC_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+	if (!hasVoucher) {
+		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+
+		// fix the difference of decimals
+		const priceInUsdc = price.div(10 ** (18 - 6))
+		const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
+		usdcAmount = priceInUsdc.add(extra)
+	}
+
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
 	const DOMAIN_ID = CROSS_CHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
-	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(USDC_ADDRESS, address, CONNEXT_ADDRESS)
+	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(ASSET_ADDRESS, address, CONNEXT_ADDRESS)
 
 	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
 	const approve: UsePlaceBetReturn['approve'] = allowance.lt(usdcAmount)
-		? { amount: usdcAmount, token: USDC_ADDRESS, spender: CONNEXT_ADDRESS }
+		? { amount: usdcAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -109,14 +116,14 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 		const slippage = BigNumber.from(300) // 3%
 
-		const size = Math.max(...results.map(r => stripZeros(r).length), 1)
+		const size = Math.max(...results.map((r) => stripZeros(r).length), 1)
 
 		const calldata = hexConcat([
 			address,
 			marketId,
 			attribution,
 			BigNumber.from(size).toHexString(),
-			hexConcat(results.map(r => hexStripZeros(r)).map(r => hexZeroPad(r, size))),
+			hexConcat(results.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
 		]) as Bytes
 
 		return {
@@ -126,7 +133,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			args: [
 				Number(GNOSIS_DOMAIN_ID),
 				GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				USDC_ADDRESS,
+				ASSET_ADDRESS,
 				address,
 				usdcAmount,
 				slippage,
@@ -142,7 +149,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(ConnextBridgeFacetAbi)
 	const events = parseEvents(receipt, CONNEXT_ADDRESS, ethersInterface)
-	const transferId = events ? events.filter(log => log.name === 'XCalled')[0]?.args?.transferId || false : false
+	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
 	return {
@@ -152,7 +159,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		error,
 		placeBet: write,
 		tokenId,
-		hasVoucher: false,
+		hasVoucher,
 		approve,
 		isCrossChainBet: true,
 	}
@@ -186,13 +193,13 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 
 	const ethersInterface = new Interface(VoucherManagerAbi)
 	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher, isCrossChainBet: false }
 }
 
 function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
-	if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
+	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
 	}
@@ -206,7 +213,7 @@ function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
 			 * ============================================================
 			 */
 			.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
-			.map(outcome => formatOutcome(outcome.value))
+			.map((outcome) => formatOutcome(outcome.value))
 	)
 }
 
