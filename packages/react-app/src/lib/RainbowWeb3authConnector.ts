@@ -41,13 +41,11 @@ function createWeb3AuthInstance(chains: Chain[], clientId: string) {
 export const googleConnector = (chains: Chain[], clientId: string) => {
 	const web3AuthInstance = createWeb3AuthInstance(chains, clientId)
 	const name = 'Login with Google'
-	const iconUrl =
-		'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-icon-logo-png-transparent-svg-vector-bie-supply-14.png'
 
 	return {
 		id: 'web3auth',
 		name,
-		iconUrl,
+		iconUrl: '/google.png',
 		iconBackground: '#fff',
 		createConnector: () => {
 			const connector = new Web3AuthConnector({
