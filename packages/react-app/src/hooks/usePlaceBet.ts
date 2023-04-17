@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
 import { AddressZero, MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
-import { useAccount, UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, useBalance, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
 import { MarketAbi } from '@/abi/Market'
@@ -28,6 +28,7 @@ export interface UsePlaceBetReturn {
 	placeBet: ReturnType<typeof useSendTx>['write']
 	hasVoucher: boolean
 	isCrossChainBet: boolean
+	hasFundsToBet: boolean
 	approve?: { amount: BigNumber; token: Address; spender: Address }
 }
 
@@ -47,6 +48,22 @@ type UsePlaceBetFn = (
 ) => UsePlaceBetReturn & { hasVoucher: boolean }
 
 export const CROSS_CHAIN_TOKEN_ID = MaxInt256
+
+const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) => {
+	if (tokenAddress === AddressZero) {
+		// in the case of a crosschain voucher set the tokenAddress to undefined
+		// it will then be ignored because tokenBalance.value.gte(betPrice) will always be true
+		tokenAddress = undefined
+	}
+
+	const { address } = useAccount()
+	const { data: tokenBalance = { value: BigNumber.from(0) } } = useBalance({ address, token: tokenAddress })
+	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
+
+	// nativeBalance.value.gt(0) is a simple check to show the error to new users
+	// with a voucher and without native tokens to pay for gas fees
+	return tokenBalance.value.gte(betPrice) && nativeBalance.value.gt(0)
+}
 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const getTxParams = (
@@ -75,7 +92,19 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const events = parseEvents(receipt, marketId, ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
 
-	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher: false, isCrossChainBet: false }
+	const hasFundsToBet = useHasFundsToBet(price)
+
+	return {
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+		hasFundsToBet,
+		placeBet: write,
+		tokenId,
+		hasVoucher: false,
+		isCrossChainBet: false,
+	}
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
@@ -152,11 +181,14 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
+	const hasFundsToBet = useHasFundsToBet(usdcAmount, ASSET_ADDRESS)
+
 	return {
 		isLoading,
 		isSuccess,
 		isError,
 		error,
+		hasFundsToBet,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
@@ -195,7 +227,19 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
-	return { isLoading, isSuccess, isError, error, placeBet: write, tokenId, hasVoucher, isCrossChainBet: false }
+	const hasFundsToBet = useHasFundsToBet(0)
+
+	return {
+		isLoading,
+		isSuccess,
+		isError,
+		error,
+		hasFundsToBet,
+		placeBet: write,
+		tokenId,
+		hasVoucher,
+		isCrossChainBet: false,
+	}
 }
 
 function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {

@@ -766,6 +766,12 @@ msgstr "You can bet from {chain} with USDC. We will take care of bridging the fu
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 
+msgid "You don't have enough funds to place a bet."
+msgstr "You don't have enough funds to place a bet."
+
+msgid "You have a free voucher but still need to have some funds to pay the gas fees."
+msgstr "You have a free voucher but still need to have some funds to pay the gas fees."
+
 msgid "You have a voucher available to place a bet for free!"
 msgstr "You have a voucher available to place a bet for free!"
 

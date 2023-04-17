@@ -121,7 +121,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
 	const attribution = isAddress(referral) ? referral : AddressZero
 
-	const { isLoading, error, placeBet, tokenId, hasVoucher, isCrossChainBet, approve } = usePlaceBet(
+	const { isLoading, error, hasFundsToBet, placeBet, tokenId, hasVoucher, isCrossChainBet, approve } = usePlaceBet(
 		market.id,
 		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
 		chain?.id || DEFAULT_CHAIN,
@@ -202,6 +202,18 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		return (
 			<Alert severity='error'>
 				<Trans>Connect your wallet to place a bet.</Trans>
+			</Alert>
+		)
+	}
+
+	if (!hasFundsToBet) {
+		return (
+			<Alert severity='error'>
+				{hasVoucher ? (
+					<Trans>You have a free voucher but still need to have some funds to pay the gas fees.</Trans>
+				) : (
+					<Trans>You don&apos;t have enough funds to place a bet.</Trans>
+				)}
 			</Alert>
 		)
 	}
