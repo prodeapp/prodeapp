@@ -21,8 +21,17 @@ gnosis.contracts = {
 	},
 }
 
+const isProd = ['prode.market', 'prode.eth.limo', 'prode.eth.link'].includes(window.location.hostname)
+
 export const { chains, provider } = configureChains(
-	[gnosis, arbitrum, optimism, polygon, bsc, polygonMumbai],
+	[
+		{ ...gnosis, iconUrl: '/chains/gnosis.svg' },
+		arbitrum,
+		optimism,
+		polygon,
+		{ ...bsc, iconUrl: '/chains/bsc.svg' },
+		...(!isProd ? [polygonMumbai] : []),
+	],
 	[
 		...(import.meta.env.VITE_ALCHEMY_API_KEY
 			? [alchemyProvider({ apiKey: import.meta.env.VITE_ALCHEMY_API_KEY })]
