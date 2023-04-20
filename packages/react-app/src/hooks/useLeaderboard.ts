@@ -8,7 +8,7 @@ import { filterChainId } from '@/lib/config'
 const query = `
     ${LEADERBOARD_FIELDS}
     query LeaderboardQuery {
-        players(first: 100, orderBy: numOfBets, orderDirection: desc) {
+        players(first: 1000, orderBy: numOfBets, orderDirection: desc) {
             ...LeaderboardFields
         }
     }

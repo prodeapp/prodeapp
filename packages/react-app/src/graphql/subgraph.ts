@@ -146,6 +146,7 @@ export const MARKETREFERRAL_FIELDS = `
 export interface Leaderboard extends Player {
 	numOfMarkets: string
 	numOfBets: string
+	name: string
 	bets: {
 		id: string
 		results: string[]
@@ -166,9 +167,10 @@ export interface Leaderboard extends Player {
 export const LEADERBOARD_FIELDS = `
   ${PLAYER_STATS_FIELDS}
   fragment LeaderboardFields on Player {
-    ...PlayerFields
+    ...PlayerStatsFields
     numOfMarkets
     numOfBets
+	name
     bets{
       id
       results
