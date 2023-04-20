@@ -24,7 +24,14 @@ function getPnL(params: { row: { amountBet: BigNumberish; pricesReceived: BigNum
 	const beted = new DecimalBigNumber(BigNumber.from(params.row.amountBet), 18)
 	const received = new DecimalBigNumber(BigNumber.from(params.row.pricesReceived), 18)
 	const number = Number(received) - Number(beted)
-	return `${parseFloat(number.toString()).toFixed(2)}`
+	return `${number.toFixed(2)}`
+}
+
+function getROI(params: { row: { amountBet: BigNumberish; pricesReceived: BigNumberish } }) {
+	const beted = Number(new DecimalBigNumber(BigNumber.from(params.row.amountBet), 18))
+	const received = Number(new DecimalBigNumber(BigNumber.from(params.row.pricesReceived), 18))
+	const roi = received === 0 ? 0 : beted === 0 ? Number('inf') : ((received - beted) / beted) * 100
+	return roi.toFixed(1)
 }
 
 export default function Leaderboard() {
@@ -32,7 +39,7 @@ export default function Leaderboard() {
 	const chainId = filterChainId(chain?.id)
 	const { isLoading, data: leaderboard } = useLeaderboard()
 	const { data: marketFactory } = useMarketFactory()
-	const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet' | 'pnl'>(
+	const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet' | 'pnl' | 'roi'>(
 		'pricesReceived'
 	)
 	const [direction, setDirection] = useState<'asc' | 'desc'>('desc')
@@ -77,6 +84,13 @@ export default function Leaderboard() {
 			type: 'number',
 			flex: 1,
 			valueGetter: getPnL,
+		},
+		{
+			field: 'roi',
+			headerName: 'ROI %',
+			type: 'number',
+			flex: 1,
+			valueGetter: getROI,
 		},
 	]
 
@@ -166,6 +180,11 @@ export default function Leaderboard() {
 							<div>
 								<Button onClick={() => setSorting('pnl')} color={sorting === 'pnl' ? 'secondary' : 'primary'}>
 									PnL
+								</Button>
+							</div>
+							<div>
+								<Button onClick={() => setSorting('roi')} color={sorting === 'roi' ? 'secondary' : 'primary'}>
+									ROI
 								</Button>
 							</div>
 						</Grid>
