@@ -143,7 +143,7 @@ export const MARKETREFERRAL_FIELDS = `
   }
 `
 
-export interface Leaderboard extends Player {
+export interface Leaderboard extends Player, PlayerStats {
 	numOfMarkets: string
 	numOfBets: string
 	name: string

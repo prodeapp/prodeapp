@@ -4,8 +4,8 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
-import { DataGrid } from '@mui/x-data-grid'
-import { BigNumberish } from 'ethers'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { BigNumber, BigNumberish } from 'ethers'
 import { useState } from 'react'
 import { useNetwork } from 'wagmi'
 
@@ -13,10 +13,18 @@ import { BoxRow, BoxWrapper } from '@/components'
 import { useLeaderboard } from '@/hooks/useLeaderboard'
 import { useMarketFactory } from '@/hooks/useMarketFactory'
 import { filterChainId } from '@/lib/config'
+import { DecimalBigNumber } from '@/lib/DecimalBigNumber'
 import { formatAmount, formatAmountDecimalPlaces, formatPlayerName } from '@/lib/helpers'
 
 function formatName(params: { row: { id: string; name: string } }) {
 	return formatPlayerName(params.row.name, params.row.id)
+}
+
+function getPnL(params: { row: { amountBet: BigNumberish; pricesReceived: BigNumberish } }) {
+	const beted = new DecimalBigNumber(BigNumber.from(params.row.amountBet), 18)
+	const received = new DecimalBigNumber(BigNumber.from(params.row.pricesReceived), 18)
+	const number = Number(received) - Number(beted)
+	return `${parseFloat(number.toString()).toFixed(2)}`
 }
 
 export default function Leaderboard() {
@@ -24,13 +32,13 @@ export default function Leaderboard() {
 	const chainId = filterChainId(chain?.id)
 	const { isLoading, data: leaderboard } = useLeaderboard()
 	const { data: marketFactory } = useMarketFactory()
-	const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet'>(
+	const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet' | 'pnl'>(
 		'pricesReceived'
 	)
 	const [direction, setDirection] = useState<'asc' | 'desc'>('desc')
 	const [pageSize, setPageSize] = useState<number>(10)
 
-	const columns = [
+	const columns: GridColDef[] = [
 		{
 			field: 'id',
 			headerName: 'Player',
@@ -62,6 +70,13 @@ export default function Leaderboard() {
 			valueFormatter: (params: { value: BigNumberish }) => {
 				return formatAmountDecimalPlaces(params.value, chainId)
 			},
+		},
+		{
+			field: 'pnl',
+			headerName: 'PnL',
+			type: 'number',
+			flex: 1,
+			valueGetter: getPnL,
 		},
 	]
 
@@ -146,6 +161,11 @@ export default function Leaderboard() {
 									color={sorting === 'amountBet' ? 'secondary' : 'primary'}
 								>
 									Amount Beted
+								</Button>
+							</div>
+							<div>
+								<Button onClick={() => setSorting('pnl')} color={sorting === 'pnl' ? 'secondary' : 'primary'}>
+									PnL
 								</Button>
 							</div>
 						</Grid>
