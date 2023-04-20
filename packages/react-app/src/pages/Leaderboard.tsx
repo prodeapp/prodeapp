@@ -4,7 +4,7 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid'
 import { BigNumber, BigNumberish } from 'ethers'
 import { useState } from 'react'
 import { useNetwork } from 'wagmi'
@@ -42,8 +42,14 @@ export default function Leaderboard() {
 	const [sorting, setSorting] = useState<'numOfBets' | 'numOfMarkets' | 'pricesReceived' | 'amountBet' | 'pnl' | 'roi'>(
 		'pricesReceived'
 	)
-	const [direction, setDirection] = useState<'asc' | 'desc'>('desc')
+	const [direction, setDirection] = useState<'asc' | 'desc' | null>('desc')
 	const [pageSize, setPageSize] = useState<number>(10)
+	const [sortModel, setSortModel] = useState<GridSortModel>([
+		{
+			field: 'pricesReceived',
+			sort: 'desc',
+		},
+	])
 
 	const columns: GridColDef[] = [
 		{
@@ -52,6 +58,7 @@ export default function Leaderboard() {
 			type: 'string',
 			flex: 2,
 			valueGetter: formatName,
+			sortable: false,
 		},
 		{ field: 'numOfBets', headerName: '# of Bets', type: 'number', flex: 1 },
 		{
@@ -59,6 +66,7 @@ export default function Leaderboard() {
 			headerName: '# of Markets',
 			type: 'number',
 			flex: 1,
+			sortable: true,
 		},
 		{
 			field: 'pricesReceived',
@@ -68,6 +76,7 @@ export default function Leaderboard() {
 			valueFormatter: (params: { value: BigNumberish }) => {
 				return formatAmountDecimalPlaces(params.value, chainId)
 			},
+			sortable: true,
 		},
 		{
 			field: 'amountBet',
@@ -77,6 +86,7 @@ export default function Leaderboard() {
 			valueFormatter: (params: { value: BigNumberish }) => {
 				return formatAmountDecimalPlaces(params.value, chainId)
 			},
+			sortable: true,
 		},
 		{
 			field: 'pnl',
@@ -84,6 +94,7 @@ export default function Leaderboard() {
 			type: 'number',
 			flex: 1,
 			valueGetter: getPnL,
+			sortable: true,
 		},
 		{
 			field: 'roi',
@@ -91,6 +102,7 @@ export default function Leaderboard() {
 			type: 'number',
 			flex: 1,
 			valueGetter: getROI,
+			sortable: true,
 		},
 	]
 
@@ -214,7 +226,9 @@ export default function Leaderboard() {
 					pagination
 					disableSelectionOnClick
 					disableColumnFilter
-					sortModel={[{ field: sorting, sort: direction }]}
+					onSortModelChange={(model) => setSortModel(model)}
+					sortModel={sortModel}
+					sortingOrder={['desc', 'asc']}
 					autoHeight={true}
 				/>
 			}
