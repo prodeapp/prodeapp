@@ -10,7 +10,7 @@ import { getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 const FooterNav = styled('div', {
-	shouldForwardProp: (prop) => prop !== 'ml',
+	shouldForwardProp: prop => prop !== 'ml',
 })<{ ml?: number }>(({ theme, ml }) => ({
 	'& > div': {
 		display: 'inline-block',
@@ -105,6 +105,11 @@ export default function Footer() {
 							<a href={getDocsUrl(locale)} target='_blank' rel='noreferrer'>
 								<Trans>Documentation</Trans>
 							</a>
+						</div>
+						<div>
+							<RouterLink to='/leaderboard'>
+								<Trans>Leaderboard</Trans>
+							</RouterLink>
 						</div>
 					</FooterNav>
 					<div style={{ color: '#7d7d7d' }}>Copyright &copy; {year} Prode.</div>

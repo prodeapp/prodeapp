@@ -183,8 +183,11 @@ export default function Header() {
 							<a href={getDocsUrl(locale)} target='_blank' rel='noreferrer'>
 								<Trans>Documentation</Trans>
 							</a>
+							<RouterLink to='/leaderboard'>
+								<Trans>Leaderboard</Trans>
+							</RouterLink>
 							<DropdownMenu text={languages[locale]}>
-								{Object.keys(languages).map((lang) => {
+								{Object.keys(languages).map(lang => {
 									return (
 										<Radio key={lang} active={locale === lang} onClick={() => handleChangeLocale(lang as LocaleEnum)}>
 											{languages[lang]}

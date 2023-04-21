@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { useTheme } from '@mui/material'
+import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
@@ -35,6 +37,7 @@ function getROI(params: { row: { amountBet: BigNumberish; pricesReceived: BigNum
 export default function Leaderboard() {
 	const { chain } = useNetwork()
 	const chainId = filterChainId(chain?.id)
+	const theme = useTheme()
 	const { isLoading, data: leaderboard } = useLeaderboard()
 	const { data: marketFactory } = useMarketFactory()
 	const [pageSize, setPageSize] = useState<number>(10)
@@ -106,18 +109,18 @@ export default function Leaderboard() {
 				<Trans>Global Metrics</Trans>
 			</Typography>
 			<Grid container columnSpacing={2} rowSpacing={1} sx={{ marginY: '30px', textAlign: 'center' }}>
-				<Grid item sm={12} md={3}>
+				<Grid item xs={12} sm={6} md={3}>
 					<Typography variant='h6'>
 						<Trans>Total Bets</Trans>:{' '}
 						{marketFactory ? formatAmount(marketFactory.totalVolumeBets, chainId) : <Skeleton />}
 					</Typography>
 				</Grid>
-				<Grid item sm={12} md={3}>
+				<Grid item xs={12} sm={6} md={3}>
 					<Typography variant='h6'>
 						<Trans>Total Bets</Trans> (#): {marketFactory ? marketFactory.numOfBets : <Skeleton />}
 					</Typography>
 				</Grid>
-				<Grid item sm={12} md={3}>
+				<Grid item xs={12} sm={6} md={3}>
 					<Typography variant='h6'>
 						<Trans
 							id='Total Players: {0}'
@@ -127,7 +130,7 @@ export default function Leaderboard() {
 						/>
 					</Typography>
 				</Grid>
-				<Grid item sm={12} md={3}>
+				<Grid item xs={12} sm={6} md={3}>
 					<Typography variant='h6'>
 						<Trans
 							id='Total Markets: {0}'
@@ -139,25 +142,47 @@ export default function Leaderboard() {
 				</Grid>
 			</Grid>
 
-			<Typography variant='h5' sx={{ marginBottom: '30px' }}>
-				Leaderboard
-			</Typography>
+			<Typography variant='h5'>Leaderboard</Typography>
 
-			<DataGrid
-				rows={leaderboard ? leaderboard! : []}
-				columns={columns}
-				loading={isLoading}
-				pageSize={pageSize}
-				onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-				rowsPerPageOptions={[10, 50, 100]}
-				pagination
-				disableSelectionOnClick
-				disableColumnFilter
-				onSortModelChange={model => setSortModel(model)}
-				sortModel={sortModel}
-				sortingOrder={['desc', 'asc']}
-				autoHeight={true}
-			/>
+			<Box
+				sx={{
+					'& .MuiDataGrid-root': {
+						borderLeft: `1px solid ${theme.palette.black.dark}`,
+						borderRight: `1px solid ${theme.palette.black.dark}`,
+					},
+					'& .MuiDataGrid-columnHeaders, & .MuiDataGrid-footerContainer': {
+						background: theme.palette.secondary.dark,
+						borderTop: `1px solid ${theme.palette.black.dark}`,
+						borderBottom: `1px solid ${theme.palette.black.dark}`,
+						fontSize: '14px',
+						minHeight: '40px',
+						borderRadius: 0,
+					},
+					'& .MuiDataGrid-columnHeaderTitle': {
+						fontWeight: 600,
+					},
+					'& .MuiDataGrid-cell': {
+						borderBottomColor: theme.palette.black.dark,
+					},
+				}}
+			>
+				<DataGrid
+					rows={leaderboard ? leaderboard! : []}
+					columns={columns}
+					loading={isLoading}
+					pageSize={pageSize}
+					onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+					rowsPerPageOptions={[10, 50, 100]}
+					pagination
+					disableSelectionOnClick
+					disableColumnFilter
+					onSortModelChange={model => setSortModel(model)}
+					sortModel={sortModel}
+					sortingOrder={['desc', 'asc']}
+					autoHeight={true}
+					sx={{ marginY: '30px' }}
+				/>
+			</Box>
 		</Container>
 	)
 }
