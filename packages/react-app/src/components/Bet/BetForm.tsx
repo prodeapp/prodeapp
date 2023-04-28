@@ -332,43 +332,43 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</Alert>
 			)}
 			<Grid container spacing={3}>
-				{fields.map((field, i) => {
-					if (!events || !events[i]) {
+				{fields.map((field, outcomeIndex) => {
+					if (!events || !events[outcomeIndex]) {
 						return null
 					}
 					// set default to be able to loop
-					const tmpOutcomeValues = outcomes?.[i]?.values || ['']
-					const totalOutcomes = tmpOutcomeValues.length
+					const tmpOutcomeValues = outcomes?.[outcomeIndex]?.values || ['']
+					const valuesLength = tmpOutcomeValues.length
 					return (
-						<React.Fragment key={events[i].id}>
+						<React.Fragment key={events[outcomeIndex].id}>
 							<Grid item xs={12} md={6}>
-								<FormatEvent title={events[i].title} />
+								<FormatEvent title={events[outcomeIndex].title} />
 							</Grid>
 							<Grid item xs={12} md={6}>
-								{tmpOutcomeValues.map((value, j) => {
+								{tmpOutcomeValues.map((value, valueIndex) => {
 									return (
-										<div key={j}>
+										<div key={valueIndex}>
 											<FormControl fullWidth>
 												<BetOutcomeSelect
-													key={events[i].id}
+													key={events[outcomeIndex].id}
 													matchesInterdependencies={matchesInterdependencies}
 													events={events}
-													i={i}
-													j={j}
+													outcomeIndex={outcomeIndex}
+													valueIndex={valueIndex}
 													outcomes={outcomes}
 													control={control}
 													errors={errors}
 													setValue={setValue}
 												/>
 												<FormError>
-													<ErrorMessage errors={errors} name={`outcomes.${i}.value`} />
+													<ErrorMessage errors={errors} name={`outcomes.${outcomeIndex}.value`} />
 												</FormError>
 											</FormControl>
 
-											{j > 0 && (
+											{valueIndex > 0 && (
 												<span
 													className='js-link'
-													onClick={removeAlternative(i, j)}
+													onClick={removeAlternative(outcomeIndex, valueIndex)}
 													style={{
 														fontSize: 12,
 														textAlign: 'right',
@@ -381,9 +381,9 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 												</span>
 											)}
 
-											{isMainChain(chain.id) && !hasVoucher && j === totalOutcomes - 1 && value !== '' && (
+											{isMainChain(chain.id) && !hasVoucher && valueIndex === valuesLength - 1 && value !== '' && (
 												<div>
-													<span className='js-link' style={{ fontSize: 12 }} onClick={addAlternative(i)}>
+													<span className='js-link' style={{ fontSize: 12 }} onClick={addAlternative(outcomeIndex)}>
 														Add alternative result
 													</span>
 												</div>
@@ -393,7 +393,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								})}
 								<input
 									type='hidden'
-									{...register(`outcomes.${i}.questionId`, {
+									{...register(`outcomes.${outcomeIndex}.questionId`, {
 										required: t`This field is required`,
 									})}
 								/>

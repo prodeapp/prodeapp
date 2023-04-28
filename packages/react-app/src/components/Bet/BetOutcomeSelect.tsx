@@ -64,8 +64,8 @@ function filterOutcomesInterdependencies(
 interface Props {
 	matchesInterdependencies: MatchesInterdependencies
 	events: Event[]
-	i: number
-	j: number
+	outcomeIndex: number
+	valueIndex: number
 	outcomes: BetFormValues['outcomes']
 	control: Control<BetFormValues>
 	errors: FieldErrors<BetFormValues>
@@ -75,8 +75,8 @@ interface Props {
 export function BetOutcomeSelect({
 	matchesInterdependencies,
 	events,
-	i,
-	j,
+	outcomeIndex,
+	valueIndex,
 	outcomes,
 	control,
 	errors,
@@ -84,7 +84,7 @@ export function BetOutcomeSelect({
 }: Props) {
 	const inverseInterdependencies = getInverseInterdependencies(matchesInterdependencies)
 
-	const event = events[i]
+	const event = events[outcomeIndex]
 
 	const onOutcomeChange = () => {
 		if (!inverseInterdependencies[event.id]) {
@@ -106,7 +106,7 @@ export function BetOutcomeSelect({
 	return (
 		<>
 			<Controller
-				name={`outcomes.${i}.values.${j}`}
+				name={`outcomes.${outcomeIndex}.values.${valueIndex}`}
 				control={control}
 				rules={{
 					required: t`This field is required`,
@@ -114,9 +114,9 @@ export function BetOutcomeSelect({
 				defaultValue={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : ''}
 				render={({ field: { onChange, value } }) => (
 					<Select
-						id={`event-${i}-outcome-select`}
+						id={`event-${outcomeIndex}-outcome-select`}
 						multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-						error={!!errors.outcomes?.[i]?.values}
+						error={!!errors.outcomes?.[outcomeIndex]?.values}
 						value={value === '' && event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : value}
 						onChange={(...event: any[]) => {
 							onChange(...event)
