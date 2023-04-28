@@ -9,7 +9,7 @@ import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
-import { BetFormValues } from '@/components/Bet/BetForm'
+import { BetFormOutcomeValue, BetFormValues } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
@@ -29,6 +29,7 @@ export interface UsePlaceBetReturn {
 	hasVoucher: boolean
 	isCrossChainBet: boolean
 	hasFundsToBet: boolean
+	betPrice: BigNumber
 	approve?: { amount: BigNumber; token: Address; spender: Address }
 }
 
@@ -37,7 +38,7 @@ type UsePreparePlaceBetFn = (
 	chainId: number,
 	price: BigNumber,
 	attribution: Address,
-	results: Bytes[] | false
+	results: BetResults[]
 ) => UsePlaceBetReturn
 type UsePlaceBetFn = (
 	marketId: Address,
@@ -65,23 +66,29 @@ const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) 
 	return tokenBalance.value.gte(betPrice) && nativeBalance.value.gt(0)
 }
 
+function hasValidResults(results: BetResults[]): results is Exclude<BetResults, false>[] {
+	return typeof results.find(r => r === false) === 'undefined'
+}
+
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
+	const betPrice = price.mul(results.length)
+
 	const getTxParams = (
 		chainId: number,
 		attribution: Address,
-		results: Bytes[] | false
-	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBet'> => {
-		if (results === false) {
+		results: BetResults[]
+	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBets'> => {
+		if (!hasValidResults(results)) {
 			return {}
 		}
 
 		return {
 			address: marketId,
 			abi: MarketAbi,
-			functionName: 'placeBet',
-			args: [attribution, results],
+			functionName: 'placeBets',
+			args: [Array(results.length).fill(attribution), results],
 			overrides: {
-				value: price,
+				value: betPrice,
 			},
 		}
 	}
@@ -90,9 +97,9 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
-	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+	const tokenId = events ? events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
 
-	const hasFundsToBet = useHasFundsToBet(price)
+	const hasFundsToBet = useHasFundsToBet(betPrice)
 
 	return {
 		isLoading,
@@ -100,6 +107,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		isError,
 		error,
 		hasFundsToBet,
+		betPrice,
 		placeBet: write,
 		tokenId,
 		hasVoucher: false,
@@ -137,22 +145,24 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const getTxParams = (
 		chainId: number,
 		attribution: Address,
-		results: Bytes[] | false
+		results: BetResults[]
 	): UsePrepareContractWriteConfig<typeof ConnextBridgeFacetAbi, 'xcall'> => {
-		if (results === false || !address || !relayerFee || typeof approve !== 'undefined') {
+		if (!hasValidResults(results) || !address || !relayerFee || typeof approve !== 'undefined') {
 			return {}
 		}
 
 		const slippage = BigNumber.from(300) // 3%
 
-		const size = Math.max(...results.map((r) => stripZeros(r).length), 1)
+		// TODO: allow multiple bets
+		const firstResult = results[0]
+		const size = Math.max(...firstResult.map(r => stripZeros(r).length), 1)
 
 		const calldata = hexConcat([
 			address,
 			marketId,
 			attribution,
 			BigNumber.from(size).toHexString(),
-			hexConcat(results.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
+			hexConcat(firstResult.map(r => hexStripZeros(r)).map(r => hexZeroPad(r, size))),
 		]) as Bytes
 
 		return {
@@ -178,7 +188,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(ConnextBridgeFacetAbi)
 	const events = parseEvents(receipt, CONNEXT_ADDRESS, ethersInterface)
-	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
+	const transferId = events ? events.filter(log => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
 	const hasFundsToBet = useHasFundsToBet(usdcAmount, ASSET_ADDRESS)
@@ -189,6 +199,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		isError,
 		error,
 		hasFundsToBet,
+		betPrice: price,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
@@ -205,17 +216,20 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		chainId: number,
 		marketId: Address,
 		attribution: Address,
-		results: Bytes[] | false
+		results: BetResults[]
 	): UsePrepareContractWriteConfig<typeof VoucherManagerAbi, 'placeBet'> => {
-		if (results === false) {
+		if (!hasValidResults(results)) {
 			return {}
 		}
+
+		// TODO: allow multiple bets
+		const firstResult = results[0]
 
 		return {
 			address: getConfigAddress('VOUCHER_MANAGER', chainId),
 			abi: VoucherManagerAbi,
 			functionName: 'placeBet',
-			args: [marketId, attribution, results],
+			args: [marketId, attribution, firstResult],
 		}
 	}
 
@@ -225,7 +239,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 
 	const ethersInterface = new Interface(VoucherManagerAbi)
 	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
-	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
+	const tokenId = events ? events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)
 
@@ -235,6 +249,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		isError,
 		error,
 		hasFundsToBet,
+		betPrice: price,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
@@ -242,8 +257,32 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	}
 }
 
-function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
-	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
+type FlatOutcome = { value: BetFormOutcomeValue; questionId: string }
+
+function getCombinations(
+	outcomes: BetFormValues['outcomes'],
+	n = 0,
+	outcomesCombinations: Array<FlatOutcome[]> = [],
+	current: FlatOutcome[] = []
+): Array<FlatOutcome[]> {
+	if (n === outcomes.length) {
+		outcomesCombinations.push(current)
+	} else {
+		outcomes[n].values.forEach(item =>
+			getCombinations(outcomes, n + 1, outcomesCombinations, [
+				...current,
+				{ value: item, questionId: outcomes[n].questionId },
+			])
+		)
+	}
+
+	return outcomesCombinations
+}
+
+type BetResults = Bytes[] | false
+
+function getResults(outcomes: FlatOutcome[]): BetResults {
+	if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
 	}
@@ -257,8 +296,12 @@ function getResults(outcomes: BetFormValues['outcomes']): Bytes[] | false {
 			 * ============================================================
 			 */
 			.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
-			.map((outcome) => formatOutcome(outcome.value))
+			.map(outcome => formatOutcome(outcome.value))
 	)
+}
+
+function getResultsCombinations(outcomes: BetFormValues['outcomes']): BetResults[] {
+	return getCombinations(outcomes).map(getResults)
 }
 
 export const usePlaceBet: UsePlaceBetFn = (
@@ -268,7 +311,7 @@ export const usePlaceBet: UsePlaceBetFn = (
 	attribution: Address,
 	outcomes: BetFormValues['outcomes']
 ) => {
-	const results = getResults(outcomes)
+	const results = getResultsCombinations(outcomes)
 
 	const marketPlaceBet = usePlaceBetWithMarket(marketId, chainId, price, attribution, results)
 	const crossChainPlaceBet = usePlaceBetCrossChain(marketId, chainId, price, attribution, results)

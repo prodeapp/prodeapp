@@ -27,8 +27,8 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
 import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN } from '@/lib/config'
-import { getReferralKey } from '@/lib/helpers'
+import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
+import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
 
 import { BetOutcomeSelect } from './BetOutcomeSelect'
@@ -36,7 +36,7 @@ import { BetOutcomeSelect } from './BetOutcomeSelect'
 export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
 
 export type BetFormValues = {
-	outcomes: { value: BetFormOutcomeValue; questionId: string }[]
+	outcomes: { values: BetFormOutcomeValue[]; questionId: string }[]
 }
 
 type BetFormProps = {
@@ -99,6 +99,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		formState: { errors },
 		handleSubmit,
 		setValue,
+		getValues,
 	} = useForm<BetFormValues>({
 		mode: 'all',
 		defaultValues: {
@@ -115,13 +116,37 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach((event) => append({ value: '', questionId: event.id }))
+		events && events.forEach(event => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
+
+	const addAlternative = (i: number) => {
+		return () => {
+			setValue(`outcomes.${i}.values`, [...getValues(`outcomes.${i}.values`), ''])
+		}
+	}
+
+	const removeAlternative = (i: number, j: number) => {
+		return () => {
+			const values = getValues(`outcomes.${i}.values`)
+			values.splice(j, 1)
+			setValue(`outcomes.${i}.values`, values)
+		}
+	}
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
 	const attribution = isAddress(referral) ? referral : AddressZero
 
-	const { isLoading, error, hasFundsToBet, placeBet, tokenId, hasVoucher, isCrossChainBet, approve } = usePlaceBet(
+	const {
+		isLoading,
+		error,
+		hasFundsToBet,
+		betPrice,
+		placeBet,
+		tokenId,
+		hasVoucher,
+		isCrossChainBet,
+		approve,
+	} = usePlaceBet(
 		market.id,
 		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
 		chain?.id || DEFAULT_CHAIN,
@@ -130,11 +155,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const {
-		isLoading: isLoadingApprove,
-		error: approveError,
-		write: approveTokens,
-	} = useSendTx(
+	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -315,27 +336,61 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					if (!events || !events[i]) {
 						return null
 					}
+					// set default to be able to loop
+					const tmpOutcomeValues = outcomes?.[i]?.values || ['']
+					const totalOutcomes = tmpOutcomeValues.length
 					return (
 						<React.Fragment key={events[i].id}>
 							<Grid item xs={12} md={6}>
 								<FormatEvent title={events[i].title} />
 							</Grid>
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth>
-									<BetOutcomeSelect
-										key={events[i].id}
-										matchesInterdependencies={matchesInterdependencies}
-										events={events}
-										i={i}
-										outcomes={outcomes}
-										control={control}
-										errors={errors}
-										setValue={setValue}
-									/>
-									<FormError>
-										<ErrorMessage errors={errors} name={`outcomes.${i}.value`} />
-									</FormError>
-								</FormControl>
+								{tmpOutcomeValues.map((value, j) => {
+									return (
+										<div key={j}>
+											<FormControl fullWidth>
+												<BetOutcomeSelect
+													key={events[i].id}
+													matchesInterdependencies={matchesInterdependencies}
+													events={events}
+													i={i}
+													j={j}
+													outcomes={outcomes}
+													control={control}
+													errors={errors}
+													setValue={setValue}
+												/>
+												<FormError>
+													<ErrorMessage errors={errors} name={`outcomes.${i}.value`} />
+												</FormError>
+											</FormControl>
+
+											{j > 0 && (
+												<span
+													className='js-link'
+													onClick={removeAlternative(i, j)}
+													style={{
+														fontSize: 12,
+														textAlign: 'right',
+														color: 'red',
+														display: 'block',
+														marginBottom: '5px',
+													}}
+												>
+													Remove result
+												</span>
+											)}
+
+											{isMainChain(chain.id) && !hasVoucher && j === totalOutcomes - 1 && value !== '' && (
+												<div>
+													<span className='js-link' style={{ fontSize: 12 }} onClick={addAlternative(i)}>
+														Add alternative result
+													</span>
+												</div>
+											)}
+										</div>
+									)
+								})}
 								<input
 									type='hidden'
 									{...register(`outcomes.${i}.questionId`, {
@@ -360,7 +415,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					)}
 					{!approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans>Place Bet</Trans> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+							<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}{' '}
+							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
 				</Grid>

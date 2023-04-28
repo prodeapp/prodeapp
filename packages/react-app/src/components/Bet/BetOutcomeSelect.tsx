@@ -40,18 +40,17 @@ function filterOutcomesInterdependencies(
 	outcomesValues: BetFormValues['outcomes'],
 	matchesInterdependencies: MatchesInterdependencies
 ): IndexedBetOutcome[] {
-	return outcomes.filter((outcome) => {
+	return outcomes.filter(outcome => {
 		if (matchesInterdependencies) {
 			const relatedQuestions: string[] = matchesInterdependencies[event.id] ?? []
 			const possibleOutcomes: string[] = []
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
-				const questionPos = events.findIndex((event) => event.id === questionId)
-				const userSelectionIndex = outcomesValues[questionPos].value
-				if (userSelectionIndex !== '') {
+				const questionPos = events.findIndex(event => event.id === questionId)
+				outcomesValues[questionPos].values.forEach(userSelectionIndex => {
 					const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
 					possibleOutcomes.push(outcomeSelected)
-				}
+				})
 			}
 			if (possibleOutcomes.length >= 2 && !possibleOutcomes.includes(outcome.text)) {
 				return false
@@ -66,13 +65,23 @@ interface Props {
 	matchesInterdependencies: MatchesInterdependencies
 	events: Event[]
 	i: number
+	j: number
 	outcomes: BetFormValues['outcomes']
 	control: Control<BetFormValues>
 	errors: FieldErrors<BetFormValues>
 	setValue: UseFormSetValue<BetFormValues>
 }
 
-export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes, control, errors, setValue }: Props) {
+export function BetOutcomeSelect({
+	matchesInterdependencies,
+	events,
+	i,
+	j,
+	outcomes,
+	control,
+	errors,
+	setValue,
+}: Props) {
 	const inverseInterdependencies = getInverseInterdependencies(matchesInterdependencies)
 
 	const event = events[i]
@@ -82,20 +91,22 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 			return
 		}
 
-		inverseInterdependencies[event.id].forEach((matchDependencyId) => {
-			const matchDependencyIndex = outcomes.findIndex((outcome) => outcome.questionId === matchDependencyId)
-			if (outcomes[matchDependencyIndex].value !== '') {
-				setValue(`outcomes.${matchDependencyIndex}.value`, '', {
-					shouldValidate: true,
-				})
-			}
+		inverseInterdependencies[event.id].forEach(matchDependencyId => {
+			const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId)
+			outcomes[matchDependencyIndex].values.forEach((value, index) => {
+				if (value !== '') {
+					setValue(`outcomes.${matchDependencyIndex}.values.${index}`, '', {
+						shouldValidate: true,
+					})
+				}
+			})
 		})
 	}
 
 	return (
 		<>
 			<Controller
-				name={`outcomes.${i}.value`}
+				name={`outcomes.${i}.values.${j}`}
 				control={control}
 				rules={{
 					required: t`This field is required`,
@@ -105,14 +116,14 @@ export function BetOutcomeSelect({ matchesInterdependencies, events, i, outcomes
 					<Select
 						id={`event-${i}-outcome-select`}
 						multiple={event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT}
-						error={!!errors.outcomes?.[i]?.value}
+						error={!!errors.outcomes?.[i]?.values}
 						value={value === '' && event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT ? [] : value}
 						onChange={(...event: any[]) => {
 							onChange(...event)
 							onOutcomeChange()
 						}}
 					>
-						{getOutcomes(event, events, outcomes, matchesInterdependencies).map((outcome) => (
+						{getOutcomes(event, events, outcomes, matchesInterdependencies).map(outcome => (
 							<MenuItem value={outcome.value} key={outcome.value}>
 								{transOutcome(outcome.text)}
 							</MenuItem>
