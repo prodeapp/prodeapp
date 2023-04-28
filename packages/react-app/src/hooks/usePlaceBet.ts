@@ -30,6 +30,7 @@ export interface UsePlaceBetReturn {
 	isCrossChainBet: boolean
 	hasFundsToBet: boolean
 	betPrice: BigNumber
+	betsCount: number
 	approve?: { amount: BigNumber; token: Address; spender: Address }
 }
 
@@ -108,6 +109,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		error,
 		hasFundsToBet,
 		betPrice,
+		betsCount: results.length,
 		placeBet: write,
 		tokenId,
 		hasVoucher: false,
@@ -200,6 +202,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		error,
 		hasFundsToBet,
 		betPrice: price,
+		betsCount: 1,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
@@ -250,6 +253,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		error,
 		hasFundsToBet,
 		betPrice: price,
+		betsCount: 1,
 		placeBet: write,
 		tokenId,
 		hasVoucher,

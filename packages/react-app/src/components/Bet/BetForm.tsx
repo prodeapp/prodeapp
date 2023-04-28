@@ -141,6 +141,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		error,
 		hasFundsToBet,
 		betPrice,
+		betsCount,
 		placeBet,
 		tokenId,
 		hasVoucher,
@@ -401,6 +402,32 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						</React.Fragment>
 					)
 				})}
+				{betsCount > 1 && (
+					<Grid item xs={12}>
+						<BigAlert severity='info' sx={{ mb: 4 }}>
+							<Box
+								sx={{
+									display: { md: 'flex' },
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}
+							>
+								<div>
+									<div>
+										<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
+											<Trans>You are about to place {betsCount} bets.</Trans>
+										</AlertTitle>
+									</div>
+									<div>
+										<Trans>
+											We will calculate all the possible combinations of results and send a bet for each one of them.
+										</Trans>
+									</div>
+								</div>
+							</Box>
+						</BigAlert>
+					</Grid>
+				)}
 				<Grid item xs={6}>
 					<Button type='button' color='primary' size='large' variant='outlined' fullWidth onClick={cancelHandler}>
 						<Trans>Cancel</Trans> <CrossIcon style={{ marginLeft: 10 }} width={10} height={10} />
