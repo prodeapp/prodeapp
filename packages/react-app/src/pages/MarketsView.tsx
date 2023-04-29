@@ -136,14 +136,13 @@ function MarketsView() {
 							</Grid>
 						</Grid>
 
-						{section !== 'bet' && (
-							<PlaceBet
-								market={market}
-								chainId={chainId}
-								onBetClick={() => setSection('bet')}
-								onResultsClick={() => setSection('results')}
-							/>
-						)}
+						<PlaceBet
+							market={market}
+							chainId={chainId}
+							fullDetails={section !== 'bet'}
+							onBetClick={() => setSection('bet')}
+							onResultsClick={() => setSection('results')}
+						/>
 					</div>
 				</GridLeftColumn>
 				<Grid item xs={12} lg={8}>

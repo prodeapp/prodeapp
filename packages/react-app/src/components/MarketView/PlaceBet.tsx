@@ -17,11 +17,13 @@ import { useI18nContext } from '@/lib/I18nContext'
 export default function PlaceBet({
 	market,
 	chainId,
+	fullDetails,
 	onBetClick,
 	onResultsClick,
 }: {
 	market: Market
 	chainId: number
+	fullDetails: boolean
 	onBetClick: () => void
 	onResultsClick: () => void
 }) {
@@ -51,7 +53,7 @@ export default function PlaceBet({
 				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
 			</Box>
 
-			{timeLeft !== false && (
+			{fullDetails && timeLeft !== false && (
 				<>
 					{hasVoucher && (
 						<Alert severity={'info'} sx={{ mb: 2, fontWeight: 700, justifyContent: 'center' }}>
@@ -70,7 +72,7 @@ export default function PlaceBet({
 				</>
 			)}
 
-			{timeLeft === false && market.hasPendingAnswers && (
+			{fullDetails && timeLeft === false && market.hasPendingAnswers && (
 				<>
 					<div style={{ fontWeight: 'bold', marginBottom: '15px' }}>
 						<Trans
