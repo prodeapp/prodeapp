@@ -119,17 +119,17 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		events && events.forEach(event => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
-	const addAlternative = (i: number) => {
+	const addAlternative = (outcomeIndex: number) => {
 		return () => {
-			setValue(`outcomes.${i}.values`, [...getValues(`outcomes.${i}.values`), ''])
+			setValue(`outcomes.${outcomeIndex}.values`, [...getValues(`outcomes.${outcomeIndex}.values`), ''])
 		}
 	}
 
-	const removeAlternative = (i: number, j: number) => {
+	const removeAlternative = (outcomeIndex: number, valueIndex: number) => {
 		return () => {
-			const values = getValues(`outcomes.${i}.values`)
-			values.splice(j, 1)
-			setValue(`outcomes.${i}.values`, values)
+			const values = getValues(`outcomes.${outcomeIndex}.values`)
+			values.splice(valueIndex, 1)
+			setValue(`outcomes.${outcomeIndex}.values`, values)
 		}
 	}
 
