@@ -33,10 +33,13 @@ import { queryClient } from '@/lib/react-query'
 
 import { BetOutcomeSelect } from './BetOutcomeSelect'
 
-export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
+export type BetFormOutcome = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
+
+export type MultiOutcomeValues = { values: BetFormOutcome[]; questionId: string }
+export type SingleOutcomeValue = { value: BetFormOutcome; questionId: string }
 
 export type BetFormValues = {
-	outcomes: { values: BetFormOutcomeValue[]; questionId: string }[]
+	outcomes: MultiOutcomeValues[]
 }
 
 type BetFormProps = {

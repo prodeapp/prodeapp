@@ -9,7 +9,7 @@ import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
-import { BetFormOutcomeValue, BetFormValues } from '@/components/Bet/BetForm'
+import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
@@ -46,7 +46,7 @@ type UsePlaceBetFn = (
 	chainId: number,
 	price: BigNumber,
 	attribution: Address,
-	outcomes: BetFormValues['outcomes']
+	outcomes: MultiOutcomeValues[]
 ) => UsePlaceBetReturn & { hasVoucher: boolean }
 
 export const CROSS_CHAIN_TOKEN_ID = MaxInt256
@@ -261,14 +261,12 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	}
 }
 
-type FlatOutcome = { value: BetFormOutcomeValue; questionId: string }
-
 function getCombinations(
-	outcomes: BetFormValues['outcomes'],
+	outcomes: MultiOutcomeValues[],
 	n = 0,
-	outcomesCombinations: Array<FlatOutcome[]> = [],
-	current: FlatOutcome[] = []
-): Array<FlatOutcome[]> {
+	outcomesCombinations: Array<SingleOutcomeValue[]> = [],
+	current: SingleOutcomeValue[] = []
+): Array<SingleOutcomeValue[]> {
 	if (n === outcomes.length) {
 		outcomesCombinations.push(current)
 	} else {
@@ -285,7 +283,7 @@ function getCombinations(
 
 type BetResults = Bytes[] | false
 
-function getResults(outcomes: FlatOutcome[]): BetResults {
+function getResults(outcomes: SingleOutcomeValue[]): BetResults {
 	if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
@@ -304,7 +302,7 @@ function getResults(outcomes: FlatOutcome[]): BetResults {
 	)
 }
 
-function getResultsCombinations(outcomes: BetFormValues['outcomes']): BetResults[] {
+function getResultsCombinations(outcomes: MultiOutcomeValues[]): BetResults[] {
 	return getCombinations(outcomes).map(getResults)
 }
 
@@ -313,7 +311,7 @@ export const usePlaceBet: UsePlaceBetFn = (
 	chainId: number,
 	price: BigNumber,
 	attribution: Address,
-	outcomes: BetFormValues['outcomes']
+	outcomes: MultiOutcomeValues[]
 ) => {
 	const results = getResultsCombinations(outcomes)
 
