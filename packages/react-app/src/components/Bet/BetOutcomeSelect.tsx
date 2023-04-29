@@ -48,8 +48,10 @@ function filterOutcomesInterdependencies(
 				const questionId = relatedQuestions[k]
 				const questionPos = events.findIndex(event => event.id === questionId)
 				outcomesValues[questionPos].values.forEach(userSelectionIndex => {
-					const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
-					possibleOutcomes.push(outcomeSelected)
+					if (userSelectionIndex !== '') {
+						const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
+						possibleOutcomes.push(outcomeSelected)
+					}
 				})
 			}
 			if (possibleOutcomes.length >= 2 && !possibleOutcomes.includes(outcome.text)) {
