@@ -4,6 +4,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { ErrorMessage } from '@hookform/error-message'
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
+import HelpIcon from '@mui/icons-material/Help'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
@@ -11,6 +12,7 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
+import Tooltip from '@mui/material/Tooltip'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { erc20ABI, useAccount, useNetwork } from 'wagmi'
@@ -369,15 +371,24 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 														marginBottom: '5px',
 													}}
 												>
-													Remove result
+													<Trans>Remove prediction</Trans>
 												</span>
 											)}
 
 											{isMainChain(chain.id) && !hasVoucher && valueIndex === valuesLength - 1 && value !== '' && (
-												<div>
-													<span className='js-link' style={{ fontSize: 12 }} onClick={addAlternative(outcomeIndex)}>
-														Add alternative result
+												<div style={{ display: 'flex', alignItems: 'center', fontSize: 16 }}>
+													<span
+														className='js-link'
+														style={{ fontSize: 12, marginRight: 5 }}
+														onClick={addAlternative(outcomeIndex)}
+													>
+														+<Trans>Add another prediction</Trans>
 													</span>
+													<Tooltip
+														title={t`You can add multiple predictions for each match to create multiple bets with different combinations of outcomes.`}
+													>
+														<HelpIcon fontSize='inherit' color='primary' />
+													</Tooltip>
 												</div>
 											)}
 										</div>

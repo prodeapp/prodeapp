@@ -28,6 +28,9 @@ msgstr "Ad created."
 msgid "Ad not found"
 msgstr "Ad not found"
 
+msgid "Add another prediction"
+msgstr "Add another prediction"
+
 msgid "Add answer"
 msgstr "Add answer"
 
@@ -547,6 +550,9 @@ msgstr "Remove event"
 msgid "Remove group"
 msgstr "Remove group"
 
+msgid "Remove prediction"
+msgstr "Remove prediction"
+
 msgid "Reopen question"
 msgstr "Reopen question"
 
@@ -768,6 +774,9 @@ msgstr "You"
 
 msgid "You are about to place {betsCount} bets."
 msgstr "You are about to place {betsCount} bets."
+
+msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
+msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 
 msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
 msgstr "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
