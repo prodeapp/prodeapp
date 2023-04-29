@@ -231,18 +231,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (!hasFundsToBet) {
-		return (
-			<Alert severity='error'>
-				{hasVoucher ? (
-					<Trans>You have a free voucher but still need to have some funds to pay the gas fees.</Trans>
-				) : (
-					<Trans>You don&apos;t have enough funds to place a bet.</Trans>
-				)}
-			</Alert>
-		)
-	}
-
 	if (!chain || chain.unsupported) {
 		return (
 			<Alert severity='error'>
@@ -405,7 +393,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						</React.Fragment>
 					)
 				})}
-				{betsCount > 1 && (
+				{hasFundsToBet && betsCount > 1 && (
 					<Grid item xs={12}>
 						<BigAlert severity='info' sx={{ mb: 4 }}>
 							<Box
@@ -429,6 +417,17 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								</div>
 							</Box>
 						</BigAlert>
+					</Grid>
+				)}
+				{!hasFundsToBet && (
+					<Grid item xs={12}>
+						<Alert severity='error'>
+							{hasVoucher ? (
+								<Trans>You have a free voucher but still need to have some funds to pay the gas fees.</Trans>
+							) : (
+								<Trans>You don&apos;t have enough funds to place a bet.</Trans>
+							)}
+						</Alert>
 					</Grid>
 				)}
 				<Grid item xs={6}>
