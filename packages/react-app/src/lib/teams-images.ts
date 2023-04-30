@@ -133,6 +133,9 @@ import TUNISIA from '@/assets/logos/fifa_wc/tunisia.png'
 import URUGUAY from '@/assets/logos/fifa_wc/uruguay.png'
 import USA from '@/assets/logos/fifa_wc/usa.png'
 import WALES from '@/assets/logos/fifa_wc/wales.png'
+// Calcio Italia
+import MILAN from '@/assets/logos/it/ac_milan.png'
+import INTER from '@/assets/logos/it/intermilan.png'
 
 const images: Record<string, Record<string, string>> = {
 	ar: {
@@ -308,6 +311,12 @@ const images: Record<string, Record<string, string>> = {
 		Belgium: BELGIUM,
 		Argentina: ARGENTINA,
 		Australia: AUSTRALIA,
+	},
+	uefa_champions: {
+		'Real Madrid': REAL_MADRID,
+		'Manchester City': MANCHESTER_CITY,
+		Milan: MILAN,
+		Inter: INTER,
 	},
 }
 
