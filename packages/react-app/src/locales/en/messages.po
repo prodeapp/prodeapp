@@ -790,8 +790,8 @@ msgstr "You don't have enough funds to place a bet."
 msgid "You have a free voucher but still need to have some funds to pay the gas fees."
 msgstr "You have a free voucher but still need to have some funds to pay the gas fees."
 
-msgid "You have a voucher available for {0} to place a bet for free!"
-msgstr "You have a voucher available for {0} to place a bet for free!"
+msgid "You have a voucher available for {0} to place bets for free!"
+msgstr "You have a voucher available for {0} to place bets for free!"
 
 msgid "You have a voucher available to place a bet for free!"
 msgstr "You have a voucher available to place a bet for free!"

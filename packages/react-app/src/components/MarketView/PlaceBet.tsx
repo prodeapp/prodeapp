@@ -65,7 +65,7 @@ export default function PlaceBet({
 					{hasVoucher && (
 						<Alert severity={'info'} sx={{ mb: 2, fontWeight: 700, justifyContent: 'center' }}>
 							<Trans>
-								You have a voucher available for {formatAmount(voucherBalance, chainId)} to place a bet for free!
+								You have a voucher available for {formatAmount(voucherBalance, chainId)} to place bets for free!
 							</Trans>
 						</Alert>
 					)}
