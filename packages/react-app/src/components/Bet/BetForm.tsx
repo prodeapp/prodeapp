@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { erc20ABI, useAccount, useNetwork } from 'wagmi'
+import { Address, erc20ABI, useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
@@ -87,6 +87,29 @@ function getApproveTxParams(approve: UsePlaceBetReturn['approve']) {
 			queryClient.invalidateQueries(['useTokenAllowance'])
 		},
 	}
+}
+
+function getGeneralError(
+	address: Address | undefined,
+	unsupportedChain: boolean | undefined,
+	hasFundsToBet: boolean,
+	hasVoucher: boolean
+): string {
+	if (!address) {
+		return t`Connect your wallet to place a bet.`
+	}
+
+	if (unsupportedChain) {
+		return t`UNSUPPORTED_CHAIN`
+	}
+
+	if (!hasFundsToBet) {
+		return hasVoucher
+			? t`You have a free voucher but still need to have some funds to pay the gas fees.`
+			: t`You don&apos;t have enough funds to place a bet.`
+	}
+
+	return ''
 }
 
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
@@ -221,22 +244,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (!address) {
-		return (
-			<Alert severity='error'>
-				<Trans>Connect your wallet to place a bet.</Trans>
-			</Alert>
-		)
-	}
-
-	if (!chain || chain.unsupported) {
-		return (
-			<Alert severity='error'>
-				<Trans>UNSUPPORTED_CHAIN</Trans>
-			</Alert>
-		)
-	}
-
 	if (eventsError) {
 		return (
 			<Alert severity='error'>
@@ -248,6 +255,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const onSubmit = async (_: BetFormValues) => {
 		placeBet!()
 	}
+
+	const generalError = getGeneralError(address, !chain || chain.unsupported, hasFundsToBet, hasVoucher)
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -290,7 +299,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</BigAlert>
 			)}
 
-			{!hasVoucher && isCrossChainBet && (
+			{!hasVoucher && chain && isCrossChainBet && (
 				<BigAlert severity='info' sx={{ mb: 4 }}>
 					<Box
 						sx={{
@@ -390,14 +399,10 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						</BigAlert>
 					</Grid>
 				)}
-				{!hasFundsToBet && (
+				{generalError !== '' && (
 					<Grid item xs={12}>
 						<Alert severity='error'>
-							{hasVoucher ? (
-								<Trans>You have a free voucher but still need to have some funds to pay the gas fees.</Trans>
-							) : (
-								<Trans>You don&apos;t have enough funds to place a bet.</Trans>
-							)}
+							<span dangerouslySetInnerHTML={{ __html: generalError }}></span>
 						</Alert>
 					</Grid>
 				)}
@@ -413,7 +418,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
-					{!approve && (
+					{chain && !approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
 							<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}{' '}
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />

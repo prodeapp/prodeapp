@@ -119,7 +119,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const { address } = useAccount()
-	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
+	const { data: hasVoucher = false } = useHasVoucher(address, marketId, chainId, price)
 
 	let ASSET_ADDRESS: Address = AddressZero
 	let usdcAmount = BigNumber.from(0)
@@ -213,7 +213,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const { address } = useAccount()
-	const hasVoucher = useHasVoucher(address, marketId, chainId, price)
+	const { data: hasVoucher = false } = useHasVoucher(address, marketId, chainId, price)
 
 	const getTxParams = (
 		chainId: number,

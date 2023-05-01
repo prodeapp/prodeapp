@@ -29,7 +29,12 @@ export default function PlaceBet({
 }) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const hasVoucher = useHasVoucher(address, market.id, chain?.id || chainId, BigNumber.from(market.price))
+	const { data: hasVoucher = false } = useHasVoucher(
+		address,
+		market.id,
+		chain?.id || chainId,
+		BigNumber.from(market.price)
+	)
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()
 
