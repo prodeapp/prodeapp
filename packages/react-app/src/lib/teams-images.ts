@@ -13,6 +13,7 @@ import GIMNASIA_LP from '@/assets/logos/ar/gimnasia_lp.png'
 import GODOY_CRUZ from '@/assets/logos/ar/godoy_cruz.png'
 import HURACAN from '@/assets/logos/ar/huracan.png'
 import INDEPENDIENTE from '@/assets/logos/ar/independiente.png'
+import INSTITUTO from '@/assets/logos/ar/instituto.png'
 import LANUS from '@/assets/logos/ar/lanus.png'
 import NEWELLS from '@/assets/logos/ar/newells.png'
 import PATRONATO from '@/assets/logos/ar/patronato.png'
@@ -76,7 +77,7 @@ import LECLERC from '@/assets/logos/f1/charles-leclerc.png'
 import RICCIARDO from '@/assets/logos/f1/daniel-ricciardo.png'
 import OCON from '@/assets/logos/f1/esteban-ocon.png'
 import ALONSO from '@/assets/logos/f1/fernando-alonso.png'
-//import HULKENBERG from '../assets/logos/f1/nico-hulkenberg.png'
+// import HULKENBERG from '../assets/logos/f1/nico-hulkenberg.png'
 import FERRARI from '@/assets/logos/f1/ferrari-logo.png'
 import RUSSEL from '@/assets/logos/f1/george-russell.png'
 import ZHOU from '@/assets/logos/f1/guanyu-zhou.png'
@@ -88,12 +89,9 @@ import HAMILTON from '@/assets/logos/f1/lewis-hamilton.png'
 import VERSTAPPEN from '@/assets/logos/f1/max-verstappen.png'
 import MCLAREN from '@/assets/logos/f1/mclaren-logo.png'
 import MERCEDES from '@/assets/logos/f1/mercedes-logo.png'
-import SCHUMACHER from '@/assets/logos/f1/mick-schumacher.png'
-import LATIFI from '@/assets/logos/f1/nicholas-latifi.png'
 import GASLY from '@/assets/logos/f1/pierre-gasly.png'
 import REDBULL from '@/assets/logos/f1/red-bull-logo.png'
 import RENAULT from '@/assets/logos/f1/renault-logo.png' // engine
-import VETTEL from '@/assets/logos/f1/sebastian-vettel.png'
 import PEREZ from '@/assets/logos/f1/sergio-perez.png'
 import BLUEFULLWET from '@/assets/logos/f1/tire-blue-full-wet.png'
 import GREENINTERMEDIATE from '@/assets/logos/f1/tire-green-intermediate.png'
@@ -135,12 +133,17 @@ import TUNISIA from '@/assets/logos/fifa_wc/tunisia.png'
 import URUGUAY from '@/assets/logos/fifa_wc/uruguay.png'
 import USA from '@/assets/logos/fifa_wc/usa.png'
 import WALES from '@/assets/logos/fifa_wc/wales.png'
+// Calcio Italia
+import MILAN from '@/assets/logos/it/ac_milan.png'
+import INTER from '@/assets/logos/it/intermilan.png'
 
 const images: Record<string, Record<string, string>> = {
 	ar: {
 		Aldosivi: ALDOSIVI,
 		'Argentinos Juniors': ARGENTINOS_JUNIORS,
+		'Argentinos JRS': ARGENTINOS_JUNIORS,
 		Arsenal: ARSENAL,
+		'Arsenal Sarandi': ARSENAL,
 		'Atletico Tucuman': ATLETICO_TUCUMAN,
 		'Atletico Tucumán': ATLETICO_TUCUMAN,
 		Banfield: BANFIELD,
@@ -148,9 +151,12 @@ const images: Record<string, Record<string, string>> = {
 		'Barracas Central': BARRACAS_CENTRAL,
 		'Boca Juniors': BOCA_JUNIORS,
 		'Central Cordoba': CENTRAL_CORDOBA,
+		'Central Cordoba de Santiago': CENTRAL_CORDOBA,
 		Colon: COLON,
 		Colón: COLON,
+		'Colon Santa Fe': COLON,
 		'Defensa y Justicia': DEFENSA_JUSTICIA,
+		'Defensa Y Justicia': DEFENSA_JUSTICIA,
 		'Estudiantes de La Plata': ESTUDIANTES_LP,
 		'Estudiantes L.P.': ESTUDIANTES_LP,
 		'Gimnasia y Esgrima de La Plata': GIMNASIA_LP,
@@ -159,9 +165,11 @@ const images: Record<string, Record<string, string>> = {
 		Huracan: HURACAN,
 		Huracán: HURACAN,
 		Independiente: INDEPENDIENTE,
+		'Instituto Cordoba': INSTITUTO,
 		Lanus: LANUS,
 		Lanús: LANUS,
 		"Newell's Old Boys": NEWELLS,
+		'Newells Old Boys': NEWELLS,
 		Patronato: PATRONATO,
 		Platense: PLATENSE,
 		Racing: RACING,
@@ -170,12 +178,16 @@ const images: Record<string, Record<string, string>> = {
 		'Rosario Central': ROSARIO_CENTRAL,
 		'San Lorenzo': SAN_LORENZO,
 		Talleres: TALLERES,
+		'Talleres Cordoba': TALLERES,
 		Tigre: TIGRE,
 		Union: UNION,
 		Unión: UNION,
+		'Union Santa Fe': UNION,
 		'Velez Sarfield': VELEZ,
+		'Velez Sarsfield': VELEZ,
 		Vélez: VELEZ,
 		Sarmiento: SARMIENTO,
+		'Sarmiento Junin': SARMIENTO,
 	},
 	en: {
 		Arsenal: ARSENAL_FC,
@@ -192,8 +204,10 @@ const images: Record<string, Record<string, string>> = {
 		Liverpool: LIVERPOOL,
 		'Manchester City': MANCHESTER_CITY,
 		'Manchester Utd': MANCHESTER_UTD,
+		'Manchester United': MANCHESTER_UTD,
 		Newcastle: NEWCASTLE,
 		Nottingham: NOTTINGHAM,
+		'Nottingham Forest': NOTTINGHAM,
 		Southampton: SOUTHAMPTON,
 		Tottenham: TOTTENHAM,
 		'West Ham': WEST_HAM,
@@ -213,14 +227,10 @@ const images: Record<string, Record<string, string>> = {
 		'Zhou Guanyu': ZHOU,
 		'Valtteri Bottas': BOTTAS,
 		'Kevin Magnussen': MAGNUSSEN,
-		'Mick Schumacher': SCHUMACHER,
 		'Pier Gasly': GASLY,
 		'Yuki Tsunoda': TSUNODA,
-		'Sebastian Vettel': VETTEL,
 		'Lance Stroll': STROLL,
 		'Alexander Albon': ALBON,
-		'Nicholas Latifi': LATIFI,
-		//'Nico Hulkenberg': HULKENBERG,
 		Ferrari: FERRARI,
 		McLaren: MCLAREN,
 		'Red Bull Racing': REDBULL,
@@ -242,12 +252,17 @@ const images: Record<string, Record<string, string>> = {
 	},
 	es: {
 		Almería: ALMERIA,
+		Almeria: ALMERIA,
 		'Athletic Club': ATHLETIC_CLUB,
 		'Atlético de Madrid': ATLETICO_MADRID,
+		'Atletico Madrid': ATLETICO_MADRID,
 		Barcelona: BARCELONA,
 		Betis: REAL_BETIS,
+		'Real Betis': REAL_BETIS,
 		'Celta de Vigo': CELTA_VIGO,
+		'Celta Vigo': CELTA_VIGO,
 		'Cádiz CF': CADIZ,
+		Cadiz: CADIZ,
 		Elche: ELCHE,
 		Espanyol: ESPANYOL,
 		Getafe: GETAFE,
@@ -261,6 +276,7 @@ const images: Record<string, Record<string, string>> = {
 		Valencia: VALENCIA,
 		Valladolid: VALLADOLID,
 		Villareal: VILLARREAL,
+		Villarreal: VILLARREAL,
 	},
 	fifa_wc: {
 		Wales: WALES,
@@ -295,6 +311,12 @@ const images: Record<string, Record<string, string>> = {
 		Belgium: BELGIUM,
 		Argentina: ARGENTINA,
 		Australia: AUSTRALIA,
+	},
+	uefa_champions: {
+		'Real Madrid': REAL_MADRID,
+		'Manchester City': MANCHESTER_CITY,
+		Milan: MILAN,
+		Inter: INTER,
 	},
 }
 

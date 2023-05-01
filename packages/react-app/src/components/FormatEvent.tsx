@@ -22,6 +22,8 @@ const getCountryFromEvent = (title: string) => {
 		return 'fifa_wc'
 	}
 
+	if (title.includes('UEFA Champions League')) return 'uefa_champions'
+
 	return 'ar'
 }
 
