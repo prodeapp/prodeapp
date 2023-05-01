@@ -1,25 +1,21 @@
 import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { ErrorMessage } from '@hookform/error-message'
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
-import HelpIcon from '@mui/icons-material/Help'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
-import Tooltip from '@mui/material/Tooltip'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { erc20ABI, useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
-import { BigAlert, FormError } from '@/components'
+import { BigAlert } from '@/components'
 import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
@@ -33,7 +29,7 @@ import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
 
-import { BetOutcomeSelect } from './BetOutcomeSelect'
+import { BetOutcomeRow } from './BetOutcomeSelect'
 
 export type BetFormOutcome = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
 
@@ -339,61 +335,25 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								<FormatEvent title={events[outcomeIndex].title} />
 							</Grid>
 							<Grid item xs={12} md={6}>
-								{tmpOutcomeValues.map((value, valueIndex) => {
-									return (
-										<div key={valueIndex}>
-											<FormControl fullWidth>
-												<BetOutcomeSelect
-													key={events[outcomeIndex].id}
-													matchesInterdependencies={matchesInterdependencies}
-													events={events}
-													outcomeIndex={outcomeIndex}
-													valueIndex={valueIndex}
-													outcomes={outcomes}
-													control={control}
-													errors={errors}
-													setValue={setValue}
-												/>
-												<FormError>
-													<ErrorMessage errors={errors} name={`outcomes.${outcomeIndex}.value`} />
-												</FormError>
-											</FormControl>
-
-											{valueIndex > 0 && (
-												<span
-													className='js-link'
-													onClick={removeAlternative(outcomeIndex, valueIndex)}
-													style={{
-														fontSize: 12,
-														textAlign: 'right',
-														color: 'red',
-														display: 'block',
-														marginBottom: '5px',
-													}}
-												>
-													<Trans>Remove prediction</Trans>
-												</span>
-											)}
-
-											{isMainChain(chain.id) && !hasVoucher && valueIndex === valuesLength - 1 && value !== '' && (
-												<div style={{ display: 'flex', alignItems: 'center', fontSize: 16 }}>
-													<span
-														className='js-link'
-														style={{ fontSize: 12, marginRight: 5 }}
-														onClick={addAlternative(outcomeIndex)}
-													>
-														+<Trans>Add another prediction</Trans>
-													</span>
-													<Tooltip
-														title={t`You can add multiple predictions for each match to create multiple bets with different combinations of outcomes.`}
-													>
-														<HelpIcon fontSize='inherit' color='primary' />
-													</Tooltip>
-												</div>
-											)}
-										</div>
-									)
-								})}
+								{tmpOutcomeValues.map((value, valueIndex) => (
+									<BetOutcomeRow
+										key={`${valueIndex}-${events[outcomeIndex].id}`}
+										matchesInterdependencies={matchesInterdependencies}
+										events={events}
+										outcomeIndex={outcomeIndex}
+										valueIndex={valueIndex}
+										outcomes={outcomes}
+										control={control}
+										errors={errors}
+										setValue={setValue}
+										addAlternative={
+											isMainChain(chainId) && !hasVoucher && valueIndex === valuesLength - 1 && value !== ''
+												? addAlternative(outcomeIndex)
+												: false
+										}
+										removeAlternative={removeAlternative(outcomeIndex, valueIndex)}
+									/>
+								))}
 								<input
 									type='hidden'
 									{...register(`outcomes.${outcomeIndex}.questionId`, {
