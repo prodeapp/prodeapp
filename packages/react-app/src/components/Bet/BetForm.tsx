@@ -23,7 +23,7 @@ import { useBetToken } from '@/hooks/useBetToken'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
-import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
+import { CROSS_CHAIN_TOKEN_ID, isOldMarket, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
 import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
@@ -356,7 +356,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										errors={errors}
 										setValue={setValue}
 										addAlternative={
-											isMainChain(chainId) && !hasVoucher && valueIndex === valuesLength - 1 && value !== ''
+											!isOldMarket(market.id) &&
+											isMainChain(chainId) &&
+											!hasVoucher &&
+											valueIndex === valuesLength - 1 &&
+											value !== ''
 												? addAlternative(outcomeIndex)
 												: false
 										}
