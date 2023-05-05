@@ -28,6 +28,9 @@ msgstr "Ad created."
 msgid "Ad not found"
 msgstr "Ad not found"
 
+msgid "Add another prediction"
+msgstr "Add another prediction"
+
 msgid "Add answer"
 msgstr "Add answer"
 
@@ -301,8 +304,8 @@ msgstr "Fund amount ({0})"
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
 
-msgid "Global Metrics:"
-msgstr "Global Metrics:"
+msgid "Global Metrics"
+msgstr "Global Metrics"
 
 msgid "Go to market"
 msgstr "Go to market"
@@ -348,6 +351,9 @@ msgstr "Item id not found"
 
 msgid "LP Rewards"
 msgstr "LP Rewards"
+
+msgid "Leaderboard"
+msgstr "Leaderboard"
 
 msgid "Loading..."
 msgstr "Loading..."
@@ -543,6 +549,9 @@ msgstr "Remove event"
 
 msgid "Remove group"
 msgstr "Remove group"
+
+msgid "Remove prediction"
+msgstr "Remove prediction"
 
 msgid "Reopen question"
 msgstr "Reopen question"
@@ -748,6 +757,9 @@ msgstr "Waiting for results"
 msgid "Waiting result"
 msgstr "Waiting result"
 
+msgid "We will calculate all the possible combinations of results and send a bet for each one of them."
+msgstr "We will calculate all the possible combinations of results and send a bet for each one of them."
+
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
 
@@ -759,6 +771,12 @@ msgstr "Yes"
 
 msgid "You"
 msgstr "You"
+
+msgid "You are about to place {betsCount} bets."
+msgstr "You are about to place {betsCount} bets."
+
+msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
+msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 
 msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
 msgstr "You can bet from {chain} with USDC. We will take care of bridging the funds for you."

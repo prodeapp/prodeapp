@@ -1,7 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { ErrorMessage } from '@hookform/error-message'
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
 import Alert from '@mui/material/Alert'
@@ -9,15 +8,14 @@ import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
-import FormControl from '@mui/material/FormControl'
 import Grid from '@mui/material/Grid'
 import React, { useEffect } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
-import { erc20ABI, useAccount, useNetwork } from 'wagmi'
+import { Address, erc20ABI, useAccount, useNetwork } from 'wagmi'
 
 import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
-import { BigAlert, FormError } from '@/components'
+import { BigAlert } from '@/components'
 import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
@@ -25,18 +23,21 @@ import { useBetToken } from '@/hooks/useBetToken'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
-import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
+import { CROSS_CHAIN_TOKEN_ID, isOldMarket, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN } from '@/lib/config'
-import { getReferralKey } from '@/lib/helpers'
+import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
+import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
 
-import { BetOutcomeSelect } from './BetOutcomeSelect'
+import { BetOutcomeRow } from './BetOutcomeSelect'
 
-export type BetFormOutcomeValue = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
+export type BetFormOutcome = FormEventOutcomeValue | FormEventOutcomeValue[] | ''
+
+export type MultiOutcomeValues = { values: BetFormOutcome[]; questionId: string }
+export type SingleOutcomeValue = { value: BetFormOutcome; questionId: string }
 
 export type BetFormValues = {
-	outcomes: { value: BetFormOutcomeValue; questionId: string }[]
+	outcomes: MultiOutcomeValues[]
 }
 
 type BetFormProps = {
@@ -88,6 +89,29 @@ function getApproveTxParams(approve: UsePlaceBetReturn['approve']) {
 	}
 }
 
+function getGeneralError(
+	address: Address | undefined,
+	unsupportedChain: boolean | undefined,
+	hasFundsToBet: boolean,
+	hasVoucher: boolean
+): string {
+	if (!address) {
+		return t`Connect your wallet to place a bet.`
+	}
+
+	if (unsupportedChain) {
+		return t`UNSUPPORTED_CHAIN`
+	}
+
+	if (!hasFundsToBet) {
+		return hasVoucher
+			? t`You have a free voucher but still need to have some funds to pay the gas fees.`
+			: t`You don&apos;t have enough funds to place a bet.`
+	}
+
+	return ''
+}
+
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
@@ -99,6 +123,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		formState: { errors },
 		handleSubmit,
 		setValue,
+		getValues,
 	} = useForm<BetFormValues>({
 		mode: 'all',
 		defaultValues: {
@@ -115,13 +140,38 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach((event) => append({ value: '', questionId: event.id }))
+		events && events.forEach(event => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
+
+	const addAlternative = (outcomeIndex: number) => {
+		return () => {
+			setValue(`outcomes.${outcomeIndex}.values`, [...getValues(`outcomes.${outcomeIndex}.values`), ''])
+		}
+	}
+
+	const removeAlternative = (outcomeIndex: number, valueIndex: number) => {
+		return () => {
+			const values = getValues(`outcomes.${outcomeIndex}.values`)
+			values.splice(valueIndex, 1)
+			setValue(`outcomes.${outcomeIndex}.values`, values)
+		}
+	}
 
 	const referral = window.localStorage.getItem(getReferralKey(market.id)) || ''
 	const attribution = isAddress(referral) ? referral : AddressZero
 
-	const { isLoading, error, hasFundsToBet, placeBet, tokenId, hasVoucher, isCrossChainBet, approve } = usePlaceBet(
+	const {
+		isLoading,
+		error,
+		hasFundsToBet,
+		betPrice,
+		betsCount,
+		placeBet,
+		tokenId,
+		hasVoucher,
+		isCrossChainBet,
+		approve,
+	} = usePlaceBet(
 		market.id,
 		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
 		chain?.id || DEFAULT_CHAIN,
@@ -130,11 +180,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const {
-		isLoading: isLoadingApprove,
-		error: approveError,
-		write: approveTokens,
-	} = useSendTx(
+	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -198,34 +244,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (!address) {
-		return (
-			<Alert severity='error'>
-				<Trans>Connect your wallet to place a bet.</Trans>
-			</Alert>
-		)
-	}
-
-	if (!hasFundsToBet) {
-		return (
-			<Alert severity='error'>
-				{hasVoucher ? (
-					<Trans>You have a free voucher but still need to have some funds to pay the gas fees.</Trans>
-				) : (
-					<Trans>You don&apos;t have enough funds to place a bet.</Trans>
-				)}
-			</Alert>
-		)
-	}
-
-	if (!chain || chain.unsupported) {
-		return (
-			<Alert severity='error'>
-				<Trans>UNSUPPORTED_CHAIN</Trans>
-			</Alert>
-		)
-	}
-
 	if (eventsError) {
 		return (
 			<Alert severity='error'>
@@ -237,6 +255,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const onSubmit = async (_: BetFormValues) => {
 		placeBet!()
 	}
+
+	const generalError = getGeneralError(address, !chain || chain.unsupported, hasFundsToBet, hasVoucher)
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
@@ -279,7 +299,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</BigAlert>
 			)}
 
-			{!hasVoucher && isCrossChainBet && (
+			{!hasVoucher && chain && isCrossChainBet && (
 				<BigAlert severity='info' sx={{ mb: 4 }}>
 					<Box
 						sx={{
@@ -311,34 +331,45 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</Alert>
 			)}
 			<Grid container spacing={3}>
-				{fields.map((field, i) => {
-					if (!events || !events[i]) {
+				{fields.map((field, outcomeIndex) => {
+					if (!events || !events[outcomeIndex]) {
 						return null
 					}
+					// set default to be able to loop
+					const tmpOutcomeValues = outcomes?.[outcomeIndex]?.values || ['']
+					const valuesLength = tmpOutcomeValues.length
 					return (
-						<React.Fragment key={events[i].id}>
+						<React.Fragment key={events[outcomeIndex].id}>
 							<Grid item xs={12} md={6}>
-								<FormatEvent title={events[i].title} />
+								<FormatEvent title={events[outcomeIndex].title} />
 							</Grid>
 							<Grid item xs={12} md={6}>
-								<FormControl fullWidth>
-									<BetOutcomeSelect
-										key={events[i].id}
+								{tmpOutcomeValues.map((value, valueIndex) => (
+									<BetOutcomeRow
+										key={`${valueIndex}-${events[outcomeIndex].id}`}
 										matchesInterdependencies={matchesInterdependencies}
 										events={events}
-										i={i}
+										outcomeIndex={outcomeIndex}
+										valueIndex={valueIndex}
 										outcomes={outcomes}
 										control={control}
 										errors={errors}
 										setValue={setValue}
+										addAlternative={
+											!isOldMarket(market.id) &&
+											isMainChain(chainId) &&
+											!hasVoucher &&
+											valueIndex === valuesLength - 1 &&
+											value !== ''
+												? addAlternative(outcomeIndex)
+												: false
+										}
+										removeAlternative={removeAlternative(outcomeIndex, valueIndex)}
 									/>
-									<FormError>
-										<ErrorMessage errors={errors} name={`outcomes.${i}.value`} />
-									</FormError>
-								</FormControl>
+								))}
 								<input
 									type='hidden'
-									{...register(`outcomes.${i}.questionId`, {
+									{...register(`outcomes.${outcomeIndex}.questionId`, {
 										required: t`This field is required`,
 									})}
 								/>
@@ -346,6 +377,39 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						</React.Fragment>
 					)
 				})}
+				{hasFundsToBet && betsCount > 1 && (
+					<Grid item xs={12}>
+						<BigAlert severity='info' sx={{ mb: 4 }}>
+							<Box
+								sx={{
+									display: { md: 'flex' },
+									justifyContent: 'space-between',
+									alignItems: 'center',
+								}}
+							>
+								<div>
+									<div>
+										<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
+											<Trans>You are about to place {betsCount} bets.</Trans>
+										</AlertTitle>
+									</div>
+									<div>
+										<Trans>
+											We will calculate all the possible combinations of results and send a bet for each one of them.
+										</Trans>
+									</div>
+								</div>
+							</Box>
+						</BigAlert>
+					</Grid>
+				)}
+				{generalError !== '' && (
+					<Grid item xs={12}>
+						<Alert severity='error'>
+							<span dangerouslySetInnerHTML={{ __html: generalError }}></span>
+						</Alert>
+					</Grid>
+				)}
 				<Grid item xs={6}>
 					<Button type='button' color='primary' size='large' variant='outlined' fullWidth onClick={cancelHandler}>
 						<Trans>Cancel</Trans> <CrossIcon style={{ marginLeft: 10 }} width={10} height={10} />
@@ -358,9 +422,10 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
-					{!approve && (
+					{chain && !approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans>Place Bet</Trans> <TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+							<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}{' '}
+							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}
 				</Grid>

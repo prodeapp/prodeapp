@@ -28,6 +28,9 @@ msgstr "Anuncio creado."
 msgid "Ad not found"
 msgstr "Anuncio no encontrado."
 
+msgid "Add another prediction"
+msgstr "Agregar otra predicción"
+
 msgid "Add answer"
 msgstr "Agregar respuesta"
 
@@ -301,8 +304,8 @@ msgstr "Cantidad a financiar ({0})"
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"
 
-msgid "Global Metrics:"
-msgstr "Métricas Globales:"
+msgid "Global Metrics"
+msgstr "Métricas Globales"
 
 msgid "Go to market"
 msgstr "Ir al mercado"
@@ -348,6 +351,9 @@ msgstr "Item id no encontrado"
 
 msgid "LP Rewards"
 msgstr "Recomenzas de LP"
+
+msgid "Leaderboard"
+msgstr ""
 
 msgid "Loading..."
 msgstr "Cargando..."
@@ -543,6 +549,9 @@ msgstr "Remover evento"
 
 msgid "Remove group"
 msgstr "Remover grupo"
+
+msgid "Remove prediction"
+msgstr "Eliminar predicción"
 
 msgid "Reopen question"
 msgstr "Reabrir pregunta"
@@ -748,6 +757,9 @@ msgstr "Esperando resultados"
 msgid "Waiting result"
 msgstr "Esperando resultado"
 
+msgid "We will calculate all the possible combinations of results and send a bet for each one of them."
+msgstr "Calcularemos todas las posibles combinaciones de resultados y enviaremos una apuesta por cada una de ellas."
+
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "Qué % del pozo ganará el jugador en la posición #X."
 
@@ -759,6 +771,12 @@ msgstr "Si"
 
 msgid "You"
 msgstr "Usted"
+
+msgid "You are about to place {betsCount} bets."
+msgstr "Estás por enviar {betsCount} apuestas"
+
+msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
+msgstr "Puedes agregar varias predicciones en cada partido para crear multiple apuestas con diferentes combinaciones de resultados."
 
 msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
 msgstr "Puedes apostar desde {chain} con USDC. Nos encargaremos de enviar los fondos por ti."
