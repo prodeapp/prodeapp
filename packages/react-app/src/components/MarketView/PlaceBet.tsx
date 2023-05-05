@@ -48,6 +48,8 @@ export default function PlaceBet({
 		return () => clearInterval(interval)
 	}, [market, locale])
 
+	const isCrossChainBet = chain?.id !== chainId
+
 	return (
 		<div style={{ textAlign: 'center', margin: '0 auto' }}>
 			<Box sx={{ marginTop: '50px', marginBottom: { xs: '50px', md: '100px' } }}>
@@ -55,7 +57,7 @@ export default function PlaceBet({
 				<Typography variant='p3' component='div'>
 					<Trans>Bet Price:</Trans>
 				</Typography>
-				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
+				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId, isCrossChainBet)}</div>
 			</Box>
 
 			{fullDetails && timeLeft !== false && (
@@ -72,7 +74,8 @@ export default function PlaceBet({
 					)}
 					<div style={{ fontWeight: 'bold', marginBottom: '15px' }}>{timeLeft}</div>
 					<Button color='primary' size='large' fullWidth onClick={onBetClick}>
-						<Trans>Place Bet</Trans> - {formatAmount(market.price, chainId)} <ArrowRight style={{ marginLeft: 10 }} />
+						<Trans>Place Bet</Trans> - {formatAmount(market.price, chainId, isCrossChainBet)}{' '}
+						<ArrowRight style={{ marginLeft: 10 }} />
 					</Button>
 				</>
 			)}

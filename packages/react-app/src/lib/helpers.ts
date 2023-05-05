@@ -75,9 +75,12 @@ export function betsClosingSoon(timestamp: number): boolean {
 	return timestamp - now < minDuration
 }
 
-export function formatAmount(amount: BigNumberish, chainId: number) {
+export function formatAmount(amount: BigNumberish, chainId: number, isCrossChainBet = false) {
 	const number = new DecimalBigNumber(BigNumber.from(amount), 18)
-	return `${number.toString()} ${getConfigString('NETWORK_TOKEN', chainId)}`
+
+	const token = isCrossChainBet ? 'USDC' : getConfigString('NETWORK_TOKEN', chainId)
+
+	return `${number.toString()} ${token}`
 }
 
 export function formatAmountDecimalPlaces(amount: BigNumberish, chainId: number) {
@@ -117,7 +120,7 @@ export function getAnswerText(
 
 	if (templateID === REALITY_TEMPLATE_MULTIPLE_SELECT) {
 		return getMultiSelectAnswers(BigNumber.from(currentAnswer).toNumber())
-			.map((answer) => transOutcome(outcomes[answer] || noAnswerText))
+			.map(answer => transOutcome(outcomes[answer] || noAnswerText))
 			.join(', ')
 	}
 
@@ -156,11 +159,11 @@ type FlattenedCategory = { id: string; text: string; isChild: boolean }
 
 export function getFlattenedCategories(): FlattenedCategory[] {
 	const data: FlattenedCategory[] = []
-	MARKET_CATEGORIES.forEach((category) => {
+	MARKET_CATEGORIES.forEach(category => {
 		data.push({ id: category.id, text: category.text, isChild: false })
 
 		category.children &&
-			category.children.forEach((subcategory) => {
+			category.children.forEach(subcategory => {
 				data.push({
 					id: subcategory.id,
 					text: subcategory.text,
@@ -183,7 +186,7 @@ export function getSubcategories(category: string): MarketCategory[] {
 }
 
 export function getCategoryText(id: string): string {
-	return getFlattenedCategories().filter((c) => c.id === id)[0]?.text || ''
+	return getFlattenedCategories().filter(c => c.id === id)[0]?.text || ''
 }
 
 export function getMarketUrl(marketId: string, chainId: number) {
