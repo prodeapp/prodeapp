@@ -353,7 +353,7 @@ msgid "LP Rewards"
 msgstr "Recomenzas de LP"
 
 msgid "Leaderboard"
-msgstr ""
+msgstr "Leaderboard"
 
 msgid "Loading..."
 msgstr "Cargando..."
@@ -789,6 +789,9 @@ msgstr "No tienes fondos suficientes para enviar la apuesta."
 
 msgid "You have a free voucher but still need to have some funds to pay the gas fees."
 msgstr "Tienes un voucher pero aun así necesitas tener fondos para pagar el envío de la transacción."
+
+msgid "You have a voucher available for {0} to place bets for free!"
+msgstr "¡Tienes un voucher disponible por {0} para apostar gratis!"
 
 msgid "You have a voucher available to place a bet for free!"
 msgstr "¡Tienes un voucher disponible para realizar una apuesta gratuita!"

@@ -29,7 +29,7 @@ export default function PlaceBet({
 }) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const { data: hasVoucher = false } = useHasVoucher(
+	const { data: {hasVoucher, voucherBalance} = {hasVoucher: false, voucherBalance: BigNumber.from(0)}} = useHasVoucher(
 		address,
 		market.id,
 		chain?.id || chainId,
@@ -64,7 +64,9 @@ export default function PlaceBet({
 				<>
 					{hasVoucher && (
 						<Alert severity={'info'} sx={{ mb: 2, fontWeight: 700, justifyContent: 'center' }}>
-							<Trans>You have a voucher available to place a bet for free!</Trans>
+							<Trans>
+								You have a voucher available for {formatAmount(voucherBalance, chainId)} to place bets for free!
+							</Trans>
 						</Alert>
 					)}
 					{betsClosingSoon(market.closingTime) && (
