@@ -189,6 +189,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		if (tokenId !== false) {
 			queryClient.invalidateQueries(['useMarket', market.id])
 			queryClient.invalidateQueries(['useBets', { marketId: market.id }])
+			queryClient.invalidateQueries(['useHasVoucher'])
 		}
 	}, [tokenId, market.id])
 
