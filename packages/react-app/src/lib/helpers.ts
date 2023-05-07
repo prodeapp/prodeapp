@@ -75,12 +75,12 @@ export function betsClosingSoon(timestamp: number): boolean {
 	return timestamp - now < minDuration
 }
 
-export function formatAmount(amount: BigNumberish, chainId: number, isCrossChainBet = false) {
-	const number = new DecimalBigNumber(BigNumber.from(amount), 18)
+export function formatAmount(amount: BigNumberish, chainId: number, isCrossChainBet = false, decimals = 18) {
+	const number = new DecimalBigNumber(BigNumber.from(amount), decimals)
 
 	const token = isCrossChainBet ? 'USDC' : getConfigString('NETWORK_TOKEN', chainId)
 
-	return `${number.toString()} ${token}`
+	return `${number.toString({ decimals: 2 })} ${token}`
 }
 
 export function formatAmountDecimalPlaces(amount: BigNumberish, chainId: number) {

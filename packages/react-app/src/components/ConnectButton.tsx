@@ -1,51 +1,27 @@
 import { Trans } from '@lingui/macro'
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
-import { Address } from '@wagmi/core'
-import React from 'react'
-import Blockies from 'react-blockies'
 import { Link as RouterLink } from 'react-router-dom'
-import { useDisconnect } from 'wagmi'
+import { useLocation } from 'react-router-dom'
 
-import { ReactComponent as ArrowRight } from '@/assets/icons/arrow-right-2.svg'
-import { ReactComponent as LogoutIcon } from '@/assets/icons/logout.svg'
-import { usePlayer } from '@/hooks/usePlayer'
-import { formatPlayerName, shortenAddress } from '@/lib/helpers'
-
-const ConnectedInfo = ({ address }: { address: string }) => {
-	const { disconnect } = useDisconnect()
-	const { data: player } = usePlayer((address || '') as Address)
-	let accountName = ''
-
-	if (player) {
-		accountName = formatPlayerName(player.name, player.id)
-	} else if (address) {
-		accountName = shortenAddress(address)
-	}
-
-	return (
-		<Box sx={{ display: 'flex', alignItems: 'center' }}>
-			<RouterLink to={'/profile'} style={{ display: 'flex', alignItems: 'center', marginRight: 10 }}>
-				<Blockies seed={address} size={7} scale={4} />
-				<Box ml={1} sx={{ display: { xs: 'none', md: 'block' } }}>
-					{accountName}
-				</Box>
-			</RouterLink>
-			<LogoutIcon onClick={() => disconnect()} style={{ cursor: 'pointer' }} />
-		</Box>
-	)
-}
-
-export const ConnectButton = () => {
+export const InPageConnectButton = ({
+	fullWidth = false,
+	size = 'large',
+}: {
+	fullWidth?: boolean
+	size?: 'small' | 'medium' | 'large'
+}) => {
 	return (
 		<RainbowConnectButton.Custom>
-			{({ account, chain, openChainModal, openConnectModal, mounted }) => {
-				const ready = mounted
-				const connected = ready && account && chain
+			{({ account, chain, openConnectModal, mounted }) => {
 				return (
 					<div
-						{...(!ready && {
+						{...(!mounted && {
 							'aria-hidden': true,
 							style: {
 								opacity: 0,
@@ -55,22 +31,119 @@ export const ConnectButton = () => {
 						})}
 					>
 						{(() => {
-							if (!connected) {
+							if (!mounted || !account || !chain) {
 								return (
-									<Button onClick={openConnectModal} color='primary' size='large'>
-										<Trans>Connect Wallet</Trans> <ArrowRight style={{ marginLeft: 10 }} />
+									<Button color='primary' size={size} fullWidth={fullWidth} onClick={openConnectModal}>
+										<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+										<Trans>Connect Wallet</Trans>
 									</Button>
 								)
 							}
-							if (chain.unsupported) {
-								return (
-									<Button onClick={openChainModal} color='error' size='large'>
-										<Trans>Wrong network</Trans> <ArrowRight style={{ marginLeft: 10 }} />
-									</Button>
-								)
-							}
+						})()}
+					</div>
+				)
+			}}
+		</RainbowConnectButton.Custom>
+	)
+}
+export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) => {
+	const location = useLocation()
+	const theme = useTheme()
+	const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
-							return <ConnectedInfo address={account.address} />
+	const walletDrawerOpen =
+		location.pathname === '/wallet' || location.pathname === '/utility' || location.pathname === '/info' ? true : false
+
+	return (
+		<RainbowConnectButton.Custom>
+			{({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
+				return (
+					<div
+						{...(!mounted && {
+							'aria-hidden': true,
+							style: {
+								opacity: 0,
+								pointerEvents: 'none',
+								userSelect: 'none',
+							},
+						})}
+					>
+						{(() => {
+							if (!mounted || !account || !chain) {
+								if (walletDrawerOpen) {
+									return (
+										<Button color='secondary' onClick={openConnectModal}>
+											<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+											<Trans>{`Connect`}</Trans>
+										</Button>
+									)
+								} else {
+									return (
+										<Button
+											component={RouterLink}
+											to={'/wallet'}
+											state={{ prevPath: location.pathname }}
+											style={{ marginRight: '0px', zIndex: 18 }}
+											color={props.buttonColor || 'primary'}
+										>
+											<AccountBalanceWalletOutlinedIcon sx={{ mr: mobile ? 0 : '9px' }} />
+											{!mobile && <Trans>Connect Wallet</Trans>}
+										</Button>
+									)
+								}
+							}
+							return (
+								<Box display='flex' alignItems='center'>
+									{walletDrawerOpen ? (
+										<>
+											<Button
+												color='secondary'
+												sx={{ mr: 1 }}
+												onClick={chain.unsupported ? openChainModal : openAccountModal}
+											>
+												<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+												{chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName}
+											</Button>
+											<Button color='secondary' sx={{ mr: 1 }} onClick={openChainModal}>
+												{chain.unsupported && <ErrorOutlineIcon style={{ fill: theme.palette.error.main }} />}
+												{chain.hasIcon && (
+													<div
+														style={{
+															background: chain.iconBackground,
+															width: 24,
+															height: 24,
+															borderRadius: 999,
+															overflow: 'hidden',
+														}}
+													>
+														{chain.iconUrl && (
+															<img
+																alt={chain.name ?? 'Chain icon'}
+																src={chain.iconUrl}
+																style={{ width: 24, height: 24 }}
+															/>
+														)}
+													</div>
+												)}
+											</Button>
+											<Button component={RouterLink} to={'/profile'} style={{ marginRight: '0px' }} color='secondary'>
+												<Trans>See profile</Trans>
+											</Button>
+										</>
+									) : (
+										<Button
+											component={RouterLink}
+											to={'/wallet'}
+											state={{ prevPath: location.pathname }}
+											style={{ marginRight: '0px' }}
+											color='primary'
+										>
+											<AccountBalanceWalletOutlinedIcon sx={{ mr: mobile ? 0 : '9px' }} />
+											{!mobile && (chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName)}
+										</Button>
+									)}
+								</Box>
+							)
 						})()}
 					</div>
 				)

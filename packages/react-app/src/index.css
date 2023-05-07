@@ -31,3 +31,12 @@ footer {
 .identicon {
 	border-radius: 50%;
 }
+
+.Wallet-root .MuiBox-root {
+	outline: none;
+	-ms-overflow-style: none !important; /* IE and Edge */
+	scrollbar-width: none !important; /* Firefox */
+	&::-webkit-scrollbar {
+	  display: none !important;
+	}
+  }
