@@ -1,5 +1,6 @@
 import '@rainbow-me/rainbowkit/styles.css'
 
+import { sequenceWallet } from '@0xsequence/rainbowkit-plugin'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
 	braveWallet,
@@ -13,6 +14,8 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
+
+import { DEFAULT_CHAIN } from './config'
 
 gnosis.contracts = {
 	multicall3: {
@@ -51,6 +54,16 @@ const connectors = connectorsForWallets([
 	{
 		groupName: 'Recommended',
 		wallets: [
+			sequenceWallet({
+				chains,
+				connect: {
+					app: 'Prode',
+					networkId: DEFAULT_CHAIN,
+					settings: {
+						signInOptions: ['email', 'google', 'apple'],
+					},
+				},
+			}),
 			metaMaskWallet({ chains, shimDisconnect: true }),
 			braveWallet({ chains, shimDisconnect: true }),
 			rainbowWallet({ chains }),

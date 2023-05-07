@@ -1,9 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import Button from '@mui/material/Button'
+import Skeleton from '@mui/material/Skeleton'
+import { sequence } from '0xsequence'
+import { OpenWalletIntent, Settings } from '0xsequence/dist/declarations/src/provider'
 import { useAccount, useBalance, useNetwork } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
+import { Bet } from '@/graphql/subgraph'
+import { useBets } from '@/hooks/useBets'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
@@ -55,9 +60,70 @@ function RealityClaim() {
 	return null
 }
 
+function TopUp() {
+	// const { chain } = useNetwork()
+	const wallet = sequence.getWallet()
+
+	const openTopUp = () => {
+		const settings: Settings = {
+			theme: 'light',
+			// includedPaymentProviders: ['moonpay', 'ramp', 'wyre'],
+			defaultFundingCurrency: 'usdc',
+			defaultPurchaseAmount: 100,
+			lockFundingCurrencyToDefault: true,
+		}
+		const intent: OpenWalletIntent = {
+			type: 'openWithOptions',
+			options: {
+				settings,
+			},
+		}
+		const path = 'wallet/add-funds'
+		wallet.openWallet(path, intent)
+	}
+	return (
+		<Button onClick={openTopUp} color='primary'>
+			<Trans>TopUp</Trans>
+		</Button>
+	)
+}
+
+function ActiveBets({ activeBets, loading }: { activeBets: Bet[] | undefined; loading: boolean }): JSX.Element {
+	return (
+		<div style={{ marginBottom: 20 }}>
+			<details>
+				<summary style={{ fontSize: 12 }}>Active Bets</summary>
+				<ul>
+					{loading ? (
+						<Skeleton />
+					) : activeBets && activeBets.length > 0 ? (
+						activeBets.map((bet) => {
+							return (
+								<li key={`${bet.market}-${bet.tokenID}`}>
+									{bet.market.name}: {bet.points}
+								</li>
+							)
+						})
+					) : (
+						<li>
+							No active Bets. Go to <a href='/#'>markets</a> to place a bet.
+						</li>
+					)}
+				</ul>
+			</details>
+		</div>
+	)
+}
+
 export default function TabInfo() {
 	const { chain } = useNetwork()
 	const { address } = useAccount()
+	const { data: bets } = useBets({ playerId: address!, chainId: 100 })
+	const activeBets = bets
+		? bets.filter((bet) => {
+				return Number(bet.market.closingTime) >= Math.floor(Date.now() / 1000)
+		  })
+		: undefined
 
 	const usdcAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.USDC : undefined
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
@@ -72,17 +138,23 @@ export default function TabInfo() {
 	return (
 		<div>
 			{chain && (
-				<div style={{ marginBottom: 20 }}>
-					<div style={{ fontSize: 12 }}>Balance</div>
-					{mainChain && (
-						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
-					)}
-					{!mainChain && !!usdcAddress && (
-						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(usdcBalance.value, chain.id, true, 6)}</div>
-					)}
+				<div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
+					<div style={{ flex: '2' }}>
+						<div style={{ fontSize: 12 }}>Balance</div>
+						{mainChain && (
+							<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
+						)}
+						{!mainChain && !!usdcAddress && (
+							<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(usdcBalance.value, chain.id, true, 6)}</div>
+						)}
+					</div>
+					<div style={{ flex: '1' }}>
+						<TopUp />
+					</div>
 				</div>
 			)}
 			<RealityClaim />
+			<ActiveBets activeBets={activeBets} loading={bets === undefined} />
 		</div>
 	)
 }

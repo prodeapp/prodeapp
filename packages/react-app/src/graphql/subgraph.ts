@@ -199,6 +199,7 @@ export interface Bet {
 	market: {
 		id: Address
 		name: string
+		closingTime: BigNumberish
 	}
 	results: readonly Bytes[]
 	points: number

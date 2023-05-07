@@ -53,6 +53,7 @@ export const marketBetViewToBet = async (
 		market: {
 			id: marketId,
 			name: marketName,
+			closingTime: 0,
 		},
 	}
 }
@@ -71,7 +72,7 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 	).slice()
 
 	const bets = await Promise.all(
-		marketBetsView.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
+		marketBetsView.map(async (marketBetView) => await marketBetViewToBet(chainId, marketBetView))
 	)
 
 	bets.sort((a, b) => b.points - a.points)
@@ -80,7 +81,7 @@ export async function getMarketBets(chainId: number, marketId: Address): Promise
 }
 
 async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<Bet[]> {
-	const contracts = graphBets.map(graphBet => ({
+	const contracts = graphBets.map((graphBet) => ({
 		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getTokenBet',
@@ -95,9 +96,9 @@ async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<
 	return await Promise.all(
 		marketBetsView
 			// remove multicall errors
-			.filter(mbv => mbv !== null)
+			.filter((mbv) => mbv !== null)
 			// @ts-ignore
-			.map(async marketBetView => await marketBetViewToBet(chainId, marketBetView))
+			.map(async (marketBetView) => await marketBetViewToBet(chainId, marketBetView))
 	)
 }
 
@@ -151,7 +152,7 @@ export function useIndexedBetsRewards(graphBets?: GraphBet[]) {
 }
 
 export const useBetsRewards = (bets: Bet[], chainId: number) => {
-	const betsId = bets.map(b => b.id.toLowerCase())
+	const betsId = bets.map((b) => b.id.toLowerCase())
 
 	return useQuery<GraphBet[], Error>(['useBetsRewards', { bets: betsId, chainId }], async () => {
 		const query = `
