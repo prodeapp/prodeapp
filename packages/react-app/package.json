@@ -15,6 +15,8 @@
     ]
   },
   "dependencies": {
+    "0xsequence": "^0.43.27",
+    "@0xsequence/rainbowkit-plugin": "^1.0.6",
     "@apollo/client": "^3.5.10",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.21.4",
