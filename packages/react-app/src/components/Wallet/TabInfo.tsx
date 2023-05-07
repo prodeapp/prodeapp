@@ -7,6 +7,7 @@ import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
+import { CROSS_CHAIN_CONFIG } from '@/lib/connext'
 import { formatAmount } from '@/lib/helpers'
 
 function RealityClaim() {
@@ -57,14 +58,28 @@ function RealityClaim() {
 export default function TabInfo() {
 	const { chain } = useNetwork()
 	const { address } = useAccount()
+
+	const usdcAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.USDC : undefined
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
+	const { data: usdcBalance = { value: BigNumber.from(0) } } = useBalance({
+		address,
+		token: usdcAddress,
+		chainId: chain?.id,
+	})
+
+	const mainChain = isMainChain(chain?.id)
 
 	return (
 		<div>
 			{chain && (
 				<div style={{ marginBottom: 20 }}>
 					<div style={{ fontSize: 12 }}>Balance</div>
-					<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
+					{mainChain && (
+						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
+					)}
+					{!mainChain && !!usdcAddress && (
+						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(usdcBalance.value, chain.id, true, 6)}</div>
+					)}
 				</div>
 			)}
 			<RealityClaim />
