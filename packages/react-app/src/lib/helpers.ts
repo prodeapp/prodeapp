@@ -80,7 +80,7 @@ export function formatAmount(amount: BigNumberish, chainId: number, isCrossChain
 
 	const token = isCrossChainBet ? 'USDC' : getConfigString('NETWORK_TOKEN', chainId)
 
-	return `${number.toString()} ${token}`
+	return `${number.toString({ decimals: 2 })} ${token}`
 }
 
 export function formatAmountDecimalPlaces(amount: BigNumberish, chainId: number) {

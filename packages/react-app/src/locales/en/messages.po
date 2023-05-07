@@ -178,6 +178,9 @@ msgstr "Closed"
 msgid "Congratulations!"
 msgstr "Congratulations!"
 
+msgid "Connect"
+msgstr "Connect"
+
 msgid "Connect Wallet"
 msgstr "Connect Wallet"
 
@@ -237,6 +240,9 @@ msgstr "Description"
 
 msgid "Details"
 msgstr "Details"
+
+msgid "Disconnect"
+msgstr "Disconnect"
 
 msgid "Documentation"
 msgstr "Documentation"
@@ -583,6 +589,9 @@ msgstr "See details"
 msgid "See only my bets"
 msgstr "See only my bets"
 
+msgid "See profile"
+msgstr "See profile"
+
 msgid "Set question"
 msgstr "Set question"
 
@@ -712,6 +721,9 @@ msgstr "Unexpected error"
 msgid "Unknown"
 msgstr "Unknown"
 
+msgid "Unsupported Network"
+msgstr "Unsupported Network"
+
 msgid "Username updated"
 msgstr "Username updated"
 
@@ -763,9 +775,6 @@ msgstr "We will calculate all the possible combinations of results and send a be
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
 
-msgid "Wrong network"
-msgstr "Wrong network"
-
 msgid "Yes"
 msgstr "Yes"
 
@@ -784,8 +793,8 @@ msgstr "You can bet from {chain} with USDC. We will take care of bridging the fu
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 
-msgid "You don't have enough funds to place a bet."
-msgstr "You don't have enough funds to place a bet."
+msgid "You don&apos;t have enough funds to place a bet."
+msgstr "You don&apos;t have enough funds to place a bet."
 
 msgid "You have a free voucher but still need to have some funds to pay the gas fees."
 msgstr "You have a free voucher but still need to have some funds to pay the gas fees."

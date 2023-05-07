@@ -9,6 +9,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { WagmiConfig } from 'wagmi'
 
 import Layout from './components/Layout'
+import Wallet from './components/Wallet'
 import { GlobalContextProvider } from './lib/GlobalContext'
 import { I18nProvider } from './lib/I18nProvider'
 import { ReactQueryProvider } from './lib/react-query'
@@ -65,6 +66,7 @@ ReactDOM.render(
 												<Route path=':id' element={<AdsView />} />
 											</Route>
 										</Route>
+										<Route path='/wallet' element={<Wallet open={true} component='wallet' />}></Route>
 									</Routes>
 								</HashRouter>
 							</GlobalContextProvider>
