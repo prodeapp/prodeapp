@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
@@ -10,15 +9,10 @@ import Toolbar from '@mui/material/Toolbar'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { useAccount, useNetwork } from 'wagmi'
 
-import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ReactComponent as DropdownArrow } from '@/assets/icons/dropdown-down.svg'
 import { ReactComponent as Logo } from '@/assets/logo.svg'
-import { useClaimArgs } from '@/hooks/useReality'
-import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigAddress, isMainChain } from '@/lib/config'
-import { formatAmount, getDocsUrl } from '@/lib/helpers'
+import { getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 import { LocaleEnum } from '@/lib/types'
 
@@ -197,53 +191,11 @@ export default function Header() {
 							</DropdownMenu>
 						</MenuBar>
 					</Box>
-					<WalletMenu />
+					<Box sx={{ display: 'flex', alignItems: 'center' }}>
+						<ConnectButton />
+					</Box>
 				</Toolbar>
 			</Container>
 		</AppBar>
-	)
-}
-
-function WalletMenu() {
-	const { chain } = useNetwork()
-	const { address } = useAccount()
-
-	const { data: claimArgs } = useClaimArgs(address || '')
-
-	const { isSuccess, write } = useSendRecklessTx({
-		address: getConfigAddress('REALITIO', chain?.id),
-		abi: RealityAbi,
-		functionName: 'claimMultipleAndWithdrawBalance',
-	})
-
-	const claimReality = async () => {
-		if (!claimArgs) {
-			return
-		}
-
-		write!({
-			recklesslySetUnpreparedArgs: [
-				claimArgs.question_ids,
-				claimArgs.answer_lengths,
-				claimArgs.history_hashes,
-				claimArgs.answerers,
-				claimArgs.bonds,
-				claimArgs.answers,
-			],
-		})
-	}
-
-	return (
-		<>
-			<Box sx={{ display: 'flex', alignItems: 'center' }}>
-				{chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0) && (
-					<Button onClick={claimReality} color='primary' style={{ marginRight: 10 }}>
-						<Trans>Claim</Trans> {formatAmount(claimArgs.total, chain.id)}
-					</Button>
-				)}
-
-				<ConnectButton />
-			</Box>
-		</>
 	)
 }
