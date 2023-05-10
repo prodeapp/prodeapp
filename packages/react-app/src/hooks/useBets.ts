@@ -50,6 +50,7 @@ export const marketBetViewToBet = async (
 		},
 		results: predictions,
 		points: points.toNumber(),
+		reward: 0,
 		market: {
 			id: marketId,
 			name: marketName,

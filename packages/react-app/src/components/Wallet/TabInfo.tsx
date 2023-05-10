@@ -9,6 +9,7 @@ import { useAccount, useBalance, useNetwork } from 'wagmi'
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { Bet } from '@/graphql/subgraph'
 import { useBets } from '@/hooks/useBets'
+import { usePlayerWinnerBets } from '@/hooks/usePlayerWinnerBets'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
@@ -115,6 +116,34 @@ function ActiveBets({ activeBets, loading }: { activeBets: Bet[] | undefined; lo
 	)
 }
 
+function WinnerBets({ address }: { address: string | undefined }): JSX.Element {
+	const { data: bets, isLoading } = usePlayerWinnerBets(address)
+	return (
+		<div style={{ marginBottom: 20 }}>
+			<details>
+				<summary style={{ fontSize: 12 }}>Last Winner Bets</summary>
+				<ul>
+					{isLoading ? (
+						<Skeleton />
+					) : bets && bets.length > 0 ? (
+						bets.map((bet) => {
+							return (
+								<li key={`${bet.market}-${bet.tokenID}`}>
+									<a href={`/#/markets/100/${bet.market.id}`}>
+										{bet.market.name}: <b>{formatAmount(bet.reward, 100)}</b>
+									</a>
+								</li>
+							)
+						})
+					) : (
+						<li>No winner Bets. Good luck for the next bet!</li>
+					)}
+				</ul>
+			</details>
+		</div>
+	)
+}
+
 export default function TabInfo() {
 	const { chain } = useNetwork()
 	const { address } = useAccount()
@@ -155,6 +184,7 @@ export default function TabInfo() {
 			)}
 			<RealityClaim />
 			<ActiveBets activeBets={activeBets} loading={bets === undefined} />
+			<WinnerBets address={address} />
 		</div>
 	)
 }

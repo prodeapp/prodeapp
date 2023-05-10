@@ -203,6 +203,7 @@ export interface Bet {
 	}
 	results: readonly Bytes[]
 	points: number
+	reward: number
 }
 
 export interface GraphBet {
