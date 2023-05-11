@@ -52,7 +52,9 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 	const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
 	const walletDrawerOpen =
-		location.pathname === '/wallet' || location.pathname === '/utility' || location.pathname === '/info' ? true : false
+		location.pathname === '/wallet' || location.pathname === '/active-bets' || location.pathname === '/winning-bets'
+			? true
+			: false
 
 	return (
 		<RainbowConnectButton.Custom>
@@ -80,9 +82,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 								} else {
 									return (
 										<Button
-											component={RouterLink}
-											to={'/wallet'}
-											state={{ prevPath: location.pathname }}
+											onClick={openConnectModal}
 											style={{ marginRight: '0px', zIndex: 18 }}
 											color={props.buttonColor || 'primary'}
 										>

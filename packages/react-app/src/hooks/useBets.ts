@@ -11,6 +11,7 @@ import { Bet, BET_FIELDS, GraphBet } from '@/graphql/subgraph'
 import { apolloProdeQuery } from '@/lib/apolloClient'
 import { filterChainId, getConfigAddress } from '@/lib/config'
 import { indexObjectsByKey } from '@/lib/helpers'
+import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
 import { ArrayElement } from '@/lib/types'
 
 export const marketBetViewToBet = async (
@@ -102,7 +103,17 @@ async function graphBetsToBets(chainId: number, graphBets: GraphBet[]): Promise<
 }
 
 type UseBets = {
-	({ playerId, chainId }: { playerId: Address; chainId: number }): UseQueryResult<Bet[], Error>
+	({
+		playerId,
+		chainId,
+		marketIds,
+		winning,
+	}: {
+		playerId: Address
+		chainId: number
+		marketIds?: Address[]
+		winning?: boolean
+	}): UseQueryResult<Bet[], Error>
 	({ marketId, chainId }: { marketId: Address; chainId: number }): UseQueryResult<Bet[], Error>
 }
 
@@ -110,13 +121,17 @@ export const useBets: UseBets = ({
 	playerId,
 	marketId,
 	chainId,
+	marketIds,
+	winning,
 }: {
 	playerId?: Address
 	marketId?: Address
 	chainId: number
+	marketIds?: Address[]
+	winning?: boolean
 }) => {
 	return useQuery<Bet[], Error>(
-		['useBets', { marketId, playerId, chainId }],
+		['useBets', { marketId, playerId, chainId, marketIds, winning }],
 		async () => {
 			if (marketId) {
 				return await getMarketBets(chainId, marketId)
@@ -125,15 +140,26 @@ export const useBets: UseBets = ({
 			if (playerId) {
 				const query = `
     ${BET_FIELDS}
-    query BetQuery($playerId: String) {
-      bets(where: {player: $playerId}, orderBy: points, orderDirection: desc) {
-        ...BetFields
-      }
-    }
+	query BetQuery(#params#) {
+		bets(where: {#where#}, orderBy: points, orderDirection: desc) {
+		  ...BetFields
+		}
+	  }
 `
-				const response = await apolloProdeQuery<{ bets: GraphBet[] }>(chainId, query, {
-					playerId: playerId.toLowerCase(),
-				})
+				const variables: QueryVariables = { player: playerId.toLowerCase() }
+
+				if (typeof marketIds !== 'undefined') {
+					if (marketIds.length === 0) {
+						return []
+					}
+					variables['market_in'] = marketIds
+				}
+
+				if (winning) {
+					variables['reward_gt'] = '0'
+				}
+
+				const response = await apolloProdeQuery<{ bets: GraphBet[] }>(chainId, buildQuery(query, variables), variables)
 
 				if (!response) throw new Error('No response from TheGraph')
 

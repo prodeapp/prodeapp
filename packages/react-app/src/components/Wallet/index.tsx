@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
 import CloseIcon from '@mui/icons-material/Close'
+import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAccount, useDisconnect } from 'wagmi'
+import { Link as RouterLink } from 'react-router-dom'
+import { useAccount, useDisconnect, useNetwork } from 'wagmi'
 
 import { ConnectButton, InPageConnectButton } from '@/components/ConnectButton'
+import { TabActiveBets, TabWinningBets } from '@/components/Wallet/TabBets'
 import TabInfo from '@/components/Wallet/TabInfo'
 
 const PREFIX = 'Wallet'
@@ -51,6 +54,8 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)(({ theme }) => ({
 }))
 
 export function Wallet(props: { open?: boolean; component?: string }) {
+	const theme = useTheme()
+
 	interface LocationState {
 		state: { prevPath: string }
 	}
@@ -66,7 +71,8 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 
 	const navigate = useNavigate()
 
-	const { isConnected } = useAccount()
+	const { isConnected, address } = useAccount()
+	const { chain } = useNetwork()
 
 	// only enable backdrop transition on ios devices,
 	// because we can assume IOS is hosted on hight-end devices and will not drop frames
@@ -92,6 +98,28 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 			</Box>
 		</>
 	)
+
+	const TabButton = (props: { isActiveComponent: boolean; to: string; children: React.ReactNode }) => {
+		if (props.isActiveComponent) {
+			return (
+				<Button component={RouterLink} color='primary' to={props.to} sx={{ borderRadius: 1, mr: 1 }}>
+					{props.children}
+				</Button>
+			)
+		}
+
+		return (
+			<Button
+				component={RouterLink}
+				color='primary'
+				variant='outlined'
+				to={props.to}
+				sx={{ borderRadius: 1, background: 'transparent', mr: 1 }}
+			>
+				{props.children}
+			</Button>
+		)
+	}
 
 	return (
 		<StyledSwipeableDrawer
@@ -122,6 +150,18 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 							/>
 						</Box>
 					</Box>
+
+					<Box sx={{ background: theme.palette.secondary.main, padding: 1, mb: 2 }}>
+						<TabButton isActiveComponent={props.component === 'wallet'} to='/wallet'>
+							Wallet
+						</TabButton>
+						<TabButton isActiveComponent={props.component === 'active-bets'} to='/active-bets'>
+							Active Bets
+						</TabButton>
+						<TabButton isActiveComponent={props.component === 'winning-bets'} to='/winning-bets'>
+							Winning Bets
+						</TabButton>
+					</Box>
 				</Box>
 				<Box
 					style={{
@@ -136,8 +176,10 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 						switch (props.component) {
 							case 'wallet':
 								return <>{!isConnected ? <ConnectMessage /> : <TabInfo />}</>
+							case 'active-bets':
+								return <>{address && chain && <TabActiveBets playerId={address} chainId={chain.id} />}</>
 							default:
-								;<></>
+								return <>{address && chain && <TabWinningBets playerId={address} chainId={chain.id} />}</>
 						}
 					})()}
 				</Box>
