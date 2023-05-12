@@ -82,7 +82,7 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 	const DisconnectButton = () => {
 		const { disconnect } = useDisconnect()
 		return (
-			<Button color='primary' variant='outlined' onClick={() => disconnect()}>
+			<Button color='primary' size='small' variant='outlined' onClick={() => disconnect()}>
 				<Trans>Disconnect</Trans>
 			</Button>
 		)
@@ -102,7 +102,7 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 	const TabButton = (props: { isActiveComponent: boolean; to: string; children: React.ReactNode }) => {
 		if (props.isActiveComponent) {
 			return (
-				<Button component={RouterLink} color='primary' to={props.to} sx={{ borderRadius: 1, mr: 1 }}>
+				<Button component={RouterLink} color='primary' size='small' to={props.to} sx={{ borderRadius: 1, mr: 1 }}>
 					{props.children}
 				</Button>
 			)
@@ -113,6 +113,7 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 				component={RouterLink}
 				color='primary'
 				variant='outlined'
+				size='small'
 				to={props.to}
 				sx={{ borderRadius: 1, background: 'transparent', mr: 1 }}
 			>

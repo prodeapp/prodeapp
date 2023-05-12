@@ -102,7 +102,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 												onClick={chain.unsupported ? openChainModal : openAccountModal}
 											>
 												<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
-												{chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName}
+												{!mobile && <>{chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName}</>}
 											</Button>
 											<Button color='secondary' sx={{ mr: 1 }} onClick={openChainModal}>
 												{chain.unsupported && <ErrorOutlineIcon style={{ fill: theme.palette.error.main }} />}
