@@ -20,6 +20,7 @@ import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
 import { useBetToken } from '@/hooks/useBetToken'
+import { useCheckMarketWhitelist } from '@/hooks/useCheckMarketWhitelist'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
@@ -117,6 +118,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const { chain } = useNetwork()
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
 
+	const { data: betWhitelistStatus = '' } = useCheckMarketWhitelist(market.id, chainId)
+
 	const {
 		register,
 		control,
@@ -140,7 +143,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ values: [''], questionId: event.id }))
+		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -180,7 +183,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -205,6 +212,29 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 			<div style={{ textAlign: 'center', marginBottom: 15 }}>
 				<CircularProgress />
 			</div>
+		)
+	}
+
+	if (betWhitelistStatus !== '') {
+		return (
+			<BigAlert severity='info' sx={{ mb: 4 }}>
+				<Box
+					sx={{
+						display: { md: 'flex' },
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
+					<div>
+						<div>
+							<AlertTitle>
+								<Trans>You are not allowed to place a bet in this market</Trans>
+							</AlertTitle>
+						</div>
+						<div>{betWhitelistStatus}</div>
+					</div>
+				</Box>
+			</BigAlert>
 		)
 	}
 
