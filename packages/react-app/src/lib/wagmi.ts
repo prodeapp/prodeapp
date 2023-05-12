@@ -69,16 +69,6 @@ const connectors = connectorsForWallets([
 	{
 		groupName: 'External Wallets',
 		wallets: [
-			sequenceWallet({
-				chains,
-				connect: {
-					app: 'Prode',
-					networkId: DEFAULT_CHAIN,
-					settings: {
-						signInOptions: ['email', 'google', 'apple'],
-					},
-				},
-			}),
 			metaMaskWallet({ chains, shimDisconnect: true }),
 			braveWallet({ chains, shimDisconnect: true }),
 			rainbowWallet({ chains }),
