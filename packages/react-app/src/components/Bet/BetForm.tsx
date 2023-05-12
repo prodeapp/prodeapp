@@ -118,7 +118,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const { chain } = useNetwork()
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
 
-	const { data: betWhitelistStatus = '' } = useCheckMarketWhitelist(market.id, chainId)
+	const { data: betWhitelistStatus = '' } = useCheckMarketWhitelist(market, chainId)
 
 	const {
 		register,
