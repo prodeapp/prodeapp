@@ -52,7 +52,7 @@ const needsInjectedWalletFallback =
 
 const connectors = connectorsForWallets([
 	{
-		groupName: 'Recommended',
+		groupName: 'Social Login',
 		wallets: [
 			sequenceWallet({
 				chains,
@@ -64,6 +64,11 @@ const connectors = connectorsForWallets([
 					},
 				},
 			}),
+		],
+	},
+	{
+		groupName: 'External Wallets',
+		wallets: [
 			metaMaskWallet({ chains, shimDisconnect: true }),
 			braveWallet({ chains, shimDisconnect: true }),
 			rainbowWallet({ chains }),
