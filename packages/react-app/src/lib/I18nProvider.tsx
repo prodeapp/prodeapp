@@ -21,7 +21,7 @@ const detectLocale = () => {
 
 const isLocalePresent = (locale: string) => {
 	let isPresent = false
-	Object.values(LocaleEnum).forEach(enumLocaleValue => {
+	Object.values(LocaleEnum).forEach((enumLocaleValue) => {
 		if (enumLocaleValue === locale) {
 			isPresent = true
 		}
@@ -55,7 +55,7 @@ export const I18nProvider: React.FC = ({ children }) => {
 
 	useEffect(() => {
 		// Dynamically load the catalogs
-		import(`../locales/${locale}/messages.mjs`).then(module => {
+		import(`../locales/${locale}.mjs`).then((module) => {
 			const messages = module.messages
 			i18n.load(locale, messages)
 			i18n.activate(locale)

@@ -74,7 +74,7 @@
     "wagmi": "^0.10.15"
   },
   "scripts": {
-    "build": "yarn vite build",
+    "build": "yarn lingui:compile && yarn vite build",
     "ipfs": "yarn build && ipfs-deploy build/",
     "start": "yarn vite dev",
     "test": "vitest",

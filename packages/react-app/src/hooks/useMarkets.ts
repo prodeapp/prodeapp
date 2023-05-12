@@ -1,6 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { UseQueryResult } from '@tanstack/react-query/src/types'
+import { Address } from '@wagmi/core'
 import { readContracts } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
@@ -88,4 +89,31 @@ export const useMarkets: UseMarkets = (chainId, { curated, status, category, min
 			return graphMarketsToMarkets(chainId, response.data.markets)
 		}
 	)
+}
+
+export const useMarketsIdsByStatus = (chainId: number, status: MarketStatus | 'not_closed') => {
+	return useQuery<Address[], Error>(['useMarketsIdsByStatus', { chainId, status }], async () => {
+		const variables: QueryVariables = {}
+
+		if (status === 'active') {
+			variables['closingTime_gt'] = String(Math.round(Date.now() / 1000))
+		} else if (status === 'pending') {
+			variables['resultSubmissionPeriodStart'] = '0'
+			variables['closingTime_lt'] = String(Math.round(Date.now() / 1000))
+		} else if (status === 'closed') {
+			variables['resultSubmissionPeriodStart_gt'] = '0'
+		} else if (status === 'not_closed') {
+			variables['resultSubmissionPeriodStart'] = '0'
+		}
+
+		const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
+			chainId,
+			buildQuery(query, variables),
+			variables
+		)
+
+		if (!response) throw new Error('No response from TheGraph')
+
+		return response.data.markets.map(m => m.id)
+	})
 }

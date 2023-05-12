@@ -45,7 +45,7 @@ function RealityClaim() {
 				<div style={{ marginBottom: 10 }}>
 					<Trans>You have funds available to claim for your answers.</Trans>
 				</div>
-				<Button onClick={claimReality} color='primary'>
+				<Button onClick={claimReality} color='primary' size='small'>
 					<Trans>Claim</Trans> {formatAmount(claimArgs.total, chain.id)}
 				</Button>
 			</div>

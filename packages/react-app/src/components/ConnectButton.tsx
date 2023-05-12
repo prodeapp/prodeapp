@@ -52,7 +52,9 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 	const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
 	const walletDrawerOpen =
-		location.pathname === '/wallet' || location.pathname === '/utility' || location.pathname === '/info' ? true : false
+		location.pathname === '/wallet' || location.pathname === '/active-bets' || location.pathname === '/winning-bets'
+			? true
+			: false
 
 	return (
 		<RainbowConnectButton.Custom>
@@ -80,9 +82,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 								} else {
 									return (
 										<Button
-											component={RouterLink}
-											to={'/wallet'}
-											state={{ prevPath: location.pathname }}
+											onClick={openConnectModal}
 											style={{ marginRight: '0px', zIndex: 18 }}
 											color={props.buttonColor || 'primary'}
 										>
@@ -102,7 +102,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 												onClick={chain.unsupported ? openChainModal : openAccountModal}
 											>
 												<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
-												{chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName}
+												{!mobile && <>{chain.unsupported ? <Trans>Unsupported Network</Trans> : account.displayName}</>}
 											</Button>
 											<Button color='secondary' sx={{ mr: 1 }} onClick={openChainModal}>
 												{chain.unsupported && <ErrorOutlineIcon style={{ fill: theme.palette.error.main }} />}
