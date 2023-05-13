@@ -118,7 +118,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const { chain } = useNetwork()
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
 
-	const { data: betWhitelistStatus = '' } = useCheckMarketWhitelist(market, chainId)
+	const { data: betWhitelistStatus = '', isLoading: isLoadingCheckWhitelist } = useCheckMarketWhitelist(market, chainId)
 
 	const {
 		register,
@@ -207,7 +207,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
-	if (isLoading || isLoadingApprove || isLoadingEvents) {
+	if (isLoading || isLoadingApprove || isLoadingEvents || isLoadingCheckWhitelist) {
 		return (
 			<div style={{ textAlign: 'center', marginBottom: 15 }}>
 				<CircularProgress />
