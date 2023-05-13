@@ -2,8 +2,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
+import { GridCloseIcon } from '@mui/x-data-grid'
 import { sequence } from '0xsequence'
+import { OpenWalletIntent, Settings } from '0xsequence/dist/declarations/src/provider'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useAccount, useBalance, useNetwork, useSignMessage } from 'wagmi'
@@ -106,7 +113,9 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 
 	return (
 		<>
-			<Button onClick={handleOpen}>{uniqueMethod ? 'Fund with Card' : 'Fund with MtPelegrin'}</Button>
+			<Button onClick={handleOpen} sx={{ width: '100%' }}>
+				{uniqueMethod ? 'Fund with Card' : 'Fund with MtPelegrin'}
+			</Button>
 			<Modal
 				open={open}
 				onClose={handleClose}
@@ -138,46 +147,101 @@ function TopUp({ address }: { address: string }) {
 	const isSequenceWallet = sequenceWallet.isConnected()
 
 	const openSequenceTopUp = () => {
-		sequenceWallet.openWallet()
+		const settings: Settings = {
+			theme: 'light',
+			bannerUrl: 'https://prode.market/banners/banner-1.png', // 3:1 aspect ratio, 1200x400 works best
+			defaultFundingCurrency: 'usdc',
+			lockFundingCurrencyToDefault: false,
+		}
+
+		const intent: OpenWalletIntent = {
+			type: 'openWithOptions',
+			options: {
+				settings: settings,
+			},
+		}
+		const path = 'wallet/add-funds'
+		sequenceWallet.openWallet(path, intent)
 	}
 	return (
 		<>
 			<Button onClick={handleOpen}>TopUp</Button>
-			<Modal
+			<Dialog
 				open={open}
 				onClose={handleClose}
 				aria-labelledby='modal-modal-title'
 				aria-describedby='modal-modal-description'
-			>
-				{/* TODO: fix styles */}
-				<div
-					style={{
-						display: 'flex',
+				PaperProps={{
+					style: {
+						backgroundColor: 'background.paper',
+						boxShadow: 'none',
 						width: '50%',
 						position: 'absolute',
 						top: '50%',
 						left: '50%',
 						transform: 'translate(-50%, -50%)',
-						minHeight: '50%',
-						backgroundColor: 'pallete.secondary',
-					}}
-				>
-					<div style={{ width: '50%' }}>
-						{isSequenceWallet ? (
-							<Button onClick={openSequenceTopUp} sx={{ display: 'flex', width: '50%' }}>
-								Fund with Sequence Methods
-							</Button>
-						) : null}
-						<div style={{ display: 'flex', width: isSequenceWallet ? '50%' : '100%' }}>
-							<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
-						</div>
-					</div>
-					<div style={{ width: '50%' }}>
-						Already have crypto
-						{/* TODO: Create popup with QR to send crypto */}
-					</div>
-				</div>
-			</Modal>
+						minHeight: '10rem',
+						margin: '0',
+						display: 'flex',
+					},
+				}}
+			>
+				<DialogTitle>
+					<IconButton onClick={handleClose}>
+						<Trans>Fund methods available by third parties</Trans>
+						<GridCloseIcon />
+					</IconButton>
+				</DialogTitle>
+				<DialogContent>
+					{/* TODO: fix styles */}
+					<Grid
+						container
+						style={{
+							display: 'flex',
+							backgroundColor: 'background.paper',
+							alignItems: 'stretch',
+							alignContent: 'center',
+							justifyContent: 'center',
+							justifyItems: 'stretch',
+							minHeight: '10rem',
+						}}
+					>
+						<Grid
+							container
+							sm={6}
+							spacing={2}
+							style={{
+								justifyContent: 'center',
+								justifyItems: 'space-around',
+								alignItems: 'stretch',
+								alignContent: 'center',
+								padding: '0 10px',
+							}}
+						>
+							{isSequenceWallet ? (
+								<Grid item sm={12}>
+									<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
+										Fund with Sequence Methods
+									</Button>
+								</Grid>
+							) : null}
+							<Grid item sm={12}>
+								<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
+							</Grid>
+						</Grid>
+						<Grid
+							container
+							sm={6}
+							style={{ justifyItems: 'center', alignContent: 'center', alignItems: 'space-around' }}
+						>
+							<Grid item sm={12}>
+								<Button style={{ width: '100%' }}>Already have crypto</Button>
+								{/* TODO: Create popup with QR to send crypto */}
+							</Grid>
+						</Grid>
+					</Grid>
+				</DialogContent>
+			</Dialog>
 		</>
 	)
 }
