@@ -526,8 +526,8 @@ msgstr "Previous"
 msgid "Price"
 msgstr "Price"
 
-msgid "Price must be greater than 0.01"
-msgstr "Price must be greater than 0.01"
+msgid "Price can't be negative"
+msgstr "Price can't be negative"
 
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
@@ -700,8 +700,14 @@ msgstr "This market has been deleted."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
+msgid "This market only allows one bet per user."
+msgstr "This market only allows one bet per user."
+
 msgid "This market was created in Gnosis Chain."
 msgstr "This market was created in Gnosis Chain."
+
+msgid "To bet in this market you need to connect using Sequence wallet."
+msgstr "To bet in this market you need to connect using Sequence wallet."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
@@ -795,6 +801,9 @@ msgstr "You"
 
 msgid "You are about to place {betsCount} bets."
 msgstr "You are about to place {betsCount} bets."
+
+msgid "You are not allowed to place a bet in this market"
+msgstr "You are not allowed to place a bet in this market"
 
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."

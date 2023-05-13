@@ -526,8 +526,8 @@ msgstr "Anterior"
 msgid "Price"
 msgstr "Precio"
 
-msgid "Price must be greater than 0.01"
-msgstr "Precio debe ser mayor a 0.01"
+msgid "Price can't be negative"
+msgstr "El precio no puede ser negativo"
 
 msgid "Prize Distribution"
 msgstr "Distribución de premios"
@@ -700,8 +700,14 @@ msgstr "Este mercado ha sido eliminado."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "Este mercado tiene más de un envío a la lista"
 
+msgid "This market only allows one bet per user."
+msgstr "Este mercado solo permite una apuesta por usuario."
+
 msgid "This market was created in Gnosis Chain."
 msgstr "Este mercado fue creado en Gnosis Chain."
+
+msgid "To bet in this market you need to connect using Sequence wallet."
+msgstr "Para apostar en este mercado necesitas conectarte usando Sequence wallet."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
@@ -796,6 +802,9 @@ msgstr "Usted"
 msgid "You are about to place {betsCount} bets."
 msgstr "Estás por enviar {betsCount} apuestas"
 
+msgid "You are not allowed to place a bet in this market"
+msgstr "No tienes permiso para apostar en este mercado"
+
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "Puedes agregar varias predicciones en cada partido para crear multiple apuestas con diferentes combinaciones de resultados."
 
@@ -818,7 +827,7 @@ msgid "You have a voucher available to place a bet for free!"
 msgstr "¡Tienes un voucher disponible para realizar una apuesta gratuita!"
 
 msgid "You have funds available to claim for your answers."
-msgstr "Tienes fondos disponibles para reclamar por respuestas."
+msgstr "Tienes fondos disponibles para reclamar por tus respuestas."
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."
