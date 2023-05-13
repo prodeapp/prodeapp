@@ -255,8 +255,8 @@ FormStepProps<MarketFormStep2Values> & { maxPointsToWin: number }) {
 									valueAsNumber: true,
 									validate: (v) => !isNaN(Number(v)) || t`Invalid number.`,
 									min: {
-										value: 0.01,
-										message: t`Price must be greater than 0.01`,
+										value: 0,
+										message: t`Price can't be negative`,
 									},
 								})}
 								error={!!errors.price}
