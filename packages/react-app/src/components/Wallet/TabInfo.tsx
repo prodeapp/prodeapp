@@ -71,29 +71,28 @@ function RealityClaim() {
 function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: boolean }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data, error, signMessage, isSuccess } = useSignMessage()
-	const [addressSigner, setAddressSigner] = useState<string>('')
-	const [signature, setSignature] = useState<string | undefined>(undefined)
+	const [addressSigner, setAddressSigner] = useState<string>(() => {
+		// getting stored value
+		const localAddress = localStorage.getItem('mtPelerinAddress')
+		return localAddress ? JSON.parse(localAddress) : ''
+	})
+	const [signature, setSignature] = useState<string | undefined>(() => {
+		// getting stored value
+		const hash = localStorage.getItem('mtPelerinHash')
+		return hash ? JSON.parse(hash) : undefined
+	})
 	const [signingStarted, setSigningStarted] = useState<boolean>(false)
-
+	console.log(signature, addressSigner)
 	useEffect(() => {
-		let localAddressSignature = localStorage.getItem('mtPelerinAddress')
-		localAddressSignature = localAddressSignature ? JSON.parse(localAddressSignature) : null
-		if (localAddressSignature) {
-			setAddressSigner(localAddressSignature)
-		}
-		const localSignature = localStorage.getItem('mtPelerinHash')
-
-		if (localSignature && address === localAddressSignature) {
-			setSignature(JSON.parse(localSignature))
-		}
-		console.log(address, localAddressSignature, localSignature)
-		if (localAddressSignature && address !== localAddressSignature) {
-			localStorage.setItem('mtPelerinHash', '')
-			localStorage.setItem('mtPelerinAddress', '')
+		if (address !== addressSigner) {
+			// clean storage
+			setSignature('')
+			setAddressSigner('')
 		}
 	}, [signature, addressSigner, address])
 
 	useEffect(() => {
+		// update storage
 		if (signature) {
 			localStorage.setItem('mtPelerinHash', JSON.stringify(signature))
 		}
@@ -161,7 +160,7 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 					{signature ? (
 						<div style={{ width: '100%', height: '100%' }}>
 							<iframe
-								src={`https://widget.mtpelerin.com/?lang=en&tab=buy&type=web&primary=%234267B3&ssc=XDAIC&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=USD&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
+								src={`https://widget.mtpelerin.com/?lang=en&tab=buy&type=web&primary=%234267B3&ssc=XDAI&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=EUR&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
 								width={'100%'}
 								height={'100%'}
 								frameBorder={0}
@@ -253,13 +252,13 @@ function TopUp({ address }: { address: string }) {
 								justifyItems: 'space-around',
 								alignItems: 'stretch',
 								alignContent: 'center',
-								padding: '0 10px',
+								padding: '5px 10px',
 							}}
 						>
 							{isSequenceWallet ? (
 								<Grid item sm={12}>
 									<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
-										Fund with Sequence Methods
+										<Trans>Fund with Sequence Methods</Trans>
 									</Button>
 								</Grid>
 							) : null}
@@ -267,13 +266,20 @@ function TopUp({ address }: { address: string }) {
 								<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
 							</Grid>
 						</Grid>
-						<Grid item sm={6} style={{ justifyItems: 'center', alignContent: 'center', alignItems: 'space-around' }}>
-							<Grid item sm={12}>
-								<Button style={{ width: '100%' }} onClick={openAccountModal}>
-									Already have crypto
-								</Button>
-								{/* TODO: Create popup with QR to send crypto */}
-							</Grid>
+						<Grid
+							item
+							sm={6}
+							style={{
+								padding: '5px 10px',
+								justifyItems: 'space-around',
+								justifyContent: 'center',
+								alignContent: 'center',
+								alignItems: 'stretch',
+							}}
+						>
+							<Button style={{ width: '100%' }} onClick={openAccountModal}>
+								<Trans>Already have crypto</Trans>
+							</Button>
 						</Grid>
 					</Grid>
 				</DialogContent>
