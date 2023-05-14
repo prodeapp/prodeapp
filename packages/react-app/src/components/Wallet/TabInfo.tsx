@@ -84,7 +84,7 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 		return hash ? JSON.parse(hash) : undefined
 	})
 	const [signingStarted, setSigningStarted] = useState<boolean>(false)
-	console.log(signature, addressSigner)
+
 	useEffect(() => {
 		if (address !== addressSigner) {
 			// clean storage
