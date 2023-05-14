@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import { GridCloseIcon } from '@mui/x-data-grid'
+import { useAccountModal } from '@rainbow-me/rainbowkit'
 import { sequence } from '0xsequence'
 import { OpenWalletIntent, Settings } from '0xsequence/dist/declarations/src/provider'
 import { ethers } from 'ethers'
@@ -71,23 +72,53 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 	const [open, setOpen] = useState<boolean>(false)
 	const { data, error, signMessage, isSuccess } = useSignMessage()
 	const [addressSigner, setAddressSigner] = useState<string>('')
-	const [signature, setSignature] = useState<string | undefined>(undefined) // This hash should be in storage!
+	const [signature, setSignature] = useState<string | undefined>(undefined)
+	const [signingStarted, setSigningStarted] = useState<boolean>(false)
 
 	useEffect(() => {
-		if (data && (!isSuccess || addressSigner !== address || signature === undefined)) {
+		let localAddressSignature = localStorage.getItem('mtPelerinAddress')
+		localAddressSignature = localAddressSignature ? JSON.parse(localAddressSignature) : null
+		if (localAddressSignature) {
+			setAddressSigner(localAddressSignature)
+		}
+		const localSignature = localStorage.getItem('mtPelerinHash')
+
+		if (localSignature && address === localAddressSignature) {
+			setSignature(JSON.parse(localSignature))
+		}
+		console.log(address, localAddressSignature, localSignature)
+		if (localAddressSignature && address !== localAddressSignature) {
+			localStorage.setItem('mtPelerinHash', '')
+			localStorage.setItem('mtPelerinAddress', '')
+		}
+	}, [signature, addressSigner, address])
+
+	useEffect(() => {
+		if (signature) {
+			localStorage.setItem('mtPelerinHash', JSON.stringify(signature))
+		}
+		if (addressSigner) {
+			localStorage.setItem('mtPelerinAddress', JSON.stringify(addressSigner))
+		}
+	}, [signature, addressSigner])
+
+	useEffect(() => {
+		if (signingStarted && data && (!isSuccess || addressSigner !== address || signature === undefined)) {
 			setAddressSigner(address)
 			const hash = ethers.utils.base64.encode(data!)
 			setSignature(hash)
 		} else if (error) {
-			console.log(error)
+			handleClose()
 		}
-	}, [isSuccess, addressSigner, address, data])
+	}, [isSuccess, addressSigner, address, data, signingStarted])
 
 	const handleOpen = () => {
-		if (!isSuccess || addressSigner !== address || signature === undefined) {
+		if (addressSigner !== address || signature === undefined) {
+			// no signature in the local storage
 			const number = (Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000).toString()
 			const message = `MtPelerin-${number}`
 			signMessage({ message })
+			setSigningStarted(true)
 		}
 		setOpen(true)
 	}
@@ -95,20 +126,19 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 		setOpen(false)
 	}
 
-	// TODO: Make style for mobile
 	const style = {
 		position: 'absolute',
-		top: '50%',
-		left: '50%',
-		transform: 'translate(-50%, -50%)',
-		width: '50%',
+		top: { xs: '0', md: '50%' },
+		left: { xs: '0', md: '50%' },
+		transform: { xs: null, md: 'translate(-50%, -50%)' },
+		width: { xs: '100%', md: '50%' },
 		minHeight: '80%',
 		margin: 'auto',
-		bgcolor: 'background.paper',
-		height: '5rem',
+		height: { xs: '100%', md: '5rem' },
 		boxShadow: 24,
-		p: 4,
-		backgroundColor: 'paper.background',
+		backgroundColor: 'background.paper',
+		display: 'flex',
+		flexDirection: 'column',
 	}
 
 	return (
@@ -123,13 +153,20 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 				aria-describedby='child-modal-description'
 			>
 				<Box sx={style}>
-					{isSuccess ? (
-						<iframe
-							src={`https://widget.mtpelerin.com/?lang=en&tab=buy&type=web&primary=%234267B3&ssc=XDAIC&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=USD&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
-							width={'100%'}
-							height={'100%'}
-							frameBorder={0}
-						></iframe>
+					<div style={{ height: '2%' }}>
+						<IconButton onClick={handleClose}>
+							<GridCloseIcon />
+						</IconButton>
+					</div>
+					{signature ? (
+						<div style={{ width: '100%', height: '100%' }}>
+							<iframe
+								src={`https://widget.mtpelerin.com/?lang=en&tab=buy&type=web&primary=%234267B3&ssc=XDAIC&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=USD&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
+								width={'100%'}
+								height={'100%'}
+								frameBorder={0}
+							></iframe>
+						</div>
 					) : (
 						'Please sign the message'
 					)}
@@ -145,6 +182,7 @@ function TopUp({ address }: { address: string }) {
 	const handleClose = () => setOpen(false)
 	const sequenceWallet = sequence.getWallet()
 	const isSequenceWallet = sequenceWallet.isConnected()
+	const { openAccountModal } = useAccountModal()
 
 	const openSequenceTopUp = () => {
 		const settings: Settings = {
@@ -196,6 +234,7 @@ function TopUp({ address }: { address: string }) {
 					{/* TODO: fix styles */}
 					<Grid
 						container
+						spacing={2}
 						style={{
 							display: 'flex',
 							backgroundColor: 'background.paper',
@@ -207,9 +246,8 @@ function TopUp({ address }: { address: string }) {
 						}}
 					>
 						<Grid
-							container
+							item
 							sm={6}
-							spacing={2}
 							style={{
 								justifyContent: 'center',
 								justifyItems: 'space-around',
@@ -229,13 +267,11 @@ function TopUp({ address }: { address: string }) {
 								<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
 							</Grid>
 						</Grid>
-						<Grid
-							container
-							sm={6}
-							style={{ justifyItems: 'center', alignContent: 'center', alignItems: 'space-around' }}
-						>
+						<Grid item sm={6} style={{ justifyItems: 'center', alignContent: 'center', alignItems: 'space-around' }}>
 							<Grid item sm={12}>
-								<Button style={{ width: '100%' }}>Already have crypto</Button>
+								<Button style={{ width: '100%' }} onClick={openAccountModal}>
+									Already have crypto
+								</Button>
 								{/* TODO: Create popup with QR to send crypto */}
 							</Grid>
 						</Grid>
