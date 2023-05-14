@@ -61,6 +61,9 @@ msgstr "All"
 msgid "Already Claimed"
 msgstr "Already Claimed"
 
+msgid "Already have crypto"
+msgstr "Already have crypto"
+
 msgid "Answer accepted"
 msgstr "Answer accepted"
 
@@ -322,6 +325,18 @@ msgstr "Fund amount ({0})"
 msgid "Fund amount must be greater than 0.01"
 msgstr "Fund amount must be greater than 0.01"
 
+msgid "Fund methods available by third parties"
+msgstr "Fund methods available by third parties"
+
+msgid "Fund with Card"
+msgstr "Fund with Card"
+
+msgid "Fund with MtPelegrin"
+msgstr "Fund with MtPelegrin"
+
+msgid "Fund with Sequence Methods"
+msgstr "Fund with Sequence Methods"
+
 msgid "Global Metrics"
 msgstr "Global Metrics"
 
@@ -519,6 +534,9 @@ msgstr "Player"
 
 msgid "Playing"
 msgstr "Playing"
+
+msgid "Please sign the message"
+msgstr "Please sign the message"
 
 msgid "Points"
 msgstr "Points"
@@ -723,6 +741,9 @@ msgstr "To bet in this market you need to connect using your email."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
+
+msgid "TopUp"
+msgstr "TopUp"
 
 msgid "Total Bet: {0}"
 msgstr "Total Bet: {0}"

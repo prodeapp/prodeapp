@@ -22,6 +22,7 @@ import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG } from '@/lib/connext'
 import { formatAmount } from '@/lib/helpers'
+import { useI18nContext } from '@/lib/I18nContext'
 
 function RealityClaim() {
 	const { chain } = useNetwork()
@@ -71,6 +72,7 @@ function RealityClaim() {
 function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: boolean }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const { data, error, signMessage, isSuccess } = useSignMessage()
+	const { locale } = useI18nContext()
 	const [addressSigner, setAddressSigner] = useState<string>(() => {
 		// getting stored value
 		const localAddress = localStorage.getItem('mtPelerinAddress')
@@ -143,7 +145,7 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 	return (
 		<>
 			<Button onClick={handleOpen} sx={{ width: '100%' }}>
-				{uniqueMethod ? 'Fund with Card' : 'Fund with MtPelegrin'}
+				{uniqueMethod ? <Trans>Fund with Card</Trans> : <Trans>Fund with MtPelegrin</Trans>}
 			</Button>
 			<Modal
 				open={open}
@@ -160,14 +162,14 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 					{signature ? (
 						<div style={{ width: '100%', height: '100%' }}>
 							<iframe
-								src={`https://widget.mtpelerin.com/?lang=en&tab=buy&type=web&primary=%234267B3&ssc=XDAI&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=EUR&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
+								src={`https://widget.mtpelerin.com/?lang=${locale}&tab=buy&type=web&primary=%234267B3&ssc=XDAI&sdc=EUR&net=xdai_mainnet&crys=XDAI&chain=xdai_mainnet&bsc=EUR&bdc=XDAI&mylogo=https%3A%2F%2Fprode.market%2Flogo512.png&addr=${address}&hash=${signature}`}
 								width={'100%'}
 								height={'100%'}
 								frameBorder={0}
 							></iframe>
 						</div>
 					) : (
-						'Please sign the message'
+						<Trans>Please sign the message</Trans>
 					)}
 				</Box>
 			</Modal>
@@ -202,7 +204,9 @@ function TopUp({ address }: { address: string }) {
 	}
 	return (
 		<>
-			<Button onClick={handleOpen}>TopUp</Button>
+			<Button onClick={handleOpen}>
+				<Trans>TopUp</Trans>
+			</Button>
 			<Dialog
 				open={open}
 				onClose={handleClose}
