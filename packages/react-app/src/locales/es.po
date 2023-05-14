@@ -88,6 +88,9 @@ msgstr "Respuestas"
 msgid "Approve USDC"
 msgstr "Aprobar USDC"
 
+msgid "Balance in Answers Ongoing"
+msgstr "Balance en respuestas pendientes"
+
 msgid "Base Prize"
 msgstr "Premio Base"
 
@@ -138,6 +141,9 @@ msgstr "Oferta enviada."
 
 msgid "Bid removed."
 msgstr "Oferta eliminada."
+
+msgid "Bond"
+msgstr "Depósito"
 
 msgid "By verifying your market future bettors will know that:"
 msgstr "Al verificar tu mercado los apostadores sabrán que:"
@@ -349,6 +355,9 @@ msgstr "Número inválido."
 msgid "Invalid result"
 msgstr "Respuesta inválida"
 
+msgid "Is Current Valid Answer?"
+msgstr "Es la respuesta actual?"
+
 msgid "Item Id"
 msgstr "Item Id"
 
@@ -426,6 +435,9 @@ msgstr "Nuevo resultado"
 
 msgid "Next"
 msgstr "Siguiente"
+
+msgid "No answers found."
+msgstr "No se encontraron respuestas"
 
 msgid "No bets found."
 msgstr "No se encontraron apuestas"
@@ -804,6 +816,9 @@ msgstr "¡Tienes un voucher disponible por {0} para apostar gratis!"
 
 msgid "You have a voucher available to place a bet for free!"
 msgstr "¡Tienes un voucher disponible para realizar una apuesta gratuita!"
+
+msgid "You have funds available to claim for your answers."
+msgstr "Tienes fondos disponibles para reclamar por respuestas"
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."

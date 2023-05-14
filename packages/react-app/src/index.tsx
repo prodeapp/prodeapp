@@ -69,6 +69,7 @@ ReactDOM.render(
 										<Route path='/wallet' element={<Wallet open={true} component='wallet' />}></Route>
 										<Route path='/active-bets' element={<Wallet open={true} component='active-bets' />}></Route>
 										<Route path='/winning-bets' element={<Wallet open={true} component='winning-bets' />}></Route>
+										<Route path='/answers-events' element={<Wallet open={true} component='answers-events' />}></Route>
 									</Routes>
 								</HashRouter>
 							</GlobalContextProvider>

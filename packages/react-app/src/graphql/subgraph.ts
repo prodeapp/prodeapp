@@ -311,3 +311,31 @@ export interface CurateSVGAdItem {
 	id: Address
 	SVGAd: Pick<SVGAd, 'id'>
 }
+
+export interface Response {
+	id: string
+	user: Address
+	question: {
+		id: string
+		currentScheduledFinalizationTimestamp: BigNumberish
+		qTitle: string
+		currentAnswer: string
+	}
+	answer: string
+	bond: BigNumberish
+}
+
+export const RESPONSES_FIELDS = `
+  fragment ResponseFields on Response {
+	id
+    user
+    question {
+      id
+      currentScheduledFinalizationTimestamp
+	  qTitle
+	  currentAnswer
+    }
+    answer
+    bond
+  }
+`
