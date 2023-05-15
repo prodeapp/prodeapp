@@ -89,7 +89,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 				height: '100%',
 			}}
 		>
-			<Box sx={{ p: '24px', paddingRight: { md: '15%' } }}>
+			<Box sx={{ p: '24px', paddingRight: { md: '15%' }, flexGrow: 1 }}>
 				<div
 					style={{
 						height: '95%',
