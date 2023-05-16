@@ -226,11 +226,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					}}
 				>
 					<div>
-						<div>
-							<AlertTitle>
-								<Trans>You are not allowed to place a bet in this market</Trans>
-							</AlertTitle>
-						</div>
 						<div>{betWhitelistStatus}</div>
 					</div>
 				</Box>
@@ -387,6 +382,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										errors={errors}
 										setValue={setValue}
 										addAlternative={
+											betPrice.gt(0) &&
 											!isOldMarket(market.id) &&
 											isMainChain(chainId) &&
 											!hasVoucher &&
@@ -455,7 +451,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					)}
 					{chain && !approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}{' '}
+							<Trans>Place Bet</Trans> - {betPrice.gt(0) ? formatAmount(betPrice, chain.id) : <Trans>Free!</Trans>}{' '}
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}

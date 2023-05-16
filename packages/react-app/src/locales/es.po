@@ -811,9 +811,6 @@ msgstr "Usted"
 msgid "You are about to place {betsCount} bets."
 msgstr "Estás por enviar {betsCount} apuestas"
 
-msgid "You are not allowed to place a bet in this market"
-msgstr "No tienes permiso para apostar en este mercado"
-
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "Puedes agregar varias predicciones en cada partido para crear multiple apuestas con diferentes combinaciones de resultados."
 

@@ -811,9 +811,6 @@ msgstr "You"
 msgid "You are about to place {betsCount} bets."
 msgstr "You are about to place {betsCount} bets."
 
-msgid "You are not allowed to place a bet in this market"
-msgstr "You are not allowed to place a bet in this market"
-
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 
