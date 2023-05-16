@@ -217,6 +217,7 @@ export default function Results({ marketId, chainId }: { marketId: Address; chai
 			queryClient.invalidateQueries(['useMarket', marketId])
 			queryClient.invalidateQueries(['useBets', { marketId }])
 			queryClient.invalidateQueries(['useEvents', { marketId }])
+			queryClient.invalidateQueries(['useEventsResponses', { chainId }])
 		}
 		setOpenModal(false)
 	}

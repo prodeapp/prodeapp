@@ -88,8 +88,8 @@ msgstr "Answers"
 msgid "Approve USDC"
 msgstr "Approve USDC"
 
-msgid "Balance in Answers Ongoing"
-msgstr "Balance in Answers Ongoing"
+msgid "Balance in ongoing answers"
+msgstr "Balance in ongoing answers"
 
 msgid "Base Prize"
 msgstr "Base Prize"
@@ -355,8 +355,8 @@ msgstr "Invalid number."
 msgid "Invalid result"
 msgstr "Invalid result"
 
-msgid "Is Current Valid Answer?"
-msgstr "Is Current Valid Answer?"
+msgid "Is current answer?"
+msgstr "Is current answer?"
 
 msgid "Item Id"
 msgstr "Item Id"

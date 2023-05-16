@@ -9,7 +9,7 @@ import { buildQuery } from '@/lib/SubgraphQueryBuilder'
 const query = `
     ${MARKETREFERRAL_FIELDS}
     query MarketReferralsQuery(#params#) {
-      marketReferrals(where: {#where#}) {
+      marketReferrals(where: #where#) {
         ...MarketReferralFields
       }
     }
@@ -25,10 +25,11 @@ export const useMarketReferrals = ({ provider }: Props) => {
 	return useQuery<MarketReferral[], Error>(
 		['useMarketReferrals', provider, chainId],
 		async () => {
-			const variables = { provider: provider.toLowerCase() }
+			const buildResult = buildQuery(query, { provider: provider.toLowerCase() })
+
 			const response = await apolloProdeQuery<{
 				marketReferrals: MarketReferral[]
-			}>(chainId, buildQuery(query, variables), variables)
+			}>(chainId, buildResult.query, buildResult.variables)
 
 			if (!response) throw new Error('No response from TheGraph')
 

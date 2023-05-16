@@ -9,7 +9,7 @@ import { buildQuery } from '@/lib/SubgraphQueryBuilder'
 const query = `
     ${ATTRIBUTION_FIELDS}
     query AttributionsQuery(#params#) {
-      attributions(where: {#where#}, orderBy:timestamp, orderDirection:desc) {
+      attributions(where: #where#, orderBy:timestamp, orderDirection:desc) {
         ...AttributionFields
       }
     }
@@ -25,12 +25,12 @@ export const useAttributions = ({ provider }: Props) => {
 	return useQuery<Attribution[], Error>(
 		['useAttributions', provider, chainId],
 		async () => {
-			const variables = { provider: provider?.toLowerCase() }
+			const buildResult = buildQuery(query, { provider: provider?.toLowerCase() })
 
 			const response = await apolloProdeQuery<{ attributions: Attribution[] }>(
 				chainId,
-				buildQuery(query, variables),
-				variables
+				buildResult.query,
+				buildResult.variables
 			)
 
 			if (!response) throw new Error('No response from TheGraph')

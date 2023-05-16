@@ -15,7 +15,7 @@ import { buildQuery, QueryVariables } from '@/lib/SubgraphQueryBuilder'
 const query = `
     ${MARKET_FIELDS}
     query MarketsQuery(#params#) {
-      markets(where: {#where#}, first: 50, orderBy: closingTime, orderDirection: $orderDirection) {
+      markets(where: #where#, first: 50, orderBy: closingTime, orderDirection: $orderDirection) {
         ...MarketFields
       }
     }
@@ -32,7 +32,7 @@ export interface UseMarketsFilters {
 }
 
 async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[]): Promise<Market[]> {
-	const contracts = graphMarkets.map(graphMarket => ({
+	const contracts = graphMarkets.map((graphMarket) => ({
 		address: getConfigAddress('MARKET_VIEW', chainId),
 		abi: MarketViewAbi,
 		functionName: 'getMarket',
@@ -45,7 +45,7 @@ async function graphMarketsToMarkets(chainId: number, graphMarkets: GraphMarket[
 	})
 
 	// @ts-ignore
-	return markets.map(market => marketViewToMarket(market)).filter(market => market.id !== AddressZero)
+	return markets.map((market) => marketViewToMarket(market)).filter((market) => market.id !== AddressZero)
 }
 type UseMarkets = (chainId: number, filters: UseMarketsFilters) => UseQueryResult<Market[], Error>
 export const useMarkets: UseMarkets = (chainId, { curated, status, category, minEvents, creatorId } = {}) => {
@@ -55,7 +55,7 @@ export const useMarkets: UseMarkets = (chainId, { curated, status, category, min
 			const variables: QueryVariables = { curated, orderDirection: 'desc' }
 
 			if (category) {
-				variables['category_in'] = [category, ...getSubcategories(category).map(s => s.id)]
+				variables['category_in'] = [category, ...getSubcategories(category).map((s) => s.id)]
 			}
 
 			if (minEvents) {
@@ -78,10 +78,12 @@ export const useMarkets: UseMarkets = (chainId, { curated, status, category, min
 				variables['creator'] = creatorId.toLowerCase()
 			}
 
+			const buildResult = buildQuery(query, variables)
+
 			const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
 				chainId,
-				buildQuery(query, variables),
-				variables
+				buildResult.query,
+				buildResult.variables
 			)
 
 			if (!response) throw new Error('No response from TheGraph')
@@ -106,14 +108,16 @@ export const useMarketsIdsByStatus = (chainId: number, status: MarketStatus | 'n
 			variables['resultSubmissionPeriodStart'] = '0'
 		}
 
+		const buildResult = buildQuery(query, variables)
+
 		const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
 			chainId,
-			buildQuery(query, variables),
-			variables
+			buildResult.query,
+			buildResult.variables
 		)
 
 		if (!response) throw new Error('No response from TheGraph')
 
-		return response.data.markets.map(m => m.id)
+		return response.data.markets.map((m) => m.id)
 	})
 }

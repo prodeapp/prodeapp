@@ -13,27 +13,31 @@ type ResponsesProps = {
 
 const query = `
     ${RESPONSES_FIELDS}
-    query ResponsesQuery($user: String) {
-      responses(where: {user: $user}, orderBy: timestamp, orderDirection:desc) {
+    query ResponsesQuery(#params#) {
+      responses(where: #where#, orderBy: timestamp, orderDirection: desc) {
         ...ResponseFields
       }
     }
 `
 
-export const useResponses = ({ playerId, chainId, pending }: ResponsesProps) => {
+export const useEventsResponses = ({ playerId, chainId, pending }: ResponsesProps) => {
 	return useQuery<Response[], Error>(
-		['useEventsResponses', playerId, chainId, pending],
+		['useEventsResponses', { playerId, chainId, pending }],
 		async () => {
 			const variables: QueryVariables = { user: playerId.toLowerCase() }
 
 			if (pending) {
-				// variables['reward_gt'] = '0'
+				variables['question_'] = {
+					currentScheduledFinalizationTimestamp_gt: String(Math.floor(Date.now() / 1000)),
+				}
 			}
+
+			const buildResult = buildQuery(query, variables)
 
 			const response = await apolloRealityQuery<{ responses: Response[] }>(
 				chainId,
-				buildQuery(query, variables),
-				variables
+				buildResult.query,
+				buildResult.variables
 			)
 
 			if (!response) throw new Error('No response from TheGraph')
