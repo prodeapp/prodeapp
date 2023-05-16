@@ -1,10 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
@@ -17,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { useAccount, useBalance, useNetwork, useSignMessage } from 'wagmi'
 
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
+import AppDialog from '@/components/Dialog'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
@@ -207,87 +205,60 @@ function TopUp({ address }: { address: string }) {
 			<Button onClick={handleOpen}>
 				<Trans>TopUp</Trans>
 			</Button>
-			<Dialog
-				open={open}
-				onClose={handleClose}
-				aria-labelledby='modal-modal-title'
-				aria-describedby='modal-modal-description'
-				PaperProps={{
-					style: {
-						backgroundColor: 'background.paper',
-						boxShadow: 'none',
-						width: '50%',
-						position: 'absolute',
-						top: '50%',
-						left: '50%',
-						transform: 'translate(-50%, -50%)',
-						minHeight: '10rem',
-						margin: '0',
+			<AppDialog open={open} handleClose={handleClose} title={t`Fund methods available by third parties`}>
+				{/* TODO: fix styles */}
+				<Grid
+					container
+					spacing={2}
+					style={{
 						display: 'flex',
-					},
-				}}
-			>
-				<DialogTitle>
-					<IconButton onClick={handleClose}>
-						<Trans>Fund methods available by third parties</Trans>
-						<GridCloseIcon />
-					</IconButton>
-				</DialogTitle>
-				<DialogContent>
-					{/* TODO: fix styles */}
+						backgroundColor: 'background.paper',
+						alignItems: 'stretch',
+						alignContent: 'center',
+						justifyContent: 'center',
+						justifyItems: 'stretch',
+						minHeight: '10rem',
+					}}
+				>
 					<Grid
-						container
-						spacing={2}
+						item
+						sm={6}
 						style={{
-							display: 'flex',
-							backgroundColor: 'background.paper',
+							justifyContent: 'center',
+							justifyItems: 'space-around',
 							alignItems: 'stretch',
 							alignContent: 'center',
-							justifyContent: 'center',
-							justifyItems: 'stretch',
-							minHeight: '10rem',
+							padding: '5px 10px',
 						}}
 					>
-						<Grid
-							item
-							sm={6}
-							style={{
-								justifyContent: 'center',
-								justifyItems: 'space-around',
-								alignItems: 'stretch',
-								alignContent: 'center',
-								padding: '5px 10px',
-							}}
-						>
-							{isSequenceWallet ? (
-								<Grid item sm={12}>
-									<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
-										<Trans>Fund with Sequence Methods</Trans>
-									</Button>
-								</Grid>
-							) : null}
+						{isSequenceWallet ? (
 							<Grid item sm={12}>
-								<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
+								<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
+									<Trans>Fund with Sequence Methods</Trans>
+								</Button>
 							</Grid>
-						</Grid>
-						<Grid
-							item
-							sm={6}
-							style={{
-								padding: '5px 10px',
-								justifyItems: 'space-around',
-								justifyContent: 'center',
-								alignContent: 'center',
-								alignItems: 'stretch',
-							}}
-						>
-							<Button style={{ width: '100%' }} onClick={openAccountModal}>
-								<Trans>Already have crypto</Trans>
-							</Button>
+						) : null}
+						<Grid item sm={12}>
+							<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
 						</Grid>
 					</Grid>
-				</DialogContent>
-			</Dialog>
+					<Grid
+						item
+						sm={6}
+						style={{
+							padding: '5px 10px',
+							justifyItems: 'space-around',
+							justifyContent: 'center',
+							alignContent: 'center',
+							alignItems: 'stretch',
+						}}
+					>
+						<Button style={{ width: '100%' }} onClick={openAccountModal}>
+							<Trans>Already have crypto</Trans>
+						</Button>
+					</Grid>
+				</Grid>
+			</AppDialog>
 		</>
 	)
 }

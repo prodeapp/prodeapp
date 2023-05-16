@@ -863,7 +863,7 @@ msgid "You have already placed a bet."
 msgstr "Ya has enviado una apuesta."
 
 msgid "You have funds available to claim for your answers."
-msgstr "Tienes fondos disponibles para reclamar por tus respuestas."
+msgstr "¡Tienes fondos disponibles para reclamar por tus respuestas!"
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."
