@@ -15,6 +15,8 @@ import { ConnectButton, InPageConnectButton } from '@/components/ConnectButton'
 import { TabActiveBets, TabWinningBets } from '@/components/Wallet/TabBets'
 import TabInfo from '@/components/Wallet/TabInfo'
 
+import { TabPendingAnswers } from './TabAnswers'
+
 const PREFIX = 'Wallet'
 
 const classes = {
@@ -162,6 +164,9 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 						<TabButton isActiveComponent={props.component === 'winning-bets'} to='/winning-bets'>
 							Winning Bets
 						</TabButton>
+						<TabButton isActiveComponent={props.component === 'events-answers'} to='/events-answers'>
+							Events Answers
+						</TabButton>
 					</Box>
 				</Box>
 				<Box
@@ -179,6 +184,8 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 								return <>{!isConnected ? <ConnectMessage /> : <TabInfo />}</>
 							case 'active-bets':
 								return <>{address && chain && <TabActiveBets playerId={address} chainId={chain.id} />}</>
+							case 'events-answers':
+								return <>{address && chain && <TabPendingAnswers playerId={address} chainId={chain.id} />}</>
 							default:
 								return <>{address && chain && <TabWinningBets playerId={address} chainId={chain.id} />}</>
 						}

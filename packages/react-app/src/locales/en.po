@@ -88,6 +88,9 @@ msgstr "Answers"
 msgid "Approve USDC"
 msgstr "Approve USDC"
 
+msgid "Balance in ongoing answers"
+msgstr "Balance in ongoing answers"
+
 msgid "Base Prize"
 msgstr "Base Prize"
 
@@ -138,6 +141,9 @@ msgstr "Bid placed."
 
 msgid "Bid removed."
 msgstr "Bid removed."
+
+msgid "Bond"
+msgstr "Bond"
 
 msgid "By verifying your market future bettors will know that:"
 msgstr "By verifying your market future bettors will know that:"
@@ -349,6 +355,9 @@ msgstr "Invalid number."
 msgid "Invalid result"
 msgstr "Invalid result"
 
+msgid "Is current answer?"
+msgstr "Is current answer?"
+
 msgid "Item Id"
 msgstr "Item Id"
 
@@ -426,6 +435,9 @@ msgstr "New result"
 
 msgid "Next"
 msgstr "Next"
+
+msgid "No answers found."
+msgstr "No answers found."
 
 msgid "No bets found."
 msgstr "No bets found."
@@ -804,6 +816,9 @@ msgstr "You have a voucher available for {0} to place bets for free!"
 
 msgid "You have a voucher available to place a bet for free!"
 msgstr "You have a voucher available to place a bet for free!"
+
+msgid "You have funds available to claim for your answers."
+msgstr "You have funds available to claim for your answers."
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "You will receive {0}% of the prize pool as fee."
