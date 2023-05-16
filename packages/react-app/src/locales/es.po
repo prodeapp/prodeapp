@@ -310,6 +310,12 @@ msgstr "Fútbol"
 msgid "Format"
 msgstr "Formato"
 
+msgid "Free to play"
+msgstr "Apuesta gratuita"
+
+msgid "Free!"
+msgstr "¡Gratis!"
+
 msgid "Fund amount ({0})"
 msgstr "Cantidad a financiar ({0})"
 
@@ -498,6 +504,9 @@ msgstr "Apostar"
 
 msgid "Place Bid"
 msgstr "Enviar Oferta"
+
+msgid "Place a Free Bet"
+msgstr "Apostar Gratis"
 
 msgid "Place your bet"
 msgstr "Enviar apuesta"

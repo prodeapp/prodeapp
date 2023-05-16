@@ -155,7 +155,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 								fullWidth
 								size='large'
 							>
-								{market.price.eq(0) ? t`Place a bet for free and win` : t`Place Bet`}
+								{market.price.eq(0) ? t`Place a Free Bet` : t`Place Bet`}
 							</Button>
 						</div>
 					)}
@@ -166,7 +166,9 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					<div>
 						<Trans>Bet Price</Trans>
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
+					<div style={{ fontWeight: 'bold' }}>
+						{market.price.eq(0) ? <Trans>Free!</Trans> : formatAmount(market.price, chainId)}
+					</div>
 				</div>
 
 				<div>

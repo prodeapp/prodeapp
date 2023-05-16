@@ -310,6 +310,12 @@ msgstr "Football"
 msgid "Format"
 msgstr "Format"
 
+msgid "Free to play"
+msgstr "Free to play"
+
+msgid "Free!"
+msgstr "Free!"
+
 msgid "Fund amount ({0})"
 msgstr "Fund amount ({0})"
 
@@ -498,6 +504,9 @@ msgstr "Place Bet"
 
 msgid "Place Bid"
 msgstr "Place Bid"
+
+msgid "Place a Free Bet"
+msgstr "Place a Free Bet"
 
 msgid "Place your bet"
 msgstr "Place your bet"
