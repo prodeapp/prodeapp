@@ -14,14 +14,14 @@ import { useConnect } from 'wagmi'
 import AppDialog, { DialogProps } from '@/components/Dialog'
 
 const CustomConnectModal = (props: DialogProps & { openConnectModal: () => void }) => {
-	const { connectors } = useConnect()
+	const { connectors, connect } = useConnect()
 	const { openConnectModal, ...dialogProps } = props
 
 	const sequenceConnector = connectors.find((connector) => connector.id === 'sequence')
 
 	const socialConnect = () => {
 		props.handleClose()
-		sequenceConnector?.connect()
+		connect({ connector: sequenceConnector })
 	}
 
 	const cryptoConnect = () => {
