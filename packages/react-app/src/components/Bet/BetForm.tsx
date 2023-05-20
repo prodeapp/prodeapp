@@ -20,6 +20,7 @@ import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
 import { useBetToken } from '@/hooks/useBetToken'
+import { useCheckMarketWhitelist } from '@/hooks/useCheckMarketWhitelist'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
@@ -117,6 +118,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const { chain } = useNetwork()
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
 
+	const { data: betWhitelistStatus = '', isLoading: isLoadingCheckWhitelist } = useCheckMarketWhitelist(market, chainId)
+
 	const {
 		register,
 		control,
@@ -140,7 +143,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ values: [''], questionId: event.id }))
+		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -180,7 +183,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -200,11 +207,29 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
-	if (isLoading || isLoadingApprove || isLoadingEvents) {
+	if (isLoading || isLoadingApprove || isLoadingEvents || isLoadingCheckWhitelist) {
 		return (
 			<div style={{ textAlign: 'center', marginBottom: 15 }}>
 				<CircularProgress />
 			</div>
+		)
+	}
+
+	if (betWhitelistStatus !== '') {
+		return (
+			<BigAlert severity='info' sx={{ mb: 4 }}>
+				<Box
+					sx={{
+						display: { md: 'flex' },
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
+					<div>
+						<div>{betWhitelistStatus}</div>
+					</div>
+				</Box>
+			</BigAlert>
 		)
 	}
 
@@ -357,6 +382,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										errors={errors}
 										setValue={setValue}
 										addAlternative={
+											betPrice.gt(0) &&
 											!isOldMarket(market.id) &&
 											isMainChain(chainId) &&
 											!hasVoucher &&
@@ -425,7 +451,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					)}
 					{chain && !approve && (
 						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}{' '}
+							<Trans>Place Bet</Trans> - {betPrice.gt(0) ? formatAmount(betPrice, chain.id) : <Trans>Free!</Trans>}{' '}
 							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 						</Button>
 					)}

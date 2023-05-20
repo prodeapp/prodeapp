@@ -89,7 +89,7 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 				height: '100%',
 			}}
 		>
-			<Box sx={{ p: '24px', paddingRight: { md: '15%' } }}>
+			<Box sx={{ p: '24px', paddingRight: { md: '15%' }, flexGrow: 1 }}>
 				<div
 					style={{
 						height: '95%',
@@ -99,7 +99,10 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					}}
 				>
 					<div>
-						<div style={{ fontWeight: 'normal', marginBottom: '5px' }}>{status}</div>
+						<div style={{ fontWeight: 'normal', marginBottom: '5px', gap: 10, display: 'flex' }}>
+							{status}
+							{market.price.eq(0) && <Chip label={t`Free to play`} color='warning' />}
+						</div>
 						<Typography variant='h4s' component='h2' style={{ marginTop: '20px' }}>
 							<Link to={paths.market(market.id, chainId)}>{market.name}</Link>
 						</Typography>
@@ -148,11 +151,11 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							<Button
 								component={RouterLink}
 								to={paths.market(market.id, chainId)}
-								color={'primary'}
+								color={market.price.eq(0) ? 'success' : 'primary'}
 								fullWidth
 								size='large'
 							>
-								<Trans>Place Bet</Trans>
+								{market.price.eq(0) ? t`Place a Free Bet` : t`Place Bet`}
 							</Button>
 						</div>
 					)}
@@ -163,7 +166,9 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 					<div>
 						<Trans>Bet Price</Trans>
 					</div>
-					<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId)}</div>
+					<div style={{ fontWeight: 'bold' }}>
+						{market.price.eq(0) ? <Trans>Free!</Trans> : formatAmount(market.price, chainId)}
+					</div>
 				</div>
 
 				<div>

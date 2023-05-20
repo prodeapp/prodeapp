@@ -187,9 +187,6 @@ msgstr "Congratulations!"
 msgid "Connect"
 msgstr "Connect"
 
-msgid "Connect Wallet"
-msgstr "Connect Wallet"
-
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
 
@@ -309,6 +306,12 @@ msgstr "Football"
 
 msgid "Format"
 msgstr "Format"
+
+msgid "Free to play"
+msgstr "Free to play"
+
+msgid "Free!"
+msgstr "Free!"
 
 msgid "Fund amount ({0})"
 msgstr "Fund amount ({0})"
@@ -499,6 +502,9 @@ msgstr "Place Bet"
 msgid "Place Bid"
 msgstr "Place Bid"
 
+msgid "Place a Free Bet"
+msgstr "Place a Free Bet"
+
 msgid "Place your bet"
 msgstr "Place your bet"
 
@@ -526,8 +532,8 @@ msgstr "Previous"
 msgid "Price"
 msgstr "Price"
 
-msgid "Price must be greater than 0.01"
-msgstr "Price must be greater than 0.01"
+msgid "Price can't be negative"
+msgstr "Price can't be negative"
 
 msgid "Prize Distribution"
 msgstr "Prize Distribution"
@@ -579,6 +585,9 @@ msgstr "Result"
 
 msgid "Results"
 msgstr "Results"
+
+msgid "Return to the market"
+msgstr "Return to the market"
 
 msgid "Review and publish your market"
 msgstr "Review and publish your market"
@@ -700,8 +709,14 @@ msgstr "This market has been deleted."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
+msgid "This market only allows one bet per user."
+msgstr "This market only allows one bet per user."
+
 msgid "This market was created in Gnosis Chain."
 msgstr "This market was created in Gnosis Chain."
+
+msgid "To bet in this market you need to connect using Sequence wallet."
+msgstr "To bet in this market you need to connect using Sequence wallet."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."

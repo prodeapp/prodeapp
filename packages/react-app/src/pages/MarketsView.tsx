@@ -103,7 +103,7 @@ function MarketsView() {
 						<MarketStatus marketId={market.id} chainId={chainId} />
 						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>{market.name}</h2>
 
-						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && (
+						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && market.numOfBets === 0 && (
 							<div style={{ marginBottom: '20px' }}>
 								<DeleteMarket marketId={market.id} />
 							</div>
@@ -190,7 +190,8 @@ function MarketsView() {
 									fontSize: '16px',
 								}}
 							>
-								<ArrowRightIcon style={{ marginRight: 10, transform: 'rotate(180deg)' }} /> Return to the market
+								<ArrowRightIcon style={{ marginRight: 10, transform: 'rotate(180deg)' }} />{' '}
+								<Trans>Return to the market</Trans>
 							</Button>
 							<BetForm market={market} chainId={chainId} cancelHandler={() => setSection('bets')} />
 						</Box>

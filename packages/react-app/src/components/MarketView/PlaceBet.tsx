@@ -29,12 +29,8 @@ export default function PlaceBet({
 }) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const { data: {hasVoucher, voucherBalance} = {hasVoucher: false, voucherBalance: BigNumber.from(0)}} = useHasVoucher(
-		address,
-		market.id,
-		chain?.id || chainId,
-		BigNumber.from(market.price)
-	)
+	const { data: { hasVoucher, voucherBalance } = { hasVoucher: false, voucherBalance: BigNumber.from(0) } } =
+		useHasVoucher(address, market.id, chain?.id || chainId, BigNumber.from(market.price))
 	const [timeLeft, setTimeLeft] = useState<string | false>(false)
 	const { locale } = useI18nContext()
 
@@ -57,7 +53,10 @@ export default function PlaceBet({
 				<Typography variant='p3' component='div'>
 					<Trans>Bet Price:</Trans>
 				</Typography>
-				<div style={{ fontWeight: 'bold' }}>{formatAmount(market.price, chainId, isCrossChainBet)}</div>
+				<div style={{ fontWeight: 'bold' }}>
+					{market.price.gt(0) && formatAmount(market.price, chainId, isCrossChainBet)}
+					{market.price.eq(0) && <Trans>Free!</Trans>}
+				</div>
 			</Box>
 
 			{fullDetails && timeLeft !== false && (
@@ -75,8 +74,9 @@ export default function PlaceBet({
 						</Typography>
 					)}
 					<div style={{ fontWeight: 'bold', marginBottom: '15px' }}>{timeLeft}</div>
-					<Button color='primary' size='large' fullWidth onClick={onBetClick}>
-						<Trans>Place Bet</Trans> - {formatAmount(market.price, chainId, isCrossChainBet)}{' '}
+					<Button color={market.price.eq(0) ? 'success' : 'primary'} size='large' fullWidth onClick={onBetClick}>
+						<Trans>Place Bet</Trans>{' '}
+						{market.price.gt(0) && <>- {formatAmount(market.price, chainId, isCrossChainBet)}</>}{' '}
 						<ArrowRight style={{ marginLeft: 10 }} />
 					</Button>
 				</>
