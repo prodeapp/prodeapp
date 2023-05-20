@@ -35,7 +35,7 @@ export const InPageConnectButton = ({
 								return (
 									<Button color='primary' size={size} fullWidth={fullWidth} onClick={openConnectModal}>
 										<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
-										<Trans>Connect Wallet</Trans>
+										<Trans>Connect</Trans>
 									</Button>
 								)
 							}
@@ -90,7 +90,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 											color={props.buttonColor || 'primary'}
 										>
 											<AccountBalanceWalletOutlinedIcon sx={{ mr: mobile ? 0 : '9px' }} />
-											{!mobile && <Trans>Connect Wallet</Trans>}
+											{!mobile && <Trans>Connect</Trans>}
 										</Button>
 									)
 								}

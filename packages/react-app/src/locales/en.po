@@ -187,8 +187,8 @@ msgstr "Congratulations!"
 msgid "Connect"
 msgstr "Connect"
 
-msgid "Connect Wallet"
-msgstr "Connect Wallet"
+msgid "Connect"
+msgstr "Connect"
 
 msgid "Connect your wallet"
 msgstr "Connect your wallet"

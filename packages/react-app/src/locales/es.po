@@ -187,8 +187,8 @@ msgstr "¡Felicitaciones!"
 msgid "Connect"
 msgstr "Conectar"
 
-msgid "Connect Wallet"
-msgstr "Conectar Billetera"
+msgid "Connect"
+msgstr "Conectarse"
 
 msgid "Connect your wallet"
 msgstr "Conecte su billetera"
