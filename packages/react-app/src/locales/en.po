@@ -721,8 +721,8 @@ msgstr "This market only allows one bet per user."
 msgid "This market was created in Gnosis Chain."
 msgstr "This market was created in Gnosis Chain."
 
-msgid "To bet in this market you need to connect using Sequence wallet."
-msgstr "To bet in this market you need to connect using Sequence wallet."
+msgid "To bet in this market you need to connect using your email."
+msgstr "To bet in this market you need to connect using your email."
 
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."

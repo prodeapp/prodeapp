@@ -22,7 +22,7 @@ export const useCheckMarketWhitelist = (market: Market, chainId: number) => {
 			}
 
 			if (connector && connector.id !== 'sequence') {
-				return t`To bet in this market you need to connect using Sequence wallet.`
+				return t`To bet in this market you need to connect using your email.`
 			}
 		}
 
