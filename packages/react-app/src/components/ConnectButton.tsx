@@ -150,8 +150,8 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 											style={{ marginRight: '0px', zIndex: 18 }}
 											color={props.buttonColor || 'primary'}
 										>
-											<AccountBalanceWalletOutlinedIcon sx={{ mr: mobile ? 0 : '9px' }} />
-											{!mobile && <Trans>Connect</Trans>}
+											<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+											<Trans>Connect</Trans>
 										</Button>
 									)
 								}

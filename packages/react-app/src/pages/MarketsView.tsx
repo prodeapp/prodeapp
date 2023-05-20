@@ -118,13 +118,13 @@ function MarketsView() {
 								paddingBottom: '20px',
 							}}
 						>
-							<Grid item xs={6} md={6} sx={{ pr: 2 }} style={{ borderRight: `1px solid ${theme.palette.black.dark}` }}>
+							<Grid item xs={7} md={6} sx={{ pr: 2 }} style={{ borderRight: `1px solid ${theme.palette.black.dark}` }}>
 								<div style={{ fontWeight: 600, marginBottom: 5 }}>
 									<Trans>Market verification</Trans>:
 								</div>
 								<MarketCurateStatus marketHash={market.hash} marketId={market.id} chainId={chainId} />
 							</Grid>
-							<Grid item xs={6} md={6} sx={{ pl: 2 }}>
+							<Grid item xs={5} md={6} sx={{ pl: 2, fontSize: { xs: '12px', md: '14px' } }}>
 								<div style={{ marginBottom: 5 }}>
 									<a href={shareUrl} target='_blank' rel='noreferrer'>
 										<TwitterIcon /> <Trans>Share on Twitter</Trans>
@@ -181,7 +181,7 @@ function MarketsView() {
 					)}
 
 					{section === 'bet' && (
-						<Box sx={{ mx: { md: 17 }, mb: 10 }}>
+						<Box sx={{ mx: { xs: 2, md: 17 }, mb: 10 }}>
 							<Button
 								variant='text'
 								onClick={() => setSection('bets')}

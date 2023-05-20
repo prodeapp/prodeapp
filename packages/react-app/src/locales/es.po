@@ -359,7 +359,7 @@ msgid "Invalid number."
 msgstr "Número inválido."
 
 msgid "Invalid result"
-msgstr "Respuesta inválida"
+msgstr "Resultado inválido"
 
 msgid "Is current answer?"
 msgstr "¿Es la respuesta actual?"
