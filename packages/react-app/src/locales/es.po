@@ -187,6 +187,9 @@ msgstr "¡Felicitaciones!"
 msgid "Connect"
 msgstr "Conectarse"
 
+msgid "Connect with your email"
+msgstr "Conectate con tu email"
+
 msgid "Connect your wallet"
 msgstr "Conecte su billetera"
 
@@ -480,6 +483,9 @@ msgstr "Hora de Apertura"
 
 msgid "Opening Time (UTC)"
 msgstr "Hora de Apertura (UTC)"
+
+msgid "Or connect with a crypto wallet"
+msgstr "O conectate con una billetera cripto"
 
 msgid "Participants"
 msgstr "Participantes"
