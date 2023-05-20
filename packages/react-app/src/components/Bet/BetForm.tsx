@@ -269,7 +269,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (!chain || chain.unsupported) {
+	if (chain?.unsupported) {
 		return (
 			<Alert severity='error'>
 				<Trans>UNSUPPORTED_CHAIN</Trans>
