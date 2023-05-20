@@ -740,7 +740,7 @@ msgid "Total Rewards: {0}"
 msgstr "Premios recibidos: {0}"
 
 msgid "UNSUPPORTED_CHAIN"
-msgstr "Red no soportada, por favor conéctese a Gnosis Chain, Arbitrum, Optimism, Polygon o BNB Chain."
+msgstr "Red no soportada. Por favor conéctese a Gnosis Chain, Arbitrum, Optimism, Polygon o BNB Chain."
 
 msgid "Unexpected error"
 msgstr "Error inesperado"

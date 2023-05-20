@@ -90,18 +90,9 @@ function getApproveTxParams(approve: UsePlaceBetReturn['approve']) {
 	}
 }
 
-function getGeneralError(
-	address: Address | undefined,
-	unsupportedChain: boolean | undefined,
-	hasFundsToBet: boolean,
-	hasVoucher: boolean
-): string {
+function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, hasVoucher: boolean): string {
 	if (!address) {
 		return t`Connect your wallet to place a bet.`
-	}
-
-	if (unsupportedChain) {
-		return t`UNSUPPORTED_CHAIN`
 	}
 
 	if (!hasFundsToBet) {
@@ -278,11 +269,19 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
+	if (!chain || chain.unsupported) {
+		return (
+			<Alert severity='error'>
+				<Trans>UNSUPPORTED_CHAIN</Trans>
+			</Alert>
+		)
+	}
+
 	const onSubmit = async (_: BetFormValues) => {
 		placeBet!()
 	}
 
-	const generalError = getGeneralError(address, !chain || chain.unsupported, hasFundsToBet, hasVoucher)
+	const generalError = getGeneralError(address, hasFundsToBet, hasVoucher)
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>

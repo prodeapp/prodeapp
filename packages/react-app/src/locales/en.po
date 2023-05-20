@@ -740,7 +740,7 @@ msgid "Total Rewards: {0}"
 msgstr "Total Rewards: {0}"
 
 msgid "UNSUPPORTED_CHAIN"
-msgstr "Unsupported chain, please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
+msgstr "Unsupported chain. Please switch to Gnosis Chain, Arbitrum, Optimism, Polygon or BNB Chain."
 
 msgid "Unexpected error"
 msgstr "Unexpected error"
