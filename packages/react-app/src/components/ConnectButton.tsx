@@ -12,16 +12,24 @@ import { useLocation } from 'react-router-dom'
 import { useConnect } from 'wagmi'
 
 import AppDialog, { DialogProps } from '@/components/Dialog'
+import { DEFAULT_CHAIN } from '@/lib/config'
 
 const CustomConnectModal = (props: DialogProps & { openConnectModal: () => void }) => {
-	const { connectors, connect } = useConnect()
+	const { connectors, connect } = useConnect({
+		onSuccess: async (data) => {
+			if (data.chain.id !== DEFAULT_CHAIN && data.connector?.switchChain) {
+				// sequence tries to connect to polygon by default, we need to force gnosis
+				await data.connector?.switchChain(DEFAULT_CHAIN)
+			}
+		},
+	})
 	const { openConnectModal, ...dialogProps } = props
 
 	const sequenceConnector = connectors.find((connector) => connector.id === 'sequence')
 
 	const socialConnect = () => {
 		props.handleClose()
-		connect({ connector: sequenceConnector })
+		connect({ connector: sequenceConnector, chainId: DEFAULT_CHAIN })
 	}
 
 	const cryptoConnect = () => {
