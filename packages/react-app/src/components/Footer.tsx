@@ -10,7 +10,7 @@ import { getDocsUrl } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
 
 const FooterNav = styled('div', {
-	shouldForwardProp: prop => prop !== 'ml',
+	shouldForwardProp: (prop) => prop !== 'ml',
 })<{ ml?: number }>(({ theme, ml }) => ({
 	'& > div': {
 		display: 'inline-block',
@@ -78,6 +78,11 @@ export default function Footer() {
 						<div>
 							<a href='https://t.me/prode_eth' target='_blank' rel='noreferrer'>
 								Telegram
+							</a>
+						</div>
+						<div>
+							<a href='https://medium.com/@prode_eth' target='_blank' rel='noreferrer'>
+								Blog
 							</a>
 						</div>
 						<div>
