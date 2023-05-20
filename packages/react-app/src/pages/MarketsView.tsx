@@ -190,7 +190,8 @@ function MarketsView() {
 									fontSize: '16px',
 								}}
 							>
-								<ArrowRightIcon style={{ marginRight: 10, transform: 'rotate(180deg)' }} /> Return to the market
+								<ArrowRightIcon style={{ marginRight: 10, transform: 'rotate(180deg)' }} />{' '}
+								<Trans>Return to the market</Trans>
 							</Button>
 							<BetForm market={market} chainId={chainId} cancelHandler={() => setSection('bets')} />
 						</Box>

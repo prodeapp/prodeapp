@@ -187,9 +187,6 @@ msgstr "Congratulations!"
 msgid "Connect"
 msgstr "Connect"
 
-msgid "Connect"
-msgstr "Connect"
-
 msgid "Connect your wallet"
 msgstr "Connect your wallet"
 
@@ -588,6 +585,9 @@ msgstr "Result"
 
 msgid "Results"
 msgstr "Results"
+
+msgid "Return to the market"
+msgstr "Return to the market"
 
 msgid "Review and publish your market"
 msgstr "Review and publish your market"
