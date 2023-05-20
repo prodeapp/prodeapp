@@ -6,8 +6,44 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { ConnectButton as RainbowConnectButton } from '@rainbow-me/rainbowkit'
+import React, { useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { useConnect } from 'wagmi'
+
+import AppDialog, { DialogProps } from '@/components/Dialog'
+
+const CustomConnectModal = (props: DialogProps & { openConnectModal: () => void }) => {
+	const { connectors, connect } = useConnect()
+	const { openConnectModal, ...dialogProps } = props
+
+	const sequenceConnector = connectors.find((connector) => connector.id === 'sequence')
+
+	const socialConnect = () => {
+		props.handleClose()
+		connect({ connector: sequenceConnector })
+	}
+
+	const cryptoConnect = () => {
+		props.handleClose()
+		openConnectModal()
+	}
+
+	return (
+		<AppDialog {...dialogProps}>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+				<Button color='primary' size={'large'} onClick={socialConnect}>
+					<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+					<Trans>Connect with your email</Trans>
+				</Button>
+
+				<Button variant='text' onClick={cryptoConnect}>
+					<Trans>Or connect with a crypto wallet</Trans>
+				</Button>
+			</div>
+		</AppDialog>
+	)
+}
 
 export const InPageConnectButton = ({
 	fullWidth = false,
@@ -16,6 +52,10 @@ export const InPageConnectButton = ({
 	fullWidth?: boolean
 	size?: 'small' | 'medium' | 'large'
 }) => {
+	const [openModal, setOpenModal] = useState(false)
+	const handleOpen = () => setOpenModal(true)
+	const handleClose = () => setOpenModal(false)
+
 	return (
 		<RainbowConnectButton.Custom>
 			{({ account, chain, openConnectModal, mounted }) => {
@@ -33,10 +73,17 @@ export const InPageConnectButton = ({
 						{(() => {
 							if (!mounted || !account || !chain) {
 								return (
-									<Button color='primary' size={size} fullWidth={fullWidth} onClick={openConnectModal}>
-										<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
-										<Trans>Connect</Trans>
-									</Button>
+									<>
+										<CustomConnectModal
+											open={openModal}
+											handleClose={handleClose}
+											openConnectModal={openConnectModal}
+										/>
+										<Button color='primary' size={size} fullWidth={fullWidth} onClick={handleOpen}>
+											<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
+											<Trans>Connect</Trans>
+										</Button>
+									</>
 								)
 							}
 						})()}
@@ -46,6 +93,7 @@ export const InPageConnectButton = ({
 		</RainbowConnectButton.Custom>
 	)
 }
+
 export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) => {
 	const location = useLocation()
 	const theme = useTheme()
@@ -58,6 +106,10 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 		location.pathname === '/events-answers'
 			? true
 			: false
+
+	const [openModal, setOpenModal] = useState(false)
+	const handleOpen = () => setOpenModal(true)
+	const handleClose = () => setOpenModal(false)
 
 	return (
 		<RainbowConnectButton.Custom>
@@ -73,11 +125,12 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 							},
 						})}
 					>
+						<CustomConnectModal open={openModal} handleClose={handleClose} openConnectModal={openConnectModal} />
 						{(() => {
 							if (!mounted || !account || !chain) {
 								if (walletDrawerOpen) {
 									return (
-										<Button color='secondary' onClick={openConnectModal}>
+										<Button color='secondary' onClick={handleOpen}>
 											<AccountBalanceWalletOutlinedIcon sx={{ mr: '9px' }} />
 											<Trans>{`Connect`}</Trans>
 										</Button>
@@ -85,7 +138,7 @@ export const ConnectButton = (props: { buttonColor?: 'primary' | 'secondary' }) 
 								} else {
 									return (
 										<Button
-											onClick={openConnectModal}
+											onClick={handleOpen}
 											style={{ marginRight: '0px', zIndex: 18 }}
 											color={props.buttonColor || 'primary'}
 										>

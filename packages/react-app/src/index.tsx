@@ -33,7 +33,7 @@ import Tournament from './pages/Tournament'
 ReactDOM.render(
 	<React.StrictMode>
 		<WagmiConfig client={wagmiClient}>
-			<RainbowKitProvider chains={chains}>
+			<RainbowKitProvider chains={chains} modalSize='compact'>
 				<ReactQueryProvider>
 					<ThemeProvider theme={theme}>
 						<CssBaseline />
