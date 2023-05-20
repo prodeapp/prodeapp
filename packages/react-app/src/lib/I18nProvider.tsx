@@ -1,5 +1,5 @@
 import { i18n } from '@lingui/core'
-import { detect, fromStorage } from '@lingui/detect-locale'
+import { detect, fromNavigator, fromStorage } from '@lingui/detect-locale'
 import { I18nProvider as LinguiI18nProvider } from '@lingui/react'
 // import plural rules for all locales
 import { en, es } from 'make-plural'
@@ -14,8 +14,9 @@ i18n.loadLocaleData({
 })
 
 const detectLocale = () => {
+	const navigatorLanguage = fromNavigator().substring(0, 2)
 	return {
-		storage: detect(fromStorage('lang', { useSessionStorage: false })),
+		storage: detect(fromStorage('lang', { useSessionStorage: false }), navigatorLanguage),
 	}
 }
 
