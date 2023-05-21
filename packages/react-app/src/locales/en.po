@@ -64,8 +64,8 @@ msgstr "Already Claimed"
 msgid "Answer accepted"
 msgstr "Answer accepted"
 
-msgid "Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
-msgstr "Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
+msgid "Answer all the questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
+msgstr "Answer all the questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
 
 msgid "Answer closes in {answerCountdown}"
 msgstr "Answer closes in {answerCountdown}"

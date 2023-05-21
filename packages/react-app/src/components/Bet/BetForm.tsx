@@ -17,6 +17,7 @@ import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
 import { BigAlert } from '@/components'
 import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
+import { InPageConnectButton } from '@/components/ConnectButton'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
 import { useBetToken } from '@/hooks/useBetToken'
@@ -296,8 +297,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				}}
 			>
 				<Trans>
-					Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s
-					prize!
+					Answer all the questions. You will get 1 point for each correct prediction. The top ranked bets win the
+					market’s prize!
 				</Trans>
 			</h4>
 
@@ -442,17 +443,29 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					</Button>
 				</Grid>
 				<Grid item xs={6}>
-					{approve && approveTokens && (
-						<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
-							<Trans>Approve USDC</Trans>{' '}
-							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
-						</Button>
-					)}
-					{chain && !approve && (
-						<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-							<Trans>Place Bet</Trans> - {betPrice.gt(0) ? formatAmount(betPrice, chain.id) : <Trans>Free!</Trans>}{' '}
-							<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
-						</Button>
+					{!address && <InPageConnectButton fullWidth={true} />}
+
+					{address && (
+						<>
+							{approve && approveTokens && (
+								<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
+									<Trans>Approve USDC</Trans>{' '}
+									<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+								</Button>
+							)}
+							{chain && !approve && (
+								<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
+									{betPrice.gt(0) ? (
+										<>
+											<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}
+										</>
+									) : (
+										<Trans>Place a Free Bet</Trans>
+									)}{' '}
+									<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+								</Button>
+							)}
+						</>
 					)}
 				</Grid>
 			</Grid>

@@ -64,7 +64,7 @@ msgstr "Ya reclamado"
 msgid "Answer accepted"
 msgstr "Respuesta aceptada"
 
-msgid "Answer all questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
+msgid "Answer all the questions. You will get 1 point for each correct prediction. The top ranked bets win the market’s prize!"
 msgstr "Respondé todas las preguntas. Por cada predicción correcta recibirás un punto. Quienes sumen más puntos ganan el pozo del mercado!"
 
 msgid "Answer closes in {answerCountdown}"
