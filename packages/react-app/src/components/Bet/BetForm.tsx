@@ -17,11 +17,13 @@ import { ReactComponent as CrossIcon } from '@/assets/icons/cross.svg'
 import { ReactComponent as TriangleIcon } from '@/assets/icons/triangle-right.svg'
 import { BigAlert } from '@/components'
 import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
+import { SimpleBetDetails } from '@/components/Bet/BetDetails'
 import { InPageConnectButton } from '@/components/ConnectButton'
 import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
+import { useBets } from '@/hooks/useBets'
 import { useBetToken } from '@/hooks/useBetToken'
-import { useCheckMarketWhitelist } from '@/hooks/useCheckMarketWhitelist'
+import { useCheckMarketWhitelist, WHITELIST_STATUS } from '@/hooks/useCheckMarketWhitelist'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
@@ -103,6 +105,25 @@ function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, h
 	}
 
 	return ''
+}
+
+function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId: number }) {
+	const { address } = useAccount()
+	const { data: bets } = useBets({ marketId, chainId })
+	const bet = (bets || []).find((b) => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
+
+	if (!bet) {
+		return null
+	}
+
+	return (
+		<>
+			<Alert severity='info'>
+				<Trans>You have already placed a bet.</Trans>
+			</Alert>
+			<SimpleBetDetails bet={bet} chainId={chainId} />
+		</>
+	)
 }
 
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
@@ -207,7 +228,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (betWhitelistStatus !== '') {
+	if (betWhitelistStatus !== WHITELIST_STATUS.OK) {
+		if (betWhitelistStatus === WHITELIST_STATUS.ALREADY_BET) {
+			return <WhitelistBetDetail marketId={market.id} chainId={chainId} />
+		}
+
 		return (
 			<BigAlert severity='info' sx={{ mb: 4 }}>
 				<Box
@@ -218,7 +243,9 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					}}
 				>
 					<div>
-						<div>{betWhitelistStatus}</div>
+						<div>
+							<Trans>To bet in this market you need to connect using your email.</Trans>
+						</div>
 					</div>
 				</Box>
 			</BigAlert>

@@ -715,9 +715,6 @@ msgstr "This market has been deleted."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
-msgid "This market only allows one bet per user."
-msgstr "This market only allows one bet per user."
-
 msgid "This market was created in Gnosis Chain."
 msgstr "This market was created in Gnosis Chain."
 
@@ -838,11 +835,17 @@ msgstr "You have a voucher available for {0} to place bets for free!"
 msgid "You have a voucher available to place a bet for free!"
 msgstr "You have a voucher available to place a bet for free!"
 
+msgid "You have already placed a bet."
+msgstr "You have already placed a bet."
+
 msgid "You have funds available to claim for your answers."
 msgstr "You have funds available to claim for your answers."
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "You will receive {0}% of the prize pool as fee."
+
+msgid "Your bet"
+msgstr "Your bet"
 
 msgid "Your bet is travelling to the destination chain, it will arrive in a few minutes!"
 msgstr "Your bet is travelling to the destination chain, it will arrive in a few minutes!"

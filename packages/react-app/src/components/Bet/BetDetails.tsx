@@ -17,12 +17,12 @@ function getBetResult(eventResult: string, playerBet: string) {
 	return playerBet === eventResult ? 1 : 2
 }
 
-const bigColumnSx = {
-	width: { xs: '100%', md: '40%' },
+const bigColumnSx = (simpleMode: boolean) => ({
+	width: { xs: '100%', md: simpleMode ? '80%' : '40%' },
 	fontSize: { xs: '14px', md: '16px' },
 	marginBottom: { xs: '10px', md: '0' },
 	wordBreak: 'break-word',
-}
+})
 
 const smallColumnsSx = {
 	width: { xs: '33%', md: '20%' },
@@ -84,7 +84,7 @@ export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number
 								fontWeight: 'normal',
 							}}
 						>
-							<Box sx={bigColumnSx}>
+							<Box sx={bigColumnSx(false)}>
 								<FormatEvent title={event.title} />
 							</Box>
 							<Box sx={smallColumnsSx}>
@@ -116,6 +116,73 @@ export default function BetDetails({ bet, chainId }: { bet: Bet; chainId: number
 								)}
 								{betResult === 1 && <span style={{ color: 'green' }}>1</span>}
 								{betResult === 2 && <span style={{ color: 'red' }}>0</span>}
+							</Box>
+						</Box>
+					</BoxRow>
+				)
+			})}
+		</BoxWrapper>
+	)
+}
+
+export function SimpleBetDetails({ bet, chainId }: { bet: Bet; chainId: number }) {
+	const isPhone = usePhone()
+	const { data: events = [] } = useEvents(bet.market.id, chainId)
+
+	const orderedEventIndices = getOrderedEventsIndexes(events)
+
+	const smallColumn = {
+		width: { xs: '100%', md: '20%' },
+		fontSize: { xs: '13px', md: '16px' },
+		display: { xs: 'flex', md: 'inline-block' },
+		justifyContent: 'center',
+		gap: '10px',
+		verticalAlign: 'top',
+		wordBreak: 'break-word',
+		textAlign: { xs: 'center', md: 'left' },
+	}
+
+	return (
+		<BoxWrapper>
+			{!isPhone && (
+				<BoxRow>
+					<div style={{ width: '80%', textAlign: 'center' }}>
+						<Trans>Event</Trans>
+					</div>
+					<div style={{ width: '20%' }}>
+						<Trans>Your bet</Trans>
+					</div>
+				</BoxRow>
+			)}
+			{events.map((event, i) => {
+				const eventNonce = orderedEventIndices.indexOf(i)
+				const playerBet = getAnswerText(
+					bet.results[eventNonce],
+					event.outcomes || [],
+					event.templateID,
+					'Invalid value'
+				)
+
+				return (
+					<BoxRow key={i} style={{ flexDirection: 'column' }}>
+						<Box
+							sx={{
+								display: { md: 'flex' },
+								justifyContent: 'space-between',
+								width: '100%',
+								fontWeight: 'normal',
+							}}
+						>
+							<Box sx={bigColumnSx(true)}>
+								<FormatEvent title={event.title} />
+							</Box>
+							<Box sx={smallColumn}>
+								{isPhone && (
+									<div style={mobileLabelSx}>
+										<Trans>Your bet</Trans>
+									</div>
+								)}
+								<FormatOutcome name={playerBet} title={event.title} />
 							</Box>
 						</Box>
 					</BoxRow>
