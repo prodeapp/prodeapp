@@ -16,6 +16,7 @@ import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
 import { DEFAULT_CHAIN, isMainChain } from './config'
+import { ripioPortalWallet } from './ripioPortalWallet'
 
 gnosis.contracts = {
 	multicall3: {
@@ -47,6 +48,8 @@ export const { chains, provider } = configureChains(
 	}
 )
 
+const ripio_chains = chains.filter((c) => c.id == 137 || c.id == 56)
+
 const needsInjectedWalletFallback =
 	typeof window !== 'undefined' && window.ethereum && !window.ethereum.isMetaMask && !window.ethereum.isCoinbaseWallet
 
@@ -73,6 +76,7 @@ const connectors = connectorsForWallets([
 			braveWallet({ chains, shimDisconnect: true }),
 			rainbowWallet({ chains }),
 			walletConnectWallet({ chains }),
+			ripioPortalWallet({ chains: ripio_chains }),
 			...(needsInjectedWalletFallback ? [injectedWallet({ chains, shimDisconnect: true })] : []),
 		],
 	},
