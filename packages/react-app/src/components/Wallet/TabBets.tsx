@@ -50,15 +50,17 @@ function TabBets({
 
 	if (!bets || bets.length === 0) {
 		return (
-			<Alert severity='error'>
-				<Trans>No bets found.</Trans>
+			<Alert severity='info'>
+				<Trans>
+					No bets found. Go to <RouterLink to='/'>markets</RouterLink> and start betting
+				</Trans>
 			</Alert>
 		)
 	}
 
 	return (
 		<div>
-			{bets.map(bet => {
+			{bets.map((bet) => {
 				return (
 					<Box
 						key={bet.id}

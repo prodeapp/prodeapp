@@ -442,11 +442,11 @@ msgstr "Nuevo resultado"
 msgid "Next"
 msgstr "Siguiente"
 
-msgid "No answers found."
-msgstr "No se encontraron respuestas."
-
 msgid "No bets found."
 msgstr "No se encontraron apuestas."
+
+msgid "No bets found. Go to <0>markets</0> and start betting"
+msgstr "No se encontraron apuestas. Vaya a los <0>mercados</0> y empiece a apostar"
 
 msgid "No bids found."
 msgstr "No se encontraron ofertas."
@@ -798,6 +798,9 @@ msgstr "Esperando resultados"
 
 msgid "Waiting result"
 msgstr "Esperando resultado"
+
+msgid "We have nott found pending answers"
+msgstr "No hemos encontrado respuestas pendientes suyas"
 
 msgid "We will calculate all the possible combinations of results and send a bet for each one of them."
 msgstr "Calcularemos todas las posibles combinaciones de resultados y enviaremos una apuesta por cada una de ellas."
