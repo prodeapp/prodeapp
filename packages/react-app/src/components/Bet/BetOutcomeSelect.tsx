@@ -38,7 +38,8 @@ function getOutcomes(
 		text: outcome,
 	}))
 
-	eventOutcomes.push({ value: INVALID_RESULT, text: t`Invalid result` })
+	// don't show INVALID_RESULT as a valid outcome
+	//eventOutcomes.push({ value: INVALID_RESULT, text: t`Invalid result` })
 
 	if (!isMultiple && outcomesValues[outcomeIndex]) {
 		// exclude the values already selected...
@@ -46,7 +47,7 @@ function getOutcomes(
 		// ... except the current value
 		outcomeValues.splice(valueIndex, 1)
 
-		eventOutcomes = eventOutcomes.filter(outcome => {
+		eventOutcomes = eventOutcomes.filter((outcome) => {
 			return !outcomeValues.includes(outcome.value)
 		})
 	}
@@ -61,14 +62,14 @@ function filterOutcomesInterdependencies(
 	outcomesValues: BetFormValues['outcomes'],
 	matchesInterdependencies: MatchesInterdependencies
 ): IndexedBetOutcome[] {
-	return eventOutcomes.filter(outcome => {
+	return eventOutcomes.filter((outcome) => {
 		if (matchesInterdependencies) {
 			const relatedQuestions: string[] = matchesInterdependencies[event.id] ?? []
 			const possibleOutcomes: string[] = []
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
-				const questionPos = events.findIndex(event => event.id === questionId)
-				outcomesValues[questionPos].values.forEach(userSelectionIndex => {
+				const questionPos = events.findIndex((event) => event.id === questionId)
+				outcomesValues[questionPos].values.forEach((userSelectionIndex) => {
 					if (userSelectionIndex !== '') {
 						const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
 						possibleOutcomes.push(outcomeSelected)
@@ -116,8 +117,8 @@ function BetOutcomeSelect({
 			return
 		}
 
-		inverseInterdependencies[event.id].forEach(matchDependencyId => {
-			const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId)
+		inverseInterdependencies[event.id].forEach((matchDependencyId) => {
+			const matchDependencyIndex = outcomes.findIndex((outcome) => outcome.questionId === matchDependencyId)
 			outcomes[matchDependencyIndex].values.forEach((value, index) => {
 				if (value !== '') {
 					setValue(`outcomes.${matchDependencyIndex}.values.${index}`, '', {
@@ -148,7 +149,7 @@ function BetOutcomeSelect({
 							onOutcomeChange()
 						}}
 					>
-						{selectOutcomes.map(outcome => (
+						{selectOutcomes.map((outcome) => (
 							<MenuItem value={outcome.value} key={outcome.value}>
 								{transOutcome(outcome.text)}
 							</MenuItem>
