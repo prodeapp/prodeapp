@@ -27,9 +27,7 @@ export type MarketFactoryV2QuestionWithMetadata = {
 }
 
 export function encodeOutcomes(outcomes: string[]) {
-	return JSON.stringify(outcomes)
-		.replace(/^\[/, '')
-		.replace(/\]$/, '')
+	return JSON.stringify(outcomes).replace(/^\[/, '').replace(/\]$/, '')
 }
 export function encodeQuestionText(
 	qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
@@ -72,7 +70,7 @@ export function getQuestionId(
 
 export function getQuestionsHash(questionIDs: string[]) {
 	return keccak256(
-		questionIDs.map(_ => 'bytes32'),
+		questionIDs.map((_) => 'bytes32'),
 		questionIDs.sort((a, b) => (a > b ? 1 : -1))
 	)
 }
@@ -96,10 +94,13 @@ export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeV
 			return ANSWERED_TOO_SOON
 		}
 
-		const answerChoice = (outcome as number[]).reduce((partialSum: number, value: number) => partialSum + 2 ** value, 0)
+		const answerChoice = (outcome as number[]).reduce(
+			(partialSum: number, value: number) => partialSum + 2 ** Number(value),
+			0
+		)
 		return hexZeroPad(hexlify(answerChoice), 32) as Bytes
 	}
 
 	// single-select
-	return hexZeroPad(hexlify(outcome), 32) as Bytes
+	return hexZeroPad(hexlify(Number(outcome)), 32) as Bytes
 }
