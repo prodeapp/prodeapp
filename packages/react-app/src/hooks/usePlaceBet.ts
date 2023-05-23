@@ -128,9 +128,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	let daiAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
-		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
-		const extra = betPrice.mul(DIVISOR).div(DIVISOR * 100)
-		daiAmount = betPrice.add(extra)
+		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
+		daiAmount = price.add(extra)
 	}
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
@@ -195,6 +195,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
+	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
 	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
 
 	return {
