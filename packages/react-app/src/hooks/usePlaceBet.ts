@@ -128,7 +128,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	let daiAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
-		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
+		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
 		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
 		daiAmount = price.add(extra)
 	}
