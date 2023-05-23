@@ -369,7 +369,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 							</div>
 							<div>
 								<Trans
-									id='You can bet from {chain} with USDC. We will take care of bridging the funds for you.'
+									id='You can bet from {chain} with DAI. We will take care of bridging the funds for you.'
 									values={{ chain: chain.name }}
 								/>
 							</div>
@@ -476,7 +476,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						<>
 							{approve && approveTokens && (
 								<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
-									<Trans>Approve USDC</Trans>{' '}
+									<Trans>Approve DAI</Trans>{' '}
 									<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 								</Button>
 							)}

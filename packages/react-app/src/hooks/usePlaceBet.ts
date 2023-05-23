@@ -159,15 +159,12 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, price)
 
 	let ASSET_ADDRESS: Address = AddressZero
-	let usdcAmount = BigNumber.from(0)
+	let daiAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
 		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
-
-		// fix the difference of decimals
-		const priceInUsdc = price.div(10 ** (18 - 6))
-		const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
-		usdcAmount = priceInUsdc.add(extra)
+		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
+		daiAmount = price.add(extra)
 	}
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
@@ -177,8 +174,8 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
-	const approve: UsePlaceBetReturn['approve'] = allowance.lt(usdcAmount)
-		? { amount: usdcAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
+	const approve: UsePlaceBetReturn['approve'] = allowance.lt(daiAmount)
+		? { amount: daiAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -213,7 +210,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 				GNOSIS_CHAIN_RECEIVER_ADDRESS,
 				ASSET_ADDRESS,
 				address,
-				usdcAmount,
+				daiAmount,
 				slippage,
 				calldata,
 			],
@@ -230,7 +227,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
-	const hasFundsToBet = useHasFundsToBet(usdcAmount, ASSET_ADDRESS)
+	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
 
 	return {
 		isLoading,
