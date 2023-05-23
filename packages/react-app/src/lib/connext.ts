@@ -26,7 +26,7 @@ const CROSS_CHAIN_CONFIG: Record<number, { DOMAIN_ID: string; CONNEXT: Address; 
 		DOMAIN_ID: '6450786',
 		CONNEXT: '0xCd401c10afa37d641d2F594852DA94C700e4F2CE',
 		DAI: '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3',
-	},
+	}
 }
 
 function buildSdkConfig(): SdkConfig {
