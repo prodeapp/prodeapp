@@ -85,8 +85,8 @@ msgstr "Answered too soon"
 msgid "Answers"
 msgstr "Answers"
 
-msgid "Approve USDC"
-msgstr "Approve USDC"
+msgid "Approve DAI"
+msgstr "Approve DAI"
 
 msgid "Balance in ongoing answers"
 msgstr "Balance in ongoing answers"
@@ -817,8 +817,8 @@ msgstr "You are about to place {betsCount} bets."
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 
-msgid "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
-msgstr "You can bet from {chain} with USDC. We will take care of bridging the funds for you."
+msgid "You can bet from {chain} with DAI. We will take care of bridging the funds for you."
+msgstr "You can bet from {chain} with DAI. We will take care of bridging the funds for you."
 
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
