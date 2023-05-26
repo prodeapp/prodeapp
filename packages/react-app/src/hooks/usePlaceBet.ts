@@ -51,16 +51,6 @@ type UsePlaceBetFn = (
 
 export const CROSS_CHAIN_TOKEN_ID = MaxInt256
 
-export const isOldMarket = (market: Address) => {
-	const oldMarkets = [
-		'0x49f83f89B87f47dB74c4D9e1CE6Ba9DD0e79601d',
-		'0x9e667F8DaE476b0173AF92611C8D84F1C087cAd1',
-		'0xCC44021f042EFE65d0278CF5F8C1D7A7C436B784',
-	].map((m) => m.toLocaleLowerCase())
-
-	return oldMarkets.includes(market.toLocaleLowerCase())
-}
-
 const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) => {
 	if (tokenAddress === AddressZero) {
 		// in the case of a crosschain voucher set the tokenAddress to undefined
@@ -86,28 +76,6 @@ function hasValidResults(results: BetResults[]): results is Exclude<BetResults, 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const betPrice = price.mul(results.length)
 
-	const getOldTxParams = (
-		chainId: number,
-		attribution: Address,
-		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBet'> => {
-		if (!hasValidResults(results)) {
-			return {}
-		}
-
-		const firstResult = results[0]
-
-		return {
-			address: marketId,
-			abi: MarketAbi,
-			functionName: 'placeBet',
-			args: [attribution, firstResult],
-			overrides: {
-				value: price,
-			},
-		}
-	}
-
 	const getTxParams = (
 		chainId: number,
 		attribution: Address,
@@ -128,10 +96,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		}
 	}
 
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(
-		// @ts-ignore
-		isOldMarket(marketId) ? getOldTxParams(chainId, attribution, results) : getTxParams(chainId, attribution, results)
-	)
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(chainId, attribution, results))
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
