@@ -4,8 +4,7 @@ import { Address } from '@wagmi/core'
 import { readContracts } from 'wagmi'
 
 import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
-import { VoucherManagerAbi } from '@/abi/VoucherManager'
-import { filterChainId, getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
+import { DEFAULT_CHAIN, GNOSIS_CHAIN_RECEIVER_ADDRESS } from '@/lib/config'
 
 type UseHasVoucher = (
 	address: Address | undefined,
@@ -18,27 +17,19 @@ export const useHasVoucher: UseHasVoucher = (address, marketId, chainId, price) 
 	return useQuery(['useHasVoucher', { address, marketId, chainId, price }], async () => {
 		const data = (await readContracts({
 			contracts: [
-				isMainChain(chainId)
-					? {
-							address: getConfigAddress('VOUCHER_MANAGER', chainId),
-							abi: VoucherManagerAbi,
-							functionName: 'balance',
-							args: [address],
-							chainId: filterChainId(chainId),
-					  }
-					: {
-							address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
-							abi: GnosisChainReceiverV2Abi,
-							functionName: 'voucherBalance',
-							args: [address],
-							chainId: filterChainId(chainId),
-					  },
 				{
-					address: getConfigAddress('VOUCHER_MANAGER', chainId),
-					abi: VoucherManagerAbi,
+					address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+					abi: GnosisChainReceiverV2Abi,
+					functionName: 'voucherBalance',
+					args: [address],
+					chainId: DEFAULT_CHAIN,
+				},
+				{
+					address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+					abi: GnosisChainReceiverV2Abi,
 					functionName: 'marketsWhitelist',
 					args: [marketId],
-					chainId: filterChainId(chainId),
+					chainId: DEFAULT_CHAIN,
 				},
 			],
 		})) as [BigNumber, boolean]

@@ -6,14 +6,14 @@ import { Address } from '@wagmi/core'
 import { useAccount, useBalance, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
+import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
-import { VoucherManagerAbi } from '@/abi/VoucherManager'
 import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
+import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
@@ -254,7 +254,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		marketId: Address,
 		attribution: Address,
 		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof VoucherManagerAbi, 'placeBet'> => {
+	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBet'> => {
 		if (!hasValidResults(results)) {
 			return {}
 		}
@@ -263,8 +263,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		const firstResult = results[0]
 
 		return {
-			address: getConfigAddress('VOUCHER_MANAGER', chainId),
-			abi: VoucherManagerAbi,
+			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBet',
 			args: [marketId, attribution, firstResult],
 		}
@@ -274,8 +274,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		getTxParams(chainId, marketId, attribution, results)
 	)
 
-	const ethersInterface = new Interface(VoucherManagerAbi)
-	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
+	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
+	const events = parseEvents(receipt, GNOSIS_CHAIN_RECEIVER_ADDRESS, ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)

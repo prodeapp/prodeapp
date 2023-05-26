@@ -10,10 +10,12 @@ import { getContract, getProvider } from '@wagmi/core'
 import React, { useState } from 'react'
 import { useNetwork } from 'wagmi'
 
+import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
 import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { filterChainId, getConfigAddress, getConfigString } from '@/lib/config'
+import { getConfigString } from '@/lib/config'
+import { DEFAULT_CHAIN, GNOSIS_CHAIN_RECEIVER_ADDRESS } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -38,16 +40,6 @@ const BATCHER_ABI = [
 	},
 ] as const
 
-const VOUCHER_MANAGER_ABI = [
-	{
-		type: 'function',
-		stateMutability: 'payable',
-		outputs: [],
-		name: 'fundAddress',
-		inputs: [{ type: 'address', name: '_to', internalType: 'address' }],
-	},
-]
-
 function SendVouchers() {
 	const { chain } = useNetwork()
 	const { isLoading, isSuccess, write } = useSendRecklessTx({
@@ -57,9 +49,9 @@ function SendVouchers() {
 	})
 
 	const voucherContract = getContract({
-		address: getConfigAddress('VOUCHER_MANAGER', chain?.id),
-		abi: VOUCHER_MANAGER_ABI,
-		signerOrProvider: getProvider({ chainId: filterChainId(chain?.id) }),
+		address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+		abi: GnosisChainReceiverV2Abi,
+		signerOrProvider: getProvider({ chainId: DEFAULT_CHAIN }),
 	})
 
 	const [vouchers, setVouchers] = useState<VoucherData[]>([])
@@ -80,7 +72,7 @@ function SendVouchers() {
 
 		write!({
 			recklesslySetUnpreparedArgs: [
-				Array(vouchers.length).fill(getConfigAddress('VOUCHER_MANAGER', chain?.id)),
+				Array(vouchers.length).fill(GNOSIS_CHAIN_RECEIVER_ADDRESS),
 				values,
 				await Promise.all(
 					vouchers.map(
