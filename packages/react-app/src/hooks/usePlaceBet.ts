@@ -190,6 +190,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		const slippage = BigNumber.from(300) // 3%
 
 		// TODO: allow multiple bets
+		const numberOfBets = 1
 		const firstResult = results[0]
 		const size = Math.max(...firstResult.map((r) => stripZeros(r).length), 1)
 
@@ -198,6 +199,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			marketId,
 			attribution,
 			BigNumber.from(size).toHexString(),
+			BigNumber.from(numberOfBets).toHexString(),
 			hexConcat(firstResult.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
 		]) as Bytes
 
