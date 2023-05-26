@@ -3,7 +3,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query'
 import { Address } from '@wagmi/core'
 import { readContracts } from 'wagmi'
 
-import { GnosisChainReceiverAbi } from '@/abi/GnosisChainReceiver'
+import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
 import { VoucherManagerAbi } from '@/abi/VoucherManager'
 import { filterChainId, getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
 
@@ -14,14 +14,9 @@ type UseHasVoucher = (
 	price: BigNumber
 ) => UseQueryResult<{ hasVoucher: boolean; voucherBalance: BigNumber }, Error>
 
-export const useHasVoucher: UseHasVoucher = (
-	address,
-	marketId,
-	chainId,
-	price
-) => {
+export const useHasVoucher: UseHasVoucher = (address, marketId, chainId, price) => {
 	return useQuery(['useHasVoucher', { address, marketId, chainId, price }], async () => {
-		const data = await readContracts({
+		const data = (await readContracts({
 			contracts: [
 				isMainChain(chainId)
 					? {
@@ -33,7 +28,7 @@ export const useHasVoucher: UseHasVoucher = (
 					  }
 					: {
 							address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
-							abi: GnosisChainReceiverAbi,
+							abi: GnosisChainReceiverV2Abi,
 							functionName: 'voucherBalance',
 							args: [address],
 							chainId: filterChainId(chainId),
@@ -46,7 +41,7 @@ export const useHasVoucher: UseHasVoucher = (
 					chainId: filterChainId(chainId),
 				},
 			],
-		}) as [BigNumber, boolean]
+		})) as [BigNumber, boolean]
 
 		const [voucherBalance, marketWhitelisted] = [data?.[0] || BigNumber.from(0), data?.[1] || false]
 
