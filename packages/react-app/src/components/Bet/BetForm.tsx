@@ -411,7 +411,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										addAlternative={
 											betPrice.gt(0) &&
 											!isOldMarket(market.id) &&
-											isMainChain(chainId) &&
+											chain &&
+											isMainChain(chain.id) &&
 											!hasVoucher &&
 											valueIndex === valuesLength - 1 &&
 											value !== ''
@@ -484,7 +485,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
 									{betPrice.gt(0) ? (
 										<>
-											<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}
+											<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id, isCrossChainBet)}
 										</>
 									) : (
 										<Trans>Place a Free Bet</Trans>
