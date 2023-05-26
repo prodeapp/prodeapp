@@ -410,7 +410,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										setValue={setValue}
 										addAlternative={
 											betPrice.gt(0) &&
-											!isOldMarket(market.id) &&
 											chain &&
 											isMainChain(chain.id) &&
 											!hasVoucher &&
