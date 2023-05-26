@@ -196,7 +196,6 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
 	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
-	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
 
 	return {
 		isLoading,
