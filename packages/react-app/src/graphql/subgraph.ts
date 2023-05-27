@@ -339,3 +339,19 @@ export const RESPONSES_FIELDS = `
     bond
   }
 `
+
+export interface DestinationTransfer {
+	chainId: string
+	nonce: BigNumberish
+	transferId: string
+	status: string
+}
+
+export const DESTINATIONTRANSFER_FIELDS = `
+  fragment DestinationTrasnferFields on DestinationTransfer {
+	chainId
+	nonce
+	transferId
+	status
+  }
+`

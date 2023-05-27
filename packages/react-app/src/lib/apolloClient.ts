@@ -24,8 +24,19 @@ const realityClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 	}),
 }
 
+const connextClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
+	[NetworkId.GNOSIS]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/connext/amarok-runtime-v0-gnosis',
+		cache: new InMemoryCache(),
+	}),
+}
+
 const apolloProdeQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
 	return apolloQuery<T>(prodeClients[filterChainId(chainId)], queryString, variables)
+}
+
+const apolloConnextQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
+	return apolloQuery<T>(connextClients[filterChainId(chainId)], queryString, variables)
 }
 
 const apolloRealityQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
@@ -47,4 +58,4 @@ const apolloQuery = async <T>(
 	}
 }
 
-export { apolloProdeQuery, apolloRealityQuery }
+export { apolloProdeQuery, apolloRealityQuery, apolloConnextQuery }
