@@ -227,22 +227,11 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 			return {}
 		}
 
-		// TODO: allow multiple bets
-		if (results.length > 0) {
-			return {
-				address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				abi: GnosisChainReceiverV2Abi,
-				functionName: 'placeBets',
-				args: [marketId, attribution, results],
-			}
-		} else {
-			const firstResult = results[0]
-			return {
-				address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				abi: GnosisChainReceiverV2Abi,
-				functionName: 'placeBet',
-				args: [marketId, attribution, firstResult],
-			}
+		return {
+			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+			abi: GnosisChainReceiverV2Abi,
+			functionName: 'placeBets',
+			args: [marketId, attribution, results],
 		}
 	}
 
