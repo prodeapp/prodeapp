@@ -29,7 +29,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
 import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
-import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
+import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
 
@@ -409,12 +409,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										errors={errors}
 										setValue={setValue}
 										addAlternative={
-											betPrice.gt(0) &&
-											chain &&
-											isMainChain(chain.id) &&
-											!hasVoucher &&
-											valueIndex === valuesLength - 1 &&
-											value !== ''
+											betPrice.gt(0) && chain && valueIndex === valuesLength - 1 && value !== ''
 												? addAlternative(outcomeIndex)
 												: false
 										}

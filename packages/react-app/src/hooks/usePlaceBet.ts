@@ -154,8 +154,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 		const slippage = BigNumber.from(300) // 3%
 
-		// TODO: allow multiple bets
-		const numberOfBets = 1
+		const numberOfBets = results.length
 		const firstResult = results[0]
 		const size = Math.max(...firstResult.map((r) => stripZeros(r).length), 1)
 
@@ -165,7 +164,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			attribution,
 			BigNumber.from(size).toHexString(),
 			BigNumber.from(numberOfBets).toHexString(),
-			hexConcat(firstResult.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
+			hexConcat(
+				results.map((result) => hexConcat(result.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))))
+			),
 		]) as Bytes
 
 		return {
@@ -221,19 +222,27 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		marketId: Address,
 		attribution: Address,
 		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBet'> => {
+	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBet' | 'placeBets'> => {
 		if (!hasValidResults(results)) {
 			return {}
 		}
 
 		// TODO: allow multiple bets
-		const firstResult = results[0]
-
-		return {
-			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
-			abi: GnosisChainReceiverV2Abi,
-			functionName: 'placeBet',
-			args: [marketId, attribution, firstResult],
+		if (results.length > 0) {
+			return {
+				address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+				abi: GnosisChainReceiverV2Abi,
+				functionName: 'placeBets',
+				args: [marketId, attribution, results],
+			}
+		} else {
+			const firstResult = results[0]
+			return {
+				address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+				abi: GnosisChainReceiverV2Abi,
+				functionName: 'placeBet',
+				args: [marketId, attribution, firstResult],
+			}
 		}
 	}
 
