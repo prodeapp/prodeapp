@@ -13,7 +13,7 @@ export enum NetworkId {
 
 export const DEFAULT_CHAIN = NetworkId.GNOSIS
 
-export const GNOSIS_CHAIN_RECEIVER_ADDRESS: Address = '0x0dB38fD51525cb4D7D2814cCd3FEe3ACee391137'
+export const GNOSIS_CHAIN_RECEIVER_ADDRESS: Address = '0xFd5300fB615fD66A7C912d2fBCA5Df71f9d79901'
 
 type AddressMap = Record<number, Address>
 type BigNumberMap = Record<number, BigNumber>
