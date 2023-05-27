@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { Address, erc20ABI, useAccount, useNetwork } from 'wagmi'
 
@@ -29,6 +29,7 @@ import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
 import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
+import { usexCallStatus } from '@/hooks/usexCallStatus'
 import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
@@ -129,10 +130,11 @@ function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId:
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
+	const [transferIdXCall, setTransferIdXCall] = useState<string | undefined>(undefined)
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
-
+	const { data: xcallStatus } = usexCallStatus(transferIdXCall, chainId)
 	const { data: betWhitelistStatus = '', isLoading: isLoadingCheckWhitelist } = useCheckMarketWhitelist(market, chainId)
-
+	console.log(xcallStatus, transferIdXCall)
 	const {
 		register,
 		control,
@@ -187,6 +189,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		hasVoucher,
 		isCrossChainBet,
 		approve,
+		transferId,
 	} = usePlaceBet(
 		market.id,
 		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
@@ -216,6 +219,13 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
+
+	useEffect(() => {
+		if (transferId) {
+			console.log(transferId)
+			setTransferIdXCall(transferId)
+		}
+	}, [transferId])
 
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)

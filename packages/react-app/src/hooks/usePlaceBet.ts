@@ -32,6 +32,7 @@ export interface UsePlaceBetReturn {
 	betPrice: BigNumber
 	betsCount: number
 	approve?: { amount: BigNumber; token: Address; spender: Address }
+	transferId?: string
 }
 
 type UsePreparePlaceBetFn = (
@@ -210,6 +211,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		hasVoucher,
 		approve,
 		isCrossChainBet: true,
+		transferId: transferId,
 	}
 }
 
