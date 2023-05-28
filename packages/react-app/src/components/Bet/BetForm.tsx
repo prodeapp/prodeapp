@@ -9,6 +9,9 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import Grid from '@mui/material/Grid'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
+import Stepper from '@mui/material/Stepper'
 import React, { useEffect, useState } from 'react'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { Address, erc20ABI, useAccount, useNetwork } from 'wagmi'
@@ -20,16 +23,17 @@ import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { SimpleBetDetails } from '@/components/Bet/BetDetails'
 import { InPageConnectButton } from '@/components/ConnectButton'
 import { FormatEvent } from '@/components/FormatEvent'
-import { Market } from '@/graphql/subgraph'
+import { DestinationTransfer, Market, OriginTransfer } from '@/graphql/subgraph'
 import { useBets } from '@/hooks/useBets'
 import { useBetToken } from '@/hooks/useBetToken'
 import { useCheckMarketWhitelist, WHITELIST_STATUS } from '@/hooks/useCheckMarketWhitelist'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
+import { useDestinationTransfer } from '@/hooks/useDestinationTransfer'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
-import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
+import { useOriginTransfer } from '@/hooks/useOriginTransfer'
+import { usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
-import { usexCallStatus } from '@/hooks/usexCallStatus'
 import { DEFAULT_CHAIN } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
 import { queryClient } from '@/lib/react-query'
@@ -127,14 +131,41 @@ function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId:
 	)
 }
 
+function getBridgingStatus(
+	originTransfer: OriginTransfer | undefined,
+	destinationTransfer: DestinationTransfer | undefined,
+	isCrossChainBet?: boolean,
+	tokenId?: BigNumber | boolean
+): number {
+	if (!isCrossChainBet) {
+		if (
+			originTransfer &&
+			originTransfer.status == 'XCalled' &&
+			destinationTransfer &&
+			destinationTransfer.status == 'Executed'
+		) {
+			return 2
+		}
+		if (originTransfer && originTransfer.status == 'XCalled') {
+			return 1
+		}
+		return 0
+	}
+	if (tokenId) {
+		return 2
+	}
+	return 0
+}
+
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
 	const [transferIdXCall, setTransferIdXCall] = useState<string | undefined>(undefined)
+	const [mintingStatus, setMintingStatus] = useState<number>(0)
 	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
-	const { data: xcallStatus } = usexCallStatus(transferIdXCall, chainId)
+	const { data: originTransfer } = useOriginTransfer(transferIdXCall, chain?.id)
+	const { data: destinationTransfer } = useDestinationTransfer(transferIdXCall, DEFAULT_CHAIN)
 	const { data: betWhitelistStatus = '', isLoading: isLoadingCheckWhitelist } = useCheckMarketWhitelist(market, chainId)
-	console.log(xcallStatus, transferIdXCall)
 	const {
 		register,
 		control,
@@ -227,6 +258,10 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		}
 	}, [transferId])
 
+	useEffect(() => {
+		setMintingStatus(getBridgingStatus(originTransfer, destinationTransfer, isCrossChainBet, tokenId))
+	}, [originTransfer, destinationTransfer, isCrossChainBet, tokenId])
+
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
@@ -263,39 +298,61 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	}
 
 	if (tokenId !== false) {
-		if (tokenId === CROSS_CHAIN_TOKEN_ID) {
-			return (
-				<BigAlert severity='info' sx={{ mb: 4 }}>
-					<Box
-						sx={{
-							display: { md: 'flex' },
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<div>
-							<div>
-								<AlertTitle>
-									<Trans>Congratulations!</Trans>
-								</AlertTitle>
-							</div>
-							<div>
-								<Trans>Your bet is travelling to the destination chain, it will arrive in a few minutes!</Trans>
-							</div>
-						</div>
-					</Box>
-				</BigAlert>
-			)
-		}
-
 		return (
-			<>
-				<Alert severity='success' sx={{ mb: 3 }}>
-					<Trans>Bet placed!</Trans>
-				</Alert>
+			<BigAlert severity='info' sx={{ mb: 4 }}>
+				<Box
+					sx={{
+						display: { md: 'flex' },
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
+					<div>
+						<div>
+							<AlertTitle>
+								<Trans>Congratulations!</Trans>
+							</AlertTitle>
+						</div>
+						<Box sx={{ width: '100%' }}>
+							<Stepper activeStep={mintingStatus}>
+								<Step key={'minting'}>
+									<StepLabel>
+										<Trans>Minting</Trans>
+									</StepLabel>
+								</Step>
+								<Step key={'bridging'} disabled={!isCrossChainBet}>
+									<StepLabel>
+										<Trans>Bridging</Trans>
+									</StepLabel>
+								</Step>
+								<Step key={'complete'}>
+									<StepLabel>
+										<Trans>Enjoy</Trans>
+									</StepLabel>
+								</Step>
+							</Stepper>
+						</Box>
+						<Box margin={'10px'}>
+							{mintingStatus === 0 ? (
+								<Trans>We are minting your prediction. This should not take longer.</Trans>
+							) : mintingStatus === 1 ? (
+								<Trans>
+									Your prediction is travelling to the home chain to be minted. You can wait or keep making predictions
+								</Trans>
+							) : (
+								<>
+									<Alert severity='success' sx={{ mb: 3 }}>
+										<Trans>Bet placed!</Trans>
+									</Alert>
 
-				<BetNFT marketId={market.id} tokenId={tokenId} chainId={chainId} />
-			</>
+									<BetNFT marketId={market.id} tokenId={BigNumber.from(0)} chainId={chainId} />
+								</>
+							)}
+						</Box>
+						w{' '}
+					</div>
+				</Box>
+			</BigAlert>
 		)
 	}
 
