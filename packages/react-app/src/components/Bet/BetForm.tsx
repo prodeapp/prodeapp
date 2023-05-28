@@ -27,7 +27,7 @@ import { useCheckMarketWhitelist, WHITELIST_STATUS } from '@/hooks/useCheckMarke
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
-import { CROSS_CHAIN_TOKEN_ID, isOldMarket, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
+import { CROSS_CHAIN_TOKEN_ID, usePlaceBet, UsePlaceBetReturn } from '@/hooks/usePlaceBet'
 import { useSendTx } from '@/hooks/useSendTx'
 import { DEFAULT_CHAIN, isMainChain } from '@/lib/config'
 import { formatAmount, getReferralKey } from '@/lib/helpers'
@@ -369,7 +369,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 							</div>
 							<div>
 								<Trans
-									id='You can bet from {chain} with USDC. We will take care of bridging the funds for you.'
+									id='You can bet from {chain} with DAI. We will take care of bridging the funds for you.'
 									values={{ chain: chain.name }}
 								/>
 							</div>
@@ -410,8 +410,8 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										setValue={setValue}
 										addAlternative={
 											betPrice.gt(0) &&
-											!isOldMarket(market.id) &&
-											isMainChain(chainId) &&
+											chain &&
+											isMainChain(chain.id) &&
 											!hasVoucher &&
 											valueIndex === valuesLength - 1 &&
 											value !== ''
@@ -476,7 +476,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 						<>
 							{approve && approveTokens && (
 								<Button type='button' color='primary' size='large' fullWidth onClick={() => approveTokens()}>
-									<Trans>Approve USDC</Trans>{' '}
+									<Trans>Approve DAI</Trans>{' '}
 									<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 								</Button>
 							)}
@@ -484,7 +484,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 								<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
 									{betPrice.gt(0) ? (
 										<>
-											<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id)}
+											<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id, isCrossChainBet)}
 										</>
 									) : (
 										<Trans>Place a Free Bet</Trans>

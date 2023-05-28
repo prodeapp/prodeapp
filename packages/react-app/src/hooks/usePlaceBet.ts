@@ -6,14 +6,14 @@ import { Address } from '@wagmi/core'
 import { useAccount, useBalance, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
+import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
 import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
-import { VoucherManagerAbi } from '@/abi/VoucherManager'
 import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { getConfigAddress, GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
+import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
@@ -51,16 +51,6 @@ type UsePlaceBetFn = (
 
 export const CROSS_CHAIN_TOKEN_ID = MaxInt256
 
-export const isOldMarket = (market: Address) => {
-	const oldMarkets = [
-		'0x49f83f89B87f47dB74c4D9e1CE6Ba9DD0e79601d',
-		'0x9e667F8DaE476b0173AF92611C8D84F1C087cAd1',
-		'0xCC44021f042EFE65d0278CF5F8C1D7A7C436B784',
-	].map((m) => m.toLocaleLowerCase())
-
-	return oldMarkets.includes(market.toLocaleLowerCase())
-}
-
 const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) => {
 	if (tokenAddress === AddressZero) {
 		// in the case of a crosschain voucher set the tokenAddress to undefined
@@ -86,28 +76,6 @@ function hasValidResults(results: BetResults[]): results is Exclude<BetResults, 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
 	const betPrice = price.mul(results.length)
 
-	const getOldTxParams = (
-		chainId: number,
-		attribution: Address,
-		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof MarketAbi, 'placeBet'> => {
-		if (!hasValidResults(results)) {
-			return {}
-		}
-
-		const firstResult = results[0]
-
-		return {
-			address: marketId,
-			abi: MarketAbi,
-			functionName: 'placeBet',
-			args: [attribution, firstResult],
-			overrides: {
-				value: price,
-			},
-		}
-	}
-
 	const getTxParams = (
 		chainId: number,
 		attribution: Address,
@@ -128,10 +96,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		}
 	}
 
-	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(
-		// @ts-ignore
-		isOldMarket(marketId) ? getOldTxParams(chainId, attribution, results) : getTxParams(chainId, attribution, results)
-	)
+	const { isLoading, isSuccess, isError, error, write, receipt } = useSendTx(getTxParams(chainId, attribution, results))
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
@@ -159,15 +124,12 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, price)
 
 	let ASSET_ADDRESS: Address = AddressZero
-	let usdcAmount = BigNumber.from(0)
+	let daiAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
-		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.USDC
-
-		// fix the difference of decimals
-		const priceInUsdc = price.div(10 ** (18 - 6))
-		const extra = priceInUsdc.mul(DIVISOR).div(DIVISOR * 100)
-		usdcAmount = priceInUsdc.add(extra)
+		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
+		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
+		daiAmount = price.add(extra)
 	}
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
@@ -177,8 +139,8 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
-	const approve: UsePlaceBetReturn['approve'] = allowance.lt(usdcAmount)
-		? { amount: usdcAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
+	const approve: UsePlaceBetReturn['approve'] = allowance.lt(daiAmount)
+		? { amount: daiAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -193,6 +155,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		const slippage = BigNumber.from(300) // 3%
 
 		// TODO: allow multiple bets
+		const numberOfBets = 1
 		const firstResult = results[0]
 		const size = Math.max(...firstResult.map((r) => stripZeros(r).length), 1)
 
@@ -201,6 +164,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			marketId,
 			attribution,
 			BigNumber.from(size).toHexString(),
+			BigNumber.from(numberOfBets).toHexString(),
 			hexConcat(firstResult.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))),
 		]) as Bytes
 
@@ -213,7 +177,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 				GNOSIS_CHAIN_RECEIVER_ADDRESS,
 				ASSET_ADDRESS,
 				address,
-				usdcAmount,
+				daiAmount,
 				slippage,
 				calldata,
 			],
@@ -230,7 +194,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
-	const hasFundsToBet = useHasFundsToBet(usdcAmount, ASSET_ADDRESS)
+	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
 
 	return {
 		isLoading,
@@ -257,7 +221,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		marketId: Address,
 		attribution: Address,
 		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof VoucherManagerAbi, 'placeBet'> => {
+	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBet'> => {
 		if (!hasValidResults(results)) {
 			return {}
 		}
@@ -266,8 +230,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		const firstResult = results[0]
 
 		return {
-			address: getConfigAddress('VOUCHER_MANAGER', chainId),
-			abi: VoucherManagerAbi,
+			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBet',
 			args: [marketId, attribution, firstResult],
 		}
@@ -277,8 +241,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		getTxParams(chainId, marketId, attribution, results)
 	)
 
-	const ethersInterface = new Interface(VoucherManagerAbi)
-	const events = parseEvents(receipt, getConfigAddress('VOUCHER_MANAGER', chainId), ethersInterface)
+	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
+	const events = parseEvents(receipt, GNOSIS_CHAIN_RECEIVER_ADDRESS, ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)

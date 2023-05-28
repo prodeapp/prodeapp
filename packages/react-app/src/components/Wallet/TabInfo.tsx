@@ -59,11 +59,11 @@ export default function TabInfo() {
 	const { chain } = useNetwork()
 	const { address } = useAccount()
 
-	const usdcAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.USDC : undefined
+	const daiAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.DAI : undefined
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
-	const { data: usdcBalance = { value: BigNumber.from(0) } } = useBalance({
+	const { data: daiBalance = { value: BigNumber.from(0) } } = useBalance({
 		address,
-		token: usdcAddress,
+		token: daiAddress,
 		chainId: chain?.id,
 	})
 
@@ -77,8 +77,8 @@ export default function TabInfo() {
 					{mainChain && (
 						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
 					)}
-					{!mainChain && !!usdcAddress && (
-						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(usdcBalance.value, chain.id, true, 6)}</div>
+					{!mainChain && !!daiBalance && (
+						<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(daiBalance.value, chain.id, true)}</div>
 					)}
 				</div>
 			)}

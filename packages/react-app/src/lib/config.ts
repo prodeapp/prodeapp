@@ -13,7 +13,7 @@ export enum NetworkId {
 
 export const DEFAULT_CHAIN = NetworkId.GNOSIS
 
-export const GNOSIS_CHAIN_RECEIVER_ADDRESS: Address = '0x5C04E0E5aa26C6B7d2346b7201E5B09e8C7D76a4'
+export const GNOSIS_CHAIN_RECEIVER_ADDRESS: Address = '0xFd5300fB615fD66A7C912d2fBCA5Df71f9d79901'
 
 type AddressMap = Record<number, Address>
 type BigNumberMap = Record<number, BigNumber>
@@ -26,7 +26,6 @@ type AddressConfigValues = {
 	REALITIO: AddressMap
 	CURATE_REGISTRY: AddressMap
 	KEY_VALUE: AddressMap
-	VOUCHER_MANAGER: AddressMap
 	SVG_AD_FACTORY: AddressMap
 	FIRST_PRICE_AUCTION: AddressMap
 }
@@ -68,11 +67,6 @@ const ADDRESSES_CONFIG: AddressConfigValues = {
 	KEY_VALUE: {
 		[NetworkId.GNOSIS]: '0x47C255D92F6e800312835f08f7906Bc9019a210C',
 		[NetworkId.POLYGON_TESTNET]: '0xE680Dc6A28674546361531BF4CaaE190E08D6Bad',
-	},
-
-	VOUCHER_MANAGER: {
-		[NetworkId.GNOSIS]: '0x10Df43e85261df385B2b865705738233626a21Ad',
-		[NetworkId.POLYGON_TESTNET]: '0x6F00370D5CC9e50Fb47c05E0f5b4C27c58918BB6',
 	},
 
 	SVG_AD_FACTORY: {
