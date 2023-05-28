@@ -12,11 +12,11 @@ const query = `
     }
 `
 
-export const useDestinationTransfer = (transferId: string | undefined, chainId: number) => {
+export const useDestinationTransfer = (transferId: string | undefined, chainId: number | undefined) => {
 	return useQuery<DestinationTransfer, Error>(
 		['useDestinationTransfer', transferId, chainId],
 		async () => {
-			const response = await apolloConnextQuery<{ destinationTransfer: DestinationTransfer }>(chainId, query, {
+			const response = await apolloConnextQuery<{ destinationTransfer: DestinationTransfer }>(chainId!, query, {
 				transferId: transferId!.toLowerCase(),
 			})
 
@@ -24,6 +24,6 @@ export const useDestinationTransfer = (transferId: string | undefined, chainId: 
 
 			return response.data.destinationTransfer
 		},
-		{ enabled: !!transferId }
+		{ enabled: !!transferId && !!chainId }
 	)
 }

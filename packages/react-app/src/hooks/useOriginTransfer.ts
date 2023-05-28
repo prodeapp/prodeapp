@@ -13,11 +13,11 @@ const query = `
 	  }
 `
 
-export const useOriginTransfer = (transferId: string | undefined, chainId: number) => {
+export const useOriginTransfer = (transferId: string | undefined, chainId: number | undefined) => {
 	return useQuery<OriginTransfer, Error>(
 		['useOriginTransfer', transferId, chainId],
 		async () => {
-			const response = await apolloConnextQuery<{ originTransfer: OriginTransfer }>(chainId, query, {
+			const response = await apolloConnextQuery<{ originTransfer: OriginTransfer }>(chainId!, query, {
 				transferId: transferId!.toLowerCase(),
 			})
 
@@ -25,6 +25,6 @@ export const useOriginTransfer = (transferId: string | undefined, chainId: numbe
 
 			return response.data.originTransfer
 		},
-		{ enabled: !!transferId }
+		{ enabled: !!transferId && !!chainId }
 	)
 }
