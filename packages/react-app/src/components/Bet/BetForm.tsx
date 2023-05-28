@@ -409,7 +409,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										errors={errors}
 										setValue={setValue}
 										addAlternative={
-											betPrice.gt(0) && chain && valueIndex === valuesLength - 1 && value !== ''
+											betPrice.gt(0) && valueIndex === valuesLength - 1 && value !== ''
 												? addAlternative(outcomeIndex)
 												: false
 										}

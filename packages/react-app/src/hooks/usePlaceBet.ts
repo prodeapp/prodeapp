@@ -155,8 +155,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		const slippage = BigNumber.from(300) // 3%
 
 		const numberOfBets = results.length
-		const firstResult = results[0]
-		const size = Math.max(...firstResult.map((r) => stripZeros(r).length), 1)
+		const size = Math.max(...results[0].map((r) => stripZeros(r).length), 1)
 
 		const calldata = hexConcat([
 			address,
@@ -222,7 +221,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		marketId: Address,
 		attribution: Address,
 		results: BetResults[]
-	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBet' | 'placeBets'> => {
+	): UsePrepareContractWriteConfig<typeof GnosisChainReceiverV2Abi, 'placeBets'> => {
 		if (!hasValidResults(results)) {
 			return {}
 		}
