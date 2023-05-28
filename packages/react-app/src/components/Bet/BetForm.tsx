@@ -142,7 +142,7 @@ function getBridgingStatus(
 			originTransfer &&
 			originTransfer.status == 'XCalled' &&
 			destinationTransfer &&
-			destinationTransfer.status == 'Executed'
+			['Executed', 'CompletedFast', 'CompletedSlow'].indexOf(destinationTransfer.status) !== -1
 		) {
 			return 2
 		}
@@ -152,7 +152,7 @@ function getBridgingStatus(
 		return 0
 	}
 	if (tokenId) {
-		return 2
+		return 1
 	}
 	return 0
 }
@@ -253,7 +253,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		if (transferId) {
-			console.log(transferId)
 			setTransferIdXCall(transferId)
 		}
 	}, [transferId])
@@ -265,8 +264,9 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
-	if (isLoading || isLoadingApprove || isLoadingEvents || isLoadingCheckWhitelist) {
+	if (isLoadingApprove || isLoadingEvents || isLoadingCheckWhitelist) {
 		return (
+			// TODO: This should appear while minting...
 			<div style={{ textAlign: 'center', marginBottom: 15 }}>
 				<CircularProgress />
 			</div>
@@ -297,62 +297,64 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		)
 	}
 
-	if (tokenId !== false) {
+	if (tokenId !== false || isLoading) {
 		return (
-			<BigAlert severity='info' sx={{ mb: 4 }}>
-				<Box
-					sx={{
-						display: { md: 'flex' },
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					<div>
+			<>
+				<BigAlert severity='info' sx={{ mb: 4 }}>
+					<Box
+						sx={{
+							display: { md: 'flex' },
+							justifyContent: 'space-between',
+							alignItems: 'center',
+						}}
+					>
 						<div>
-							<AlertTitle>
-								<Trans>Congratulations!</Trans>
-							</AlertTitle>
+							<div>
+								<AlertTitle>
+									<Trans>Congratulations!</Trans>
+								</AlertTitle>
+							</div>
+							<Box sx={{ width: '100%' }}>
+								<Stepper activeStep={mintingStatus}>
+									<Step key={'minting'}>
+										<StepLabel>
+											<Trans>Minting</Trans>
+										</StepLabel>
+									</Step>
+									{isCrossChainBet ? (
+										<Step key={'bridging'} disabled={!isCrossChainBet}>
+											<StepLabel>
+												<Trans>Bridging</Trans>
+											</StepLabel>
+										</Step>
+									) : null}
+									<Step key={'completed'}>
+										<StepLabel>
+											<Trans>Bet placed!</Trans>
+										</StepLabel>
+									</Step>
+								</Stepper>
+							</Box>
 						</div>
-						<Box sx={{ width: '100%' }}>
-							<Stepper activeStep={mintingStatus}>
-								<Step key={'minting'}>
-									<StepLabel>
-										<Trans>Minting</Trans>
-									</StepLabel>
-								</Step>
-								<Step key={'bridging'} disabled={!isCrossChainBet}>
-									<StepLabel>
-										<Trans>Bridging</Trans>
-									</StepLabel>
-								</Step>
-								<Step key={'complete'}>
-									<StepLabel>
-										<Trans>Enjoy</Trans>
-									</StepLabel>
-								</Step>
-							</Stepper>
-						</Box>
-						<Box margin={'10px'}>
-							{mintingStatus === 0 ? (
+					</Box>
+				</BigAlert>
+				<Box margin={'10px'}>
+					{mintingStatus === 0 ? (
+						<div>
+							<div>
 								<Trans>We are minting your prediction. This should not take longer.</Trans>
-							) : mintingStatus === 1 ? (
-								<Trans>
-									Your prediction is travelling to the home chain to be minted. You can wait or keep making predictions
-								</Trans>
-							) : (
-								<>
-									<Alert severity='success' sx={{ mb: 3 }}>
-										<Trans>Bet placed!</Trans>
-									</Alert>
-
-									<BetNFT marketId={market.id} tokenId={BigNumber.from(0)} chainId={chainId} />
-								</>
-							)}
-						</Box>
-						w{' '}
-					</div>
+							</div>
+							<CircularProgress />
+						</div>
+					) : mintingStatus === 1 ? (
+						<Trans>
+							Your prediction is travelling to the home chain to be minted. You can wait or keep making predictions
+						</Trans>
+					) : (
+						<BetNFT marketId={market.id} tokenId={BigNumber.from(0)} chainId={chainId} />
+					)}
 				</Box>
-			</BigAlert>
+			</>
 		)
 	}
 
