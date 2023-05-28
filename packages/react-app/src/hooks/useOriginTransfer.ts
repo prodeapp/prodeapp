@@ -6,7 +6,7 @@ import { apolloConnextQuery } from '@/lib/apolloClient'
 
 const query = `
     ${ORIGINTRANSFER_FIELDS}
-    query originTransfer($transferId: String) {
+    query OriginTransfer($transferId: String) {
 		originTransfer(id:$transferId) {
 		  chainId
 		  status
@@ -15,12 +15,12 @@ const query = `
 `
 
 export const useOriginTransfer = (transferId: string | undefined, chainId: number | undefined) => {
-	const [originTransfer, setOriginTransfer] = useState<undefined | OriginTransfer>(undefined)
+	const [originTransfer, setOriginTransfer] = useState<OriginTransfer | null>(null)
 
 	return useQuery<OriginTransfer, Error>(
 		['useOriginTransfer', transferId, chainId],
 		async () => {
-			if (originTransfer === undefined || originTransfer.status !== 'XCalled') {
+			if (originTransfer === null || originTransfer?.status !== 'XCalled') {
 				const response = await apolloConnextQuery<{ originTransfer: OriginTransfer }>(chainId!, query, {
 					transferId: transferId!.toLowerCase(),
 				})

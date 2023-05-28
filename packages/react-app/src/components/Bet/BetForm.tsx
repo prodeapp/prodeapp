@@ -140,9 +140,9 @@ function getBridgingStatus(
 	if (isCrossChainBet) {
 		if (
 			originTransfer &&
-			originTransfer.status == 'XCalled' &&
+			originTransfer?.status == 'XCalled' &&
 			destinationTransfer &&
-			['Executed', 'CompletedFast', 'CompletedSlow'].indexOf(destinationTransfer.status) !== -1
+			['Executed', 'CompletedFast', 'CompletedSlow'].indexOf(destinationTransfer?.status) !== -1
 		) {
 			return 2
 		}
@@ -253,7 +253,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		if (transferId) {
-			setTransferIdXCall(transferId)
+			setTransferIdXCall(transferId.toLowerCase())
 		}
 	}, [transferId])
 
