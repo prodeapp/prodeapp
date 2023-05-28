@@ -137,7 +137,7 @@ function getBridgingStatus(
 	isCrossChainBet?: boolean,
 	tokenId?: BigNumber | boolean
 ): number {
-	if (!isCrossChainBet) {
+	if (isCrossChainBet) {
 		if (
 			originTransfer &&
 			originTransfer.status == 'XCalled' &&
