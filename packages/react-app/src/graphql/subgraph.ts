@@ -350,8 +350,20 @@ export interface DestinationTransfer {
 export const DESTINATIONTRANSFER_FIELDS = `
   fragment DestinationTrasnferFields on DestinationTransfer {
 	chainId
-	nonce
-	transferId
+	status
+  }
+`
+
+export interface OriginTransfer {
+	chainId: string
+	nonce: BigNumberish
+	transferId: string
+	status: string
+}
+
+export const ORIGINTRANSFER_FIELDS = `
+  fragment OriginTransferFields on OriginTransfer {
+	chainId
 	status
   }
 `

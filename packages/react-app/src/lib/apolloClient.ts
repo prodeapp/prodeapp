@@ -29,6 +29,18 @@ const connextClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 		uri: 'https://api.thegraph.com/subgraphs/name/connext/amarok-runtime-v0-gnosis',
 		cache: new InMemoryCache(),
 	}),
+	[NetworkId.POLYGON]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/connext/amarok-runtime-v0-polygon',
+		cache: new InMemoryCache(),
+	}),
+	[NetworkId.ARBITRUM]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/connext/amarok-runtime-v0-arbitrum',
+		cache: new InMemoryCache(),
+	}),
+	[NetworkId.OPTIMISM]: new ApolloClient({
+		uri: 'https://api.thegraph.com/subgraphs/name/connext/amarok-runtime-v0-optimism',
+		cache: new InMemoryCache(),
+	}),
 }
 
 const apolloProdeQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
@@ -36,7 +48,7 @@ const apolloProdeQuery = async <T>(chainId: number, queryString: string, variabl
 }
 
 const apolloConnextQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {
-	return apolloQuery<T>(connextClients[filterChainId(chainId)], queryString, variables)
+	return apolloQuery<T>(connextClients[chainId], queryString, variables)
 }
 
 const apolloRealityQuery = async <T>(chainId: number, queryString: string, variables: Record<string, any> = {}) => {

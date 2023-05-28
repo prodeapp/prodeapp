@@ -5,16 +5,16 @@ import { apolloConnextQuery } from '@/lib/apolloClient'
 
 const query = `
     ${DESTINATIONTRANSFER_FIELDS}
-    query DestinationTrasnferFields($transferId: String) {
+    query DestinationTrasnfer($transferId: String) {
       destinationTransfer(id:$transferId) {
-        ...XCallStatusFields
+        ...DestinationTrasnferFields
       }
     }
 `
 
-export const usexCallStatus = (transferId: string | undefined, chainId: number) => {
+export const useDestinationTransfer = (transferId: string | undefined, chainId: number) => {
 	return useQuery<DestinationTransfer, Error>(
-		['usexCallStatus', transferId, chainId],
+		['useDestinationTransfer', transferId, chainId],
 		async () => {
 			const response = await apolloConnextQuery<{ destinationTransfer: DestinationTransfer }>(chainId, query, {
 				transferId: transferId!.toLowerCase(),
