@@ -229,11 +229,11 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 
 					{isConnected ? (
 						<Box sx={{ background: theme.palette.secondary.main, padding: 1, mb: 2 }}>
-							<TabButton isActiveComponent={props.component === 'active-bets'} to='/active-bets'>
-								Active Bets
-							</TabButton>
 							<TabButton isActiveComponent={props.component === 'winning-bets'} to='/winning-bets'>
 								Winning Bets
+							</TabButton>
+							<TabButton isActiveComponent={props.component === 'active-bets'} to='/active-bets'>
+								Active Bets
 							</TabButton>
 							<TabButton isActiveComponent={props.component === 'events-answers'} to='/events-answers'>
 								Events Answers
