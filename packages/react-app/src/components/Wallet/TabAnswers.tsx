@@ -43,7 +43,7 @@ function TabAnswers({ playerId, chainId, pending }: { playerId: Address; chainId
 	if (answers.length === 0) {
 		return (
 			<Alert severity='info'>
-				<Trans>We have nott found pending answers</Trans>
+				<Trans>We have not found pending answers</Trans>
 			</Alert>
 		)
 	}

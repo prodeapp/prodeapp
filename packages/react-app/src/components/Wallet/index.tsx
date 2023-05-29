@@ -131,11 +131,11 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 	const { chain } = useNetwork()
 	const mainChain = isMainChain(chain?.id)
 
-	const usdcAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.USDC : undefined
+	const daiAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.DAI : undefined
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
-	const { data: usdcBalance = { value: BigNumber.from(0) } } = useBalance({
+	const { data: daiBalance = { value: BigNumber.from(0) } } = useBalance({
 		address,
-		token: usdcAddress,
+		token: daiAddress,
 		chainId: chain?.id,
 	})
 
@@ -220,14 +220,9 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 					{chain && (
 						<Box style={{ marginBottom: 20 }}>
 							<div style={{ fontSize: 12 }}>Balance</div>
-							{mainChain && (
-								<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
-							)}
-							{!mainChain && !!usdcAddress && (
-								<div style={{ fontSize: 30, fontWeight: 600 }}>
-									{formatAmount(usdcBalance.value, chain.id, true, 6)}
-								</div>
-							)}
+							<div style={{ fontSize: 30, fontWeight: 600 }}>
+								{formatAmount(mainChain ? nativeBalance.value : daiBalance.value, chain.id)}
+							</div>
 							<RealityClaim address={address!} chain={chain} />
 						</Box>
 					)}

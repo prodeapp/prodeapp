@@ -799,8 +799,8 @@ msgstr "Waiting for results"
 msgid "Waiting result"
 msgstr "Waiting result"
 
-msgid "We have nott found pending answers"
-msgstr "We have nott found pending answers"
+msgid "We have not found pending answers"
+msgstr "We have not found pending answers"
 
 msgid "We will calculate all the possible combinations of results and send a bet for each one of them."
 msgstr "We will calculate all the possible combinations of results and send a bet for each one of them."
