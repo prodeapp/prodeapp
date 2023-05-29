@@ -15,6 +15,7 @@ import { Address, Chain, useAccount, useBalance, useDisconnect, useNetwork } fro
 import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ConnectButton, InPageConnectButton } from '@/components/ConnectButton'
 import { TabActiveBets, TabWinningBets } from '@/components/Wallet/TabBets'
+import TopUp from '@/components/Wallet/TopUp'
 import { useClaimArgs } from '@/hooks/useReality'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigAddress, isMainChain } from '@/lib/config'
@@ -219,9 +220,16 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 
 					{chain && (
 						<Box style={{ marginBottom: 20 }}>
-							<div style={{ fontSize: 12 }}>Balance</div>
-							<div style={{ fontSize: 30, fontWeight: 600 }}>
-								{formatAmount(mainChain ? nativeBalance.value : daiBalance.value, chain.id)}
+							<div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
+								<div style={{ flex: '2' }}>
+									<div style={{ fontSize: 12 }}>Balance</div>
+									<div style={{ fontSize: 30, fontWeight: 600 }}>
+										{formatAmount(mainChain ? nativeBalance.value : daiBalance.value, chain.id)}
+									</div>
+								</div>
+								<div style={{ flex: '1' }}>
+									<TopUp address={address!} />
+								</div>
 							</div>
 							<RealityClaim address={address!} chain={chain} />
 						</Box>

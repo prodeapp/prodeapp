@@ -322,6 +322,18 @@ msgstr "Cantidad a financiar ({0})"
 msgid "Fund amount must be greater than 0.01"
 msgstr "La cantidad a financiar debe ser mayor a 0.01"
 
+msgid "Fund methods available by third parties"
+msgstr "Métodos disponibles por terceros"
+
+msgid "Fund with Card"
+msgstr "Fondear con Tarjeta"
+
+msgid "Fund with MtPelegrin"
+msgstr "Fondear con MtPelegrin"
+
+msgid "Fund with Sequence Methods"
+msgstr "Fondear con métodos de Sequence"
+
 msgid "Global Metrics"
 msgstr "Métricas Globales"
 
@@ -519,6 +531,9 @@ msgstr "Apostador"
 
 msgid "Playing"
 msgstr "Jugando"
+
+msgid "Please sign the message"
+msgstr "Por favor firme el mensaje"
 
 msgid "Points"
 msgstr "Puntos"
@@ -724,6 +739,9 @@ msgstr "Para apostar en este mercado necesitas conectarte usando tu email."
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
 
+msgid "Top Up"
+msgstr "Depositar"
+
 msgid "Total Bet: {0}"
 msgstr "Total apostado: {0}"
 
@@ -842,7 +860,7 @@ msgid "You have already placed a bet."
 msgstr "Ya has enviado una apuesta."
 
 msgid "You have funds available to claim for your answers."
-msgstr "Tienes fondos disponibles para reclamar por tus respuestas."
+msgstr "¡Tienes fondos disponibles para reclamar por tus respuestas!"
 
 msgid "You will receive {0}% of the prize pool as fee."
 msgstr "Recibirás {0}% del pool de premios como comisión."
