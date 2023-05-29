@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Modal from '@mui/material/Modal'
 import { GridCloseIcon } from '@mui/x-data-grid'
-import { useAccountModal } from '@rainbow-me/rainbowkit'
 import { sequence } from '0xsequence'
 import { OpenWalletIntent, Settings } from '0xsequence/dist/declarations/src/provider'
 import { ethers } from 'ethers'
@@ -129,7 +128,6 @@ export default function TopUp({ address }: { address: string }) {
 	const handleClose = () => setOpen(false)
 	const sequenceWallet = sequence.getWallet()
 	const isSequenceWallet = sequenceWallet.isConnected()
-	const { openAccountModal } = useAccountModal()
 
 	const openSequenceTopUp = () => {
 		const settings: Settings = {
@@ -165,11 +163,6 @@ export default function TopUp({ address }: { address: string }) {
 							</Button>
 						</Grid>
 					)}
-					<Grid item sm={6}>
-						<Button style={{ width: '100%' }} onClick={openAccountModal}>
-							<Trans>Already have crypto</Trans>
-						</Button>
-					</Grid>
 				</Grid>
 			</AppDialog>
 		</>

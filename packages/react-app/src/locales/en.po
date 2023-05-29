@@ -61,9 +61,6 @@ msgstr "All"
 msgid "Already Claimed"
 msgstr "Already Claimed"
 
-msgid "Already have crypto"
-msgstr "Already have crypto"
-
 msgid "Answer accepted"
 msgstr "Answer accepted"
 
