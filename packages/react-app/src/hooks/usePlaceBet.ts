@@ -120,16 +120,17 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
+	const betPrice = price.mul(results.length)
 	const { address } = useAccount()
-	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, price)
+	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
 
 	let ASSET_ADDRESS: Address = AddressZero
 	let daiAmount = BigNumber.from(0)
 
 	if (!hasVoucher) {
 		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
-		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
-		daiAmount = price.add(extra)
+		const extra = betPrice.mul(DIVISOR).div(DIVISOR * 100)
+		daiAmount = betPrice.add(extra)
 	}
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
@@ -202,8 +203,8 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		isError,
 		error,
 		hasFundsToBet,
-		betPrice: price,
-		betsCount: 1,
+		betPrice,
+		betsCount: results.length,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
@@ -213,8 +214,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 }
 
 const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
+	const betPrice = price.mul(results.length)
 	const { address } = useAccount()
-	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, price)
+	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
 
 	const getTxParams = (
 		chainId: number,
@@ -250,8 +252,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		isError,
 		error,
 		hasFundsToBet,
-		betPrice: price,
-		betsCount: 1,
+		betPrice,
+		betsCount: results.length,
 		placeBet: write,
 		tokenId,
 		hasVoucher,
