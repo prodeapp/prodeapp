@@ -6,14 +6,20 @@ import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
 import SwipeableDrawer from '@mui/material/SwipeableDrawer'
 import Typography from '@mui/material/Typography'
+import { BigNumber } from 'ethers'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Link as RouterLink } from 'react-router-dom'
-import { useAccount, useDisconnect, useNetwork } from 'wagmi'
+import { Address, Chain, useAccount, useBalance, useDisconnect, useNetwork } from 'wagmi'
 
+import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import { ConnectButton, InPageConnectButton } from '@/components/ConnectButton'
 import { TabActiveBets, TabWinningBets } from '@/components/Wallet/TabBets'
-import TabInfo from '@/components/Wallet/TabInfo'
+import { useClaimArgs } from '@/hooks/useReality'
+import { useSendRecklessTx } from '@/hooks/useSendTx'
+import { getConfigAddress, isMainChain } from '@/lib/config'
+import { CROSS_CHAIN_CONFIG } from '@/lib/connext'
+import { formatAmount } from '@/lib/helpers'
 
 import { TabPendingAnswers } from './TabAnswers'
 
@@ -55,6 +61,54 @@ const StyledSwipeableDrawer = styled(SwipeableDrawer)(({ theme }) => ({
 	},
 }))
 
+function RealityClaim({
+	address,
+	chain,
+}: {
+	address: Address
+	chain: (Chain & { unsupported?: boolean | undefined }) | undefined
+}) {
+	const { data: claimArgs } = useClaimArgs(address || '')
+
+	const { isSuccess, write } = useSendRecklessTx({
+		address: getConfigAddress('REALITIO', chain?.id),
+		abi: RealityAbi,
+		functionName: 'claimMultipleAndWithdrawBalance',
+	})
+
+	const claimReality = async () => {
+		if (!claimArgs) {
+			return
+		}
+
+		write!({
+			recklesslySetUnpreparedArgs: [
+				claimArgs.question_ids,
+				claimArgs.answer_lengths,
+				claimArgs.history_hashes,
+				claimArgs.answerers,
+				claimArgs.bonds,
+				claimArgs.answers,
+			],
+		})
+	}
+
+	if (chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0)) {
+		return (
+			<div style={{ marginBottom: 20 }}>
+				<div style={{ marginBottom: 10 }}>
+					<Trans>You have funds available to claim for your answers.</Trans>
+				</div>
+				<Button onClick={claimReality} color='primary' size='small'>
+					<Trans>Claim</Trans> {formatAmount(claimArgs.total, chain.id)}
+				</Button>
+			</div>
+		)
+	}
+
+	return null
+}
+
 export function Wallet(props: { open?: boolean; component?: string }) {
 	const theme = useTheme()
 
@@ -75,6 +129,15 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 
 	const { isConnected, address } = useAccount()
 	const { chain } = useNetwork()
+	const mainChain = isMainChain(chain?.id)
+
+	const daiAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.DAI : undefined
+	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
+	const { data: daiBalance = { value: BigNumber.from(0) } } = useBalance({
+		address,
+		token: daiAddress,
+		chainId: chain?.id,
+	})
 
 	// only enable backdrop transition on ios devices,
 	// because we can assume IOS is hosted on hight-end devices and will not drop frames
@@ -154,20 +217,31 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 						</Box>
 					</Box>
 
-					<Box sx={{ background: theme.palette.secondary.main, padding: 1, mb: 2 }}>
-						<TabButton isActiveComponent={props.component === 'wallet'} to='/wallet'>
-							Wallet
-						</TabButton>
-						<TabButton isActiveComponent={props.component === 'active-bets'} to='/active-bets'>
-							Active Bets
-						</TabButton>
-						<TabButton isActiveComponent={props.component === 'winning-bets'} to='/winning-bets'>
-							Winning Bets
-						</TabButton>
-						<TabButton isActiveComponent={props.component === 'events-answers'} to='/events-answers'>
-							Events Answers
-						</TabButton>
-					</Box>
+					{chain && (
+						<Box style={{ marginBottom: 20 }}>
+							<div style={{ fontSize: 12 }}>Balance</div>
+							<div style={{ fontSize: 30, fontWeight: 600 }}>
+								{formatAmount(mainChain ? nativeBalance.value : daiBalance.value, chain.id)}
+							</div>
+							<RealityClaim address={address!} chain={chain} />
+						</Box>
+					)}
+
+					{isConnected ? (
+						<Box sx={{ background: theme.palette.secondary.main, padding: 1, mb: 2 }}>
+							<TabButton isActiveComponent={props.component === 'winning-bets'} to='/winning-bets'>
+								Winning Bets
+							</TabButton>
+							<TabButton isActiveComponent={props.component === 'active-bets'} to='/active-bets'>
+								Active Bets
+							</TabButton>
+							<TabButton isActiveComponent={props.component === 'events-answers'} to='/events-answers'>
+								Events Answers
+							</TabButton>
+						</Box>
+					) : (
+						<ConnectMessage />
+					)}
 				</Box>
 				<Box
 					style={{
@@ -180,8 +254,6 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 				>
 					{(() => {
 						switch (props.component) {
-							case 'wallet':
-								return <>{!isConnected ? <ConnectMessage /> : <TabInfo />}</>
 							case 'active-bets':
 								return <>{address && chain && <TabActiveBets playerId={address} chainId={chain.id} />}</>
 							case 'events-answers':
@@ -192,7 +264,7 @@ export function Wallet(props: { open?: boolean; component?: string }) {
 					})()}
 				</Box>
 			</Box>
-			{(props.component !== 'wallet' || isConnected) && (
+			{isConnected && (
 				<Box
 					display='flex'
 					flexDirection='row'
