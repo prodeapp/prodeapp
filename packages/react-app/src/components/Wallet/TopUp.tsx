@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { t, Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,61 +10,10 @@ import { sequence } from '0xsequence'
 import { OpenWalletIntent, Settings } from '0xsequence/dist/declarations/src/provider'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
-import { useAccount, useBalance, useNetwork, useSignMessage } from 'wagmi'
+import { useSignMessage } from 'wagmi'
 
-import { RealityAbi } from '@/abi/RealityETH_v3_0'
 import AppDialog from '@/components/Dialog'
-import { useClaimArgs } from '@/hooks/useReality'
-import { useSendRecklessTx } from '@/hooks/useSendTx'
-import { getConfigAddress, isMainChain } from '@/lib/config'
-import { CROSS_CHAIN_CONFIG } from '@/lib/connext'
-import { formatAmount } from '@/lib/helpers'
 import { useI18nContext } from '@/lib/I18nContext'
-
-function RealityClaim() {
-	const { chain } = useNetwork()
-	const { address } = useAccount()
-
-	const { data: claimArgs } = useClaimArgs(address || '')
-
-	const { isSuccess, write } = useSendRecklessTx({
-		address: getConfigAddress('REALITIO', chain?.id),
-		abi: RealityAbi,
-		functionName: 'claimMultipleAndWithdrawBalance',
-	})
-
-	const claimReality = async () => {
-		if (!claimArgs) {
-			return
-		}
-
-		write!({
-			recklesslySetUnpreparedArgs: [
-				claimArgs.question_ids,
-				claimArgs.answer_lengths,
-				claimArgs.history_hashes,
-				claimArgs.answerers,
-				claimArgs.bonds,
-				claimArgs.answers,
-			],
-		})
-	}
-
-	if (chain && !chain.unsupported && isMainChain(chain?.id) && !isSuccess && claimArgs && claimArgs.total.gt(0)) {
-		return (
-			<div style={{ marginBottom: 20 }}>
-				<div style={{ marginBottom: 10 }}>
-					<Trans>You have funds available to claim for your answers.</Trans>
-				</div>
-				<Button onClick={claimReality} color='primary' size='small'>
-					<Trans>Claim</Trans> {formatAmount(claimArgs.total, chain.id)}
-				</Button>
-			</div>
-		)
-	}
-
-	return null
-}
 
 function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: boolean }) {
 	const [open, setOpen] = useState<boolean>(false)
@@ -175,7 +123,7 @@ function MtPelerin({ address, uniqueMethod }: { address: string; uniqueMethod: b
 	)
 }
 
-function TopUp({ address }: { address: string }) {
+export default function TopUp({ address }: { address: string }) {
 	const [open, setOpen] = useState<boolean>(false)
 	const handleOpen = () => setOpen(true)
 	const handleClose = () => setOpen(false)
@@ -202,57 +150,22 @@ function TopUp({ address }: { address: string }) {
 	}
 	return (
 		<>
-			<Button onClick={handleOpen}>
-				<Trans>TopUp</Trans>
+			<Button onClick={handleOpen} size='small'>
+				<Trans>Top Up</Trans>
 			</Button>
 			<AppDialog open={open} handleClose={handleClose} title={t`Fund methods available by third parties`}>
-				{/* TODO: fix styles */}
-				<Grid
-					container
-					spacing={2}
-					style={{
-						display: 'flex',
-						backgroundColor: 'background.paper',
-						alignItems: 'stretch',
-						alignContent: 'center',
-						justifyContent: 'center',
-						justifyItems: 'stretch',
-						minHeight: '10rem',
-					}}
-				>
-					<Grid
-						item
-						sm={6}
-						style={{
-							justifyContent: 'center',
-							justifyItems: 'space-around',
-							alignItems: 'stretch',
-							alignContent: 'center',
-							padding: '5px 10px',
-						}}
-					>
-						{isSequenceWallet ? (
-							<Grid item sm={12}>
-								<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
-									<Trans>Fund with Sequence Methods</Trans>
-								</Button>
-							</Grid>
-						) : null}
-						<Grid item sm={12}>
-							<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
-						</Grid>
+				<Grid container spacing={2}>
+					<Grid item sm={6}>
+						<MtPelerin address={address} uniqueMethod={!isSequenceWallet} />
 					</Grid>
-					<Grid
-						item
-						sm={6}
-						style={{
-							padding: '5px 10px',
-							justifyItems: 'space-around',
-							justifyContent: 'center',
-							alignContent: 'center',
-							alignItems: 'stretch',
-						}}
-					>
+					{isSequenceWallet && (
+						<Grid item sm={6}>
+							<Button onClick={openSequenceTopUp} style={{ width: '100%' }}>
+								<Trans>Fund with Sequence Methods</Trans>
+							</Button>
+						</Grid>
+					)}
+					<Grid item sm={6}>
 						<Button style={{ width: '100%' }} onClick={openAccountModal}>
 							<Trans>Already have crypto</Trans>
 						</Button>
@@ -260,42 +173,5 @@ function TopUp({ address }: { address: string }) {
 				</Grid>
 			</AppDialog>
 		</>
-	)
-}
-
-export default function TabInfo() {
-	const { chain } = useNetwork()
-	const { address } = useAccount()
-
-	const daiAddress = chain ? CROSS_CHAIN_CONFIG?.[chain.id]?.DAI : undefined
-	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
-	const { data: daiBalance = { value: BigNumber.from(0) } } = useBalance({
-		address,
-		token: daiAddress,
-		chainId: chain?.id,
-	})
-
-	const mainChain = isMainChain(chain?.id)
-
-	return (
-		<div>
-			{chain && (
-				<div style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
-					<div style={{ flex: '2' }}>
-						<div style={{ fontSize: 12 }}>Balance</div>
-						{mainChain && (
-							<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(nativeBalance.value, chain.id)}</div>
-						)}
-						{!mainChain && !!daiBalance && (
-							<div style={{ fontSize: 30, fontWeight: 600 }}>{formatAmount(daiBalance.value, chain.id, true)}</div>
-						)}
-					</div>
-					<div style={{ flex: '1' }}>
-						<TopUp address={address!} />
-					</div>
-				</div>
-			)}
-			<RealityClaim />
-		</div>
 	)
 }

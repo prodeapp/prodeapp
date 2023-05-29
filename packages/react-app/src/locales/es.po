@@ -742,7 +742,7 @@ msgstr "Para apostar en este mercado necesitas conectarte usando tu email."
 msgid "To submit the answer you need to deposit a bond of {0} that will be returned if the answer is correct."
 msgstr "Para enviar un resultado debes dejar un depósito de {0} que será devuelto si su respuesta es correcta."
 
-msgid "TopUp"
+msgid "Top Up"
 msgstr "Depositar"
 
 msgid "Total Bet: {0}"
