@@ -16,7 +16,6 @@ import React from 'react'
 import { Controller } from 'react-hook-form'
 import { FieldErrors } from 'react-hook-form/dist/types/errors'
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form'
-import { Address } from 'wagmi'
 
 import { FormError } from '@/components'
 import { FormatEvent, FormatOutcome } from '@/components/FormatEvent'
@@ -54,8 +53,8 @@ function getOutcomes(
 		const outcomeValues = [...outcomesValues[outcomeIndex].values]
 		// ... except the current value
 		outcomeValues.splice(valueIndex, 1)
-		eventOutcomes = eventOutcomes.filter((outcome) => {
-			return !outcomeValues.map((v) => String(v)).includes(String(outcome.value))
+		eventOutcomes = eventOutcomes.filter(outcome => {
+			return !outcomeValues.map(v => String(v)).includes(String(outcome.value))
 		})
 	}
 
@@ -69,14 +68,14 @@ function filterOutcomesInterdependencies(
 	outcomesValues: BetFormValues['outcomes'],
 	matchesInterdependencies: MatchesInterdependencies
 ): IndexedBetOutcome[] {
-	return eventOutcomes.filter((outcome) => {
+	return eventOutcomes.filter(outcome => {
 		if (matchesInterdependencies) {
 			const relatedQuestions: string[] = matchesInterdependencies[event.id] ?? []
 			const possibleOutcomes: string[] = []
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
-				const questionPos = events.findIndex((event) => event.id === questionId)
-				outcomesValues[questionPos].values.forEach((userSelectionIndex) => {
+				const questionPos = events.findIndex(event => event.id === questionId)
+				outcomesValues[questionPos].values.forEach(userSelectionIndex => {
 					if (userSelectionIndex !== '') {
 						const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
 						possibleOutcomes.push(outcomeSelected)
@@ -126,8 +125,8 @@ function BetOutcomeField({
 			return
 		}
 
-		inverseInterdependencies[event.id].forEach((matchDependencyId) => {
-			const matchDependencyIndex = outcomes.findIndex((outcome) => outcome.questionId === matchDependencyId)
+		inverseInterdependencies[event.id].forEach(matchDependencyId => {
+			const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId)
 			outcomes[matchDependencyIndex].values.forEach((value, index) => {
 				if (value !== '') {
 					setValue(`outcomes.${matchDependencyIndex}.values.${index}`, '', {
@@ -162,13 +161,13 @@ function BetOutcomeField({
 								onChange={onChangeHandler}
 								sx={{ justifyContent: 'center' }}
 							>
-								{fieldOutcomes.map((outcome) => (
+								{fieldOutcomes.map(outcome => (
 									<FormControlLabel
 										value={outcome.value}
 										key={outcome.value}
 										control={<Radio />}
 										sx={{ flexDirection: 'column', width: '33%', margin: 0 }}
-										label={<FormatOutcome name={transOutcome(outcome.text)} title={event.title} />}
+										label={<FormatOutcome name={transOutcome(outcome.text)} title={event.title} xsColumn={true} />}
 									/>
 								))}
 							</RadioGroup>
@@ -183,7 +182,7 @@ function BetOutcomeField({
 							value={value === '' && isMultiple ? [] : value}
 							onChange={onChangeHandler}
 						>
-							{fieldOutcomes.map((outcome) => (
+							{fieldOutcomes.map(outcome => (
 								<MenuItem value={outcome.value} key={outcome.value}>
 									{transOutcome(outcome.text)}
 								</MenuItem>
@@ -294,10 +293,7 @@ function BetOutcomeFieldWrapper({
 }
 
 interface BetOutcomeRowProps {
-	marketId: Address
-	chainId: number
 	betPrice: BigNumber
-	hasVoucher: boolean
 	matchesInterdependencies: MatchesInterdependencies
 	events: Event[]
 	values: BetFormOutcome[]
@@ -312,10 +308,7 @@ interface BetOutcomeRowProps {
 }
 
 export function BetOutcomeRow({
-	marketId,
-	chainId,
 	betPrice,
-	hasVoucher,
 	matchesInterdependencies,
 	events,
 	values,
@@ -366,11 +359,7 @@ export function BetOutcomeRow({
 						errors={errors}
 						setValue={setValue}
 						addAlternative={
-							betPrice.gt(0) &&
-							valueIndex === valuesLength - 1 &&
-							value !== ''
-								? addAlternative(outcomeIndex)
-								: false
+							betPrice.gt(0) && valueIndex === valuesLength - 1 && value !== '' ? addAlternative(outcomeIndex) : false
 						}
 						removeAlternative={removeAlternative(outcomeIndex, valueIndex)}
 					/>

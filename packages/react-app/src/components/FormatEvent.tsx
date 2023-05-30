@@ -1,3 +1,6 @@
+import Box from '@mui/material/Box'
+import { SxProps } from '@mui/system'
+
 import { getTeamImage } from '@/lib/teams-images'
 import { matchQuestion } from '@/lib/templates'
 
@@ -32,26 +35,33 @@ export function FormatOutcome({
 	country,
 	title,
 	imageAlign = 'left',
+	xsColumn = false,
 }: {
 	name: string
 	country?: string
 	title?: string
 	imageAlign?: 'left' | 'right'
+	xsColumn?: boolean
 }) {
 	if (!country) {
 		country = title ? getCountryFromEvent(title) : ''
 	}
 
-	const style: React.CSSProperties = { display: 'flex', alignItems: 'center' }
+	const style: SxProps = { display: 'flex', alignItems: 'center' }
 
 	if (imageAlign === 'right') {
 		style.justifyContent = 'end'
 		style.textAlign = 'right'
 	}
 
+	if (xsColumn) {
+		style.flexDirection = { xs: xsColumn ? 'column' : 'row', sm: 'row' }
+		style.textAlign = { xs: 'center', sm: imageAlign === 'right' ? 'right' : 'left' }
+	}
+
 	const image = getTeamImage(name, country)
 	return (
-		<div style={style}>
+		<Box sx={style}>
 			{image && imageAlign === 'left' && (
 				<img src={image} alt={name} width={15} height={15} style={{ marginRight: '5px' }} />
 			)}
@@ -59,7 +69,7 @@ export function FormatOutcome({
 			{image && imageAlign === 'right' && (
 				<img src={image} alt={name} width={15} height={15} style={{ marginLeft: '5px' }} />
 			)}
-		</div>
+		</Box>
 	)
 }
 
