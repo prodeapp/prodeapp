@@ -10,8 +10,6 @@ import {
 	WriteContractMode,
 } from 'wagmi'
 
-import { useDebounce } from './useDebounce'
-
 export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName extends string>({
 	address,
 	abi,
@@ -29,17 +27,13 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 	const [isTxSuccess, setIsTxSuccess] = useState(false)
 	const [isTxError, setIsTxError] = useState(false)
 	const [receipt, setReceipt] = useState<TransactionReceipt | undefined>()
-	const debouncedArgs = useDebounce(args, 500)
-
-	// the first call to useDebounce returns undefined, we need to skip this because the args are not ready yet
-	const waitDebounce = typeof args !== 'undefined' && typeof debouncedArgs === 'undefined'
 
 	// @ts-ignore
 	const { config, isError: isPrepareError } = usePrepareContractWrite({
 		address,
 		abi,
-		functionName: waitDebounce ? '' : functionName,
-		args: debouncedArgs,
+		functionName,
+		args,
 		overrides,
 		enabled,
 	})
@@ -54,7 +48,7 @@ export const useSendTx = <TAbi extends Abi | readonly unknown[], TFunctionName e
 
 	const { isLoading: isTxLoading, error } = useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess: (data) => {
+		onSuccess: data => {
 			const isSuccess = data.status === 1
 			setIsTxSuccess(isSuccess)
 			setIsTxError(!isSuccess)
@@ -108,7 +102,7 @@ export const useSendRecklessTx = <
 
 	const { isLoading: isTxLoading, error } = useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess: (data) => {
+		onSuccess: data => {
 			const isSuccess = data.status === 1
 			setIsTxSuccess(isSuccess)
 			setIsTxError(!isSuccess)
