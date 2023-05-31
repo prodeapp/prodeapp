@@ -28,7 +28,7 @@ import { BetFormOutcome, BetFormValues } from './BetForm'
 
 type BetOutcomeValue = number | typeof INVALID_RESULT
 
-type IndexedBetOutcome = { value: BetOutcomeValue; text: string }
+type IndexedBetOutcome = { value: BetOutcomeValue; text: string; disabled: boolean }
 
 function getOutcomes(
 	outcomeIndex: number,
@@ -43,6 +43,7 @@ function getOutcomes(
 	let eventOutcomes: IndexedBetOutcome[] = event.outcomes.map((outcome, i) => ({
 		value: i,
 		text: outcome,
+		disabled: false,
 	}))
 
 	// don't show INVALID_RESULT as a valid outcome
@@ -53,8 +54,12 @@ function getOutcomes(
 		const outcomeValues = [...outcomesValues[outcomeIndex].values]
 		// ... except the current value
 		outcomeValues.splice(valueIndex, 1)
-		eventOutcomes = eventOutcomes.filter(outcome => {
-			return !outcomeValues.map(v => String(v)).includes(String(outcome.value))
+		eventOutcomes = eventOutcomes.map(outcome => {
+			if (outcomeValues.map(v => String(v)).includes(String(outcome.value))) {
+				outcome.disabled = true
+			}
+
+			return outcome
 		})
 	}
 
@@ -165,7 +170,7 @@ function BetOutcomeField({
 									<FormControlLabel
 										value={outcome.value}
 										key={outcome.value}
-										control={<Radio />}
+										control={<Radio disabled={outcome.disabled} />}
 										sx={{ flexDirection: 'column', width: '33%', margin: 0 }}
 										label={<FormatOutcome name={transOutcome(outcome.text)} title={event.title} xsColumn={true} />}
 									/>
@@ -182,11 +187,16 @@ function BetOutcomeField({
 							value={value === '' && isMultiple ? [] : value}
 							onChange={onChangeHandler}
 						>
-							{fieldOutcomes.map(outcome => (
-								<MenuItem value={outcome.value} key={outcome.value}>
-									{transOutcome(outcome.text)}
-								</MenuItem>
-							))}
+							{fieldOutcomes.map(outcome => {
+								if (outcome.disabled) {
+									return null
+								}
+								return (
+									<MenuItem value={outcome.value} key={outcome.value}>
+										{transOutcome(outcome.text)}
+									</MenuItem>
+								)
+							})}
 						</Select>
 					)
 				}}
@@ -226,7 +236,9 @@ function BetOutcomeFieldWrapper({
 	addAlternative,
 	removeAlternative,
 }: BetOutcomeFieldWraperProps) {
-	if (fieldOutcomes.length === 0) {
+	const enabledOutcomesCount = fieldOutcomes.filter(f => !f.disabled).length
+
+	if (enabledOutcomesCount === 0) {
 		return null
 	}
 
@@ -268,7 +280,7 @@ function BetOutcomeFieldWrapper({
 				</div>
 			</div>
 
-			{addAlternative !== false && fieldOutcomes.length > 1 && (
+			{addAlternative !== false && enabledOutcomesCount > 1 && (
 				<div
 					style={{
 						display: 'flex',
