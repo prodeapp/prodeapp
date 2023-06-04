@@ -109,8 +109,8 @@ export const getConfigNumber = <T extends keyof BigNumberConfigValues>(configKey
 }
 
 export const filterChainId = (chainId?: number) => {
-	if (chainId === NetworkId.POLYGON_TESTNET) {
-		return chainId
+	if (chainId === NetworkId.POLYGON_TESTNET || chainId === NetworkId.OPTIMISM_TESTNET) {
+		return NetworkId.POLYGON_TESTNET
 	}
 
 	return DEFAULT_CHAIN
