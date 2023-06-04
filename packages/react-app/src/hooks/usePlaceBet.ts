@@ -13,13 +13,16 @@ import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
+import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, MUMBAI_CHAIN_RECEIVER_ADDRESS } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
 
 import { useHasVoucher } from './useHasVoucher'
 import { useSendTx } from './useSendTx'
+
+const isProd = ['prode.market', 'prode.eth.limo', 'prode.eth.link'].includes(window.location.hostname)
+const RECEIVER_ADDRESS = isProd ? GNOSIS_CHAIN_RECEIVER_ADDRESS : MUMBAI_CHAIN_RECEIVER_ADDRESS
 
 export interface UsePlaceBetReturn {
 	isLoading: boolean
@@ -171,15 +174,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			address: CONNEXT_ADDRESS,
 			abi: ConnextBridgeFacetAbi,
 			functionName: 'xcall',
-			args: [
-				Number(GNOSIS_DOMAIN_ID),
-				GNOSIS_CHAIN_RECEIVER_ADDRESS,
-				ASSET_ADDRESS,
-				address,
-				daiAmount,
-				slippage,
-				calldata,
-			],
+			args: [Number(GNOSIS_DOMAIN_ID), RECEIVER_ADDRESS, ASSET_ADDRESS, address, daiAmount, slippage, calldata],
 			overrides: {
 				value: relayerFee,
 			},
@@ -227,7 +222,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		}
 
 		return {
-			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+			address: RECEIVER_ADDRESS,
 			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBets',
 			args: [marketId, attribution, results],
@@ -239,7 +234,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	)
 
 	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
-	const events = parseEvents(receipt, GNOSIS_CHAIN_RECEIVER_ADDRESS, ethersInterface)
+	const events = parseEvents(receipt, RECEIVER_ADDRESS, ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)
