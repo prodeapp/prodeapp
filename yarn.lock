@@ -148,6 +148,11 @@
   dependencies:
     js-base64 "^3.7.2"
 
+"@0xsequence/wagmi-connector@1.0":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@0xsequence/wagmi-connector/-/wagmi-connector-1.0.13.tgz#8c1254ca64be06a20eafdbab6e999ea7f26e00fc"
+  integrity sha512-cym3m7a0eUFrbWKcUzXER1+lhyymTMQrJpuo9DsxYCvruKeW8bjwnr+6NlwAHslwdZim2SskfBbvx1fAZ+fPFQ==
+
 "@0xsequence/wallet@^0.43.27":
   version "0.43.27"
   resolved "https://registry.yarnpkg.com/@0xsequence/wallet/-/wallet-0.43.27.tgz#7b15932faa4e9fcacc9f8030b1f339e6089e8f91"
