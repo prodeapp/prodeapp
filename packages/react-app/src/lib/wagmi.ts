@@ -9,7 +9,7 @@ import {
 	rainbowWallet,
 	walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { arbitrum, bsc, gnosis, optimism, polygon, polygonMumbai } from '@wagmi/core/chains'
+import { arbitrum, bsc, gnosis, optimism, optimismGoerli, polygon, polygonMumbai } from '@wagmi/core/chains'
 import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
@@ -33,7 +33,7 @@ export const { chains, provider } = configureChains(
 		optimism,
 		polygon,
 		{ ...bsc, iconUrl: '/chains/bsc.svg' },
-		...(!isProd ? [polygonMumbai] : []),
+		...(!isProd ? [polygonMumbai, optimismGoerli] : []),
 	],
 	[
 		...(import.meta.env.VITE_ALCHEMY_API_KEY

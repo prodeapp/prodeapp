@@ -9,6 +9,7 @@ export enum NetworkId {
 	GNOSIS = 100,
 	ARBITRUM = 42161,
 	POLYGON_TESTNET = 80001,
+	OPTIMISM_TESTNET = 420,
 }
 
 export const DEFAULT_CHAIN = NetworkId.GNOSIS
