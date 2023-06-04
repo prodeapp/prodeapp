@@ -15,7 +15,7 @@ import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
-import { DEFAULT_CHAIN, isMainChain } from './config'
+import { DEFAULT_CHAIN } from './config'
 
 gnosis.contracts = {
 	multicall3: {
@@ -55,7 +55,7 @@ const connectors = connectorsForWallets([
 		groupName: 'Social Login',
 		wallets: [
 			sequenceWallet({
-				chains: chains.filter((c) => isMainChain(c.id)),
+				chains: chains,
 				connect: {
 					app: 'Prode',
 					networkId: DEFAULT_CHAIN,

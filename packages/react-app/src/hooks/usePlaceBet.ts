@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
 import { AddressZero, MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
-import { useAccount, useBalance, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, useBalance, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
 import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
@@ -13,7 +13,7 @@ import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
+import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
@@ -59,12 +59,10 @@ const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) 
 	}
 
 	const { address, connector } = useAccount()
-	const { chain } = useNetwork()
 	const { data: tokenBalance = { value: BigNumber.from(0) } } = useBalance({ address, token: tokenAddress })
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
-
-	const hasFundsForGas =
-		connector && connector.id === 'sequence' && chain?.id === NetworkId.GNOSIS ? true : nativeBalance.value.gt(0)
+	// in sequence you can pay gas with ERC-20 tokens
+	const hasFundsForGas = connector && connector.id === 'sequence' ? true : nativeBalance.value.gt(0)
 
 	return tokenBalance.value.gte(betPrice) && hasFundsForGas
 }
