@@ -32,6 +32,7 @@ export interface UsePlaceBetReturn {
 	betPrice: BigNumber
 	betsCount: number
 	approve?: { amount: BigNumber; token: Address; spender: Address }
+	transferId?: string
 }
 
 type UsePreparePlaceBetFn = (
@@ -129,8 +130,8 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	if (!hasVoucher) {
 		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
-		const extra = betPrice.mul(DIVISOR).div(DIVISOR * 100)
-		daiAmount = betPrice.add(extra)
+		const extra = price.mul(DIVISOR).div(DIVISOR * 100)
+		daiAmount = price.add(extra)
 	}
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
@@ -210,6 +211,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		hasVoucher,
 		approve,
 		isCrossChainBet: true,
+		transferId: transferId,
 	}
 }
 
