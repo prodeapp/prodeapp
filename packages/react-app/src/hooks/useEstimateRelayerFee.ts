@@ -13,6 +13,7 @@ export const useEstimateRelayerFee = (originDomain: string, destinationDomain: s
 			return await sdkBase.estimateRelayerFee({
 				originDomain,
 				destinationDomain,
+				priceIn: 'usd',
 			})
 		},
 		{
