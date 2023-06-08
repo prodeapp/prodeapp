@@ -13,16 +13,13 @@ import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, MUMBAI_CHAIN_RECEIVER_ADDRESS } from '@/lib/config'
+import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, MUMBAI_CHAIN_RECEIVER_ADDRESS, NetworkId } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
 
 import { useHasVoucher } from './useHasVoucher'
 import { useSendTx } from './useSendTx'
-
-const isProd = ['prode.market', 'prode.eth.limo', 'prode.eth.link'].includes(window.location.hostname)
-const RECEIVER_ADDRESS = isProd ? GNOSIS_CHAIN_RECEIVER_ADDRESS : MUMBAI_CHAIN_RECEIVER_ADDRESS
 
 export interface UsePlaceBetReturn {
 	isLoading: boolean
@@ -35,6 +32,7 @@ export interface UsePlaceBetReturn {
 	betPrice: BigNumber
 	betsCount: number
 	approve?: { amount: BigNumber; token: Address; spender: Address }
+	relayerFee?: BigNumber
 }
 
 type UsePreparePlaceBetFn = (
@@ -154,8 +152,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			return {}
 		}
 
+		const RECEIVER_ADDRESS =
+			chainId === NetworkId.OPTIMISM_TESTNET ? MUMBAI_CHAIN_RECEIVER_ADDRESS : GNOSIS_CHAIN_RECEIVER_ADDRESS
 		const slippage = BigNumber.from(300) // 3%
-
 		const numberOfBets = results.length
 		const size = Math.max(...results[0].map(r => stripZeros(r).length), 1)
 
@@ -207,6 +206,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		hasVoucher,
 		approve,
 		isCrossChainBet: true,
+		relayerFee,
 	}
 }
 
@@ -214,6 +214,8 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	const betPrice = price.mul(results.length)
 	const { address } = useAccount()
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
+	const RECEIVER_ADDRESS =
+		chainId === NetworkId.OPTIMISM_TESTNET ? MUMBAI_CHAIN_RECEIVER_ADDRESS : GNOSIS_CHAIN_RECEIVER_ADDRESS
 
 	const getTxParams = (
 		chainId: number,
