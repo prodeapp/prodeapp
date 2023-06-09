@@ -111,7 +111,7 @@ function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, h
 function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId: number }) {
 	const { address } = useAccount()
 	const { data: bets } = useBets({ marketId, chainId })
-	const bet = (bets || []).find(b => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
+	const bet = (bets || []).find((b) => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
 
 	if (!bet) {
 		return null
@@ -157,7 +157,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ values: [''], questionId: event.id }))
+		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -188,7 +188,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		hasVoucher,
 		isCrossChainBet,
 		approve,
-		relayerFee,
 	} = usePlaceBet(
 		market.id,
 		// chainId can be gnosis and chain.id arbitrum, here we need to use the chain the user is connected to
@@ -198,7 +197,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -481,8 +484,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 										<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
 											{betPrice.gt(0) ? (
 												<>
-													<Trans>Place Bet</Trans> -{' '}
-													{formatAmount(relayerFee ? betPrice.add(relayerFee) : betPrice, chain.id, isCrossChainBet)}
+													<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id, isCrossChainBet)}
 												</>
 											) : (
 												<Trans>Place a Free Bet</Trans>

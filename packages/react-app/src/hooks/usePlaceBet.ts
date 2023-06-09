@@ -11,7 +11,6 @@ import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
-import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
 import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, MUMBAI_CHAIN_RECEIVER_ADDRESS, NetworkId } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
@@ -32,7 +31,6 @@ export interface UsePlaceBetReturn {
 	betPrice: BigNumber
 	betsCount: number
 	approve?: { amount: BigNumber; token: Address; spender: Address }
-	relayerFee?: BigNumber
 }
 
 type UsePreparePlaceBetFn = (
@@ -69,7 +67,7 @@ const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) 
 }
 
 function hasValidResults(results: BetResults[]): results is Exclude<BetResults, false>[] {
-	return typeof results.find(r => r === false) === 'undefined'
+	return typeof results.find((r) => r === false) === 'undefined'
 }
 
 const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
@@ -99,7 +97,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(MarketAbi)
 	const events = parseEvents(receipt, marketId, ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'PlaceBet')[0]?.args.tokenID || false : false
 
 	const hasFundsToBet = useHasFundsToBet(betPrice)
 
@@ -119,28 +117,24 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
-	const betPrice = price.mul(results.length)
+	let betPrice = price.mul(results.length)
 	const { address } = useAccount()
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
 
-	let ASSET_ADDRESS: Address = AddressZero
-	let daiAmount = BigNumber.from(0)
-
-	if (!hasVoucher) {
-		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
-		const extra = betPrice.mul(DIVISOR).div(DIVISOR * 100)
-		daiAmount = betPrice.add(extra)
-	}
+	const ASSET_ADDRESS: Address = !hasVoucher ? CROSS_CHAIN_CONFIG?.[chainId]?.DAI : AddressZero
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
 	const DOMAIN_ID = CROSS_CHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
 	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(ASSET_ADDRESS, address, CONNEXT_ADDRESS)
 
-	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
+	const { data: relayerFee = BigNumber.from(0) } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
-	const approve: UsePlaceBetReturn['approve'] = allowance.lt(daiAmount)
-		? { amount: daiAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
+	betPrice = betPrice.add(relayerFee)
+
+	const approve: UsePlaceBetReturn['approve'] = allowance.lt(betPrice)
+		? // add relayerFee again to account for possible gas price increases
+		  { amount: betPrice.add(relayerFee), token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -156,7 +150,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			chainId === NetworkId.OPTIMISM_TESTNET ? MUMBAI_CHAIN_RECEIVER_ADDRESS : GNOSIS_CHAIN_RECEIVER_ADDRESS
 		const slippage = BigNumber.from(300) // 3%
 		const numberOfBets = results.length
-		const size = Math.max(...results[0].map(r => stripZeros(r).length), 1)
+		const size = Math.max(...results[0].map((r) => stripZeros(r).length), 1)
 
 		const calldata = hexConcat([
 			address,
@@ -164,7 +158,9 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			attribution,
 			BigNumber.from(size).toHexString(),
 			BigNumber.from(numberOfBets).toHexString(),
-			hexConcat(results.map(result => hexConcat(result.map(r => hexStripZeros(r)).map(r => hexZeroPad(r, size))))),
+			hexConcat(
+				results.map((result) => hexConcat(result.map((r) => hexStripZeros(r)).map((r) => hexZeroPad(r, size))))
+			),
 		]) as Bytes
 
 		return {
@@ -176,7 +172,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 				RECEIVER_ADDRESS,
 				ASSET_ADDRESS,
 				address,
-				daiAmount,
+				betPrice,
 				slippage,
 				calldata,
 				relayerFee,
@@ -188,10 +184,10 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const ethersInterface = new Interface(ConnextBridgeFacetAbi)
 	const events = parseEvents(receipt, CONNEXT_ADDRESS, ethersInterface)
-	const transferId = events ? events.filter(log => log.name === 'XCalled')[0]?.args?.transferId || false : false
+	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
-	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
+	const hasFundsToBet = useHasFundsToBet(betPrice, ASSET_ADDRESS)
 
 	return {
 		isLoading,
@@ -206,7 +202,6 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		hasVoucher,
 		approve,
 		isCrossChainBet: true,
-		relayerFee,
 	}
 }
 
@@ -241,7 +236,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 
 	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
 	const events = parseEvents(receipt, RECEIVER_ADDRESS, ethersInterface)
-	const tokenId = events ? events.filter(log => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
+	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)
 
@@ -269,7 +264,7 @@ function getCombinations(
 	if (n === outcomes.length) {
 		outcomesCombinations.push(current)
 	} else {
-		outcomes[n].values.forEach(item =>
+		outcomes[n].values.forEach((item) =>
 			getCombinations(outcomes, n + 1, outcomesCombinations, [
 				...current,
 				{ value: item, questionId: outcomes[n].questionId },
@@ -283,7 +278,7 @@ function getCombinations(
 type BetResults = Bytes[] | false
 
 function getResults(outcomes: SingleOutcomeValue[]): BetResults {
-	if (outcomes.length === 0 || typeof outcomes.find(o => o.value === '') !== 'undefined') {
+	if (outcomes.length === 0 || typeof outcomes.find((o) => o.value === '') !== 'undefined') {
 		// false if there are missing predictions
 		return false
 	}
@@ -297,7 +292,7 @@ function getResults(outcomes: SingleOutcomeValue[]): BetResults {
 			 * ============================================================
 			 */
 			.sort((a, b) => (a.questionId > b.questionId ? 1 : -1))
-			.map(outcome => formatOutcome(outcome.value))
+			.map((outcome) => formatOutcome(outcome.value))
 	)
 }
 
