@@ -12,7 +12,7 @@ import { Bytes } from '@/abi/types'
 import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, MUMBAI_CHAIN_RECEIVER_ADDRESS, NetworkId } from '@/lib/config'
+import { getConfigAddress, isMainChain } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
@@ -146,8 +146,6 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			return {}
 		}
 
-		const RECEIVER_ADDRESS =
-			chainId === NetworkId.OPTIMISM_TESTNET ? MUMBAI_CHAIN_RECEIVER_ADDRESS : GNOSIS_CHAIN_RECEIVER_ADDRESS
 		const slippage = BigNumber.from(300) // 3%
 		const numberOfBets = results.length
 		const size = Math.max(...results[0].map((r) => stripZeros(r).length), 1)
@@ -169,7 +167,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			functionName: 'xcall',
 			args: [
 				Number(GNOSIS_DOMAIN_ID),
-				RECEIVER_ADDRESS,
+				getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 				ASSET_ADDRESS,
 				address,
 				betPrice,
@@ -209,8 +207,6 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	const betPrice = price.mul(results.length)
 	const { address } = useAccount()
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
-	const RECEIVER_ADDRESS =
-		chainId === NetworkId.OPTIMISM_TESTNET ? MUMBAI_CHAIN_RECEIVER_ADDRESS : GNOSIS_CHAIN_RECEIVER_ADDRESS
 
 	const getTxParams = (
 		chainId: number,
@@ -223,7 +219,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		}
 
 		return {
-			address: RECEIVER_ADDRESS,
+			address: getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBets',
 			args: [marketId, attribution, results],
@@ -235,7 +231,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	)
 
 	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
-	const events = parseEvents(receipt, RECEIVER_ADDRESS, ethersInterface)
+	const events = parseEvents(receipt, getConfigAddress('CHAIN_RECEIVER_V2', chainId), ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)

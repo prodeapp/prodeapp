@@ -15,7 +15,7 @@ import { Bytes } from '@/abi/types'
 import { FormLabel, FormRow } from '@/components'
 import { useSendRecklessTx } from '@/hooks/useSendTx'
 import { getConfigString } from '@/lib/config'
-import { DEFAULT_CHAIN, GNOSIS_CHAIN_RECEIVER_ADDRESS } from '@/lib/config'
+import { DEFAULT_CHAIN, getConfigAddress } from '@/lib/config'
 
 interface VoucherData {
 	address: string
@@ -49,7 +49,7 @@ function SendVouchers() {
 	})
 
 	const voucherContract = getContract({
-		address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+		address: getConfigAddress('CHAIN_RECEIVER_V2', chain?.id),
 		abi: GnosisChainReceiverV2Abi,
 		signerOrProvider: getProvider({ chainId: DEFAULT_CHAIN }),
 	})
@@ -72,7 +72,7 @@ function SendVouchers() {
 
 		write!({
 			recklesslySetUnpreparedArgs: [
-				Array(vouchers.length).fill(GNOSIS_CHAIN_RECEIVER_ADDRESS),
+				Array(vouchers.length).fill(getConfigAddress('CHAIN_RECEIVER_V2', chain?.id)),
 				values,
 				await Promise.all(
 					vouchers.map(

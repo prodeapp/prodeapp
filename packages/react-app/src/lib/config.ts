@@ -14,9 +14,6 @@ export enum NetworkId {
 
 export const DEFAULT_CHAIN = NetworkId.GNOSIS
 
-export const GNOSIS_CHAIN_RECEIVER_ADDRESS: Address = '0xFd5300fB615fD66A7C912d2fBCA5Df71f9d79901'
-export const MUMBAI_CHAIN_RECEIVER_ADDRESS: Address = '0x1d67c100737520d8751DaeF490d66a877EEDe069'
-
 type AddressMap = Record<number, Address>
 type BigNumberMap = Record<number, BigNumber>
 type StringMap = Record<number, string>
@@ -24,6 +21,7 @@ type StringMap = Record<number, string>
 type AddressConfigValues = {
 	MARKET_FACTORY: AddressMap
 	MARKET_FACTORY_V2: AddressMap
+	CHAIN_RECEIVER_V2: AddressMap
 	MARKET_VIEW: AddressMap
 	REALITIO: AddressMap
 	CURATE_REGISTRY: AddressMap
@@ -49,6 +47,11 @@ const ADDRESSES_CONFIG: AddressConfigValues = {
 	MARKET_FACTORY_V2: {
 		[NetworkId.GNOSIS]: '0x364Bc6fCdF1D2Ce014010aB4f479a892a8736014',
 		[NetworkId.POLYGON_TESTNET]: '0xF25455008BD7a750EBFeEC73d4E64114dA9449F5',
+	},
+
+	CHAIN_RECEIVER_V2: {
+		[NetworkId.GNOSIS]: '0xFd5300fB615fD66A7C912d2fBCA5Df71f9d79901',
+		[NetworkId.POLYGON_TESTNET]: '0x1d67c100737520d8751DaeF490d66a877EEDe069',
 	},
 
 	MARKET_VIEW: {
