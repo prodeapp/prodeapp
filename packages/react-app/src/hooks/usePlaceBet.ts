@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexConcat, hexStripZeros, hexZeroPad, stripZeros } from '@ethersproject/bytes'
 import { AddressZero, MaxInt256 } from '@ethersproject/constants'
 import { Address } from '@wagmi/core'
-import { useAccount, useBalance, useNetwork, UsePrepareContractWriteConfig } from 'wagmi'
+import { useAccount, useBalance, UsePrepareContractWriteConfig } from 'wagmi'
 
 import { ConnextBridgeFacetAbi } from '@/abi/ConnextBridgeFacet'
 import { GnosisChainReceiverV2Abi } from '@/abi/GnosisChainReceiverV2'
@@ -11,9 +11,8 @@ import { MarketAbi } from '@/abi/Market'
 import { Bytes } from '@/abi/types'
 import { MultiOutcomeValues, SingleOutcomeValue } from '@/components/Bet/BetForm'
 import { useEstimateRelayerFee } from '@/hooks/useEstimateRelayerFee'
-import { DIVISOR } from '@/hooks/useMarketForm'
 import { useTokenAllowance } from '@/hooks/useTokenAllowance'
-import { GNOSIS_CHAIN_RECEIVER_ADDRESS, isMainChain, NetworkId } from '@/lib/config'
+import { getConfigAddress, isMainChain } from '@/lib/config'
 import { CROSS_CHAIN_CONFIG, GNOSIS_DOMAIN_ID } from '@/lib/connext'
 import { parseEvents } from '@/lib/helpers'
 import { formatOutcome } from '@/lib/reality'
@@ -59,12 +58,10 @@ const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) 
 	}
 
 	const { address, connector } = useAccount()
-	const { chain } = useNetwork()
 	const { data: tokenBalance = { value: BigNumber.from(0) } } = useBalance({ address, token: tokenAddress })
 	const { data: nativeBalance = { value: BigNumber.from(0) } } = useBalance({ address })
-
-	const hasFundsForGas =
-		connector && connector.id === 'sequence' && chain?.id === NetworkId.GNOSIS ? true : nativeBalance.value.gt(0)
+	// in sequence you can pay gas with ERC-20 tokens
+	const hasFundsForGas = connector && connector.id === 'sequence' ? true : nativeBalance.value.gt(0)
 
 	return tokenBalance.value.gte(betPrice) && hasFundsForGas
 }
@@ -120,28 +117,24 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
-	const betPrice = price.mul(results.length)
+	let betPrice = price.mul(results.length)
 	const { address } = useAccount()
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
 
-	let ASSET_ADDRESS: Address = AddressZero
-	let daiAmount = BigNumber.from(0)
-
-	if (!hasVoucher) {
-		ASSET_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.DAI
-		const extra = betPrice.mul(DIVISOR).div(DIVISOR * 100)
-		daiAmount = betPrice.add(extra)
-	}
+	const ASSET_ADDRESS: Address = !hasVoucher ? CROSS_CHAIN_CONFIG?.[chainId]?.DAI : AddressZero
 
 	const CONNEXT_ADDRESS = CROSS_CHAIN_CONFIG?.[chainId]?.CONNEXT
 	const DOMAIN_ID = CROSS_CHAIN_CONFIG?.[chainId]?.DOMAIN_ID
 
 	const { data: allowance = BigNumber.from(0) } = useTokenAllowance(ASSET_ADDRESS, address, CONNEXT_ADDRESS)
 
-	const { data: relayerFee } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
+	const { data: relayerFee = BigNumber.from(0) } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
-	const approve: UsePlaceBetReturn['approve'] = allowance.lt(daiAmount)
-		? { amount: daiAmount, token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
+	betPrice = betPrice.add(relayerFee)
+
+	const approve: UsePlaceBetReturn['approve'] = allowance.lt(betPrice)
+		? // add relayerFee again to account for possible gas price increases
+		  { amount: betPrice.add(relayerFee), token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -154,7 +147,6 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 		}
 
 		const slippage = BigNumber.from(300) // 3%
-
 		const numberOfBets = results.length
 		const size = Math.max(...results[0].map((r) => stripZeros(r).length), 1)
 
@@ -175,16 +167,14 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 			functionName: 'xcall',
 			args: [
 				Number(GNOSIS_DOMAIN_ID),
-				GNOSIS_CHAIN_RECEIVER_ADDRESS,
+				getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 				ASSET_ADDRESS,
 				address,
-				daiAmount,
+				betPrice,
 				slippage,
 				calldata,
+				relayerFee,
 			],
-			overrides: {
-				value: relayerFee,
-			},
 		}
 	}
 
@@ -195,7 +185,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
-	const hasFundsToBet = useHasFundsToBet(daiAmount, ASSET_ADDRESS)
+	const hasFundsToBet = useHasFundsToBet(betPrice, ASSET_ADDRESS)
 
 	return {
 		isLoading,
@@ -229,7 +219,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 		}
 
 		return {
-			address: GNOSIS_CHAIN_RECEIVER_ADDRESS,
+			address: getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBets',
 			args: [marketId, attribution, results],
@@ -241,7 +231,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 	)
 
 	const ethersInterface = new Interface(GnosisChainReceiverV2Abi)
-	const events = parseEvents(receipt, GNOSIS_CHAIN_RECEIVER_ADDRESS, ethersInterface)
+	const events = parseEvents(receipt, getConfigAddress('CHAIN_RECEIVER_V2', chainId), ethersInterface)
 	const tokenId = events ? events.filter((log) => log.name === 'VoucherUsed')[0]?.args._tokenId || false : false
 
 	const hasFundsToBet = useHasFundsToBet(0)

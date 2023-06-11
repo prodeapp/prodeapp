@@ -9,13 +9,13 @@ import {
 	rainbowWallet,
 	walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets'
-import { arbitrum, bsc, gnosis, optimism, polygon, polygonMumbai } from '@wagmi/core/chains'
+import { arbitrum, bsc, gnosis, optimism, optimismGoerli, polygon, polygonMumbai } from '@wagmi/core/chains'
 import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { infuraProvider } from '@wagmi/core/providers/infura'
 import { configureChains, createClient } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 
-import { DEFAULT_CHAIN, isMainChain } from './config'
+import { DEFAULT_CHAIN } from './config'
 
 gnosis.contracts = {
 	multicall3: {
@@ -33,7 +33,7 @@ export const { chains, provider } = configureChains(
 		optimism,
 		polygon,
 		{ ...bsc, iconUrl: '/chains/bsc.svg' },
-		...(!isProd ? [polygonMumbai] : []),
+		...(!isProd ? [polygonMumbai, optimismGoerli] : []),
 	],
 	[
 		...(import.meta.env.VITE_ALCHEMY_API_KEY
@@ -55,7 +55,7 @@ const connectors = connectorsForWallets([
 		groupName: 'Social Login',
 		wallets: [
 			sequenceWallet({
-				chains: chains.filter((c) => isMainChain(c.id)),
+				chains: chains,
 				connect: {
 					app: 'Prode',
 					networkId: DEFAULT_CHAIN,

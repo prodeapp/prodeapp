@@ -838,8 +838,11 @@ msgstr "Estás por enviar {betsCount} apuestas"
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "Puedes agregar varias predicciones en cada partido para crear multiple apuestas con diferentes combinaciones de resultados."
 
-msgid "You can bet from {chain} with DAI. We will take care of bridging the funds for you."
-msgstr "Puedes apostar desde {chain} con DAI. Nos encargaremos de enviar los fondos por ti."
+msgid "You can bet from {0} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
+msgstr "Puedes apostar desde {0} con DAI. Nos encargaremos de enviar los fondos por ti. Hay un costo adicional (en DAI) por los servicios de puente."
+
+msgid "You can bet from {chain} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
+msgstr "Puedes apostar desde {chain} con DAI. Nos encargaremos de enviar los fondos por ti. Hay un costo adicional (en DAI) por los servicios de puente."
 
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "Puede transferirlo o venderlo en un marketplace, pero recuerde que el dueño de este NFT puede reclamar el premio si esta apuesta resulta ganadora."
