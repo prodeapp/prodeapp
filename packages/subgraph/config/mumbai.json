@@ -2,6 +2,7 @@
   "repository": "https://github.com/prodeapp/prodeapp-mumbai",
   "network": "mumbai",
   "supportsCallHandlers": false,
+  "managerV2": true,
   "MarketFactory": {
     "address": "0xFE6bd7451E92DeddD1096430e659e8af882D2eb7",
     "startBlock": "32883854"
