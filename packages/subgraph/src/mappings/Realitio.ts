@@ -126,7 +126,11 @@ export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
 
 export function handleReopenQuestion(event: LogReopenQuestion): void {
     const oldQuestionID = event.params.reopened_question_id.toHexString();
-    let oldEvent = Event.load(oldQuestionID)!;
+    let oldEvent = Event.load(oldQuestionID);
+    if (oldEvent === null) {
+        // Is not a question of Prode
+        return
+    }
     const newQuestionID = event.params.question_id.toHexString();
     const entity = duplicateEvent(oldEvent, newQuestionID);
     let reopEvnts = entity.reopenedEvents;
