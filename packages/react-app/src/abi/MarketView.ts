@@ -16,6 +16,11 @@ export const MarketViewAbi = [
 				name: '_liquidityFactory',
 				type: 'address',
 			},
+			{
+				internalType: 'contract IMarketFactory',
+				name: '_marketFactory',
+				type: 'address',
+			},
 		],
 		stateMutability: 'nonpayable',
 		type: 'constructor',
@@ -258,129 +263,6 @@ export const MarketViewAbi = [
 		name: 'getMarket',
 		outputs: [
 			{
-				internalType: 'address',
-				name: 'id',
-				type: 'address',
-			},
-			{
-				components: [
-					{
-						internalType: 'string',
-						name: 'name',
-						type: 'string',
-					},
-					{
-						internalType: 'bytes32',
-						name: 'hash',
-						type: 'bytes32',
-					},
-					{
-						internalType: 'uint256',
-						name: 'price',
-						type: 'uint256',
-					},
-					{
-						internalType: 'address',
-						name: 'creator',
-						type: 'address',
-					},
-					{
-						internalType: 'uint256[]',
-						name: 'prizes',
-						type: 'uint256[]',
-					},
-					{
-						internalType: 'uint256',
-						name: 'numOfBets',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'pool',
-						type: 'uint256',
-					},
-					{
-						internalType: 'bool',
-						name: 'curated',
-						type: 'bool',
-					},
-				],
-				internalType: 'struct MarketView.BaseInfo',
-				name: 'baseInfo',
-				type: 'tuple',
-			},
-			{
-				components: [
-					{
-						internalType: 'address',
-						name: 'managerId',
-						type: 'address',
-					},
-					{
-						internalType: 'uint256',
-						name: 'managementRewards',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'managementFee',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'protocolFee',
-						type: 'uint256',
-					},
-				],
-				internalType: 'struct MarketView.ManagerInfo',
-				name: 'managerInfo',
-				type: 'tuple',
-			},
-			{
-				components: [
-					{
-						internalType: 'uint256',
-						name: 'closingTime',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'resultSubmissionPeriodStart',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'submissionTimeout',
-						type: 'uint256',
-					},
-				],
-				internalType: 'struct MarketView.PeriodsInfo',
-				name: 'periodsInfo',
-				type: 'tuple',
-			},
-			{
-				components: [
-					{
-						internalType: 'uint256',
-						name: 'numOfEvents',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'numOfEventsWithAnswer',
-						type: 'uint256',
-					},
-					{
-						internalType: 'bool',
-						name: 'hasPendingAnswers',
-						type: 'bool',
-					},
-				],
-				internalType: 'struct MarketView.EventsInfo',
-				name: 'eventsInfo',
-				type: 'tuple',
-			},
-			{
 				components: [
 					{
 						internalType: 'address',
@@ -388,38 +270,168 @@ export const MarketViewAbi = [
 						type: 'address',
 					},
 					{
-						internalType: 'address',
-						name: 'creator',
-						type: 'address',
+						components: [
+							{
+								internalType: 'string',
+								name: 'name',
+								type: 'string',
+							},
+							{
+								internalType: 'bytes32',
+								name: 'hash',
+								type: 'bytes32',
+							},
+							{
+								internalType: 'uint256',
+								name: 'price',
+								type: 'uint256',
+							},
+							{
+								internalType: 'address',
+								name: 'creator',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256[]',
+								name: 'prizes',
+								type: 'uint256[]',
+							},
+							{
+								internalType: 'uint256',
+								name: 'numOfBets',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'pool',
+								type: 'uint256',
+							},
+							{
+								internalType: 'bool',
+								name: 'curated',
+								type: 'bool',
+							},
+						],
+						internalType: 'struct MarketView.BaseInfo',
+						name: 'baseInfo',
+						type: 'tuple',
 					},
 					{
-						internalType: 'uint256',
-						name: 'creatorFee',
-						type: 'uint256',
+						components: [
+							{
+								internalType: 'address',
+								name: 'managerId',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256',
+								name: 'managementRewards',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'managementFee',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'protocolFee',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.ManagerInfo',
+						name: 'managerInfo',
+						type: 'tuple',
 					},
 					{
-						internalType: 'uint256',
-						name: 'pointsToWin',
-						type: 'uint256',
+						components: [
+							{
+								internalType: 'uint256',
+								name: 'closingTime',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'resultSubmissionPeriodStart',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'submissionTimeout',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.PeriodsInfo',
+						name: 'periodsInfo',
+						type: 'tuple',
 					},
 					{
-						internalType: 'uint256',
-						name: 'betMultiplier',
-						type: 'uint256',
+						components: [
+							{
+								internalType: 'uint256',
+								name: 'numOfEvents',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'numOfEventsWithAnswer',
+								type: 'uint256',
+							},
+							{
+								internalType: 'bool',
+								name: 'hasPendingAnswers',
+								type: 'bool',
+							},
+						],
+						internalType: 'struct MarketView.EventsInfo',
+						name: 'eventsInfo',
+						type: 'tuple',
 					},
 					{
-						internalType: 'uint256',
-						name: 'totalDeposits',
-						type: 'uint256',
-					},
-					{
-						internalType: 'uint256',
-						name: 'prizePool',
-						type: 'uint256',
+						components: [
+							{
+								internalType: 'address',
+								name: 'id',
+								type: 'address',
+							},
+							{
+								internalType: 'address',
+								name: 'creator',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256',
+								name: 'creatorFee',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'pointsToWin',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'betMultiplier',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'totalDeposits',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'prizePool',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.LiquidityInfo',
+						name: 'liquidityInfo',
+						type: 'tuple',
 					},
 				],
-				internalType: 'struct MarketView.LiquidityInfo',
-				name: 'liquidityInfo',
+				internalType: 'struct MarketView.MarketInfo',
+				name: '',
 				type: 'tuple',
 			},
 		],
@@ -483,13 +495,7 @@ export const MarketViewAbi = [
 		type: 'function',
 	},
 	{
-		inputs: [
-			{
-				internalType: 'contract IMarketFactory',
-				name: 'marketFactory',
-				type: 'address',
-			},
-		],
+		inputs: [],
 		name: 'getMarketFactoryAttrs',
 		outputs: [
 			{
@@ -506,6 +512,192 @@ export const MarketViewAbi = [
 				internalType: 'uint256',
 				name: 'timeout',
 				type: 'uint256',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [
+			{
+				internalType: 'uint256',
+				name: 'count',
+				type: 'uint256',
+			},
+		],
+		name: 'getMarkets',
+		outputs: [
+			{
+				components: [
+					{
+						internalType: 'address',
+						name: 'id',
+						type: 'address',
+					},
+					{
+						components: [
+							{
+								internalType: 'string',
+								name: 'name',
+								type: 'string',
+							},
+							{
+								internalType: 'bytes32',
+								name: 'hash',
+								type: 'bytes32',
+							},
+							{
+								internalType: 'uint256',
+								name: 'price',
+								type: 'uint256',
+							},
+							{
+								internalType: 'address',
+								name: 'creator',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256[]',
+								name: 'prizes',
+								type: 'uint256[]',
+							},
+							{
+								internalType: 'uint256',
+								name: 'numOfBets',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'pool',
+								type: 'uint256',
+							},
+							{
+								internalType: 'bool',
+								name: 'curated',
+								type: 'bool',
+							},
+						],
+						internalType: 'struct MarketView.BaseInfo',
+						name: 'baseInfo',
+						type: 'tuple',
+					},
+					{
+						components: [
+							{
+								internalType: 'address',
+								name: 'managerId',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256',
+								name: 'managementRewards',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'managementFee',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'protocolFee',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.ManagerInfo',
+						name: 'managerInfo',
+						type: 'tuple',
+					},
+					{
+						components: [
+							{
+								internalType: 'uint256',
+								name: 'closingTime',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'resultSubmissionPeriodStart',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'submissionTimeout',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.PeriodsInfo',
+						name: 'periodsInfo',
+						type: 'tuple',
+					},
+					{
+						components: [
+							{
+								internalType: 'uint256',
+								name: 'numOfEvents',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'numOfEventsWithAnswer',
+								type: 'uint256',
+							},
+							{
+								internalType: 'bool',
+								name: 'hasPendingAnswers',
+								type: 'bool',
+							},
+						],
+						internalType: 'struct MarketView.EventsInfo',
+						name: 'eventsInfo',
+						type: 'tuple',
+					},
+					{
+						components: [
+							{
+								internalType: 'address',
+								name: 'id',
+								type: 'address',
+							},
+							{
+								internalType: 'address',
+								name: 'creator',
+								type: 'address',
+							},
+							{
+								internalType: 'uint256',
+								name: 'creatorFee',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'pointsToWin',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'betMultiplier',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'totalDeposits',
+								type: 'uint256',
+							},
+							{
+								internalType: 'uint256',
+								name: 'prizePool',
+								type: 'uint256',
+							},
+						],
+						internalType: 'struct MarketView.LiquidityInfo',
+						name: 'liquidityInfo',
+						type: 'tuple',
+					},
+				],
+				internalType: 'struct MarketView.MarketInfo[]',
+				name: '',
+				type: 'tuple[]',
 			},
 		],
 		stateMutability: 'view',
@@ -730,6 +922,19 @@ export const MarketViewAbi = [
 		outputs: [
 			{
 				internalType: 'contract ILiquidityFactory',
+				name: '',
+				type: 'address',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
+		inputs: [],
+		name: 'marketFactory',
+		outputs: [
+			{
+				internalType: 'contract IMarketFactory',
 				name: '',
 				type: 'address',
 			},

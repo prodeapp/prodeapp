@@ -26,7 +26,7 @@ export async function getMarket(marketId: Address, chainId: number): Promise<Mar
 }
 
 export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketViewAbi, 'getMarket'>): Market => {
-	const [id, baseInfo, managerInfo, periodsInfo, eventsInfo, liquidityInfo] = marketView
+	const { id, baseInfo, managerInfo, periodsInfo, eventsInfo, liquidityInfo } = marketView
 
 	const fees = baseInfo.pool.mul(managerInfo.managementFee.add(managerInfo.protocolFee)).div(DIVISOR)
 	const pool = baseInfo.pool.sub(fees)
@@ -37,7 +37,7 @@ export const marketViewToMarket = (marketView: ReadContractResult<typeof MarketV
 		hash: baseInfo.hash,
 		price: baseInfo.price,
 		pool,
-		prizes: baseInfo.prizes.map(p => p.toNumber()),
+		prizes: baseInfo.prizes.map((p) => p.toNumber()),
 		manager: {
 			id: managerInfo.managerId,
 			managementRewards: managerInfo.managementRewards,

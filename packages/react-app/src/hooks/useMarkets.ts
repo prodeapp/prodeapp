@@ -1,7 +1,9 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { useQuery } from '@tanstack/react-query'
 import { UseQueryResult } from '@tanstack/react-query/src/types'
 import { Address } from '@wagmi/core'
+import { readContract } from '@wagmi/core'
 import { readContracts } from 'wagmi'
 
 import { MarketViewAbi } from '@/abi/MarketView'
@@ -80,15 +82,49 @@ export const useMarkets: UseMarkets = (chainId, { curated, status, category, min
 
 			const buildResult = buildQuery(query, variables)
 
-			const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
-				chainId,
-				buildResult.query,
-				buildResult.variables
-			)
+			try {
+				const response = await apolloProdeQuery<{ markets: GraphMarket[] }>(
+					chainId,
+					buildResult.query,
+					buildResult.variables
+				)
 
-			if (!response) throw new Error('No response from TheGraph')
+				if (!response) {
+					throw new Error('No response from TheGraph')
+				}
 
-			return graphMarketsToMarkets(chainId, response.data.markets)
+				return graphMarketsToMarkets(chainId, response.data.markets)
+			} catch (e) {
+				// graph error, read on chain data
+				const markets = await readContract({
+					address: getConfigAddress('MARKET_VIEW', chainId),
+					abi: MarketViewAbi,
+					functionName: 'getMarkets',
+					args: [BigNumber.from(50)],
+					chainId: filterChainId(chainId),
+				})
+
+				return markets
+					.filter((market) => {
+						if (market.eventsInfo.numOfEvents.lt(3)) {
+							return false
+						}
+
+						if (status === 'active') {
+							return market.periodsInfo.closingTime.gt(Math.round(Date.now() / 1000))
+						} else if (status === 'pending') {
+							return (
+								market.periodsInfo.resultSubmissionPeriodStart.eq(0) &&
+								market.periodsInfo.closingTime.lt(Math.round(Date.now() / 1000))
+							)
+						} else if (status === 'closed') {
+							return market.periodsInfo.resultSubmissionPeriodStart.gt(0)
+						}
+
+						return true
+					})
+					.map((market) => marketViewToMarket(market))
+			}
 		}
 	)
 }
