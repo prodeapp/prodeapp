@@ -8,13 +8,17 @@ const teamSx = {
 	width: 'calc(50% - 15px)',
 }
 
-const getCountryFromEvent = (title: string) => {
+export const getEventCodeFromTitle = (title: string): string | undefined => {
 	if (title.includes('Premier League')) {
-		return 'en'
+		return 'footbal_england'
 	}
 
 	if (title.includes('La Liga Santander')) {
-		return 'es'
+		return 'footbal_spain'
+	}
+
+	if (title.includes('Brasileiro')) {
+		return 'footbal_brazil'
 	}
 
 	if (title.includes('F1') && title.includes('Grand Prix')) {
@@ -25,26 +29,30 @@ const getCountryFromEvent = (title: string) => {
 		return 'fifa_wc'
 	}
 
-	if (title.includes('UEFA Champions League')) return 'uefa_champions'
+	if (title.includes('UEFA Champions League')) {
+		return 'uefa_champions'
+	}
 
-	return 'ar'
+	if (title.includes('Liga Profesional Argentina')) {
+		return 'football_argentina'
+	}
 }
 
 export function FormatOutcome({
 	name,
-	country,
+	eventCode,
 	title,
 	imageAlign = 'left',
 	xsColumn = false,
 }: {
 	name: string
-	country?: string
+	eventCode?: string
 	title?: string
 	imageAlign?: 'left' | 'right'
 	xsColumn?: boolean
 }) {
-	if (!country) {
-		country = title ? getCountryFromEvent(title) : ''
+	if (!eventCode) {
+		eventCode = title ? getEventCodeFromTitle(title) : ''
 	}
 
 	const style: SxProps = { display: 'flex', alignItems: 'center' }
@@ -59,7 +67,7 @@ export function FormatOutcome({
 		style.textAlign = { xs: 'center', sm: imageAlign === 'right' ? 'right' : 'left' }
 	}
 
-	const image = getTeamImage(name, country)
+	const image = eventCode && getTeamImage(name, eventCode)
 	return (
 		<Box sx={style}>
 			{image && imageAlign === 'left' && (
@@ -80,16 +88,16 @@ export function FormatEvent({ title }: { title: string }) {
 		return <>{title}</>
 	}
 
-	const country = getCountryFromEvent(title)
+	const eventCode = getEventCodeFromTitle(title)
 
 	return (
 		<div style={{ display: 'flex', alignItems: 'center' }}>
 			<div style={teamSx}>
-				<FormatOutcome name={params.param1} country={country} imageAlign='right' />
+				<FormatOutcome name={params.param1} eventCode={eventCode} imageAlign='right' />
 			</div>
 			<div style={{ width: '30px', textAlign: 'center' }}>vs</div>
 			<div style={teamSx}>
-				<FormatOutcome name={params.param2} country={country} />
+				<FormatOutcome name={params.param2} eventCode={eventCode} />
 			</div>
 		</div>
 	)

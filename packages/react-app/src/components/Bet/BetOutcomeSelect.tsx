@@ -18,7 +18,7 @@ import { FieldErrors } from 'react-hook-form/dist/types/errors'
 import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form'
 
 import { FormError } from '@/components'
-import { FormatEvent, FormatOutcome } from '@/components/FormatEvent'
+import { FormatOutcome } from '@/components/FormatEvent'
 import { Event } from '@/graphql/subgraph'
 import { getInverseInterdependencies, MatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
 import { transOutcome } from '@/lib/helpers'
@@ -54,8 +54,8 @@ function getOutcomes(
 		const outcomeValues = [...outcomesValues[outcomeIndex].values]
 		// ... except the current value
 		outcomeValues.splice(valueIndex, 1)
-		eventOutcomes = eventOutcomes.map(outcome => {
-			if (outcomeValues.map(v => String(v)).includes(String(outcome.value))) {
+		eventOutcomes = eventOutcomes.map((outcome) => {
+			if (outcomeValues.map((v) => String(v)).includes(String(outcome.value))) {
 				outcome.disabled = true
 			}
 
@@ -73,14 +73,14 @@ function filterOutcomesInterdependencies(
 	outcomesValues: BetFormValues['outcomes'],
 	matchesInterdependencies: MatchesInterdependencies
 ): IndexedBetOutcome[] {
-	return eventOutcomes.filter(outcome => {
+	return eventOutcomes.filter((outcome) => {
 		if (matchesInterdependencies) {
 			const relatedQuestions: string[] = matchesInterdependencies[event.id] ?? []
 			const possibleOutcomes: string[] = []
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
-				const questionPos = events.findIndex(event => event.id === questionId)
-				outcomesValues[questionPos].values.forEach(userSelectionIndex => {
+				const questionPos = events.findIndex((event) => event.id === questionId)
+				outcomesValues[questionPos].values.forEach((userSelectionIndex) => {
 					if (userSelectionIndex !== '') {
 						const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
 						possibleOutcomes.push(outcomeSelected)
@@ -130,8 +130,8 @@ function BetOutcomeField({
 			return
 		}
 
-		inverseInterdependencies[event.id].forEach(matchDependencyId => {
-			const matchDependencyIndex = outcomes.findIndex(outcome => outcome.questionId === matchDependencyId)
+		inverseInterdependencies[event.id].forEach((matchDependencyId) => {
+			const matchDependencyIndex = outcomes.findIndex((outcome) => outcome.questionId === matchDependencyId)
 			outcomes[matchDependencyIndex].values.forEach((value, index) => {
 				if (value !== '') {
 					setValue(`outcomes.${matchDependencyIndex}.values.${index}`, '', {
@@ -166,7 +166,7 @@ function BetOutcomeField({
 								onChange={onChangeHandler}
 								sx={{ justifyContent: 'center' }}
 							>
-								{fieldOutcomes.map(outcome => (
+								{fieldOutcomes.map((outcome) => (
 									<FormControlLabel
 										value={outcome.value}
 										key={outcome.value}
@@ -187,7 +187,7 @@ function BetOutcomeField({
 							value={value === '' && isMultiple ? [] : value}
 							onChange={onChangeHandler}
 						>
-							{fieldOutcomes.map(outcome => {
+							{fieldOutcomes.map((outcome) => {
 								if (outcome.disabled) {
 									return null
 								}
@@ -236,7 +236,7 @@ function BetOutcomeFieldWrapper({
 	addAlternative,
 	removeAlternative,
 }: BetOutcomeFieldWraperProps) {
-	const enabledOutcomesCount = fieldOutcomes.filter(f => !f.disabled).length
+	const enabledOutcomesCount = fieldOutcomes.filter((f) => !f.disabled).length
 
 	if (enabledOutcomesCount === 0) {
 		return null
@@ -342,11 +342,9 @@ export function BetOutcomeRow({
 
 	return (
 		<>
-			{!showRadios && (
-				<Grid item xs={12} md={6}>
-					<FormatEvent title={events[outcomeIndex].title} />
-				</Grid>
-			)}
+			<Grid item xs={12} md={!showRadios ? 6 : 12}>
+				{events[outcomeIndex].title}
+			</Grid>
 			<Grid item xs={12} md={showRadios ? 12 : 6}>
 				{values.map((value, valueIndex) => (
 					<BetOutcomeFieldWrapper

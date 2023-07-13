@@ -138,7 +138,7 @@ import MILAN from '@/assets/logos/it/ac_milan.png'
 import INTER from '@/assets/logos/it/intermilan.png'
 
 const images: Record<string, Record<string, string>> = {
-	ar: {
+	football_argentina: {
 		Aldosivi: ALDOSIVI,
 		'Argentinos Juniors': ARGENTINOS_JUNIORS,
 		'Argentinos JRS': ARGENTINOS_JUNIORS,
@@ -189,7 +189,7 @@ const images: Record<string, Record<string, string>> = {
 		Sarmiento: SARMIENTO,
 		'Sarmiento Junin': SARMIENTO,
 	},
-	en: {
+	footbal_england: {
 		Arsenal: ARSENAL_FC,
 		'Aston Villa': ASTON_VILLA,
 		Bournemouth: BOURNEMOUTH,
@@ -250,7 +250,7 @@ const images: Record<string, Record<string, string>> = {
 		'Intermediate Tire': GREENINTERMEDIATE,
 		'Full Wet Tire': BLUEFULLWET,
 	},
-	es: {
+	footbal_spain: {
 		Almería: ALMERIA,
 		Almeria: ALMERIA,
 		'Athletic Club': ATHLETIC_CLUB,
@@ -320,6 +320,6 @@ const images: Record<string, Record<string, string>> = {
 	},
 }
 
-export function getTeamImage(teamName: string, country: string): string {
-	return images[country][teamName] || ''
+export function getTeamImage(teamName: string, eventCode: string): string {
+	return images?.[eventCode]?.[teamName] || ''
 }

@@ -110,7 +110,7 @@ function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, h
 function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId: number }) {
 	const { address } = useAccount()
 	const { data: bets } = useBets({ marketId, chainId })
-	const bet = (bets || []).find(b => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
+	const bet = (bets || []).find((b) => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
 
 	if (!bet) {
 		return null
@@ -182,7 +182,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ values: [''], questionId: event.id }))
+		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -222,7 +222,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -386,7 +390,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					{error?.message || approveError?.message}
 				</Alert>
 			)}
-			<Grid container rowSpacing={3}>
+			<Grid container rowSpacing={3} columnSpacing={2}>
 				{fields.map((field, outcomeIndex) => {
 					if (!events || !events[outcomeIndex]) {
 						return null
