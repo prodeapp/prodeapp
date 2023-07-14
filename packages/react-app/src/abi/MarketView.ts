@@ -904,6 +904,30 @@ export const MarketViewAbi = [
 		type: 'function',
 	},
 	{
+		inputs: [
+			{
+				internalType: 'address',
+				name: 'userId',
+				type: 'address',
+			},
+			{
+				internalType: 'address',
+				name: 'marketId',
+				type: 'address',
+			},
+		],
+		name: 'hasBets',
+		outputs: [
+			{
+				internalType: 'bool',
+				name: '',
+				type: 'bool',
+			},
+		],
+		stateMutability: 'view',
+		type: 'function',
+	},
+	{
 		inputs: [],
 		name: 'keyValue',
 		outputs: [

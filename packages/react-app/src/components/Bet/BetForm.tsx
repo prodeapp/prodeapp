@@ -24,7 +24,7 @@ import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
 import { useBets } from '@/hooks/useBets'
 import { useBetToken } from '@/hooks/useBetToken'
-import { useCheckMarketWhitelist, WHITELIST_STATUS } from '@/hooks/useCheckMarketWhitelist'
+import { hasBetInMarket, useCheckMarketWhitelist, WHITELIST_STATUS } from '@/hooks/useCheckMarketWhitelist'
 import { useCurateItemJson } from '@/hooks/useCurateItems'
 import { useEvents } from '@/hooks/useEvents'
 import { useMatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
@@ -111,7 +111,7 @@ function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, h
 function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId: number }) {
 	const { address } = useAccount()
 	const { data: bets } = useBets({ marketId, chainId })
-	const bet = (bets || []).find((b) => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
+	const bet = (bets || []).find(b => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
 
 	if (!bet) {
 		return null
@@ -157,7 +157,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
+		events && events.forEach(event => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -197,11 +197,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const {
-		isLoading: isLoadingApprove,
-		error: approveError,
-		write: approveTokens,
-	} = useSendTx(
+	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -307,6 +303,13 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 	}
 
 	const onSubmit = async (_: BetFormValues) => {
+		if (betPrice.eq(0) && (await hasBetInMarket(market.id, address, chainId))) {
+			// invalidate queries to show error message
+			queryClient.invalidateQueries(['useCheckMarketWhitelist'])
+			queryClient.invalidateQueries(['useBets'])
+			return
+		}
+
 		placeBet!()
 	}
 
