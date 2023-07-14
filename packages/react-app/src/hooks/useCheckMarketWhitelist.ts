@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import { Address, readContract } from '@wagmi/core'
 import { useAccount } from 'wagmi'
 
+import { MarketViewAbi } from '@/abi/MarketView'
 import { Market } from '@/graphql/subgraph'
-import { useBets } from '@/hooks/useBets'
+import { filterChainId, getConfigAddress } from '@/lib/config'
 
 export enum WHITELIST_STATUS {
 	OK,
@@ -10,13 +12,25 @@ export enum WHITELIST_STATUS {
 	INVALID_CONNECTOR,
 }
 
+export async function hasBetInMarket(marketId: Address | undefined, userId: Address | undefined, chainId: number) {
+	if (!marketId || !userId) {
+		return false
+	}
+
+	return await readContract({
+		address: getConfigAddress('MARKET_VIEW', chainId),
+		abi: MarketViewAbi,
+		functionName: 'hasBets',
+		args: [userId, marketId],
+		chainId: filterChainId(chainId),
+	})
+}
+
 export const useCheckMarketWhitelist = (market: Market, chainId: number) => {
 	const { address, connector } = useAccount()
-	const { data: bets } = useBets({ marketId: market.id, chainId })
-	const playerIds = (bets || []).map((b) => b.player.id.toLocaleLowerCase())
 
 	return useQuery<WHITELIST_STATUS, Error>(
-		['useUserCanBet', { marketId: market.id, chainId, playerIds, address }],
+		['useCheckMarketWhitelist', { marketId: market.id, chainId, address }],
 		async () => {
 			if (!address) {
 				// we'll check it later
@@ -24,7 +38,7 @@ export const useCheckMarketWhitelist = (market: Market, chainId: number) => {
 			}
 
 			if (market.price.eq(0)) {
-				if (playerIds.includes(address.toLocaleLowerCase())) {
+				if (await hasBetInMarket(market.id, address, chainId)) {
 					return WHITELIST_STATUS.ALREADY_BET
 				}
 
