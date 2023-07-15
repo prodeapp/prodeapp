@@ -343,7 +343,7 @@ export function BetOutcomeRow({
 	return (
 		<>
 			<Grid item xs={12}>
-				{events[outcomeIndex].title}
+				<Trans id={events[outcomeIndex].title} />
 			</Grid>
 			<Grid item xs={12}>
 				{values.map((value, valueIndex) => (
