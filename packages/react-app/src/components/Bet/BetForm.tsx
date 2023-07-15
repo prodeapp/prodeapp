@@ -111,7 +111,7 @@ function getGeneralError(address: Address | undefined, hasFundsToBet: boolean, h
 function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId: number }) {
 	const { address } = useAccount()
 	const { data: bets } = useBets({ marketId, chainId })
-	const bet = (bets || []).find(b => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
+	const bet = (bets || []).find((b) => b.player.id.toLocaleLowerCase() === address?.toLocaleLowerCase())
 
 	if (!bet) {
 		return null
@@ -124,6 +124,32 @@ function WhitelistBetDetail({ marketId, chainId }: { marketId: Address; chainId:
 			</Alert>
 			<SimpleBetDetails bet={bet} chainId={chainId} />
 		</>
+	)
+}
+
+function BetButton({
+	placeBet,
+	betPrice,
+	chainId,
+	isCrossChainBet,
+}: {
+	placeBet: UsePlaceBetReturn['placeBet']
+	betPrice: BigNumber
+	chainId: number
+	isCrossChainBet: boolean
+}) {
+	return (
+		<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
+			{betPrice.gt(0) ? (
+				<>
+					<Trans>Place Bet</Trans> - {formatAmount(betPrice, chainId, isCrossChainBet)}
+				</>
+			) : (
+				<Trans>Place a Free Bet</Trans>
+			)}
+			{''}
+			<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
+		</Button>
 	)
 }
 
@@ -157,7 +183,7 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 
 	useEffect(() => {
 		remove()
-		events && events.forEach(event => append({ values: [''], questionId: event.id }))
+		events && events.forEach((event) => append({ values: [''], questionId: event.id }))
 	}, [events, append, remove])
 
 	const addAlternative = (outcomeIndex: number) => {
@@ -197,7 +223,11 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		outcomes
 	)
 
-	const { isLoading: isLoadingApprove, error: approveError, write: approveTokens } = useSendTx(
+	const {
+		isLoading: isLoadingApprove,
+		error: approveError,
+		write: approveTokens,
+	} = useSendTx(
 		// @ts-ignore
 		getApproveTxParams(approve)
 	)
@@ -356,32 +386,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 				</BigAlert>
 			)}
 
-			{!hasVoucher && chain && isCrossChainBet && (
-				<BigAlert severity='info' sx={{ mb: 4 }}>
-					<Box
-						sx={{
-							display: { md: 'flex' },
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<div>
-							<div>
-								<AlertTitle sx={{ '&.MuiAlertTitle-root': { fontSize: 21 } }}>
-									<Trans>This market was created in Gnosis Chain.</Trans>
-								</AlertTitle>
-							</div>
-							<div>
-								<Trans
-									id='You can bet from {chain} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service.'
-									values={{ chain: chain.name }}
-								/>
-							</div>
-						</div>
-					</Box>
-				</BigAlert>
-			)}
-
 			{(error || approveError) && (
 				<Alert severity='error' sx={{ mb: 2 }}>
 					{error?.message || approveError?.message}
@@ -479,25 +483,29 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 									<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
 								</Button>
 							)}
-							{chain && !approve && (
-								<Tooltip
-									title={t`You can bet from ${chain.name} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service.`}
-								>
-									<span>
-										<Button type='submit' disabled={!placeBet} color='primary' size='large' fullWidth>
-											{betPrice.gt(0) ? (
-												<>
-													<Trans>Place Bet</Trans> - {formatAmount(betPrice, chain.id, isCrossChainBet)}
-												</>
-											) : (
-												<Trans>Place a Free Bet</Trans>
-											)}
-											{''}
-											<TriangleIcon style={{ marginLeft: 10, fill: 'currentColor', color: 'white' }} />
-										</Button>
-									</span>
-								</Tooltip>
-							)}
+							{chain &&
+								!approve &&
+								(isCrossChainBet ? (
+									<Tooltip
+										title={t`This market was created in Gnosis Chain but you can bet from ${chain.name} and we will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service.`}
+									>
+										<span>
+											<BetButton
+												placeBet={placeBet}
+												betPrice={betPrice}
+												chainId={chain.id}
+												isCrossChainBet={isCrossChainBet}
+											/>
+										</span>
+									</Tooltip>
+								) : (
+									<BetButton
+										placeBet={placeBet}
+										betPrice={betPrice}
+										chainId={chain.id}
+										isCrossChainBet={isCrossChainBet}
+									/>
+								))}
 						</>
 					)}
 				</Grid>

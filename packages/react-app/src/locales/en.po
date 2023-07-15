@@ -730,8 +730,8 @@ msgstr "This market has been deleted."
 msgid "This market has more than 1 submissions. ItemId's: {0}"
 msgstr "This market has more than 1 submissions. ItemId's: {0}"
 
-msgid "This market was created in Gnosis Chain."
-msgstr "This market was created in Gnosis Chain."
+msgid "This market was created in Gnosis Chain but you can bet from {0} and we will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
+msgstr "This market was created in Gnosis Chain but you can bet from {0} and we will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
 
 msgid "To bet in this market you need to connect using your email."
 msgstr "To bet in this market you need to connect using your email."
@@ -837,12 +837,6 @@ msgstr "You are about to place {betsCount} bets."
 
 msgid "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
 msgstr "You can add multiple predictions for each match to create multiple bets with different combinations of outcomes."
-
-msgid "You can bet from {0} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
-msgstr "You can bet from {0} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
-
-msgid "You can bet from {chain} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
-msgstr "You can bet from {chain} with DAI. We will take care of bridging the funds for you. There is an extra cost (in DAI) to pay the bridge service."
 
 msgid "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
 msgstr "You can transfer or sell it in a marketplace, but remember that the owner of this NFT may claim a prize if this bet wins."
