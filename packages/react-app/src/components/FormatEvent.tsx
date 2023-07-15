@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import Box from '@mui/material/Box'
 import { SxProps } from '@mui/system'
 
@@ -85,7 +86,7 @@ export function FormatEvent({ title }: { title: string }) {
 	const params = matchQuestion(title)
 
 	if (params === null || !params?.param1 || !params?.param2) {
-		return <>{title}</>
+		return <Trans id={title} />
 	}
 
 	const eventCode = getEventCodeFromTitle(title)
