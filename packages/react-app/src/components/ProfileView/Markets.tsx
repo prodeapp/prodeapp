@@ -58,7 +58,9 @@ export function Markets({ creatorId, chainId }: { creatorId: string; chainId: nu
 						return (
 							<BoxRow key={market.id}>
 								<div style={{ width: '40%' }}>
-									<a href={paths.market(market.id, chainId)}>{market.name}</a>
+									<a href={paths.market(market.id, chainId)}>
+										<Trans id={market.name} />
+									</a>
 								</div>
 								<div style={{ width: '20%' }}>{formatAmount(market.pool, chainId)}</div>
 								<div style={{ width: '20%' }}>{shortenAddress(market.manager.id)}</div>

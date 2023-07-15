@@ -104,7 +104,9 @@ function MarketBox({ market, chainId }: { market: Market; chainId: number }) {
 							{market.price.eq(0) && <Chip label={t`Free to play`} color='warning' />}
 						</div>
 						<Typography variant='h4s' component='h2' style={{ marginTop: '20px' }}>
-							<Link to={paths.market(market.id, chainId)}>{market.name}</Link>
+							<Link to={paths.market(market.id, chainId)}>
+								<Trans id={market.name} />
+							</Link>
 						</Typography>
 					</div>
 					{closingTimeLeft === false && (

@@ -101,7 +101,9 @@ function MarketsView() {
 				<GridLeftColumn item xs={12} lg={4}>
 					<div>
 						<MarketStatus marketId={market.id} chainId={chainId} />
-						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>{market.name}</h2>
+						<h2 style={{ fontSize: '27.65px', marginTop: '10px' }}>
+							<Trans id={market.name} />
+						</h2>
 
 						{address?.toLowerCase() === market.creator.toLowerCase() && market.pool.eq(0) && market.numOfBets === 0 && (
 							<div style={{ marginBottom: '20px' }}>

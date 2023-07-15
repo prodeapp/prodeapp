@@ -88,6 +88,9 @@ msgstr "Respuestas"
 msgid "Approve DAI"
 msgstr "Aprobar DAI"
 
+msgid "Argentinean Presidential Primary election (PASO) 2023"
+msgstr "Elecciones Primarias Presidenciales Argentinas (PASO) 2023"
+
 msgid "Balance in ongoing answers"
 msgstr "Balance en respuestas pendientes"
 

@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 
 // translate events
 
+t`Argentinean Presidential Primary election (PASO) 2023`
 t`Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Juntos por el Cambio party?`
 t`Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Union por la Patria party?`
 t`Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Frente de Izquierda party?`

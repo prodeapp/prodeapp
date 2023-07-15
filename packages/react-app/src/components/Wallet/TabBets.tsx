@@ -73,7 +73,7 @@ function TabBets({
 								fontWeight: '600',
 							}}
 						>
-							{bet.market.name}
+							<Trans id={bet.market.name} />
 						</div>
 						<div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
 							<div>
