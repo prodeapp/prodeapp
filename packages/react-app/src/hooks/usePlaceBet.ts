@@ -222,7 +222,7 @@ const usePlaceBetWithVoucher: UsePreparePlaceBetFn = (marketId, chainId, price, 
 			address: getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 			abi: GnosisChainReceiverV2Abi,
 			functionName: 'placeBets',
-			args: [marketId, attribution, results],
+			args: [marketId, Array(results.length).fill(attribution), results],
 		}
 	}
 
