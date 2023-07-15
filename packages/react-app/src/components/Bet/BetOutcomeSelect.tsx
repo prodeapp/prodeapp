@@ -245,7 +245,7 @@ function BetOutcomeFieldWrapper({
 	return (
 		<div>
 			<div style={{ display: 'flex', alignItems: 'center' }}>
-				<FormControl fullWidth>
+				<FormControl fullWidth sx={{ maxWidth: showRadios ? 'auto' : '400px', mx: 'auto' }}>
 					<BetOutcomeField
 						matchesInterdependencies={matchesInterdependencies}
 						event={event}
@@ -286,8 +286,8 @@ function BetOutcomeFieldWrapper({
 						display: 'flex',
 						alignItems: 'center',
 						fontSize: 16,
-						justifyContent: showRadios ? 'center' : 'left',
-						marginTop: showRadios ? 10 : 0,
+						justifyContent: 'center',
+						marginTop: 10,
 					}}
 				>
 					<span className='js-link' style={{ fontSize: 12, marginRight: 5 }} onClick={addAlternative}>
@@ -342,10 +342,10 @@ export function BetOutcomeRow({
 
 	return (
 		<>
-			<Grid item xs={12} md={!showRadios ? 6 : 12}>
+			<Grid item xs={12}>
 				{events[outcomeIndex].title}
 			</Grid>
-			<Grid item xs={12} md={showRadios ? 12 : 6}>
+			<Grid item xs={12}>
 				{values.map((value, valueIndex) => (
 					<BetOutcomeFieldWrapper
 						key={`${valueIndex}-${events[outcomeIndex].id}`}
@@ -381,7 +381,7 @@ export function BetOutcomeRow({
 					})}
 				/>
 			</Grid>
-			{showRadios && <div style={{ borderBottom: '1px solid #CCC', width: '100%', paddingBottom: 24 }}></div>}
+			<div style={{ borderBottom: '1px solid #CCC', width: '100%', paddingBottom: 24 }}></div>
 		</>
 	)
 }
