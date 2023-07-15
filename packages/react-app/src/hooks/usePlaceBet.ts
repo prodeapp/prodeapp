@@ -50,10 +50,10 @@ type UsePlaceBetFn = (
 
 export const CROSS_CHAIN_TOKEN_ID = MaxInt256
 
-const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) => {
+const useHasFundsToBet = (amount: BigNumber | number, tokenAddress?: Address) => {
 	if (tokenAddress === AddressZero) {
 		// in the case of a crosschain voucher set the tokenAddress to undefined
-		// it will then be ignored because tokenBalance.value.gte(betPrice) will always be true
+		// it will then be ignored because tokenBalance.value.gte(amount) will always be true
 		tokenAddress = undefined
 	}
 
@@ -63,7 +63,7 @@ const useHasFundsToBet = (betPrice: BigNumber | number, tokenAddress?: Address) 
 	// in sequence you can pay gas with ERC-20 tokens
 	const hasFundsForGas = connector && connector.id === 'sequence' ? true : nativeBalance.value.gt(0)
 
-	return tokenBalance.value.gte(betPrice) && hasFundsForGas
+	return tokenBalance.value.gte(amount) && hasFundsForGas
 }
 
 function hasValidResults(results: BetResults[]): results is Exclude<BetResults, false>[] {
@@ -117,7 +117,7 @@ const usePlaceBetWithMarket: UsePreparePlaceBetFn = (marketId, chainId, price, a
 }
 
 const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, attribution, results) => {
-	let betPrice = price.mul(results.length)
+	const betPrice = price.mul(results.length)
 	const { address } = useAccount()
 	const { data: { hasVoucher } = { hasVoucher: false } } = useHasVoucher(address, marketId, chainId, betPrice)
 
@@ -130,11 +130,11 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 
 	const { data: relayerFee = BigNumber.from(0) } = useEstimateRelayerFee(DOMAIN_ID, GNOSIS_DOMAIN_ID)
 
-	betPrice = betPrice.add(relayerFee)
+	const totalPrice = betPrice.add(relayerFee)
 
-	const approve: UsePlaceBetReturn['approve'] = allowance.lt(betPrice)
+	const approve: UsePlaceBetReturn['approve'] = allowance.lt(totalPrice)
 		? // add relayerFee again to account for possible gas price increases
-		  { amount: betPrice.add(relayerFee), token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
+		  { amount: totalPrice.add(relayerFee), token: ASSET_ADDRESS, spender: CONNEXT_ADDRESS }
 		: undefined
 
 	const getTxParams = (
@@ -170,7 +170,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 				getConfigAddress('CHAIN_RECEIVER_V2', chainId),
 				ASSET_ADDRESS,
 				address,
-				betPrice,
+				totalPrice,
 				slippage,
 				calldata,
 				relayerFee,
@@ -185,7 +185,7 @@ const usePlaceBetCrossChain: UsePreparePlaceBetFn = (marketId, chainId, price, a
 	const transferId = events ? events.filter((log) => log.name === 'XCalled')[0]?.args?.transferId || false : false
 	const tokenId = transferId ? CROSS_CHAIN_TOKEN_ID : false
 
-	const hasFundsToBet = useHasFundsToBet(betPrice, ASSET_ADDRESS)
+	const hasFundsToBet = useHasFundsToBet(totalPrice, ASSET_ADDRESS)
 
 	return {
 		isLoading,

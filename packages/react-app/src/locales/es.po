@@ -88,6 +88,9 @@ msgstr "Respuestas"
 msgid "Approve DAI"
 msgstr "Aprobar DAI"
 
+msgid "Argentinean Presidential Primary election (PASO) 2023"
+msgstr "Elecciones Primarias Presidenciales Argentinas (PASO) 2023"
+
 msgid "Balance in ongoing answers"
 msgstr "Balance en respuestas pendientes"
 
@@ -595,9 +598,6 @@ msgstr "Remover evento"
 msgid "Remove group"
 msgstr "Remover grupo"
 
-msgid "Remove prediction"
-msgstr "Eliminar predicción"
-
 msgid "Reopen question"
 msgstr "Reabrir pregunta"
 
@@ -825,6 +825,30 @@ msgstr "Calcularemos todas las posibles combinaciones de resultados y enviaremos
 
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "Qué % del pozo ganará el jugador en la posición #X."
+
+msgid "What percentage of votes will get Milei-Villaroel at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "¿Qué porcentaje de votos obtendrá Milei-Villaroel en las elecciones Primarias Presidenciales Argentinas (PASO) 2023?"
+
+msgid "What percentage of votes will get Schiaretti-Randazzo at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "¿Qué porcentaje de votos obtendrá Schiaretti-Randazzo en las elecciones Primarias Presidenciales Argentinas (PASO) 2023?"
+
+msgid "Which candidate will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "¿Qué candidato obtendrá la mayor cantidad de votos en las elecciones Primarias Presidenciales Argentinas (PASO) 2023?"
+
+msgid "Which party will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "¿Qué partido obtendrá más votos en las elecciones Primarias Presidenciales Argentinas (PASO) 2023?"
+
+msgid "Which party will get the second most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "¿Qué partido obtendrá la segunda mayor cantidad de votos en las elecciones Primarias Presidenciales Argentinas (PASO) 2023?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Frente de Izquierda party?"
+msgstr "¿Quién ganará las elecciones Primarias Presidenciales Argentinas (PASO) 2023 dentro del partido Frente de Izquierda?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Juntos por el Cambio party?"
+msgstr "¿Quién ganará las elecciones Primarias Presidenciales Argentinas (PASO) 2023 dentro del partido Juntos por el Cambio?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Union por la Patria party?"
+msgstr "¿Quién ganará las elecciones Primarias Presidenciales Argentinas (PASO) 2023 dentro del partido Unión por la Patria?"
 
 msgid "Yes"
 msgstr "Si"

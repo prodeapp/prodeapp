@@ -88,6 +88,9 @@ msgstr "Answers"
 msgid "Approve DAI"
 msgstr "Approve DAI"
 
+msgid "Argentinean Presidential Primary election (PASO) 2023"
+msgstr "Argentinean Presidential Primary election (PASO) 2023"
+
 msgid "Balance in ongoing answers"
 msgstr "Balance in ongoing answers"
 
@@ -595,9 +598,6 @@ msgstr "Remove event"
 msgid "Remove group"
 msgstr "Remove group"
 
-msgid "Remove prediction"
-msgstr "Remove prediction"
-
 msgid "Reopen question"
 msgstr "Reopen question"
 
@@ -825,6 +825,30 @@ msgstr "We will calculate all the possible combinations of results and send a be
 
 msgid "What % of the pool will win the player ranked at position #X."
 msgstr "What % of the pool will win the player ranked at position #X."
+
+msgid "What percentage of votes will get Milei-Villaroel at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "What percentage of votes will get Milei-Villaroel at the Argentinean Presidential Primary election (PASO) 2023?"
+
+msgid "What percentage of votes will get Schiaretti-Randazzo at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "What percentage of votes will get Schiaretti-Randazzo at the Argentinean Presidential Primary election (PASO) 2023?"
+
+msgid "Which candidate will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "Which candidate will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+
+msgid "Which party will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "Which party will get the most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+
+msgid "Which party will get the second most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+msgstr "Which party will get the second most votes at the Argentinean Presidential Primary election (PASO) 2023?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Frente de Izquierda party?"
+msgstr "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Frente de Izquierda party?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Juntos por el Cambio party?"
+msgstr "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Juntos por el Cambio party?"
+
+msgid "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Union por la Patria party?"
+msgstr "Who will win the Argentinean Presidential Primary election (PASO) 2023 within the Union por la Patria party?"
 
 msgid "Yes"
 msgstr "Yes"

@@ -1,27 +1,34 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { ErrorMessage } from '@hookform/error-message'
 import { t } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
+import ClearIcon from '@mui/icons-material/Clear'
 import HelpIcon from '@mui/icons-material/Help'
 import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid'
 import MenuItem from '@mui/material/MenuItem'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
 import Select from '@mui/material/Select'
 import Tooltip from '@mui/material/Tooltip'
 import React from 'react'
 import { Controller } from 'react-hook-form'
 import { FieldErrors } from 'react-hook-form/dist/types/errors'
-import { Control, UseFormSetValue } from 'react-hook-form/dist/types/form'
+import { Control, UseFormRegister, UseFormSetValue } from 'react-hook-form/dist/types/form'
 
 import { FormError } from '@/components'
+import { FormatOutcome } from '@/components/FormatEvent'
 import { Event } from '@/graphql/subgraph'
 import { getInverseInterdependencies, MatchesInterdependencies } from '@/hooks/useMatchesInterdependencies'
 import { transOutcome } from '@/lib/helpers'
 import { INVALID_RESULT, REALITY_TEMPLATE_MULTIPLE_SELECT } from '@/lib/reality'
 
-import { BetFormValues } from './BetForm'
+import { BetFormOutcome, BetFormValues } from './BetForm'
 
 type BetOutcomeValue = number | typeof INVALID_RESULT
 
-type IndexedBetOutcome = { value: BetOutcomeValue; text: string }
+type IndexedBetOutcome = { value: BetOutcomeValue; text: string; disabled: boolean }
 
 function getOutcomes(
 	outcomeIndex: number,
@@ -36,6 +43,7 @@ function getOutcomes(
 	let eventOutcomes: IndexedBetOutcome[] = event.outcomes.map((outcome, i) => ({
 		value: i,
 		text: outcome,
+		disabled: false,
 	}))
 
 	// don't show INVALID_RESULT as a valid outcome
@@ -46,9 +54,12 @@ function getOutcomes(
 		const outcomeValues = [...outcomesValues[outcomeIndex].values]
 		// ... except the current value
 		outcomeValues.splice(valueIndex, 1)
+		eventOutcomes = eventOutcomes.map((outcome) => {
+			if (outcomeValues.map((v) => String(v)).includes(String(outcome.value))) {
+				outcome.disabled = true
+			}
 
-		eventOutcomes = eventOutcomes.filter((outcome) => {
-			return !outcomeValues.includes(outcome.value)
+			return outcome
 		})
 	}
 
@@ -85,11 +96,12 @@ function filterOutcomesInterdependencies(
 	})
 }
 
-interface BetOutcomeSelectProps {
+interface BetOutcomeFieldProps {
 	matchesInterdependencies: MatchesInterdependencies
 	event: Event
-	selectOutcomes: IndexedBetOutcome[]
+	fieldOutcomes: IndexedBetOutcome[]
 	isMultiple: boolean
+	showRadios: boolean
 	outcomeIndex: number
 	valueIndex: number
 	outcomes: BetFormValues['outcomes']
@@ -98,18 +110,19 @@ interface BetOutcomeSelectProps {
 	setValue: UseFormSetValue<BetFormValues>
 }
 
-function BetOutcomeSelect({
+function BetOutcomeField({
 	matchesInterdependencies,
 	event,
-	selectOutcomes,
+	fieldOutcomes,
 	isMultiple,
+	showRadios,
 	outcomeIndex,
 	valueIndex,
 	outcomes,
 	control,
 	errors,
 	setValue,
-}: BetOutcomeSelectProps) {
+}: BetOutcomeFieldProps) {
 	const inverseInterdependencies = getInverseInterdependencies(matchesInterdependencies)
 
 	const onOutcomeChange = () => {
@@ -138,32 +151,66 @@ function BetOutcomeSelect({
 					required: t`This field is required`,
 				}}
 				defaultValue={isMultiple ? [] : ''}
-				render={({ field: { onChange, value } }) => (
-					<Select
-						id={`event-${outcomeIndex}-outcome-select`}
-						multiple={isMultiple}
-						error={!!errors.outcomes?.[outcomeIndex]?.values}
-						value={value === '' && isMultiple ? [] : value}
-						onChange={(...event: any[]) => {
-							onChange(...event)
-							onOutcomeChange()
-						}}
-					>
-						{selectOutcomes.map((outcome) => (
-							<MenuItem value={outcome.value} key={outcome.value}>
-								{transOutcome(outcome.text)}
-							</MenuItem>
-						))}
-					</Select>
-				)}
+				render={({ field: { onChange, value } }) => {
+					const onChangeHandler = (...event: any[]) => {
+						onChange(...event)
+						onOutcomeChange()
+					}
+
+					if (showRadios) {
+						return (
+							<RadioGroup
+								row
+								id={`event-${outcomeIndex}-outcome-field`}
+								value={value}
+								onChange={onChangeHandler}
+								sx={{ justifyContent: 'center' }}
+							>
+								{fieldOutcomes.map((outcome) => (
+									<FormControlLabel
+										value={outcome.value}
+										key={outcome.value}
+										control={<Radio disabled={outcome.disabled} />}
+										sx={{ flexDirection: 'column', width: '33%', margin: 0 }}
+										label={<FormatOutcome name={transOutcome(outcome.text)} title={event.title} xsColumn={true} />}
+									/>
+								))}
+							</RadioGroup>
+						)
+					}
+
+					return (
+						<Select
+							id={`event-${outcomeIndex}-outcome-field`}
+							multiple={isMultiple}
+							error={!!errors.outcomes?.[outcomeIndex]?.values}
+							value={value === '' && isMultiple ? [] : value}
+							onChange={onChangeHandler}
+						>
+							{fieldOutcomes.map((outcome) => {
+								if (outcome.disabled) {
+									return null
+								}
+								return (
+									<MenuItem value={outcome.value} key={outcome.value}>
+										{transOutcome(outcome.text)}
+									</MenuItem>
+								)
+							})}
+						</Select>
+					)
+				}}
 			/>
 		</>
 	)
 }
 
-interface BetOutcomeRowProps {
+interface BetOutcomeFieldWraperProps {
+	showRadios: boolean
 	matchesInterdependencies: MatchesInterdependencies
-	events: Event[]
+	event: Event
+	isMultiple: boolean
+	fieldOutcomes: IndexedBetOutcome[]
 	outcomeIndex: number
 	valueIndex: number
 	outcomes: BetFormValues['outcomes']
@@ -174,9 +221,12 @@ interface BetOutcomeRowProps {
 	removeAlternative: () => void
 }
 
-export function BetOutcomeRow({
+function BetOutcomeFieldWrapper({
+	showRadios,
 	matchesInterdependencies,
-	events,
+	event,
+	isMultiple,
+	fieldOutcomes,
 	outcomeIndex,
 	valueIndex,
 	outcomes,
@@ -185,62 +235,61 @@ export function BetOutcomeRow({
 	setValue,
 	addAlternative,
 	removeAlternative,
-}: BetOutcomeRowProps) {
-	const event = events[outcomeIndex]
-	const isMultiple = event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT
+}: BetOutcomeFieldWraperProps) {
+	const enabledOutcomesCount = fieldOutcomes.filter((f) => !f.disabled).length
 
-	const selectOutcomes = getOutcomes(
-		outcomeIndex,
-		valueIndex,
-		event,
-		events,
-		outcomes,
-		matchesInterdependencies,
-		isMultiple
-	)
-
-	if (selectOutcomes.length === 0) {
+	if (enabledOutcomesCount === 0) {
 		return null
 	}
 
 	return (
 		<div>
-			<FormControl fullWidth>
-				<BetOutcomeSelect
-					matchesInterdependencies={matchesInterdependencies}
-					event={event}
-					selectOutcomes={selectOutcomes}
-					isMultiple={isMultiple}
-					outcomeIndex={outcomeIndex}
-					valueIndex={valueIndex}
-					outcomes={outcomes}
-					control={control}
-					errors={errors}
-					setValue={setValue}
-				/>
-				<FormError>
-					<ErrorMessage errors={errors} name={`outcomes.${outcomeIndex}.value`} />
-				</FormError>
-			</FormControl>
+			<div style={{ display: 'flex', alignItems: 'center' }}>
+				<FormControl fullWidth sx={{ maxWidth: showRadios ? 'auto' : '400px', mx: 'auto' }}>
+					<BetOutcomeField
+						matchesInterdependencies={matchesInterdependencies}
+						event={event}
+						fieldOutcomes={fieldOutcomes}
+						isMultiple={isMultiple}
+						showRadios={showRadios}
+						outcomeIndex={outcomeIndex}
+						valueIndex={valueIndex}
+						outcomes={outcomes}
+						control={control}
+						errors={errors}
+						setValue={setValue}
+					/>
+					<FormError>
+						<ErrorMessage errors={errors} name={`outcomes.${outcomeIndex}.value`} />
+					</FormError>
+				</FormControl>
 
-			{valueIndex > 0 && (
-				<span
-					className='js-link'
-					onClick={removeAlternative}
+				<div style={{ width: 25 }}>
+					{valueIndex > 0 && (
+						<span
+							onClick={removeAlternative}
+							style={{
+								cursor: 'pointer',
+								color: 'red',
+								marginBottom: '5px',
+							}}
+						>
+							<ClearIcon fontSize='small' />
+						</span>
+					)}
+				</div>
+			</div>
+
+			{addAlternative !== false && enabledOutcomesCount > 1 && (
+				<div
 					style={{
-						fontSize: 12,
-						textAlign: 'right',
-						color: 'red',
-						display: 'block',
-						marginBottom: '5px',
+						display: 'flex',
+						alignItems: 'center',
+						fontSize: 16,
+						justifyContent: 'center',
+						marginTop: 10,
 					}}
 				>
-					<Trans>Remove prediction</Trans>
-				</span>
-			)}
-
-			{addAlternative !== false && selectOutcomes.length > 1 && (
-				<div style={{ display: 'flex', alignItems: 'center', fontSize: 16 }}>
 					<span className='js-link' style={{ fontSize: 12, marginRight: 5 }} onClick={addAlternative}>
 						+<Trans>Add another prediction</Trans>
 					</span>
@@ -252,5 +301,87 @@ export function BetOutcomeRow({
 				</div>
 			)}
 		</div>
+	)
+}
+
+interface BetOutcomeRowProps {
+	betPrice: BigNumber
+	matchesInterdependencies: MatchesInterdependencies
+	events: Event[]
+	values: BetFormOutcome[]
+	outcomeIndex: number
+	outcomes: BetFormValues['outcomes']
+	control: Control<BetFormValues>
+	errors: FieldErrors<BetFormValues>
+	register: UseFormRegister<BetFormValues>
+	setValue: UseFormSetValue<BetFormValues>
+	addAlternative: (outcomeIndex: number) => () => void
+	removeAlternative: (outcomeIndex: number, valueIndex: number) => () => void
+}
+
+export function BetOutcomeRow({
+	betPrice,
+	matchesInterdependencies,
+	events,
+	values,
+	outcomeIndex,
+	outcomes,
+	control,
+	errors,
+	register,
+	setValue,
+	addAlternative,
+	removeAlternative,
+}: BetOutcomeRowProps) {
+	const valuesLength = values.length
+
+	const event = events[outcomeIndex]
+	const isMultiple = event.templateID === REALITY_TEMPLATE_MULTIPLE_SELECT
+
+	const showRadios = !isMultiple && event.outcomes.length <= 3
+
+	return (
+		<>
+			<Grid item xs={12}>
+				<Trans id={events[outcomeIndex].title} />
+			</Grid>
+			<Grid item xs={12}>
+				{values.map((value, valueIndex) => (
+					<BetOutcomeFieldWrapper
+						key={`${valueIndex}-${events[outcomeIndex].id}`}
+						showRadios={showRadios}
+						matchesInterdependencies={matchesInterdependencies}
+						event={event}
+						isMultiple={isMultiple}
+						fieldOutcomes={getOutcomes(
+							outcomeIndex,
+							valueIndex,
+							event,
+							events,
+							outcomes,
+							matchesInterdependencies,
+							isMultiple
+						)}
+						outcomeIndex={outcomeIndex}
+						valueIndex={valueIndex}
+						outcomes={outcomes}
+						control={control}
+						errors={errors}
+						setValue={setValue}
+						addAlternative={
+							betPrice.gt(0) && valueIndex === valuesLength - 1 && value !== '' ? addAlternative(outcomeIndex) : false
+						}
+						removeAlternative={removeAlternative(outcomeIndex, valueIndex)}
+					/>
+				))}
+				<input
+					type='hidden'
+					{...register(`outcomes.${outcomeIndex}.questionId`, {
+						required: t`This field is required`,
+					})}
+				/>
+			</Grid>
+			<div style={{ borderBottom: '1px solid #CCC', width: '100%', paddingBottom: 24 }}></div>
+		</>
 	)
 }

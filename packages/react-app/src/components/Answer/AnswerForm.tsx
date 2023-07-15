@@ -28,7 +28,8 @@ import {
 	REALITY_TEMPLATE_SINGLE_SELECT,
 } from '@/lib/reality'
 
-export type FormEventOutcomeValue = number | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON
+// `string` is a stringified number (value returned by the radio buttons)
+export type FormEventOutcomeValue = number | string | typeof INVALID_RESULT | typeof ANSWERED_TOO_SOON
 
 type AnswerFormValues = {
 	outcome: FormEventOutcomeValue | [FormEventOutcomeValue] | ''

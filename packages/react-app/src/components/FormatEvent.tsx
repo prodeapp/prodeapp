@@ -1,3 +1,7 @@
+import { Trans } from '@lingui/macro'
+import Box from '@mui/material/Box'
+import { SxProps } from '@mui/system'
+
 import { getTeamImage } from '@/lib/teams-images'
 import { matchQuestion } from '@/lib/templates'
 
@@ -5,13 +9,17 @@ const teamSx = {
 	width: 'calc(50% - 15px)',
 }
 
-const getCountryFromEvent = (title: string) => {
+export const getEventCodeFromTitle = (title: string): string | undefined => {
 	if (title.includes('Premier League')) {
-		return 'en'
+		return 'footbal_england'
 	}
 
 	if (title.includes('La Liga Santander')) {
-		return 'es'
+		return 'footbal_spain'
+	}
+
+	if (title.includes('Brasileiro')) {
+		return 'footbal_brazil'
 	}
 
 	if (title.includes('F1') && title.includes('Grand Prix')) {
@@ -22,36 +30,47 @@ const getCountryFromEvent = (title: string) => {
 		return 'fifa_wc'
 	}
 
-	if (title.includes('UEFA Champions League')) return 'uefa_champions'
+	if (title.includes('UEFA Champions League')) {
+		return 'uefa_champions'
+	}
 
-	return 'ar'
+	if (title.includes('Liga Profesional Argentina')) {
+		return 'football_argentina'
+	}
 }
 
 export function FormatOutcome({
 	name,
-	country,
+	eventCode,
 	title,
 	imageAlign = 'left',
+	xsColumn = false,
 }: {
 	name: string
-	country?: string
+	eventCode?: string
 	title?: string
 	imageAlign?: 'left' | 'right'
+	xsColumn?: boolean
 }) {
-	if (!country) {
-		country = title ? getCountryFromEvent(title) : ''
+	if (!eventCode) {
+		eventCode = title ? getEventCodeFromTitle(title) : ''
 	}
 
-	const style: React.CSSProperties = { display: 'flex', alignItems: 'center' }
+	const style: SxProps = { display: 'flex', alignItems: 'center' }
 
 	if (imageAlign === 'right') {
 		style.justifyContent = 'end'
 		style.textAlign = 'right'
 	}
 
-	const image = getTeamImage(name, country)
+	if (xsColumn) {
+		style.flexDirection = { xs: xsColumn ? 'column' : 'row', sm: 'row' }
+		style.textAlign = { xs: 'center', sm: imageAlign === 'right' ? 'right' : 'left' }
+	}
+
+	const image = eventCode && getTeamImage(name, eventCode)
 	return (
-		<div style={style}>
+		<Box sx={style}>
 			{image && imageAlign === 'left' && (
 				<img src={image} alt={name} width={15} height={15} style={{ marginRight: '5px' }} />
 			)}
@@ -59,7 +78,7 @@ export function FormatOutcome({
 			{image && imageAlign === 'right' && (
 				<img src={image} alt={name} width={15} height={15} style={{ marginLeft: '5px' }} />
 			)}
-		</div>
+		</Box>
 	)
 }
 
@@ -67,19 +86,19 @@ export function FormatEvent({ title }: { title: string }) {
 	const params = matchQuestion(title)
 
 	if (params === null || !params?.param1 || !params?.param2) {
-		return <>{title}</>
+		return <Trans id={title} />
 	}
 
-	const country = getCountryFromEvent(title)
+	const eventCode = getEventCodeFromTitle(title)
 
 	return (
 		<div style={{ display: 'flex', alignItems: 'center' }}>
 			<div style={teamSx}>
-				<FormatOutcome name={params.param1} country={country} imageAlign='right' />
+				<FormatOutcome name={params.param1} eventCode={eventCode} imageAlign='right' />
 			</div>
 			<div style={{ width: '30px', textAlign: 'center' }}>vs</div>
 			<div style={teamSx}>
-				<FormatOutcome name={params.param2} country={country} />
+				<FormatOutcome name={params.param2} eventCode={eventCode} />
 			</div>
 		</div>
 	)

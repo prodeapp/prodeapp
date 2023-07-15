@@ -20,7 +20,6 @@ import { BigAlert } from '@/components'
 import { FormEventOutcomeValue } from '@/components/Answer/AnswerForm'
 import { SimpleBetDetails } from '@/components/Bet/BetDetails'
 import { InPageConnectButton } from '@/components/ConnectButton'
-import { FormatEvent } from '@/components/FormatEvent'
 import { Market } from '@/graphql/subgraph'
 import { useBets } from '@/hooks/useBets'
 import { useBetToken } from '@/hooks/useBetToken'
@@ -391,47 +390,31 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 					{error?.message || approveError?.message}
 				</Alert>
 			)}
-			<Grid container spacing={3}>
+			<Grid container rowSpacing={3} columnSpacing={2}>
 				{fields.map((field, outcomeIndex) => {
 					if (!events || !events[outcomeIndex]) {
 						return null
 					}
 					// set default to be able to loop
 					const tmpOutcomeValues = outcomes?.[outcomeIndex]?.values || ['']
-					const valuesLength = tmpOutcomeValues.length
 					return (
-						<React.Fragment key={events[outcomeIndex].id}>
-							<Grid item xs={12} md={6}>
-								<FormatEvent title={events[outcomeIndex].title} />
-							</Grid>
-							<Grid item xs={12} md={6}>
-								{tmpOutcomeValues.map((value, valueIndex) => (
-									<BetOutcomeRow
-										key={`${valueIndex}-${events[outcomeIndex].id}`}
-										matchesInterdependencies={matchesInterdependencies}
-										events={events}
-										outcomeIndex={outcomeIndex}
-										valueIndex={valueIndex}
-										outcomes={outcomes}
-										control={control}
-										errors={errors}
-										setValue={setValue}
-										addAlternative={
-											betPrice.gt(0) && valueIndex === valuesLength - 1 && value !== ''
-												? addAlternative(outcomeIndex)
-												: false
-										}
-										removeAlternative={removeAlternative(outcomeIndex, valueIndex)}
-									/>
-								))}
-								<input
-									type='hidden'
-									{...register(`outcomes.${outcomeIndex}.questionId`, {
-										required: t`This field is required`,
-									})}
-								/>
-							</Grid>
-						</React.Fragment>
+						<BetOutcomeRow
+							key={events[outcomeIndex].id}
+							{...{
+								betPrice,
+								matchesInterdependencies,
+								events,
+								values: tmpOutcomeValues,
+								outcomeIndex,
+								outcomes,
+								control,
+								errors,
+								register,
+								setValue,
+								addAlternative,
+								removeAlternative,
+							}}
+						/>
 					)
 				})}
 				{hasFundsToBet && betsCount > 1 && (
