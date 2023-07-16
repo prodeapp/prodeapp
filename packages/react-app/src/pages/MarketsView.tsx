@@ -28,7 +28,7 @@ import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
 import { hasBetInMarket } from '@/hooks/useCheckMarketWhitelist'
 import { useMarket } from '@/hooks/useMarket'
-import { filterChainId, NetworkId } from '@/lib/config'
+import { filterChainId } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
 
 const GridLeftColumn = styled(Grid)(({ theme }) => ({
@@ -67,20 +67,13 @@ function MarketsView() {
 	}, [searchParams, id])
 
 	useEffect(() => {
-		async function getHasBet({
-			chainId,
-			id,
-			address,
-		}: {
-			chainId: NetworkId
-			id: Address
-			address: Address | undefined
-		}) {
-			const hasBet = await hasBetInMarket(id, address, chainId)
-			setHasBet(hasBet)
-			setSection('bet')
-		}
-		getHasBet({ chainId, id, address })
+		;(async () => {
+			const _hasBet = await hasBetInMarket(id, address, chainId)
+			setHasBet(_hasBet)
+			if (!_hasBet) {
+				setSection('bet')
+			}
+		})()
 	}, [chainId, id, address])
 
 	if (isLoading || hasBet === undefined) {
