@@ -26,6 +26,7 @@ import PlaceBet from '@/components/MarketView/PlaceBet'
 import ReferralLink from '@/components/MarketView/ReferralLink'
 import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
+import { hasBetInMarket } from '@/hooks/useCheckMarketWhitelist'
 import { useMarket } from '@/hooks/useMarket'
 import { filterChainId } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
@@ -51,6 +52,7 @@ function MarketsView() {
 
 	const { isLoading, data: market } = useMarket(id, chainId)
 	const [section, setSection] = useState<MarketSections>('bets')
+	const [hasBet, setHasBet] = useState<boolean | undefined>(undefined)
 	const [searchParams] = useSearchParams()
 	const [onlyMyBets, setOnlyMyBets] = useState(false)
 	const theme = useTheme()
@@ -64,7 +66,17 @@ function MarketsView() {
 		}
 	}, [searchParams, id])
 
-	if (isLoading) {
+	useEffect(() => {
+		;(async () => {
+			const _hasBet = await hasBetInMarket(id, address, chainId)
+			setHasBet(_hasBet)
+			if (!_hasBet) {
+				setSection('bet')
+			}
+		})()
+	}, [chainId, id, address])
+
+	if (isLoading || hasBet === undefined) {
 		return (
 			<div>
 				<Trans>Loading...</Trans>
