@@ -3,6 +3,7 @@ import { Address } from '@wagmi/core'
 import compareAsc from 'date-fns/compareAsc'
 import fromUnixTime from 'date-fns/fromUnixTime'
 
+import { Market } from '@/graphql/subgraph'
 import { isFinalized } from '@/lib/helpers'
 
 import { useEvents } from './useEvents'
@@ -15,6 +16,10 @@ type MarketStatus =
 	| 'WAITING_REGISTER_POINTS'
 	| 'FINALIZED'
 
+export function marketIsAcceptingBets(market: Market) {
+	return compareAsc(fromUnixTime(market.closingTime), new Date()) === 1
+}
+
 export const useMarketStatus = (marketId: Address, chainId: number) => {
 	const { data: market } = useMarket(marketId, chainId)
 	const { data: events } = useEvents(marketId, chainId)
@@ -26,7 +31,7 @@ export const useMarketStatus = (marketId: Address, chainId: number) => {
 				return ''
 			}
 
-			if (compareAsc(fromUnixTime(market.closingTime), new Date()) === 1) {
+			if (marketIsAcceptingBets(market)) {
 				// closingTime > now
 				return 'ACCEPTING_BETS'
 			}

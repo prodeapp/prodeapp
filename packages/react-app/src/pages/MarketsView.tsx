@@ -28,6 +28,7 @@ import Results from '@/components/MarketView/Results'
 import { Stats } from '@/components/MarketView/Stats'
 import { hasBetInMarket } from '@/hooks/useCheckMarketWhitelist'
 import { useMarket } from '@/hooks/useMarket'
+import { marketIsAcceptingBets } from '@/hooks/useMarketStatus'
 import { filterChainId } from '@/lib/config'
 import { getMarketUrl, getReferralKey, getTwitterShareUrl } from '@/lib/helpers'
 
@@ -67,14 +68,19 @@ function MarketsView() {
 	}, [searchParams, id])
 
 	useEffect(() => {
+		if (!market?.id) {
+			return
+		}
+
 		;(async () => {
-			const _hasBet = await hasBetInMarket(id, address, chainId)
+			const _hasBet = await hasBetInMarket(market?.id, address, chainId)
 			setHasBet(_hasBet)
-			if (!_hasBet) {
+
+			if (marketIsAcceptingBets(market) && !_hasBet) {
 				setSection('bet')
 			}
 		})()
-	}, [chainId, id, address])
+	}, [chainId, market?.id, address])
 
 	if (isLoading || hasBet === undefined) {
 		return (
