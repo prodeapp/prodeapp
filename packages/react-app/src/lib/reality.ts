@@ -83,7 +83,7 @@ export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeV
 		// we add this check anyway to simplify the usage of this function
 		throw Error(`Invalid outcome`)
 	}
-	console.log(outcome, Number(outcome))
+
 	if (typeof outcome === 'object') {
 		// multi-select
 
