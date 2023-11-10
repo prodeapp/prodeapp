@@ -27,7 +27,9 @@ export type MarketFactoryV2QuestionWithMetadata = {
 }
 
 export function encodeOutcomes(outcomes: string[]) {
-	return JSON.stringify(outcomes).replace(/^\[/, '').replace(/\]$/, '')
+	return JSON.stringify(outcomes)
+		.replace(/^\[/, '')
+		.replace(/\]$/, '')
 }
 export function encodeQuestionText(
 	qtype: 'bool' | 'single-select' | 'multiple-select' | 'uint' | 'datetime',
@@ -70,7 +72,7 @@ export function getQuestionId(
 
 export function getQuestionsHash(questionIDs: string[]) {
 	return keccak256(
-		questionIDs.map((_) => 'bytes32'),
+		questionIDs.map(_ => 'bytes32'),
 		questionIDs.sort((a, b) => (a > b ? 1 : -1))
 	)
 }
@@ -81,7 +83,7 @@ export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeV
 		// we add this check anyway to simplify the usage of this function
 		throw Error(`Invalid outcome`)
 	}
-
+	console.log(outcome, Number(outcome))
 	if (typeof outcome === 'object') {
 		// multi-select
 
@@ -102,5 +104,8 @@ export function formatOutcome(outcome: FormEventOutcomeValue | FormEventOutcomeV
 	}
 
 	// single-select
+	if (outcome == ANSWERED_TOO_SOON || outcome == INVALID_RESULT) {
+		return outcome as Bytes
+	}
 	return hexZeroPad(hexlify(Number(outcome)), 32) as Bytes
 }
