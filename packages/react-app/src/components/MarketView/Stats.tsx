@@ -92,7 +92,7 @@ function bets2Stats(bets: Bet[], events: Event[]): Stat[][] {
 	if (events[0].outcomes.length > 4) {
 		// filter zero values for clarity in the graphs
 		stats = stats.map((eventStat) =>
-			eventStat.filter((stat) => stat.amountBets !== 0 || stat.outcome.toLowerCase() === t`draw`)
+			eventStat.filter((stat) => stat.amountBets !== 0 || (stat.outcome || '').toLowerCase() === t`draw`)
 		)
 	}
 
