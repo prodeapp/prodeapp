@@ -1,10 +1,9 @@
-import { gtcrDecode, gtcrEncode } from '@kleros/gtcr-encoder'
-
 import { Bytes } from '@/abi/types'
 import { CurateSubmitFormValues } from '@/components/Curate'
 import validate from '@/components/Curate/schema'
 import { CURATE_ITEM_FIELDS, CurateItem } from '@/graphql/subgraph'
 import { getConfigAddress } from '@/lib/config'
+import { gtcrDecode, gtcrEncode } from '@/lib/gtcr-encoder'
 
 import { apolloProdeQuery } from './apolloClient'
 import ipfsPublish from './ipfs-publish'
@@ -138,8 +137,8 @@ export async function getDecodedParams(chainId: number, itemId: string): Promise
 
 export function convertExtraDataGroups(extraDataGroups: CurateSubmitFormValues['extraDataGroups']): ExtraDataGroups {
 	return {
-		sizes: extraDataGroups.groups.map(g => g.size),
-		names: extraDataGroups.groups.map(g => g.name),
+		sizes: extraDataGroups.groups.map((g) => g.size),
+		names: extraDataGroups.groups.map((g) => g.name),
 		rounds: extraDataGroups.rounds,
 	}
 }
