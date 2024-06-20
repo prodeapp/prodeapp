@@ -35,7 +35,7 @@ export const marketEventViewToEvent = async (
 	return event
 }
 
-type FetchEvents = (chainId: number, marketId: Address, orderBy?: 'openingTs' | 'id') => Promise<Event[]>
+type FetchEvents = (chainId: number, marketId: Address, orderBy?: 'openingTs' | 'id' | string[]) => Promise<Event[]>
 
 export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'openingTs') => {
 	const marketEventsView = await readContract({
@@ -46,21 +46,29 @@ export const fetchEvents: FetchEvents = async (chainId, marketId, orderBy = 'ope
 		chainId: filterChainId(chainId),
 	})
 
-	if (typeof marketEventsView.find(e => e.templateId.eq(0)) !== 'undefined') {
+	if (typeof marketEventsView.find((e) => e.templateId.eq(0)) !== 'undefined') {
 		// it needs to be added to RealityRegistry first
 		return []
 	}
 
 	const events = await Promise.all(
-		marketEventsView.map(async marketEventView => await marketEventViewToEvent(marketEventView))
+		marketEventsView.map(async (marketEventView) => await marketEventViewToEvent(marketEventView))
 	)
 
-	events.sort((a, b) => (a[orderBy] === b[orderBy] ? 0 : a[orderBy] > b[orderBy] ? 1 : -1))
+	if (typeof orderBy === 'object') {
+		events.sort((a, b) => orderBy.indexOf(a.id) - orderBy.indexOf(b.id))
+	} else {
+		events.sort((a, b) => (a[orderBy] === b[orderBy] ? 0 : a[orderBy] > b[orderBy] ? 1 : -1))
+	}
 
 	return events
 }
 
-type UseEvents = (marketId: Address, chainId: number, orderBy?: 'openingTs' | 'id') => UseQueryResult<Event[], Error>
+type UseEvents = (
+	marketId: Address,
+	chainId: number,
+	orderBy?: 'openingTs' | 'id' | string[]
+) => UseQueryResult<Event[], Error>
 export const useEvents: UseEvents = (marketId: Address, chainId: number, orderBy = 'openingTs') => {
 	return useQuery<Event[], Error>(['useEvents', { marketId, orderBy, chainId }], async () => {
 		return fetchEvents(chainId, marketId, orderBy)

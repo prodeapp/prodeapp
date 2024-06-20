@@ -80,12 +80,13 @@ function filterOutcomesInterdependencies(
 			for (let k = 0; k < relatedQuestions.length; k++) {
 				const questionId = relatedQuestions[k]
 				const questionPos = events.findIndex((event) => event.id === questionId)
-				outcomesValues[questionPos].values.forEach((userSelectionIndex) => {
-					if (userSelectionIndex !== '') {
-						const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
-						possibleOutcomes.push(outcomeSelected)
-					}
-				})
+				outcomesValues?.[questionPos] &&
+					outcomesValues[questionPos].values.forEach((userSelectionIndex) => {
+						if (userSelectionIndex !== '') {
+							const outcomeSelected = events[questionPos].outcomes[Number(userSelectionIndex)]
+							possibleOutcomes.push(outcomeSelected)
+						}
+					})
 			}
 			if (possibleOutcomes.length >= 2 && !possibleOutcomes.includes(outcome.text)) {
 				return false

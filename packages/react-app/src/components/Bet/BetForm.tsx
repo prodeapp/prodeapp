@@ -155,7 +155,12 @@ function BetButton({
 export default function BetForm({ market, chainId, cancelHandler }: BetFormProps) {
 	const { address } = useAccount()
 	const { chain } = useNetwork()
-	const { isLoading: isLoadingEvents, error: eventsError, data: events } = useEvents(market.id, chainId)
+	const itemJson = useCurateItemJson(market.hash)
+	const {
+		isLoading: isLoadingEvents,
+		error: eventsError,
+		data: events,
+	} = useEvents(market.id, chainId, itemJson?.formats?.[0]?.questions)
 
 	const { data: betWhitelistStatus = '', isLoading: isLoadingCheckWhitelist } = useCheckMarketWhitelist(market, chainId)
 
@@ -243,7 +248,6 @@ export default function BetForm({ market, chainId, cancelHandler }: BetFormProps
 		window.scrollTo(0, 0)
 	}, [])
 
-	const itemJson = useCurateItemJson(market.hash)
 	const matchesInterdependencies = useMatchesInterdependencies(events, itemJson)
 
 	if (isLoading || isLoadingApprove || isLoadingEvents || isLoadingCheckWhitelist) {
