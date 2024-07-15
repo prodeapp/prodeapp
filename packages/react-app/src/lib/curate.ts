@@ -69,7 +69,7 @@ async function getRegistryColumns(chainId: number): Promise<any[]> {
 	}
 
 	try {
-		const response = await fetch(`https://ipfs.kleros.io${result.data.registry.clearingMetaEvidence.URI}`)
+		const response = await fetch(`https://cdn.kleros.link${result.data.registry.clearingMetaEvidence.URI}`)
 		const metadata = await response.json()
 		return metadata.metadata.columns
 	} catch (e) {
@@ -124,7 +124,7 @@ export async function getDecodedParams(chainId: number, itemId: string): Promise
 
 	if (props.Details) {
 		try {
-			const response = await fetch(`https://ipfs.kleros.io${props.Details}`)
+			const response = await fetch(`https://cdn.kleros.link${props.Details}`)
 			props.Details = await response.json()
 		} catch (e) {
 			console.log('JSON error')
