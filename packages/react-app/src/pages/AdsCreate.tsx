@@ -250,7 +250,7 @@ function AdsCreate() {
 						<FormRow>
 							The ad must follow the{' '}
 							<a
-								href='https://ipfs.kleros.io/ipfs/QmeycGJx3HUBjC3cbgtKqfgD6N4eZtZDn8tmCuJZPMVrQt/ad-content-curation-policy.pdf'
+								href='https://cdn.kleros.link/ipfs/QmeycGJx3HUBjC3cbgtKqfgD6N4eZtZDn8tmCuJZPMVrQt/ad-content-curation-policy.pdf'
 								target='_blank'
 								rel='noopener noreferrer'
 							>

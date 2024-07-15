@@ -4,7 +4,7 @@ import { filterChainId, NetworkId } from '@/lib/config'
 
 const prodeClients: Record<number, ApolloClient<NormalizedCacheObject>> = {
 	[NetworkId.GNOSIS]: new ApolloClient({
-		uri: 'https://api.thegraph.com/subgraphs/name/prodeapp/prodeapp',
+		uri: 'https://api.studio.thegraph.com/proxy/66145/prodeapp/version/latest',
 		cache: new InMemoryCache(),
 	}),
 	[NetworkId.POLYGON_TESTNET]: new ApolloClient({
