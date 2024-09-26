@@ -1,9 +1,11 @@
+/* eslint-disable prefer-const */
 import { Address, BigInt, ByteArray, Bytes, log, store } from "@graphprotocol/graph-ts";
+
 import { LogFinalize, LogFundAnswerBounty, LogNewAnswer, LogNotifyOfArbitrationRequest, LogReopenQuestion } from "../types/RealitioV3/Realitio";
-import { Market as MarketSC } from '../types/templates/Market/Market';
 import { Bet, Event, Market } from "../types/schema";
+import { Market as MarketSC } from '../types/templates/Market/Market';
 import { correctAnswerPoints } from "./utils/constants";
-import { getBetID, duplicateEvent } from "./utils/helpers";
+import { duplicateEvent,getBetID } from "./utils/helpers";
 
 export function handleNewAnswer(evt: LogNewAnswer): void {
     let id = evt.params.question_id.toHexString();
@@ -36,6 +38,7 @@ export function handleNewAnswer(evt: LogNewAnswer): void {
         if (i > 0) {
             const marketSC = MarketSC.bind(Address.fromBytes(Address.fromHexString(event.markets[i])));
             let aux_nonce = 0;
+            // eslint-disable-next-line no-constant-condition
             while (true) {
                 let questionID = marketSC.try_questionIDs(BigInt.fromI32(aux_nonce));
                 if (questionID.reverted) {
@@ -123,7 +126,11 @@ export function handleFundAnswerBounty(event: LogFundAnswerBounty): void {
 
 export function handleReopenQuestion(event: LogReopenQuestion): void {
     const oldQuestionID = event.params.reopened_question_id.toHexString();
-    let oldEvent = Event.load(oldQuestionID)!;
+    let oldEvent = Event.load(oldQuestionID);
+    if (oldEvent === null) {
+        // Is not a question of Prode
+        return
+    }
     const newQuestionID = event.params.question_id.toHexString();
     const entity = duplicateEvent(oldEvent, newQuestionID);
     let reopEvnts = entity.reopenedEvents;
