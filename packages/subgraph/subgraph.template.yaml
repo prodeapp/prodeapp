@@ -309,6 +309,13 @@ templates:
       abis:
         - name: Manager
           file: ./contracts/abis/Manager.json
+      {{#managerV2}}
+      eventHandlers:
+        - event: ReferralRewardClaimed(address,uint256)
+          handler: handleReferralRewardClaimed
+        - event: ManagerRewardClaimed(address,uint256)
+          handler: handleRewardsClaimed
+      {{/managerV2}}
       {{#supportsCallHandlers}}
       callHandlers:
         - function: claimReferralReward(address)
