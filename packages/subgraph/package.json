@@ -1,21 +1,23 @@
 {
-  "name": "@prodeapp/subgraph",
-  "version": "1.0.0",
-  "dependencies": {
-    "@graphprotocol/graph-cli": "0.61.0",
-    "@graphprotocol/graph-ts": "0.31.0"
-  },
-  "license": "MIT",
-  "scripts": {
-    "auth": "graph auth --product hosted-service $GRAPH_ACCESS_TOKEN",
-    "build": "graph build",
-    "codegen": "graph codegen --output-dir src/types/",
-    "prepare:gnosis": "mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
-    "prepare:mumbai": "mustache config/mumbai.json subgraph.template.yaml > subgraph.yaml",
-    "deploy:gnosis": "yarn prepare:gnosis && graph deploy --product hosted-service prodeapp/prodeapp",
-    "deploy:mumbai": "yarn prepare:mumbai && graph deploy --product hosted-service prodeapp/prodeapp-mumbai"
-  },
-  "devDependencies": {
-    "mustache": "^4.2.0"
-  }
+	"name": "@prodeapp/subgraph",
+	"version": "1.0.0",
+	"dependencies": {
+		"@graphprotocol/graph-cli": "^0.97.1",
+		"@graphprotocol/graph-ts": "^0.38.1"
+	},
+	"license": "MIT",
+	"scripts": {
+		"auth": "graph auth --product hosted-service $GRAPH_ACCESS_TOKEN",
+		"build": "graph build",
+		"codegen": "graph codegen --output-dir src/types/",
+		"prepare:gnosis": "mustache config/gnosis.json subgraph.template.yaml > subgraph.yaml",
+		"prepare:mumbai": "mustache config/mumbai.json subgraph.template.yaml > subgraph.yaml",
+		"prepare:baseSepolia": "mustache config/base-sepolia.json subgraph.template.testnet.yaml > subgraph.yaml",
+		"deploy:gnosis": "yarn prepare:gnosis && graph deploy --product prodeapp",
+		"deploy:mumbai": "yarn prepare:mumbai && graph deploy --product prodeapp-mumbai",
+		"deploy:baseSepolia": "yarn prepare:baseSepolia && graph deploy prodeapp-base-sepolia"
+	},
+	"devDependencies": {
+		"mustache": "^4.2.0"
+	}
 }

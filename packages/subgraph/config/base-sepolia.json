@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/prodeapp/prodeapp",
+  "network": "base-sepolia",
+  "supportsCallHandlers": true,
+  "MarketFactory": {
+    "address": "0xd3246af138e7e5fff220856c735fbaaa860086b8",
+    "startBlock": "31959669"
+  },
+  "RealitioV3": {
+    "address": "0x135D9d131Af9C0c7dd6F82014067D69e9E49e31e",
+    "startBlock": "31958916"
+  }
+}

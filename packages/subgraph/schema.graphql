@@ -1,271 +1,293 @@
 enum CurationStatus {
-  """The Item is not in the registry"""
-  Absent,
-  """The item is in the registry."""
-  Registered, 
-  """The item has a request to be added to the registry."""
-  RegistrationRequested,
-  """The item has a request to be removed from the registry."""
-  ClearingRequested
+	"""
+	The Item is not in the registry
+	"""
+	Absent
+	"""
+	The item is in the registry.
+	"""
+	Registered
+	"""
+	The item has a request to be added to the registry.
+	"""
+	RegistrationRequested
+	"""
+	The item has a request to be removed from the registry.
+	"""
+	ClearingRequested
 }
 
-type Market @entity {
-  id: ID!
-  hash: String!
-  nonce: BigInt!
-  name: String!
-  category: String!
-  closingTime: BigInt!
-  creationTime: BigInt!
-  resultSubmissionPeriodStart: BigInt!
-  submissionTimeout: BigInt!
-  price: BigInt!
-  pool: BigInt!
-  numOfBets: BigInt!
-  managementFee: BigInt!
-  protocolFee: BigInt!
-  manager: Manager!
-  creator: String!
-  numOfEvents: BigInt!
-  numOfEventsWithAnswer: BigInt!
-  hasPendingAnswers: Boolean!
-  prizes: [BigInt!]
-  curated: Boolean!
-  players: [Player!]! @derivedFrom(field: "markets")
-  events: [Event!]! @derivedFrom(field: "markets")
-  bets: [Bet!]! @derivedFrom(field: "market")
-  funders: [Funder!] @derivedFrom(field: "markets")
-  attributions: [Attribution!]! @derivedFrom(field: "market")
-  marketFactory: MarketFactory!
-  "Amount of the prize that was funded by sponsor"
-  sponsoredAmount: BigInt!
-  "All the bids for this market"
-  bids: [Bid!]! @derivedFrom(field: "market")
-  "All Ads (active or not) that has a bid in this market"
-  ads: [SVGAd!]! @derivedFrom(field: "markets")
-  "Current Ad with highest bid, null if there is no Ad with Bid."
-  highestBidAd: SVGAd
-  "Current highest bid, null if there are not."
-  highestBid: Bid
-  "Market Billing Balance"
-  billingBalance: BigInt!
+type Market @entity(immutable: false) {
+	id: ID!
+	hash: String!
+	nonce: BigInt!
+	name: String!
+	category: String!
+	closingTime: BigInt!
+	creationTime: BigInt!
+	resultSubmissionPeriodStart: BigInt!
+	submissionTimeout: BigInt!
+	price: BigInt!
+	pool: BigInt!
+	numOfBets: BigInt!
+	managementFee: BigInt!
+	protocolFee: BigInt!
+	manager: Manager!
+	creator: String!
+	numOfEvents: BigInt!
+	numOfEventsWithAnswer: BigInt!
+	hasPendingAnswers: Boolean!
+	prizes: [BigInt!]
+	curated: Boolean!
+	players: [Player!]! @derivedFrom(field: "markets")
+	events: [Event!]! @derivedFrom(field: "markets")
+	bets: [Bet!]! @derivedFrom(field: "market")
+	funders: [Funder!] @derivedFrom(field: "markets")
+	attributions: [Attribution!]! @derivedFrom(field: "market")
+	marketFactory: MarketFactory!
+	"Amount of the prize that was funded by sponsor"
+	sponsoredAmount: BigInt!
+	"All the bids for this market"
+	bids: [Bid!]! @derivedFrom(field: "market")
+	"All Ads (active or not) that has a bid in this market"
+	ads: [SVGAd!]! @derivedFrom(field: "markets")
+	"Current Ad with highest bid, null if there is no Ad with Bid."
+	highestBidAd: SVGAd
+	"Current highest bid, null if there are not."
+	highestBid: Bid
+	"Market Billing Balance"
+	billingBalance: BigInt!
 }
 
-type MarketCuration @entity {
-  """Hash of the market"""
-  id: ID!
-  markets: [Market!]!
+type MarketCuration @entity(immutable: false) {
+	"""
+	Hash of the market
+	"""
+	id: ID!
+	markets: [Market!]!
 }
 
-type CurateItem @entity {
-  """itemID in curate"""
-  id: ID!
-  """Hash of the market"""
-  hash: String!
-  """Status in the curation. Enum with statuses"""
-  status: CurationStatus!
-  "The data describing the item (encoded)"
-  data: Bytes!
-  """The title of the item"""
-  title: String!
-  """the json file. empty if error"""
-  json: String!
-  timestamp: BigInt!
+type CurateItem @entity(immutable: false) {
+	"""
+	itemID in curate
+	"""
+	id: ID!
+	"""
+	Hash of the market
+	"""
+	hash: String!
+	"""
+	Status in the curation. Enum with statuses
+	"""
+	status: CurationStatus!
+	"The data describing the item (encoded)"
+	data: Bytes!
+	"""
+	The title of the item
+	"""
+	title: String!
+	"""
+	the json file. empty if error
+	"""
+	json: String!
+	timestamp: BigInt!
 }
 
-type Attribution @entity {
-  "provider-attributor-market-counter"
-  id: ID!
-  "Wallet that receives the attribution"
-  provider: Player!,
-  "Wallet that generate the attribution"
-  attributor: Player!,
-  "Amount to be paid to the provider"
-  amount: BigInt!
-  "Market where the attribution was generated"
-  market: Market!
-  "timestamp of the attribution"
-  timestamp: BigInt!
-  claimed: Boolean!
+type Attribution @entity(immutable: true) {
+	"provider-attributor-market-counter"
+	id: ID!
+	"Wallet that receives the attribution"
+	provider: Player!
+	"Wallet that generate the attribution"
+	attributor: Player!
+	"Amount to be paid to the provider"
+	amount: BigInt!
+	"Market where the attribution was generated"
+	market: Market!
+	"timestamp of the attribution"
+	timestamp: BigInt!
+	claimed: Boolean!
 }
 
-type MarketReferral @entity {
-  id: ID!
-  provider: Player!
-  totalAmount: BigInt!
-  claimed: Boolean!
-  market: Market!
-  attributions: [Attribution!]!
-  manager: String!
+type MarketReferral @entity(immutable: false) {
+	id: ID!
+	provider: Player!
+	totalAmount: BigInt!
+	claimed: Boolean!
+	market: Market!
+	attributions: [Attribution!]!
+	manager: String!
 }
 
-type Event @entity {
-  "questionID"
-  id: ID!
-  nonce: BigInt!
-  arbitrator: Bytes!
-  markets: [Market!]!
-  answer: Bytes
-  category: String!
-  title: String!
-  lang: String!
-  outcomes: [String!]!
-  templateID: BigInt!
-  answerFinalizedTimestamp: BigInt
-  arbitrationOccurred: Boolean!
-  isPendingArbitration: Boolean!
-  openingTs: BigInt!
-  finalizeTs: BigInt!
-  creationTs: BigInt!
-  lastAnswerTs: BigInt
-  timeout: BigInt!
-  minBond: BigInt!
-  lastBond: BigInt!
-  bounty: BigInt!
-  contentHash: Bytes!
-  historyHash: Bytes!
-  "List of questionIDs that this event it's reopening."
-  reopenedEvents: [String!]!
+type Event @entity(immutable: false) {
+	"questionID"
+	id: ID!
+	nonce: BigInt!
+	arbitrator: Bytes!
+	markets: [Market!]!
+	answer: Bytes
+	category: String!
+	title: String!
+	lang: String!
+	outcomes: [String!]!
+	templateID: BigInt!
+	answerFinalizedTimestamp: BigInt
+	arbitrationOccurred: Boolean!
+	isPendingArbitration: Boolean!
+	openingTs: BigInt!
+	finalizeTs: BigInt!
+	creationTs: BigInt!
+	lastAnswerTs: BigInt
+	timeout: BigInt!
+	minBond: BigInt!
+	lastBond: BigInt!
+	bounty: BigInt!
+	contentHash: Bytes!
+	historyHash: Bytes!
+	"List of questionIDs that this event it's reopening."
+	reopenedEvents: [String!]!
 }
 
-type Player @entity {
-  id: ID!
-  name: String!
-  amountBet: BigInt!
-  pricesReceived: BigInt!
-  markets: [Market!]!
-  bets: [Bet!]! @derivedFrom(field: "player")
-  numOfMarkets: BigInt!
-  numOfBets: BigInt!
-  attributions: [Attribution!]! @derivedFrom(field: "provider")
-  totalAttributions: BigInt!
-  "timestamp of the first bet"
-  firstBetTs: BigInt!
-  "timestamp of their last bast"
-  lastBetTs: BigInt!
+type Player @entity(immutable: false) {
+	id: ID!
+	name: String!
+	amountBet: BigInt!
+	pricesReceived: BigInt!
+	markets: [Market!]!
+	bets: [Bet!]! @derivedFrom(field: "player")
+	numOfMarkets: BigInt!
+	numOfBets: BigInt!
+	attributions: [Attribution!]! @derivedFrom(field: "provider")
+	totalAttributions: BigInt!
+	"timestamp of the first bet"
+	firstBetTs: BigInt!
+	"timestamp of their last bast"
+	lastBetTs: BigInt!
 }
 
-type Manager @entity {
-  id: ID!
-  markets: [Market!]!
-  managementRewards: BigInt!
-  claimed: Boolean!
+type Manager @entity(immutable: false) {
+	id: ID!
+	markets: [Market!]!
+	managementRewards: BigInt!
+	claimed: Boolean!
 }
 
-type Bet @entity {
-  """marketId-tokenID"""
-  id: ID!
-  player: Player!
-  market: Market!
-  tokenID: BigInt!
-  hash: Bytes!
-  points: BigInt!
-  results: [Bytes!]!
-  count: BigInt!
-  claim: Boolean!
-  reward: BigInt!
-  ranking: BigInt
-  timestamp: BigInt!
+type Bet @entity(immutable: false) {
+	"""
+	marketId-tokenID
+	"""
+	id: ID!
+	player: Player!
+	market: Market!
+	tokenID: BigInt!
+	hash: Bytes!
+	points: BigInt!
+	results: [Bytes!]!
+	count: BigInt!
+	claim: Boolean!
+	reward: BigInt!
+	ranking: BigInt
+	timestamp: BigInt!
 }
 
-type Funder @entity {
-  id: ID!
-  amount: BigInt!
-  markets: [Market!]!
-  messages: [String!]
+type Funder @entity(immutable: false) {
+	id: ID!
+	amount: BigInt!
+	markets: [Market!]!
+	messages: [String!]
 }
 
-type Registry @entity {
-  "The registry address"
-  id: ID!
-  "The current registration meta evidence"
-  registrationMetaEvidence: MetaEvidence!
-  "The current removal meta evidence"
-  clearingMetaEvidence: MetaEvidence!
-  "The number of MetaEvidence event logs emitted."
-  metaEvidenceCount: BigInt!
+type Registry @entity(immutable: true) {
+	"The registry address"
+	id: ID!
+	"The current registration meta evidence"
+	registrationMetaEvidence: MetaEvidence!
+	"The current removal meta evidence"
+	clearingMetaEvidence: MetaEvidence!
+	"The number of MetaEvidence event logs emitted."
+	metaEvidenceCount: BigInt!
 }
 
-type MetaEvidence @entity {
-  "The meta evidence ID."
-  id: ID!
-  "The URI of the meta evidence file."
-  URI: String!
+type MetaEvidence @entity(immutable: true) {
+	"The meta evidence ID."
+	id: ID!
+	"The URI of the meta evidence file."
+	URI: String!
 }
 
-type MarketFactory @entity {
-  "address of the factory SC"
-  id: ID!
-  "counter of markets"
-  numOfMarkets: BigInt!
-  "counter of bets"
-  numOfBets: BigInt!
-  "counter of players"
-  numOfPlayers: BigInt!
-  "counter of money betted"
-  totalVolumeBets: BigInt!
-  "amount of prizes claimed"
-  prizedClaimed: BigInt!
-  "total amount funded as sponsoring"
-  totalVolumeFunding: BigInt!
-  markets: [Market!]! @derivedFrom(field: "marketFactory")
+type MarketFactory @entity(immutable: false) {
+	"address of the factory SC"
+	id: ID!
+	"counter of markets"
+	numOfMarkets: BigInt!
+	"counter of bets"
+	numOfBets: BigInt!
+	"counter of players"
+	numOfPlayers: BigInt!
+	"counter of money betted"
+	totalVolumeBets: BigInt!
+	"amount of prizes claimed"
+	prizedClaimed: BigInt!
+	"total amount funded as sponsoring"
+	totalVolumeFunding: BigInt!
+	markets: [Market!]! @derivedFrom(field: "marketFactory")
 }
 
 type _Schema_
-  @fulltext(
-    name: "marketTitleSearch"
-    language: en
-    algorithm: rank
-    include: [{ entity: "Market", fields: [{ name: "name" }] }]
-  )
+	@fulltext(
+		name: "marketTitleSearch"
+		language: en
+		algorithm: rank
+		include: [{ entity: "Market", fields: [{ name: "name" }] }]
+	)
 
-type SVGAd @entity {
-  "address of the Smart Contract"
-  id: ID!
-  "Markets where this Ad has bids (active or not)."
-  markets: [Market!]!
-  "entity with curate information of this Ad"
-  curateSVGAdItem: CurateSVGAdItem
-  # svg: String
-  "All the bids of this ad"
-  bids: [Bid!]!
-  activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
+type SVGAd @entity(immutable: false) {
+	"address of the Smart Contract"
+	id: ID!
+	"Markets where this Ad has bids (active or not)."
+	markets: [Market!]!
+	"entity with curate information of this Ad"
+	curateSVGAdItem: CurateSVGAdItem
+	# svg: String
+	"All the bids of this ad"
+	bids: [Bid!]!
+	activeMarkets: [Market!]! @derivedFrom(field: "highestBidAd")
 }
 
-type Bid @entity {
-  "market-bider-itemID"
-  id: ID!
-  market: Market!
-  bidPerSecond: BigInt!
-  "Address of the bidder."
-  bidder: Bytes!
-  "Balance of the Bid"
-  balance: BigInt!,
-  startTimestamp: BigInt!,
-  currentHighest: Boolean!
-  "Address of the ad"
-  SVGAd: SVGAd!
-  "Curate info for the Ad of this Bid"
-  curateSVGAdItem: CurateSVGAdItem
+type Bid @entity(immutable: false) {
+	"market-bider-itemID"
+	id: ID!
+	market: Market!
+	bidPerSecond: BigInt!
+	"Address of the bidder."
+	bidder: Bytes!
+	"Balance of the Bid"
+	balance: BigInt!
+	startTimestamp: BigInt!
+	currentHighest: Boolean!
+	"Address of the ad"
+	SVGAd: SVGAd!
+	"Curate info for the Ad of this Bid"
+	curateSVGAdItem: CurateSVGAdItem
 }
 
-type CurateSVGAdItem @entity {
-  "CurateProxySVG itemID = keccack256(abi.encode(itemID, itemID))"
-  id: ID!
-  SVGAd: SVGAd!,
-  "itemID in technical list of Curate"
-  technicalItemID: Bytes!,
-  "itemID in the content list of Curate"
-  contentItemID: Bytes!,
-  "Status in the content curation list. Enum with statuses"
-  contentStatus: CurationStatus!
-  "Status in the technical curation list. Enum with statuses"
-  technicalStatus: CurationStatus!
+type CurateSVGAdItem @entity(immutable: false) {
+	"CurateProxySVG itemID = keccack256(abi.encode(itemID, itemID))"
+	id: ID!
+	SVGAd: SVGAd!
+	"itemID in technical list of Curate"
+	technicalItemID: Bytes!
+	"itemID in the content list of Curate"
+	contentItemID: Bytes!
+	"Status in the content curation list. Enum with statuses"
+	contentStatus: CurationStatus!
+	"Status in the technical curation list. Enum with statuses"
+	technicalStatus: CurationStatus!
 }
 
-type CurateAdsMapper @entity {
-  "ItemID in curate"
-  id: ID!
-  SVGAd: SVGAd!
-  ipfs: String!
+type CurateAdsMapper @entity(immutable: false) {
+	"ItemID in curate"
+	id: ID!
+	SVGAd: SVGAd!
+	ipfs: String!
 }
